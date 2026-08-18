@@ -17,6 +17,7 @@
       --text-muted: #9c9589;
       --whatsapp: #25d366;
       --success: #2d6a4f;
+      --error: #e63946;
     }
 
     * {
@@ -373,12 +374,12 @@
         </div>
 
         <div class="form-group">
-          <label for="custEmail">Email Address (For Invoices & Order Updates)</label>
+          <label for="custEmail">Email Address (For Order Updates & Invoices)</label>
           <input type="email" id="custEmail" placeholder="e.g. sarthak@example.com" required />
         </div>
         
         <div class="form-group">
-          <label for="custPhone">WhatsApp Number (For Direct Delivery Receipt)</label>
+          <label for="custPhone">WhatsApp Number</label>
           <input type="tel" id="custPhone" placeholder="e.g. 9876543210" required />
         </div>
         
@@ -398,7 +399,7 @@
       <div class="section-card" style="text-align: center;">
         <div class="success-badge">✓ Payment & Order Confirmed</div>
         <h2 style="font-size: 1.2rem; margin-bottom: 4px;">Order Placed!</h2>
-        <p style="font-size: 0.8rem; color: var(--text-muted);">Your micro-batch reservation is confirmed for Delhi NCR delivery.</p>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Your reservation is confirmed for Delhi NCR delivery.</p>
 
         <div class="receipt-details">
           <div class="receipt-row">
@@ -448,8 +449,8 @@
 
   <script>
     const CONFIG = {
-      razorpayKeyId: "rzp_test_TRBvifegBTxShv",
-      googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbzYlYgCrsV39_ttak__q1W_dTwZJmF7vuIH9GOS9zETUGuOg90F2hGB_8B_FSFQFVsX/execs"
+      razorpayKeyId: "rzp_test_TRBvifegBTxShv", // Replace with your Razorpay Key ID
+      googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbzYlYgCrsV39_ttak__q1W_dTwZJmF7vuIH9GOS9zETUGuOg90F2hGB_8B_FSFQFVsX/exec" // Replace with your deployed Web App URL ending in /exec
     };
 
     let selectedPack = {
@@ -461,6 +462,7 @@
     let isPincodeServiceable = false;
     let lastOrderData = null;
 
+    // Dynamically calculate upcoming Saturday drop
     function getUpcomingSaturdayFormatted() {
       const d = new Date();
       const currentDay = d.getDay();
@@ -497,6 +499,7 @@
       document.getElementById('btnAmount').textContent = `₹${total}`;
     }
 
+    // Delhi NCR PIN Code Validation (Delhi: 11xxxx, Gurugram: 122xxx, Faridabad: 121xxx, Noida/Ghaziabad: 201xxx)
     function validateDelhiNcrPincode() {
       const pinInput = document.getElementById('custPincode').value.trim();
       const statusEl = document.getElementById('pinStatus');
@@ -517,7 +520,7 @@
         isPincodeServiceable = true;
         payBtn.disabled = false;
       } else {
-        statusEl.textContent = '✕ Currently not serviceable. We only deliver in Delhi NCR (Delhi, Gurugram, Noida, Faridabad, Ghaziabad).';
+        statusEl.textContent = '✕ Not serviceable. We deliver only across Delhi NCR (Gurugram, Delhi, Noida, Faridabad, Ghaziabad).';
         statusEl.className = 'pin-status pin-invalid';
         isPincodeServiceable = false;
         payBtn.disabled = true;
@@ -544,7 +547,7 @@
       }
 
       if (!isPincodeServiceable) {
-        alert('Sorry! The Apartment Brew Co. currently only delivers within Delhi NCR.');
+        alert('Sorry! We currently deliver only within Delhi NCR.');
         return;
       }
 
@@ -605,10 +608,10 @@
         notes: `Payment ID: ${paymentId}`
       };
 
-      // 1. Log to Google Sheet
+      // Background dispatch to Google Sheets via text/plain to bypass CORS blocks
       if (CONFIG.googleSheetEndpoint && !CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
         try {
-          await fetch(CONFIG.googleSheetEndpoint, {
+          fetch(CONFIG.googleSheetEndpoint, {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
@@ -619,7 +622,7 @@
         }
       }
 
-      // 2. Render On-Screen Receipt
+      // Display on-screen confirmation
       document.getElementById('rOrderId').textContent = orderId;
       document.getElementById('rPayId').textContent = paymentId;
       document.getElementById('rDropDate').textContent = `${dropDate} (Morning Drop)`;
