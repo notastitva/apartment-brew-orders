@@ -16,6 +16,7 @@
       --whatsapp: #25d366;
       --whatsapp-hover: #1ebc57;
       --upi-purple: #5f259f;
+      --success: #2d6a4f;
     }
 
     * {
@@ -196,9 +197,9 @@
 
     .btn {
       width: 100%;
-      padding: 12px;
+      padding: 13px;
       border-radius: 8px;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
       border: none;
@@ -214,6 +215,12 @@
       opacity: 0.9;
     }
 
+    .btn-primary {
+      background: var(--accent);
+      color: #141312;
+      margin-top: 10px;
+    }
+
     .btn-upi {
       background: var(--upi-purple);
       color: #fff;
@@ -224,107 +231,225 @@
       background: var(--whatsapp);
       color: #fff;
     }
+
+    .btn-secondary {
+      background: #2a2724;
+      color: var(--text);
+      border: 1px solid var(--card-border);
+      margin-top: 8px;
+    }
+
+    /* Confirmation Receipt Screen */
+    #receiptView {
+      display: none;
+    }
+
+    .success-badge {
+      background: rgba(45, 106, 79, 0.2);
+      border: 1px solid var(--success);
+      color: #95d5b2;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .receipt-details {
+      background: #151413;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      padding: 14px;
+      margin: 14px 0;
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #262320;
+      padding-bottom: 6px;
+    }
+
+    .receipt-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .receipt-label {
+      color: var(--text-muted);
+    }
+
+    .receipt-val {
+      font-weight: 600;
+      text-align: right;
+    }
   </style>
 </head>
 <body>
   <div class="container">
+    <!-- Header -->
     <div class="header-card">
       <div class="brand-title">THE APARTMENT BREW CO.</div>
       <div class="brand-subtitle">Micro-Batch Flash-Chilled Specialty Coffee • Gurugram</div>
       <div class="drop-banner" id="dropBanner">Next Drop: Saturday Morning</div>
     </div>
 
-    <div class="section-card">
-      <div class="section-title">1. Select Your Brew</div>
-      
-      <div class="form-group">
-        <label for="coffeeOrigin">Single-Estate Lot</label>
-        <select id="coffeeOrigin">
-          <option value="Ratnagiri Estate (Anaerobic Naturals)">Ratnagiri Estate — Anaerobic Naturals</option>
-          <option value="Thogarihunkal Estate (Washed)">Thogarihunkal Estate — Washed</option>
-          <option value="Seasonal Microlot (Roaster's Choice)">Seasonal Microlot — Roaster's Choice</option>
-        </select>
+    <!-- VIEW 1: Order Intake Form -->
+    <div id="orderFormView">
+      <!-- Step 1: Select Brew -->
+      <div class="section-card">
+        <div class="section-title">1. Select Your Brew</div>
+        
+        <div class="form-group">
+          <label for="coffeeOrigin">Single-Estate Lot</label>
+          <select id="coffeeOrigin">
+            <option value="Ratnagiri Estate (Anaerobic Naturals)">Ratnagiri Estate — Anaerobic Naturals</option>
+            <option value="Thogarihunkal Estate (Washed)">Thogarihunkal Estate — Washed</option>
+            <option value="Seasonal Microlot (Roaster's Choice)">Seasonal Microlot — Roaster's Choice</option>
+          </select>
+        </div>
+
+        <label>Choose Pack</label>
+        <div class="pack-grid">
+          <div class="pack-option" onclick="selectPack('Single Bottle', 1, 240, this)">
+            <div class="pack-name">Single Bottle</div>
+            <div class="pack-price">₹240</div>
+            <div class="pack-desc">1x 250ml</div>
+          </div>
+          <div class="pack-option" onclick="selectPack('Duo Pack', 2, 480, this)">
+            <div class="pack-name">Duo Pack</div>
+            <div class="pack-price">₹480</div>
+            <div class="pack-desc">2x 250ml (MOQ)</div>
+          </div>
+          <div class="pack-option active" onclick="selectPack('Weekend Pack', 4, 899, this)">
+            <div class="pack-name">Weekend Pack</div>
+            <div class="pack-price">₹899</div>
+            <div class="pack-desc">4x 250ml (Popular)</div>
+          </div>
+          <div class="pack-option" onclick="selectPack('Weekly Sub', 5, 1000, this)">
+            <div class="pack-name">Weekly Sub</div>
+            <div class="pack-price">₹1,000</div>
+            <div class="pack-desc">5x 250ml (@ ₹200)</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="packQty">Quantity of Packs</label>
+          <input type="number" id="packQty" min="1" value="1" oninput="updateTotal()" />
+        </div>
+
+        <div class="summary-box">
+          <span style="font-size:0.85rem; color:var(--text-muted);">Total Amount (Free 5km Delivery):</span>
+          <span class="summary-total" id="totalAmountDisplay">₹899</span>
+        </div>
       </div>
 
-      <label>Choose Pack</label>
-      <div class="pack-grid">
-        <div class="pack-option" onclick="selectPack('Single Bottle', 1, 240, this)">
-          <div class="pack-name">Single Bottle</div>
-          <div class="pack-price">₹240</div>
-          <div class="pack-desc">1x 250ml</div>
+      <!-- Step 2: Delivery Details -->
+      <div class="section-card" style="margin-top: 14px;">
+        <div class="section-title">2. Delivery Info</div>
+        <div class="form-group">
+          <label for="custName">Your Name</label>
+          <input type="text" id="custName" placeholder="e.g. Sarthak Srivastava" required />
         </div>
-        <div class="pack-option" onclick="selectPack('Duo Pack', 2, 480, this)">
-          <div class="pack-name">Duo Pack</div>
-          <div class="pack-price">₹480</div>
-          <div class="pack-desc">2x 250ml (MOQ)</div>
+        <div class="form-group">
+          <label for="custPhone">WhatsApp Number (For Order Receipt)</label>
+          <input type="tel" id="custPhone" placeholder="e.g. 9876543210" required />
         </div>
-        <div class="pack-option active" onclick="selectPack('Weekend Pack', 4, 899, this)">
-          <div class="pack-name">Weekend Pack</div>
-          <div class="pack-price">₹899</div>
-          <div class="pack-desc">4x 250ml (Popular)</div>
-        </div>
-        <div class="pack-option" onclick="selectPack('Tech Hub Sub', 5, 1000, this)">
-          <div class="pack-name">Weekly Sub</div>
-          <div class="pack-price">₹1,000</div>
-          <div class="pack-desc">5x 250ml (@ ₹200)</div>
+        <div class="form-group">
+          <label for="custAddress">Delivery Address / Tech Park</label>
+          <textarea id="custAddress" rows="2" placeholder="e.g. Flat 402, DLF Phase 5 / Cyber Hub Tower B" required></textarea>
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="packQty">Quantity of Selected Pack</label>
-        <input type="number" id="packQty" min="1" value="1" oninput="updateTotal()" />
-      </div>
+      <!-- Step 3: Payment & Submit -->
+      <div class="section-card" style="margin-top: 14px;">
+        <div class="section-title">3. Payment & Confirmation</div>
+        
+        <div class="qr-container">
+          <img id="upiQrCode" src="" alt="UPI Payment QR Code" />
+          <div class="qr-note">Scan with GPay / PhonePe / Paytm / CRED</div>
+        </div>
 
-      <div class="summary-box">
-        <span style="font-size:0.85rem; color:var(--text-muted);">Total (Free 5km Delivery):</span>
-        <span class="summary-total" id="totalAmountDisplay">₹899</span>
+        <a id="upiPayBtn" class="btn btn-upi" href="#">
+          <span>⚡ Open UPI App on Mobile</span>
+        </a>
+
+        <div class="form-group" style="margin-top: 10px;">
+          <label for="utrNumber">UPI Ref / UTR No. (Optional)</label>
+          <input type="text" id="utrNumber" placeholder="Enter last 4 digits or UTR" />
+        </div>
+
+        <button id="submitOrderBtn" class="btn btn-primary" onclick="submitOrder()">
+          <span>✓ Place Order & Get Receipt</span>
+        </button>
       </div>
     </div>
 
-    <div class="section-card">
-      <div class="section-title">2. Delivery Info</div>
-      <div class="form-group">
-        <label for="custName">Your Name</label>
-        <input type="text" id="custName" placeholder="e.g. Test Customer" oninput="refreshLinks()" />
-      </div>
-      <div class="form-group">
-        <label for="custPhone">WhatsApp Number</label>
-        <input type="tel" id="custPhone" placeholder="e.g. 9876543210" oninput="refreshLinks()" />
-      </div>
-      <div class="form-group">
-        <label for="custAddress">Delivery Address / Tech Park</label>
-        <textarea id="custAddress" rows="2" placeholder="e.g. Cyber Hub / DLF Phase 5" oninput="refreshLinks()"></textarea>
-      </div>
-    </div>
+    <!-- VIEW 2: Order Receipt Screen -->
+    <div id="receiptView">
+      <div class="section-card" style="text-align: center;">
+        <div class="success-badge">✓ Order Placed Successfully</div>
+        <h2 style="font-size: 1.2rem; margin-bottom: 4px;">Order Confirmed!</h2>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Your micro-batch reservation has been recorded.</p>
 
-    <div class="section-card">
-      <div class="section-title">3. Pay via UPI & Confirm</div>
-      
-      <div class="qr-container">
-        <img id="upiQrCode" src="" alt="UPI Payment QR Code" />
-        <div class="qr-note">Scan with GPay / PhonePe / Paytm / CRED</div>
+        <div class="receipt-details">
+          <div class="receipt-row">
+            <span class="receipt-label">Order ID</span>
+            <span class="receipt-val" id="rOrderId">TABC-0000</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Batch Drop</span>
+            <span class="receipt-val" id="rDropDate">Saturday Morning</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Customer</span>
+            <span class="receipt-val" id="rName">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Coffee Lot</span>
+            <span class="receipt-val" id="rBean">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Selection</span>
+            <span class="receipt-val" id="rPack">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Total Bottles</span>
+            <span class="receipt-val" id="rBottles">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Amount</span>
+            <span class="receipt-val" style="color:var(--accent);" id="rTotal">₹0</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Address</span>
+            <span class="receipt-val" id="rAddress" style="font-size: 0.75rem; max-width: 60%;">-</span>
+          </div>
+        </div>
+
+        <!-- WhatsApp Receipt Trigger -->
+        <button class="btn btn-whatsapp" onclick="sendReceiptToCustomerWhatsApp()">
+          <span>📲 Send Receipt to My WhatsApp</span>
+        </button>
+
+        <button class="btn btn-secondary" onclick="resetForm()">
+          <span>+ Place Another Order</span>
+        </button>
       </div>
-
-      <a id="upiPayBtn" class="btn btn-upi" href="#">
-        <span>⚡ Open UPI App (GPay / PhonePe)</span>
-      </a>
-
-      <div class="form-group" style="margin-top: 10px;">
-        <label for="utrNumber">UPI Ref / UTR No. (Optional)</label>
-        <input type="text" id="utrNumber" placeholder="Last 4 digits or UTR" oninput="refreshLinks()" />
-      </div>
-
-      <button class="btn btn-whatsapp" onclick="sendWhatsAppOrder()">
-        <span>💬 Send Order on WhatsApp</span>
-      </button>
     </div>
   </div>
 
   <script>
+    // Configuration
     const BUSINESS_CONFIG = {
       upiVpa: "astitvagupta1234@okicici",
       payeeName: "The Apartment Brew Co",
-      whatsappNumber: "919876543210"
+      googleSheetEndpoint: "YOUR_APPS_SCRIPT_URL_HERE" // Paste Google Apps Script Web App URL here
     };
 
     let selectedPack = {
@@ -332,6 +457,8 @@
       bottles: 4,
       unitPrice: 899
     };
+
+    let lastOrderData = null;
 
     function selectPack(name, bottles, price, element) {
       document.querySelectorAll('.pack-option').forEach(el => el.classList.remove('active'));
@@ -348,60 +475,127 @@
     function updateTotal() {
       const total = calculateTotal();
       document.getElementById('totalAmountDisplay').textContent = `₹${total}`;
-      refreshLinks();
-    }
-
-    function refreshLinks() {
-      const total = calculateTotal();
-      const name = document.getElementById('custName').value.trim() || 'Customer';
-      const note = encodeURIComponent(`Apartment Brew Drop - ${name}`);
       
-      const upiUrl = `upi://pay?pa=${BUSINESS_CONFIG.upiVpa}&pn=${encodeURIComponent(BUSINESS_CONFIG.payeeName)}&am=${total}&cu=INR&tn=${note}`;
+      const upiUrl = `upi://pay?pa=${BUSINESS_CONFIG.upiVpa}&pn=${encodeURIComponent(BUSINESS_CONFIG.payeeName)}&am=${total}&cu=INR&tn=${encodeURIComponent('The Apartment Brew Co Pre-Order')}`;
       document.getElementById('upiPayBtn').href = upiUrl;
 
       const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiUrl)}`;
       document.getElementById('upiQrCode').src = qrApiUrl;
     }
 
-    function sendWhatsAppOrder() {
+    async function submitOrder() {
       const name = document.getElementById('custName').value.trim();
       const phone = document.getElementById('custPhone').value.trim();
       const address = document.getElementById('custAddress').value.trim();
       const bean = document.getElementById('coffeeOrigin').value;
-      const qty = document.getElementById('packQty').value || 1;
+      const qty = parseInt(document.getElementById('packQty').value, 10) || 1;
       const total = calculateTotal();
-      const utr = document.getElementById('utrNumber').value.trim() || 'Paid via UPI';
+      const utr = document.getElementById('utrNumber').value.trim() || 'UPI';
 
-      if (!name || !address) {
-        alert('Please provide your name and delivery address to proceed.');
+      if (!name || !phone || !address) {
+        alert('Please fill in your Name, WhatsApp Number, and Delivery Address.');
         return;
       }
 
-      const message = `*☕ NEW FLASH BREW ORDER — THE APARTMENT BREW CO.*\n` +
-                      `------------------------------------\n` +
-                      `*Customer:* ${name}\n` +
-                      `*Contact:* ${phone || 'Not provided'}\n` +
-                      `*Delivery Address:* ${address}\n\n` +
-                      `*Order Details:*\n` +
-                      `• *Bean:* ${bean}\n` +
-                      `• *Pack:* ${selectedPack.name} (${selectedPack.bottles}x 250ml) x ${qty}\n` +
-                      `• *Total Bottles:* ${selectedPack.bottles * qty}\n` +
-                      `• *Total Amount:* ₹${total}\n\n` +
-                      `*Payment:* ${utr}\n` +
-                      `------------------------------------\n` +
-                      `_Please confirm my Saturday batch reservation._`;
+      const btn = document.getElementById('submitOrderBtn');
+      btn.disabled = true;
+      btn.textContent = 'Submitting order...';
 
-      const whatsappUrl = `https://wa.me/${BUSINESS_CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`;
+      const orderId = "TABC-" + Math.floor(100000 + Math.random() * 900000);
+      const dropDate = getDropDateFormatted();
+
+      lastOrderData = {
+        orderId,
+        dropDate,
+        name,
+        phone,
+        address,
+        bean,
+        pack: `${selectedPack.name} (${selectedPack.bottles}x 250ml)`,
+        quantity: qty,
+        bottles: selectedPack.bottles * qty,
+        totalAmount: total,
+        paymentMode: "UPI / Web Form",
+        paymentStatus: utr ? `Paid (${utr})` : "Pending Verification",
+        notes: utr
+      };
+
+      // 1. Log to Google Sheet in background
+      if (BUSINESS_CONFIG.googleSheetEndpoint && !BUSINESS_CONFIG.googleSheetEndpoint.includes("YOUR_APPS_SCRIPT")) {
+        try {
+          await fetch(BUSINESS_CONFIG.googleSheetEndpoint, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(lastOrderData)
+          });
+        } catch (e) {
+          console.error("Sheet log error:", e);
+        }
+      }
+
+      // 2. Display the receipt screen
+      document.getElementById('rOrderId').textContent = orderId;
+      document.getElementById('rDropDate').textContent = dropDate;
+      document.getElementById('rName').textContent = name;
+      document.getElementById('rBean').textContent = bean;
+      document.getElementById('rPack').textContent = `${selectedPack.name} x ${qty}`;
+      document.getElementById('rBottles').textContent = `${selectedPack.bottles * qty} bottles (250ml)`;
+      document.getElementById('rTotal').textContent = `₹${total}`;
+      document.getElementById('rAddress').textContent = address;
+
+      document.getElementById('orderFormView').style.display = 'none';
+      document.getElementById('receiptView').style.display = 'block';
+    }
+
+    function sendReceiptToCustomerWhatsApp() {
+      if (!lastOrderData) return;
+
+      const message = `*🧾 ORDER RECEIPT — THE APARTMENT BREW CO.*\n` +
+                      `------------------------------------\n` +
+                      `*Order ID:* ${lastOrderData.orderId}\n` +
+                      `*Scheduled Drop:* ${lastOrderData.dropDate}\n\n` +
+                      `*Customer:* ${lastOrderData.name}\n` +
+                      `*Delivery Location:* ${lastOrderData.address}\n\n` +
+                      `*Items Ordered:*\n` +
+                      `• *Coffee:* ${lastOrderData.bean}\n` +
+                      `• *Selection:* ${lastOrderData.pack} x ${lastOrderData.quantity}\n` +
+                      `• *Total Bottles:* ${lastOrderData.bottles} (250ml)\n` +
+                      `• *Total Paid:* ₹${lastOrderData.totalAmount}\n\n` +
+                      `*Status:* Confirmed for Fresh Saturday Delivery\n` +
+                      `------------------------------------\n` +
+                      `_Thank you for supporting micro-batch craft coffee!_`;
+
+      // Formats customer phone number with India country code 91
+      let cleanPhone = lastOrderData.phone.replace(/[^0-9]/g, '');
+      if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
+
+      // Opens WhatsApp chat to the customer's own number with the receipt
+      const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, '_blank');
     }
 
-    function setNextDropDate() {
+    function resetForm() {
+      document.getElementById('orderFormView').style.display = 'block';
+      document.getElementById('receiptView').style.display = 'none';
+      document.getElementById('submitOrderBtn').disabled = false;
+      document.getElementById('submitOrderBtn').textContent = '✓ Place Order & Get Receipt';
+      document.getElementById('custName').value = '';
+      document.getElementById('custPhone').value = '';
+      document.getElementById('custAddress').value = '';
+      document.getElementById('utrNumber').value = '';
+    }
+
+    function getDropDateFormatted() {
       const d = new Date();
       const day = d.getDay();
       const diff = (6 - day + 7) % 7 || 7;
       d.setDate(d.getDate() + diff);
-      const options = { month: 'short', day: 'numeric' };
-      document.getElementById('dropBanner').textContent = `Next Fresh Drop: Saturday, ${d.toLocaleDateString('en-IN', options)}`;
+      return d.toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' });
+    }
+
+    function setNextDropDate() {
+      document.getElementById('dropBanner').textContent = `Next Fresh Drop: ${getDropDateFormatted()}`;
     }
 
     setNextDropDate();
