@@ -17,6 +17,7 @@
       --text-muted: #9c9589;
       --whatsapp: #25d366;
       --success: #2d6a4f;
+      --error: #e63946;
     }
 
     * {
@@ -373,7 +374,7 @@
         </div>
         
         <div class="form-group">
-          <label for="custPhone">WhatsApp Number (For Direct Receipt & Delivery)</label>
+          <label for="custPhone">WhatsApp Number (For Direct Delivery Receipt)</label>
           <input type="tel" id="custPhone" placeholder="e.g. 9876543210" required />
         </div>
         
@@ -393,7 +394,7 @@
       <div class="section-card" style="text-align: center;">
         <div class="success-badge">✓ Payment & Order Confirmed</div>
         <h2 style="font-size: 1.2rem; margin-bottom: 4px;">Order Placed!</h2>
-        <p style="font-size: 0.8rem; color: var(--text-muted);">Receipt has been generated for your scheduled Saturday morning drop.</p>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Your micro-batch reservation is confirmed for Delhi NCR delivery.</p>
 
         <div class="receipt-details">
           <div class="receipt-row">
@@ -426,8 +427,9 @@
           </div>
         </div>
 
+        <!-- Optional WhatsApp receipt button (No auto-popup) -->
         <button class="btn btn-whatsapp" onclick="sendReceiptToCustomerWhatsApp()">
-          <span>📲 Re-send Receipt to WhatsApp</span>
+          <span>📲 Send Receipt to My WhatsApp</span>
         </button>
 
         <button class="btn btn-secondary" onclick="resetForm()">
@@ -439,8 +441,8 @@
 
   <script>
     const CONFIG = {
-      razorpayKeyId: "rzp_test_TRBvifegBTxShv",
-      googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbzYlYgCrsV39_ttak__q1W_dTwZJmF7vuIH9GOS9zETUGuOg90F2hGB_8B_FSFQFVsX/exec"
+      razorpayKeyId: "rzp_test_TRBvifegBTxShv", // Replace with your rzp_test_... or rzp_live_...
+      googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbzYlYgCrsV39_ttak__q1W_dTwZJmF7vuIH9GOS9zETUGuOg90F2hGB_8B_FSFQFVsX/exec" // Your Google Apps Script Web App URL
     };
 
     let selectedPack = {
@@ -458,7 +460,7 @@
       const currentDay = d.getDay(); // 0: Sun, 1: Mon, ..., 6: Sat
       let daysUntilSaturday = (6 - currentDay + 7) % 7;
       
-      // If placed on Saturday after 10 AM, schedule for next Saturday's fresh batch
+      // If ordered on Saturday after 10 AM, schedule for next Saturday's fresh batch
       if (daysUntilSaturday === 0 && d.getHours() >= 10) {
         daysUntilSaturday = 7;
       }
@@ -490,6 +492,8 @@
       document.getElementById('btnAmount').textContent = `₹${total}`;
     }
 
+    // Delhi NCR PIN Code Validation Rule:
+    // Delhi: 11xxxx, Gurugram: 122xxx, Faridabad: 121xxx, Noida/Ghaziabad: 201xxx
     function validateDelhiNcrPincode() {
       const pinInput = document.getElementById('custPincode').value.trim();
       const statusEl = document.getElementById('pinStatus');
@@ -602,7 +606,7 @@
         }
       }
 
-      // 2. Render On-Screen Receipt
+      // 2. Render On-Screen Receipt (No automatic WhatsApp popup)
       document.getElementById('rOrderId').textContent = orderId;
       document.getElementById('rPayId').textContent = paymentId;
       document.getElementById('rDropDate').textContent = `${dropDate} (Morning Drop)`;
@@ -613,9 +617,6 @@
 
       document.getElementById('orderFormView').style.display = 'none';
       document.getElementById('receiptView').style.display = 'block';
-
-      // 3. Automatically launch WhatsApp receipt to the customer
-      sendReceiptToCustomerWhatsApp();
     }
 
     function sendReceiptToCustomerWhatsApp() {
@@ -629,4 +630,36 @@
                       `*Customer Details:*\n` +
                       `• Name: ${lastOrderData.name}\n` +
                       `• Phone: ${lastOrderData.phone}\n` +
-                      `• Deli
+                      `• Delivery Address: ${lastOrderData.address}\n\n` +
+                      `*Items Ordered:*\n` +
+                      `• Coffee Lot: ${lastOrderData.bean}\n` +
+                      `• Selection: ${lastOrderData.pack} x ${lastOrderData.quantity}\n` +
+                      `• Total Bottles: ${lastOrderData.bottles} (250ml)\n` +
+                      `• Total Amount Paid: ₹${lastOrderData.totalAmount} (Verified)\n\n` +
+                      `*Status:* Confirmed for Fresh Saturday Delivery\n` +
+                      `------------------------------------\n` +
+                      `_Your batch will be brewed hot and flash-chilled on Friday night for Saturday delivery. Thank you for supporting micro-batch craft coffee!_`;
+
+      let cleanPhone = lastOrderData.phone.replace(/[^0-9]/g, '');
+      if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
+
+      const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+    }
+
+    function resetForm() {
+      document.getElementById('orderFormView').style.display = 'block';
+      document.getElementById('receiptView').style.display = 'none';
+      document.getElementById('custName').value = '';
+      document.getElementById('custPhone').value = '';
+      document.getElementById('custAddress').value = '';
+      document.getElementById('custPincode').value = '';
+      document.getElementById('pinStatus').textContent = '';
+      document.getElementById('payNowBtn').disabled = false;
+    }
+
+    document.getElementById('dropBanner').textContent = `Next Fresh Drop: ${getUpcomingSaturdayFormatted()}`;
+    updateTotal();
+  </script>
+</body>
+</html>
