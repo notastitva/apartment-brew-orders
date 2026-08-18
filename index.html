@@ -17,7 +17,6 @@
       --text-muted: #9c9589;
       --whatsapp: #25d366;
       --success: #2d6a4f;
-      --error: #e63946;
     }
 
     * {
@@ -349,7 +348,7 @@
       </div>
 
       <div class="section-card" style="margin-top: 14px;">
-        <div class="section-title">2. Delhi NCR Delivery Info</div>
+        <div class="section-title">2. Customer & Delivery Info</div>
         
         <div class="form-group">
           <label for="custCity">City / Region (Delhi NCR Only)</label>
@@ -371,6 +370,11 @@
         <div class="form-group">
           <label for="custName">Your Name</label>
           <input type="text" id="custName" placeholder="e.g. Sarthak Srivastava" required />
+        </div>
+
+        <div class="form-group">
+          <label for="custEmail">Email Address (For Invoices & Order Updates)</label>
+          <input type="email" id="custEmail" placeholder="e.g. sarthak@example.com" required />
         </div>
         
         <div class="form-group">
@@ -414,6 +418,10 @@
             <span class="receipt-val" id="rName">-</span>
           </div>
           <div class="receipt-row">
+            <span class="receipt-label">Email</span>
+            <span class="receipt-val" id="rEmail">-</span>
+          </div>
+          <div class="receipt-row">
             <span class="receipt-label">Coffee Lot</span>
             <span class="receipt-val" id="rBean">-</span>
           </div>
@@ -427,7 +435,6 @@
           </div>
         </div>
 
-        <!-- Optional WhatsApp receipt button (No auto-popup) -->
         <button class="btn btn-whatsapp" onclick="sendReceiptToCustomerWhatsApp()">
           <span>📲 Send Receipt to My WhatsApp</span>
         </button>
@@ -441,8 +448,8 @@
 
   <script>
     const CONFIG = {
-      razorpayKeyId: "rzp_test_TRBvifegBTxShv", // Replace with your rzp_test_... or rzp_live_...
-      googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbzYlYgCrsV39_ttak__q1W_dTwZJmF7vuIH9GOS9zETUGuOg90F2hGB_8B_FSFQFVsX/exec" // Your Google Apps Script Web App URL
+      razorpayKeyId: "rzp_test_TRBvifegBTxShv",
+      googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbzYlYgCrsV39_ttak__q1W_dTwZJmF7vuIH9GOS9zETUGuOg90F2hGB_8B_FSFQFVsX/execs"
     };
 
     let selectedPack = {
@@ -454,13 +461,11 @@
     let isPincodeServiceable = false;
     let lastOrderData = null;
 
-    // Calculates the nearest upcoming Saturday date regardless of current day of week
     function getUpcomingSaturdayFormatted() {
       const d = new Date();
-      const currentDay = d.getDay(); // 0: Sun, 1: Mon, ..., 6: Sat
+      const currentDay = d.getDay();
       let daysUntilSaturday = (6 - currentDay + 7) % 7;
       
-      // If ordered on Saturday after 10 AM, schedule for next Saturday's fresh batch
       if (daysUntilSaturday === 0 && d.getHours() >= 10) {
         daysUntilSaturday = 7;
       }
@@ -492,8 +497,6 @@
       document.getElementById('btnAmount').textContent = `₹${total}`;
     }
 
-    // Delhi NCR PIN Code Validation Rule:
-    // Delhi: 11xxxx, Gurugram: 122xxx, Faridabad: 121xxx, Noida/Ghaziabad: 201xxx
     function validateDelhiNcrPincode() {
       const pinInput = document.getElementById('custPincode').value.trim();
       const statusEl = document.getElementById('pinStatus');
@@ -523,13 +526,20 @@
 
     function initiatePayment() {
       const name = document.getElementById('custName').value.trim();
+      const email = document.getElementById('custEmail').value.trim();
       const phone = document.getElementById('custPhone').value.trim();
       const address = document.getElementById('custAddress').value.trim();
       const pin = document.getElementById('custPincode').value.trim();
       const total = calculateTotal();
 
-      if (!name || !phone || !address || !pin) {
-        alert('Please fill in your Name, WhatsApp Number, PIN Code, and Delivery Address.');
+      if (!name || !email || !phone || !address || !pin) {
+        alert('Please fill in your Name, Email, WhatsApp Number, PIN Code, and Delivery Address.');
+        return;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address.');
         return;
       }
 
@@ -547,6 +557,7 @@
           description: `Pre-Order: ${selectedPack.name}`,
           prefill: {
             name: name,
+            email: email,
             contact: phone
           },
           theme: {
@@ -566,6 +577,7 @@
 
     async function handleOrderSuccess(paymentId) {
       const name = document.getElementById('custName').value.trim();
+      const email = document.getElementById('custEmail').value.trim();
       const phone = document.getElementById('custPhone').value.trim();
       const city = document.getElementById('custCity').value;
       const pin = document.getElementById('custPincode').value.trim();
@@ -580,6 +592,7 @@
         orderId: orderId,
         dropDate: dropDate,
         name: name,
+        email: email,
         phone: phone,
         address: address,
         bean: bean,
@@ -606,11 +619,12 @@
         }
       }
 
-      // 2. Render On-Screen Receipt (No automatic WhatsApp popup)
+      // 2. Render On-Screen Receipt
       document.getElementById('rOrderId').textContent = orderId;
       document.getElementById('rPayId').textContent = paymentId;
       document.getElementById('rDropDate').textContent = `${dropDate} (Morning Drop)`;
       document.getElementById('rName').textContent = name;
+      document.getElementById('rEmail').textContent = email;
       document.getElementById('rBean').textContent = bean;
       document.getElementById('rPack').textContent = `${selectedPack.name} x ${qty}`;
       document.getElementById('rTotal').textContent = `₹${total}`;
@@ -629,6 +643,7 @@
                       `*Delivery Date:* ${lastOrderData.dropDate} (Morning Drop)\n\n` +
                       `*Customer Details:*\n` +
                       `• Name: ${lastOrderData.name}\n` +
+                      `• Email: ${lastOrderData.email}\n` +
                       `• Phone: ${lastOrderData.phone}\n` +
                       `• Delivery Address: ${lastOrderData.address}\n\n` +
                       `*Items Ordered:*\n` +
@@ -651,6 +666,7 @@
       document.getElementById('orderFormView').style.display = 'block';
       document.getElementById('receiptView').style.display = 'none';
       document.getElementById('custName').value = '';
+      document.getElementById('custEmail').value = '';
       document.getElementById('custPhone').value = '';
       document.getElementById('custAddress').value = '';
       document.getElementById('custPincode').value = '';
@@ -663,3 +679,4 @@
   </script>
 </body>
 </html>
+
