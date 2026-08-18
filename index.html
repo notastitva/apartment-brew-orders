@@ -75,6 +75,17 @@
       font-weight: 600;
     }
 
+    .geo-badge {
+      display: block;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px dashed var(--card-border);
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 6px;
+      border-radius: 6px;
+      margin-top: 8px;
+    }
+
     .section-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -116,6 +127,15 @@
     input:focus, select:focus, textarea:focus {
       border-color: var(--accent);
     }
+
+    .pin-status {
+      font-size: 0.75rem;
+      margin-top: 2px;
+      font-weight: 600;
+    }
+
+    .pin-valid { color: #95d5b2; }
+    .pin-invalid { color: #ff8fa3; }
 
     .pack-grid {
       display: grid;
@@ -199,6 +219,13 @@
       margin-top: 14px;
     }
 
+    .btn-pay:disabled {
+      background: #383430;
+      color: #777;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
     .btn-whatsapp {
       background: var(--whatsapp);
       color: #fff;
@@ -266,8 +293,9 @@
   <div class="container">
     <div class="header-card">
       <div class="brand-title">THE APARTMENT BREW CO.</div>
-      <div class="brand-subtitle">Micro-Batch Flash-Chilled Specialty Coffee • Gurugram</div>
-      <div class="drop-banner" id="dropBanner">Next Drop: Saturday Morning</div>
+      <div class="brand-subtitle">Micro-Batch Flash-Chilled Specialty Coffee</div>
+      <div class="drop-banner" id="dropBanner">Next Drop: Loading...</div>
+      <div class="geo-badge">📍 Delivering Exclusively in Delhi NCR (Gurugram • Delhi • Noida • Faridabad)</div>
     </div>
 
     <!-- Order View -->
@@ -314,23 +342,43 @@
         </div>
 
         <div class="summary-box">
-          <span style="font-size:0.85rem; color:var(--text-muted);">Total (Free 5km Delivery):</span>
+          <span style="font-size:0.85rem; color:var(--text-muted);">Total Amount (Free Delhi NCR Delivery):</span>
           <span class="summary-total" id="totalAmountDisplay">₹899</span>
         </div>
       </div>
 
       <div class="section-card" style="margin-top: 14px;">
-        <div class="section-title">2. Delivery Info & Checkout</div>
+        <div class="section-title">2. Delhi NCR Delivery Info</div>
+        
+        <div class="form-group">
+          <label for="custCity">City / Region (Delhi NCR Only)</label>
+          <select id="custCity">
+            <option value="Gurugram (DLF Phase 1-5 / Cyber City / Golf Course Rd)">Gurugram (DLF Phase 1-5 / Cyber City / Golf Course Rd)</option>
+            <option value="South / Central Delhi">South / Central Delhi</option>
+            <option value="Noida / Greater Noida">Noida / Greater Noida</option>
+            <option value="Faridabad / Ghaziabad">Faridabad / Ghaziabad</option>
+            <option value="Other Delhi NCR Area">Other Delhi NCR Area</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="custPincode">6-Digit PIN Code</label>
+          <input type="text" id="custPincode" maxlength="6" placeholder="e.g. 122002" oninput="validateDelhiNcrPincode()" required />
+          <div id="pinStatus" class="pin-status"></div>
+        </div>
+
         <div class="form-group">
           <label for="custName">Your Name</label>
           <input type="text" id="custName" placeholder="e.g. Sarthak Srivastava" required />
         </div>
+        
         <div class="form-group">
-          <label for="custPhone">WhatsApp Number</label>
+          <label for="custPhone">WhatsApp Number (For Direct Receipt & Delivery)</label>
           <input type="tel" id="custPhone" placeholder="e.g. 9876543210" required />
         </div>
+        
         <div class="form-group">
-          <label for="custAddress">Delivery Address / Tech Park</label>
+          <label for="custAddress">Full Address (Building, Flat, Society)</label>
           <textarea id="custAddress" rows="2" placeholder="e.g. Flat 402, DLF Phase 5 / Cyber Hub Tower B" required></textarea>
         </div>
 
@@ -345,7 +393,7 @@
       <div class="section-card" style="text-align: center;">
         <div class="success-badge">✓ Payment & Order Confirmed</div>
         <h2 style="font-size: 1.2rem; margin-bottom: 4px;">Order Placed!</h2>
-        <p style="font-size: 0.8rem; color: var(--text-muted);">Your payment was successful and your batch slot is locked.</p>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Receipt has been generated for your scheduled Saturday morning drop.</p>
 
         <div class="receipt-details">
           <div class="receipt-row">
@@ -357,8 +405,8 @@
             <span class="receipt-val" id="rPayId" style="font-family:monospace;font-size:0.8rem;">pay_1234</span>
           </div>
           <div class="receipt-row">
-            <span class="receipt-label">Batch Drop</span>
-            <span class="receipt-val" id="rDropDate">Saturday Morning</span>
+            <span class="receipt-label">Delivery Date</span>
+            <span class="receipt-val" id="rDropDate" style="color:var(--accent);">Saturday Morning</span>
           </div>
           <div class="receipt-row">
             <span class="receipt-label">Customer</span>
@@ -379,7 +427,7 @@
         </div>
 
         <button class="btn btn-whatsapp" onclick="sendReceiptToCustomerWhatsApp()">
-          <span>📲 Send Receipt to My WhatsApp</span>
+          <span>📲 Re-send Receipt to WhatsApp</span>
         </button>
 
         <button class="btn btn-secondary" onclick="resetForm()">
@@ -391,8 +439,8 @@
 
   <script>
     const CONFIG = {
-      razorpayKeyId: "rzp_test_TRBvifegBTxShv", // Replace with your rzp_test_... or rzp_live_...
-      googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbzYlYgCrsV39_ttak__q1W_dTwZJmF7vuIH9GOS9zETUGuOg90F2hGB_8B_FSFQFVsX/exec" // Your Google Apps Script Web App URL
+      razorpayKeyId: "rzp_test_TRBvifegBTxShv",
+      googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbzYlYgCrsV39_ttak__q1W_dTwZJmF7vuIH9GOS9zETUGuOg90F2hGB_8B_FSFQFVsX/exec"
     };
 
     let selectedPack = {
@@ -401,7 +449,28 @@
       unitPrice: 899
     };
 
+    let isPincodeServiceable = false;
     let lastOrderData = null;
+
+    // Calculates the nearest upcoming Saturday date regardless of current day of week
+    function getUpcomingSaturdayFormatted() {
+      const d = new Date();
+      const currentDay = d.getDay(); // 0: Sun, 1: Mon, ..., 6: Sat
+      let daysUntilSaturday = (6 - currentDay + 7) % 7;
+      
+      // If placed on Saturday after 10 AM, schedule for next Saturday's fresh batch
+      if (daysUntilSaturday === 0 && d.getHours() >= 10) {
+        daysUntilSaturday = 7;
+      }
+
+      d.setDate(d.getDate() + daysUntilSaturday);
+      return d.toLocaleDateString('en-IN', {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      });
+    }
 
     function selectPack(name, bottles, price, element) {
       document.querySelectorAll('.pack-option').forEach(el => el.classList.remove('active'));
@@ -421,22 +490,54 @@
       document.getElementById('btnAmount').textContent = `₹${total}`;
     }
 
+    function validateDelhiNcrPincode() {
+      const pinInput = document.getElementById('custPincode').value.trim();
+      const statusEl = document.getElementById('pinStatus');
+      const payBtn = document.getElementById('payNowBtn');
+
+      if (pinInput.length < 6) {
+        statusEl.textContent = '';
+        isPincodeServiceable = false;
+        payBtn.disabled = false;
+        return;
+      }
+
+      const isNcr = /^(11[0-9]{4}|122[0-9]{3}|121[0-9]{3}|201[0-9]{3})$/.test(pinInput);
+
+      if (isNcr) {
+        statusEl.textContent = '✓ Serviceable in Delhi NCR';
+        statusEl.className = 'pin-status pin-valid';
+        isPincodeServiceable = true;
+        payBtn.disabled = false;
+      } else {
+        statusEl.textContent = '✕ Currently not serviceable. We only deliver in Delhi NCR (Delhi, Gurugram, Noida, Faridabad, Ghaziabad).';
+        statusEl.className = 'pin-status pin-invalid';
+        isPincodeServiceable = false;
+        payBtn.disabled = true;
+      }
+    }
+
     function initiatePayment() {
       const name = document.getElementById('custName').value.trim();
       const phone = document.getElementById('custPhone').value.trim();
       const address = document.getElementById('custAddress').value.trim();
+      const pin = document.getElementById('custPincode').value.trim();
       const total = calculateTotal();
 
-      if (!name || !phone || !address) {
-        alert('Please fill in your Name, WhatsApp Number, and Delivery Address.');
+      if (!name || !phone || !address || !pin) {
+        alert('Please fill in your Name, WhatsApp Number, PIN Code, and Delivery Address.');
         return;
       }
 
-      // If Razorpay Key is configured, launch the direct modal
+      if (!isPincodeServiceable) {
+        alert('Sorry! The Apartment Brew Co. currently only delivers within Delhi NCR.');
+        return;
+      }
+
       if (CONFIG.razorpayKeyId && !CONFIG.razorpayKeyId.includes("YOUR_RAZORPAY")) {
         const options = {
           key: CONFIG.razorpayKeyId,
-          amount: total * 100, // Amount in paise
+          amount: total * 100,
           currency: "INR",
           name: "The Apartment Brew Co.",
           description: `Pre-Order: ${selectedPack.name}`,
@@ -454,7 +555,6 @@
         const rzp = new Razorpay(options);
         rzp.open();
       } else {
-        // Fallback demo mode if key is not yet set
         const dummyPayId = "pay_demo_" + Math.random().toString(36).substring(2, 9);
         handleOrderSuccess(dummyPayId);
       }
@@ -463,12 +563,14 @@
     async function handleOrderSuccess(paymentId) {
       const name = document.getElementById('custName').value.trim();
       const phone = document.getElementById('custPhone').value.trim();
-      const address = document.getElementById('custAddress').value.trim();
+      const city = document.getElementById('custCity').value;
+      const pin = document.getElementById('custPincode').value.trim();
+      const address = `${document.getElementById('custAddress').value.trim()}, ${city} (PIN: ${pin})`;
       const bean = document.getElementById('coffeeOrigin').value;
       const qty = parseInt(document.getElementById('packQty').value, 10) || 1;
       const total = calculateTotal();
       const orderId = "TABC-" + Math.floor(100000 + Math.random() * 900000);
-      const dropDate = getDropDateFormatted();
+      const dropDate = getUpcomingSaturdayFormatted();
 
       lastOrderData = {
         orderId: orderId,
@@ -486,7 +588,7 @@
         notes: `Payment ID: ${paymentId}`
       };
 
-      // Log to Google Sheet
+      // 1. Log to Google Sheet
       if (CONFIG.googleSheetEndpoint && !CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
         try {
           await fetch(CONFIG.googleSheetEndpoint, {
@@ -500,10 +602,10 @@
         }
       }
 
-      // Render Receipt View
+      // 2. Render On-Screen Receipt
       document.getElementById('rOrderId').textContent = orderId;
       document.getElementById('rPayId').textContent = paymentId;
-      document.getElementById('rDropDate').textContent = dropDate;
+      document.getElementById('rDropDate').textContent = `${dropDate} (Morning Drop)`;
       document.getElementById('rName').textContent = name;
       document.getElementById('rBean').textContent = bean;
       document.getElementById('rPack').textContent = `${selectedPack.name} x ${qty}`;
@@ -511,6 +613,9 @@
 
       document.getElementById('orderFormView').style.display = 'none';
       document.getElementById('receiptView').style.display = 'block';
+
+      // 3. Automatically launch WhatsApp receipt to the customer
+      sendReceiptToCustomerWhatsApp();
     }
 
     function sendReceiptToCustomerWhatsApp() {
@@ -519,48 +624,9 @@
       const message = `*🧾 ORDER & PAYMENT RECEIPT — THE APARTMENT BREW CO.*\n` +
                       `------------------------------------\n` +
                       `*Order ID:* ${lastOrderData.orderId}\n` +
-                      `*Payment Ref:* ${lastOrderData.notes}\n` +
-                      `*Scheduled Drop:* ${lastOrderData.dropDate}\n\n` +
-                      `*Customer:* ${lastOrderData.name}\n` +
-                      `*Delivery Location:* ${lastOrderData.address}\n\n` +
-                      `*Items Ordered:*\n` +
-                      `• *Coffee:* ${lastOrderData.bean}\n` +
-                      `• *Selection:* ${lastOrderData.pack} x ${lastOrderData.quantity}\n` +
-                      `• *Total Bottles:* ${lastOrderData.bottles} (250ml)\n` +
-                      `• *Total Paid:* ₹${lastOrderData.totalAmount}\n\n` +
-                      `*Status:* Payment Verified & Reserved for Saturday\n` +
-                      `------------------------------------\n` +
-                      `_Thank you for supporting micro-batch craft coffee!_`;
-
-      let cleanPhone = lastOrderData.phone.replace(/[^0-9]/g, '');
-      if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
-
-      const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
-    }
-
-    function resetForm() {
-      document.getElementById('orderFormView').style.display = 'block';
-      document.getElementById('receiptView').style.display = 'none';
-      document.getElementById('custName').value = '';
-      document.getElementById('custPhone').value = '';
-      document.getElementById('custAddress').value = '';
-    }
-
-    function getDropDateFormatted() {
-      const d = new Date();
-      const day = d.getDay();
-      const diff = (6 - day + 7) % 7 || 7;
-      d.setDate(d.getDate() + diff);
-      return d.toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' });
-    }
-
-    function setNextDropDate() {
-      document.getElementById('dropBanner').textContent = `Next Fresh Drop: ${getDropDateFormatted()}`;
-    }
-
-    setNextDropDate();
-    updateTotal();
-  </script>
-</body>
-</html>
+                      `*Payment Reference:* ${lastOrderData.notes}\n` +
+                      `*Delivery Date:* ${lastOrderData.dropDate} (Morning Drop)\n\n` +
+                      `*Customer Details:*\n` +
+                      `• Name: ${lastOrderData.name}\n` +
+                      `• Phone: ${lastOrderData.phone}\n` +
+                      `• Deli
