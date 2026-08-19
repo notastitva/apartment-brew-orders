@@ -15,7 +15,6 @@
       --accent-hover: #b08968;
       --text: #fefae0;
       --text-muted: #9c9589;
-      --whatsapp: #25d366;
       --success: #2d6a4f;
       --error: #e63946;
     }
@@ -37,7 +36,7 @@
 
     .container {
       width: 100%;
-      max-width: 480px;
+      max-width: 520px;
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -70,7 +69,7 @@
       border: 1px solid rgba(212, 163, 115, 0.3);
       color: var(--accent);
       font-size: 0.75rem;
-      padding: 4px 10px;
+      padding: 4px 12px;
       border-radius: 20px;
       margin-top: 10px;
       font-weight: 600;
@@ -87,6 +86,40 @@
       margin-top: 8px;
     }
 
+    /* Segmented Tab Switcher */
+    .tab-switcher {
+      display: flex;
+      background: #141312;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .tab-btn.active {
+      background: var(--card-bg);
+      color: var(--accent);
+      border: 1px solid var(--card-border);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
     .section-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -101,6 +134,16 @@
       margin-bottom: 12px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .badge-subtext {
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      text-transform: none;
     }
 
     .form-group {
@@ -194,6 +237,29 @@
       color: var(--accent);
     }
 
+    .radio-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .radio-option {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #141312;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .radio-option input[type="radio"] {
+      accent-color: var(--accent);
+    }
+
     .btn {
       width: 100%;
       padding: 14px;
@@ -227,20 +293,15 @@
       opacity: 0.7;
     }
 
-    .btn-whatsapp {
-      background: var(--whatsapp);
-      color: #fff;
-    }
-
     .btn-secondary {
       background: #2a2724;
       color: var(--text);
       border: 1px solid var(--card-border);
-      margin-top: 8px;
+      margin-top: 12px;
     }
 
-    /* Receipt View */
-    #receiptView {
+    /* Confirmation View */
+    #confirmationView {
       display: none;
     }
 
@@ -248,12 +309,23 @@
       background: rgba(45, 106, 79, 0.2);
       border: 1px solid var(--success);
       color: #95d5b2;
-      padding: 6px 12px;
+      padding: 6px 14px;
       border-radius: 20px;
       font-size: 0.8rem;
       font-weight: 600;
       display: inline-block;
       margin-bottom: 12px;
+    }
+
+    .info-banner {
+      background: rgba(212, 163, 115, 0.1);
+      border: 1px solid rgba(212, 163, 115, 0.25);
+      border-radius: 8px;
+      padding: 12px;
+      margin: 12px 0;
+      font-size: 0.8rem;
+      color: var(--accent);
+      line-height: 1.4;
     }
 
     .receipt-details {
@@ -294,51 +366,92 @@
   <div class="container">
     <div class="header-card">
       <div class="brand-title">THE APARTMENT BREW CO.</div>
-      <div class="brand-subtitle">Micro-Batch Flash-Chilled Specialty Coffee</div>
+      <div class="brand-subtitle">Micro-Batch Flash-Chilled Specialty Coffee • Gurugram</div>
       <div class="drop-banner" id="dropBanner">Next Drop: Loading...</div>
-      <div class="geo-badge">📍 Delivering Exclusively in Delhi NCR (Gurugram • Delhi • Noida • Faridabad)</div>
+      <div class="geo-badge">📍 Delivering Exclusively Across Delhi NCR Tech Parks & Residences</div>
+    </div>
+
+    <!-- Segmented Tab Toggle -->
+    <div class="tab-switcher">
+      <button id="tabB2c" class="tab-btn active" onclick="switchMode('B2C')">
+        ☕ Individual Pre-Order (Sat)
+      </button>
+      <button id="tabB2b" class="tab-btn" onclick="switchMode('B2B')">
+        🏢 Office & Team Drop (Fri)
+      </button>
     </div>
 
     <!-- Order View -->
     <div id="orderFormView">
+      <!-- Section 1: Coffee & Pack Selection -->
       <div class="section-card">
-        <div class="section-title">1. Select Your Brew</div>
+        <div class="section-title">
+          <span>1. Select Your Brew</span>
+          <span class="badge-subtext" id="packSubtext">Saturday Morning Drop</span>
+        </div>
         
         <div class="form-group">
-          <label for="coffeeOrigin">Single-Estate Lot</label>
+          <label for="coffeeOrigin">Single-Estate Lot Selection</label>
           <select id="coffeeOrigin">
-            <option value="Ratnagiri Estate (Anaerobic Naturals)">Ratnagiri Estate — Anaerobic Naturals</option>
-            <option value="Thogarihunkal Estate (Washed)">Thogarihunkal Estate — Washed</option>
+            <option value="Ratnagiri Estate (Anaerobic Naturals)">Ratnagiri Estate — Anaerobic Naturals (Fruity & Aromatic)</option>
+            <option value="Thogarihunkal Estate (Washed)">Thogarihunkal Estate — Washed (Crisp & Floral)</option>
+            <option value="Curated Roaster's Split">Curated Roaster's Split (50% Ratnagiri / 50% Thogarihunkal)</option>
             <option value="Seasonal Microlot (Roaster's Choice)">Seasonal Microlot — Roaster's Choice</option>
           </select>
         </div>
 
-        <label>Choose Pack</label>
-        <div class="pack-grid">
-          <div class="pack-option" onclick="selectPack('Single Bottle', 1, 240, this)">
+        <label id="choosePackLabel">Choose Pack Tier</label>
+        
+        <!-- Individual B2C Packs Container -->
+        <div class="pack-grid" id="b2cPacks">
+          <div class="pack-option" onclick="selectB2cPack('Single Bottle', 1, 240, this)">
             <div class="pack-name">Single Bottle</div>
             <div class="pack-price">₹240</div>
             <div class="pack-desc">1x 250ml</div>
           </div>
-          <div class="pack-option" onclick="selectPack('Duo Pack', 2, 480, this)">
+          <div class="pack-option" onclick="selectB2cPack('Duo Pack', 2, 480, this)">
             <div class="pack-name">Duo Pack</div>
             <div class="pack-price">₹480</div>
             <div class="pack-desc">2x 250ml (MOQ)</div>
           </div>
-          <div class="pack-option active" onclick="selectPack('Weekend Pack', 4, 899, this)">
+          <div class="pack-option active" onclick="selectB2cPack('Weekend Pack', 4, 899, this)">
             <div class="pack-name">Weekend Pack</div>
             <div class="pack-price">₹899</div>
             <div class="pack-desc">4x 250ml (Popular)</div>
           </div>
-          <div class="pack-option" onclick="selectPack('Weekly Sub', 5, 1000, this)">
+          <div class="pack-option" onclick="selectB2cPack('Weekly Sub', 5, 1000, this)">
             <div class="pack-name">Weekly Sub</div>
             <div class="pack-price">₹1,000</div>
             <div class="pack-desc">5x 250ml (@ ₹200)</div>
           </div>
         </div>
 
+        <!-- Corporate B2B Packs Container -->
+        <div class="pack-grid" id="b2bPacks" style="display:none;">
+          <div class="pack-option active" onclick="selectB2bPack('Team Pack', 10, 1800, this)">
+            <div class="pack-name">Team Pack</div>
+            <div class="pack-price">₹1,800</div>
+            <div class="pack-desc">10x 250ml (₹180/ea)</div>
+          </div>
+          <div class="pack-option" onclick="selectB2bPack('Office Batch', 20, 3400, this)">
+            <div class="pack-name">Office Batch</div>
+            <div class="pack-price">₹3,400</div>
+            <div class="pack-desc">20x 250ml (₹170/ea)</div>
+          </div>
+          <div class="pack-option" onclick="selectB2bPack('Floor Pack', 40, 6000, this)">
+            <div class="pack-name">Floor Pack</div>
+            <div class="pack-price">₹6,000</div>
+            <div class="pack-desc">40x 250ml (₹150/ea)</div>
+          </div>
+          <div class="pack-option" onclick="selectB2bPack('Townhall Bulk', 60, 8700, this)">
+            <div class="pack-name">Townhall Bulk</div>
+            <div class="pack-price">₹8,700</div>
+            <div class="pack-desc">60x 250ml (₹145/ea)</div>
+          </div>
+        </div>
+
         <div class="form-group">
-          <label for="packQty">Quantity of Packs</label>
+          <label for="packQty">Quantity of Selected Packs</label>
           <input type="number" id="packQty" min="1" value="1" oninput="updateTotal()" />
         </div>
 
@@ -348,10 +461,49 @@
         </div>
       </div>
 
+      <!-- Section 2: Delivery & Contact Details -->
       <div class="section-card" style="margin-top: 14px;">
-        <div class="section-title">2. Customer & Delivery Info</div>
-        
-        <div class="form-group">
+        <div class="section-title">
+          <span>2. Customer & Delivery Info</span>
+        </div>
+
+        <!-- B2B Specific Corporate Fields -->
+        <div id="b2bFields" style="display:none;">
+          <div class="form-group">
+            <label for="custCompany">Company / Business Name *</label>
+            <input type="text" id="custCompany" placeholder="e.g. Zomato, Google, Razorpay" />
+          </div>
+
+          <div class="form-group">
+            <label for="b2bTechPark">Tech Park / Commercial Hub *</label>
+            <select id="b2bTechPark">
+              <option value="DLF Cyber City / Cyber Hub (Gurugram)">DLF Cyber City / Cyber Hub (Gurugram)</option>
+              <option value="One Horizon Center / Golf Course Rd (Gurugram)">One Horizon Center / Golf Course Rd (Gurugram)</option>
+              <option value="Candor TechSpace / Sector 48 (Gurugram)">Candor TechSpace / Sector 48 (Gurugram)</option>
+              <option value="Cyber Park / Sector 67 (Gurugram)">Cyber Park / Sector 67 (Gurugram)</option>
+              <option value="Udyog Vihar Phases 1-5 (Gurugram)">Udyog Vihar Phases 1-5 (Gurugram)</option>
+              <option value="Noida Sector 62 / 126 / 135 Tech Parks">Noida Sector 62 / 126 / 135 Tech Parks</option>
+              <option value="South / Central Delhi Office Area">South / Central Delhi Office Area</option>
+              <option value="Other Commercial Complex">Other Commercial Complex</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="b2bDeliveryWindow">Friday Delivery Window *</label>
+            <select id="b2bDeliveryWindow">
+              <option value="Morning Kickoff (9:30 AM – 11:30 AM)">Morning Kickoff (9:30 AM – 11:30 AM)</option>
+              <option value="Afternoon Recharge (2:00 PM – 4:00 PM)">Afternoon Recharge (2:00 PM – 4:00 PM)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="custGstin">Company GSTIN (Optional, for B2B Tax Invoice)</label>
+            <input type="text" id="custGstin" placeholder="e.g. 06AAAAA0000A1Z5" maxlength="15" />
+          </div>
+        </div>
+
+        <!-- B2C Specific Region Dropdown -->
+        <div class="form-group" id="b2cCityGroup">
           <label for="custCity">City / Region (Delhi NCR Only)</label>
           <select id="custCity">
             <option value="Gurugram (DLF Phase 1-5 / Cyber City / Golf Course Rd)">Gurugram (DLF Phase 1-5 / Cyber City / Golf Course Rd)</option>
@@ -363,43 +515,61 @@
         </div>
 
         <div class="form-group">
-          <label for="custPincode">6-Digit PIN Code</label>
+          <label for="custPincode">6-Digit PIN Code *</label>
           <input type="text" id="custPincode" maxlength="6" placeholder="e.g. 122002" oninput="validateDelhiNcrPincode()" required />
           <div id="pinStatus" class="pin-status"></div>
         </div>
 
         <div class="form-group">
-          <label for="custName">Your Name</label>
-          <input type="text" id="custName" placeholder="e.g. Sarthak Srivastava" required />
+          <label for="custName" id="labelName">Your Name *</label>
+          <input type="text" id="custName" placeholder="e.g. Rohan Verma" required />
         </div>
 
         <div class="form-group">
-          <label for="custEmail">Email Address (For Order Updates & Invoices)</label>
-          <input type="email" id="custEmail" placeholder="e.g. sarthak@example.com" required />
+          <label for="custEmail" id="labelEmail">Email Address (For Order Confirmation & Invoice) *</label>
+          <input type="email" id="custEmail" placeholder="e.g. rohan@company.com" required />
         </div>
         
         <div class="form-group">
-          <label for="custPhone">WhatsApp Number</label>
+          <label for="custPhone">Phone Number *</label>
           <input type="tel" id="custPhone" placeholder="e.g. 9876543210" required />
         </div>
         
         <div class="form-group">
-          <label for="custAddress">Full Address (Building, Flat, Society)</label>
-          <textarea id="custAddress" rows="2" placeholder="e.g. Flat 402, DLF Phase 5 / Cyber Hub Tower B" required></textarea>
+          <label for="custAddress" id="labelAddress">Delivery Address / Floor Details *</label>
+          <textarea id="custAddress" rows="2" placeholder="e.g. Tower B, 7th Floor Central Pantry, Cyber City" required></textarea>
+        </div>
+
+        <!-- Payment Method Selection for B2B -->
+        <div id="paymentChoiceGroup" style="display:none; margin-top: 12px;">
+          <label>Payment Preference</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="payOption" value="GATEWAY" checked onclick="togglePayMode('GATEWAY')" />
+              <span>Direct Gateway (UPI/Card)</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="payOption" value="INVOICE" onclick="togglePayMode('INVOICE')" />
+              <span>Corporate Invoice (PO/NEFT)</span>
+            </label>
+          </div>
         </div>
 
         <button id="payNowBtn" class="btn btn-pay" onclick="initiatePayment()">
-          <span>💳 Pay & Confirm Pre-Order (<span id="btnAmount">₹899</span>)</span>
+          <span id="btnText">💳 Pay & Confirm Pre-Order (<span id="btnAmount">₹899</span>)</span>
         </button>
       </div>
     </div>
 
-    <!-- Receipt View -->
-    <div id="receiptView">
+    <!-- Confirmation View (Email-Grounded, No WhatsApp) -->
+    <div id="confirmationView">
       <div class="section-card" style="text-align: center;">
-        <div class="success-badge">✓ Payment & Order Confirmed</div>
-        <h2 style="font-size: 1.2rem; margin-bottom: 4px;">Order Placed!</h2>
-        <p style="font-size: 0.8rem; color: var(--text-muted);">Your reservation is confirmed for Delhi NCR delivery.</p>
+        <div class="success-badge">✓ Order Confirmed</div>
+        <h2 style="font-size: 1.25rem; margin-bottom: 6px;" id="rHeading">Thank You for Your Order!</h2>
+        
+        <div class="info-banner">
+          📧 <strong>Confirmation Email Sent:</strong> A detailed receipt and order confirmation have been dispatched to your email address.
+        </div>
 
         <div class="receipt-details">
           <div class="receipt-row">
@@ -407,15 +577,27 @@
             <span class="receipt-val" id="rOrderId">TABC-0000</span>
           </div>
           <div class="receipt-row">
-            <span class="receipt-label">Payment Ref</span>
+            <span class="receipt-label">Order Type</span>
+            <span class="receipt-val" id="rOrderType">Individual Pre-Order</span>
+          </div>
+          <div class="receipt-row" id="rCompanyRow" style="display:none;">
+            <span class="receipt-label">Company</span>
+            <span class="receipt-val" id="rCompany">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Payment Ref / Status</span>
             <span class="receipt-val" id="rPayId" style="font-family:monospace;font-size:0.8rem;">pay_1234</span>
           </div>
           <div class="receipt-row">
             <span class="receipt-label">Delivery Date</span>
             <span class="receipt-val" id="rDropDate" style="color:var(--accent);">Saturday Morning</span>
           </div>
+          <div class="receipt-row" id="rWindowRow" style="display:none;">
+            <span class="receipt-label">Delivery Slot</span>
+            <span class="receipt-val" id="rWindow">-</span>
+          </div>
           <div class="receipt-row">
-            <span class="receipt-label">Customer</span>
+            <span class="receipt-label">Customer Name</span>
             <span class="receipt-val" id="rName">-</span>
           </div>
           <div class="receipt-row">
@@ -436,10 +618,6 @@
           </div>
         </div>
 
-        <button class="btn btn-whatsapp" onclick="sendReceiptToCustomerWhatsApp()">
-          <span>📲 Send Receipt to My WhatsApp</span>
-        </button>
-
         <button class="btn btn-secondary" onclick="resetForm()">
           <span>+ Place Another Order</span>
         </button>
@@ -453,25 +631,48 @@
       googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbzYlYgCrsV39_ttak__q1W_dTwZJmF7vuIH9GOS9zETUGuOg90F2hGB_8B_FSFQFVsX/exec" // Replace with your deployed Web App URL ending in /exec
     };
 
-    let selectedPack = {
+    let currentMode = "B2C"; // "B2C" or "B2B"
+    let currentPayOption = "GATEWAY"; // "GATEWAY" or "INVOICE"
+
+    let selectedB2cPack = {
       name: "Weekend Pack",
       bottles: 4,
       unitPrice: 899
     };
 
-    let isPincodeServiceable = false;
-    let lastOrderData = null;
+    let selectedB2bPack = {
+      name: "Team Pack",
+      bottles: 10,
+      unitPrice: 1800
+    };
 
-    // Dynamically calculate upcoming Saturday drop
+    let isPincodeServiceable = false;
+
+    // Calculate upcoming Friday
+    function getUpcomingFridayFormatted() {
+      const d = new Date();
+      const currentDay = d.getDay(); // 0=Sun, 5=Fri
+      let daysUntilFriday = (5 - currentDay + 7) % 7;
+      if (daysUntilFriday === 0 && d.getHours() >= 12) {
+        daysUntilFriday = 7;
+      }
+      d.setDate(d.getDate() + daysUntilFriday);
+      return d.toLocaleDateString('en-IN', {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      });
+    }
+
+    // Calculate upcoming Saturday
     function getUpcomingSaturdayFormatted() {
       const d = new Date();
       const currentDay = d.getDay();
       let daysUntilSaturday = (6 - currentDay + 7) % 7;
-      
       if (daysUntilSaturday === 0 && d.getHours() >= 10) {
         daysUntilSaturday = 7;
       }
-
       d.setDate(d.getDate() + daysUntilSaturday);
       return d.toLocaleDateString('en-IN', {
         weekday: 'short',
@@ -481,25 +682,78 @@
       });
     }
 
-    function selectPack(name, bottles, price, element) {
-      document.querySelectorAll('.pack-option').forEach(el => el.classList.remove('active'));
+    function switchMode(mode) {
+      currentMode = mode;
+      document.getElementById('tabB2c').classList.toggle('active', mode === 'B2C');
+      document.getElementById('tabB2b').classList.toggle('active', mode === 'B2B');
+
+      if (mode === 'B2C') {
+        document.getElementById('dropBanner').textContent = `Next Fresh Drop: ${getUpcomingSaturdayFormatted()} (Morning Drop)`;
+        document.getElementById('packSubtext').textContent = 'Saturday Morning Drop';
+        document.getElementById('b2cPacks').style.display = 'grid';
+        document.getElementById('b2bPacks').style.display = 'none';
+        document.getElementById('b2bFields').style.display = 'none';
+        document.getElementById('b2cCityGroup').style.display = 'flex';
+        document.getElementById('paymentChoiceGroup').style.display = 'none';
+        document.getElementById('labelName').textContent = 'Your Name *';
+        document.getElementById('labelEmail').textContent = 'Email Address (For Order Confirmation) *';
+        document.getElementById('labelAddress').textContent = 'Delivery Address (Building, Flat, Society) *';
+        currentPayOption = 'GATEWAY';
+      } else {
+        document.getElementById('dropBanner').textContent = `Next Office Drop: ${getUpcomingFridayFormatted()} (Friday Delivery)`;
+        document.getElementById('packSubtext').textContent = 'Friday Office Drop (Order Cutoff: Thu 6 PM)';
+        document.getElementById('b2cPacks').style.display = 'none';
+        document.getElementById('b2bPacks').style.display = 'grid';
+        document.getElementById('b2bFields').style.display = 'block';
+        document.getElementById('b2cCityGroup').style.display = 'none';
+        document.getElementById('paymentChoiceGroup').style.display = 'block';
+        document.getElementById('labelName').textContent = 'Contact Person Name & Role *';
+        document.getElementById('labelEmail').textContent = 'Official Work Email (For Tax Invoice & Updates) *';
+        document.getElementById('labelAddress').textContent = 'Tower, Floor & Pantry / Desk Details *';
+      }
+      updateTotal();
+    }
+
+    function selectB2cPack(name, bottles, price, element) {
+      document.querySelectorAll('#b2cPacks .pack-option').forEach(el => el.classList.remove('active'));
       element.classList.add('active');
-      selectedPack = { name, bottles, unitPrice: price };
+      selectedB2cPack = { name, bottles, unitPrice: price };
+      updateTotal();
+    }
+
+    function selectB2bPack(name, bottles, price, element) {
+      document.querySelectorAll('#b2bPacks .pack-option').forEach(el => el.classList.remove('active'));
+      element.classList.add('active');
+      selectedB2bPack = { name, bottles, unitPrice: price };
+      updateTotal();
+    }
+
+    function togglePayMode(mode) {
+      currentPayOption = mode;
       updateTotal();
     }
 
     function calculateTotal() {
       const qty = parseInt(document.getElementById('packQty').value, 10) || 1;
-      return selectedPack.unitPrice * qty;
+      const activePack = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
+      return activePack.unitPrice * qty;
     }
 
     function updateTotal() {
       const total = calculateTotal();
-      document.getElementById('totalAmountDisplay').textContent = `₹${total}`;
-      document.getElementById('btnAmount').textContent = `₹${total}`;
+      document.getElementById('totalAmountDisplay').textContent = `₹${total.toLocaleString('en-IN')}`;
+      
+      const btnAmountSpan = document.getElementById('btnAmount');
+      if (btnAmountSpan) btnAmountSpan.textContent = `₹${total.toLocaleString('en-IN')}`;
+
+      const btnText = document.getElementById('btnText');
+      if (currentMode === 'B2B' && currentPayOption === 'INVOICE') {
+        btnText.innerHTML = `📄 Request Corporate Invoice (<span id="btnAmount">₹${total.toLocaleString('en-IN')}</span>)`;
+      } else {
+        btnText.innerHTML = `💳 Pay & Confirm Pre-Order (<span id="btnAmount">₹${total.toLocaleString('en-IN')}</span>)`;
+      }
     }
 
-    // Delhi NCR PIN Code Validation (Delhi: 11xxxx, Gurugram: 122xxx, Faridabad: 121xxx, Noida/Ghaziabad: 201xxx)
     function validateDelhiNcrPincode() {
       const pinInput = document.getElementById('custPincode').value.trim();
       const statusEl = document.getElementById('pinStatus');
@@ -515,7 +769,7 @@
       const isNcr = /^(11[0-9]{4}|122[0-9]{3}|121[0-9]{3}|201[0-9]{3})$/.test(pinInput);
 
       if (isNcr) {
-        statusEl.textContent = '✓ Serviceable in Delhi NCR';
+        statusEl.textContent = '✓ Serviceable in Delhi NCR Tech Hubs & Residences';
         statusEl.className = 'pin-status pin-valid';
         isPincodeServiceable = true;
         payBtn.disabled = false;
@@ -536,8 +790,16 @@
       const total = calculateTotal();
 
       if (!name || !email || !phone || !address || !pin) {
-        alert('Please fill in your Name, Email, WhatsApp Number, PIN Code, and Delivery Address.');
+        alert('Please fill in your Name, Email, Phone Number, PIN Code, and Delivery Address.');
         return;
+      }
+
+      if (currentMode === 'B2B') {
+        const company = document.getElementById('custCompany').value.trim();
+        if (!company) {
+          alert('Please enter your Company / Business Name.');
+          return;
+        }
       }
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -551,13 +813,20 @@
         return;
       }
 
+      if (currentMode === 'B2B' && currentPayOption === 'INVOICE') {
+        const invoiceRef = "INV-REQ-" + Math.floor(100000 + Math.random() * 900000);
+        handleOrderSuccess(invoiceRef, "Invoice Requested (Net Terms/Bank Transfer)");
+        return;
+      }
+
       if (CONFIG.razorpayKeyId && !CONFIG.razorpayKeyId.includes("YOUR_RAZORPAY")) {
+        const activePack = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
         const options = {
           key: CONFIG.razorpayKeyId,
           amount: total * 100,
           currency: "INR",
           name: "The Apartment Brew Co.",
-          description: `Pre-Order: ${selectedPack.name}`,
+          description: `${currentMode === 'B2B' ? 'Office Drop' : 'Pre-Order'}: ${activePack.name}`,
           prefill: {
             name: name,
             email: email,
@@ -567,55 +836,78 @@
             color: "#d4a373"
           },
           handler: function (response) {
-            handleOrderSuccess(response.razorpay_payment_id);
+            handleOrderSuccess(response.razorpay_payment_id, "Paid via Gateway");
           }
         };
         const rzp = new Razorpay(options);
         rzp.open();
       } else {
         const dummyPayId = "pay_demo_" + Math.random().toString(36).substring(2, 9);
-        handleOrderSuccess(dummyPayId);
+        handleOrderSuccess(dummyPayId, "Demo Paid");
       }
     }
 
-    async function handleOrderSuccess(paymentId) {
+    async function handleOrderSuccess(paymentId, paymentStatusText) {
       const name = document.getElementById('custName').value.trim();
       const email = document.getElementById('custEmail').value.trim();
       const phone = document.getElementById('custPhone').value.trim();
-      const city = document.getElementById('custCity').value;
       const pin = document.getElementById('custPincode').value.trim();
-      const address = `${document.getElementById('custAddress').value.trim()}, ${city} (PIN: ${pin})`;
       const bean = document.getElementById('coffeeOrigin').value;
       const qty = parseInt(document.getElementById('packQty').value, 10) || 1;
       const total = calculateTotal();
-      const orderId = "TABC-" + Math.floor(100000 + Math.random() * 900000);
-      const dropDate = getUpcomingSaturdayFormatted();
+      const activePack = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
 
-      lastOrderData = {
+      let orderId, dropDate, cityOrTechPark, deliveryWindow, company, gstin, fullAddress;
+
+      if (currentMode === 'B2C') {
+        orderId = "TABC-" + Math.floor(100000 + Math.random() * 900000);
+        dropDate = getUpcomingSaturdayFormatted();
+        cityOrTechPark = document.getElementById('custCity').value;
+        deliveryWindow = "Saturday Morning (8:00 AM – 11:00 AM)";
+        company = "N/A (Individual)";
+        gstin = "N/A";
+        fullAddress = `${document.getElementById('custAddress').value.trim()}, ${cityOrTechPark} (PIN: ${pin})`;
+      } else {
+        orderId = "TABC-B2B-" + Math.floor(100000 + Math.random() * 900000);
+        dropDate = getUpcomingFridayFormatted();
+        cityOrTechPark = document.getElementById('b2bTechPark').value;
+        deliveryWindow = document.getElementById('b2bDeliveryWindow').value;
+        company = document.getElementById('custCompany').value.trim();
+        gstin = document.getElementById('custGstin').value.trim() || "N/A";
+        fullAddress = `${document.getElementById('custAddress').value.trim()}, ${cityOrTechPark} (PIN: ${pin})`;
+      }
+
+      const orderPayload = {
+        orderType: currentMode,
+        targetSheet: currentMode === 'B2B' ? 'B2B Orders' : 'Sheet1',
         orderId: orderId,
         dropDate: dropDate,
+        deliveryWindow: deliveryWindow,
+        company: company,
+        gstin: gstin,
         name: name,
         email: email,
         phone: phone,
-        address: address,
+        techPark: cityOrTechPark,
+        address: fullAddress,
         bean: bean,
-        pack: `${selectedPack.name} (${selectedPack.bottles}x 250ml)`,
+        pack: `${activePack.name} (${activePack.bottles}x 250ml)`,
         quantity: qty,
-        bottles: selectedPack.bottles * qty,
+        bottles: activePack.bottles * qty,
         totalAmount: total,
-        paymentMode: "Direct Gateway (UPI/Card)",
-        paymentStatus: `Paid (${paymentId})`,
-        notes: `Payment ID: ${paymentId}`
+        paymentMode: currentPayOption === 'INVOICE' ? 'Corporate Invoice / Bank Transfer' : 'Direct Gateway (UPI/Card)',
+        paymentStatus: `${paymentStatusText} (${paymentId})`,
+        notes: `Payment Ref: ${paymentId} | Mode: ${currentMode}`
       };
 
-      // Background dispatch to Google Sheets via text/plain to bypass CORS blocks
+      // Dispatch to Google Apps Script / Sheet Endpoint (triggers email notification from tracker)
       if (CONFIG.googleSheetEndpoint && !CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
         try {
           fetch(CONFIG.googleSheetEndpoint, {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify(lastOrderData)
+            body: JSON.stringify(orderPayload)
           });
         } catch (e) {
           console.error("Sheet log error:", e);
@@ -624,62 +916,46 @@
 
       // Display on-screen confirmation
       document.getElementById('rOrderId').textContent = orderId;
+      document.getElementById('rOrderType').textContent = currentMode === 'B2B' ? 'Corporate / Office Drop' : 'Individual Pre-Order';
+      
+      if (currentMode === 'B2B') {
+        document.getElementById('rCompanyRow').style.display = 'flex';
+        document.getElementById('rCompany').textContent = company;
+        document.getElementById('rWindowRow').style.display = 'flex';
+        document.getElementById('rWindow').textContent = deliveryWindow;
+      } else {
+        document.getElementById('rCompanyRow').style.display = 'none';
+        document.getElementById('rWindowRow').style.display = 'none';
+      }
+
       document.getElementById('rPayId').textContent = paymentId;
-      document.getElementById('rDropDate').textContent = `${dropDate} (Morning Drop)`;
+      document.getElementById('rDropDate').textContent = `${dropDate} (${currentMode === 'B2B' ? 'Friday' : 'Saturday'} Drop)`;
       document.getElementById('rName').textContent = name;
       document.getElementById('rEmail').textContent = email;
       document.getElementById('rBean').textContent = bean;
-      document.getElementById('rPack').textContent = `${selectedPack.name} x ${qty}`;
-      document.getElementById('rTotal').textContent = `₹${total}`;
+      document.getElementById('rPack').textContent = `${activePack.name} x ${qty} (${activePack.bottles * qty} bottles)`;
+      document.getElementById('rTotal').textContent = `₹${total.toLocaleString('en-IN')}`;
 
       document.getElementById('orderFormView').style.display = 'none';
-      document.getElementById('receiptView').style.display = 'block';
-    }
-
-    function sendReceiptToCustomerWhatsApp() {
-      if (!lastOrderData) return;
-
-      const message = `*🧾 ORDER & PAYMENT RECEIPT — THE APARTMENT BREW CO.*\n` +
-                      `------------------------------------\n` +
-                      `*Order ID:* ${lastOrderData.orderId}\n` +
-                      `*Payment Reference:* ${lastOrderData.notes}\n` +
-                      `*Delivery Date:* ${lastOrderData.dropDate} (Morning Drop)\n\n` +
-                      `*Customer Details:*\n` +
-                      `• Name: ${lastOrderData.name}\n` +
-                      `• Email: ${lastOrderData.email}\n` +
-                      `• Phone: ${lastOrderData.phone}\n` +
-                      `• Delivery Address: ${lastOrderData.address}\n\n` +
-                      `*Items Ordered:*\n` +
-                      `• Coffee Lot: ${lastOrderData.bean}\n` +
-                      `• Selection: ${lastOrderData.pack} x ${lastOrderData.quantity}\n` +
-                      `• Total Bottles: ${lastOrderData.bottles} (250ml)\n` +
-                      `• Total Amount Paid: ₹${lastOrderData.totalAmount} (Verified)\n\n` +
-                      `*Status:* Confirmed for Fresh Saturday Delivery\n` +
-                      `------------------------------------\n` +
-                      `_Your batch will be brewed hot and flash-chilled on Friday night for Saturday delivery. Thank you for supporting micro-batch craft coffee!_`;
-
-      let cleanPhone = lastOrderData.phone.replace(/[^0-9]/g, '');
-      if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
-
-      const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
+      document.getElementById('confirmationView').style.display = 'block';
     }
 
     function resetForm() {
       document.getElementById('orderFormView').style.display = 'block';
-      document.getElementById('receiptView').style.display = 'none';
+      document.getElementById('confirmationView').style.display = 'none';
       document.getElementById('custName').value = '';
       document.getElementById('custEmail').value = '';
       document.getElementById('custPhone').value = '';
       document.getElementById('custAddress').value = '';
       document.getElementById('custPincode').value = '';
+      document.getElementById('custCompany').value = '';
+      document.getElementById('custGstin').value = '';
       document.getElementById('pinStatus').textContent = '';
       document.getElementById('payNowBtn').disabled = false;
     }
 
-    document.getElementById('dropBanner').textContent = `Next Fresh Drop: ${getUpcomingSaturdayFormatted()}`;
-    updateTotal();
+    // Initialize UI
+    switchMode('B2C');
   </script>
 </body>
 </html>
-
