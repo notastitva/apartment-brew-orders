@@ -18,26 +18,60 @@
 
 ## 🏗️ 2. System Architecture
 
-┌────────────────────────────────────────────────────────┐
-│                      Client Layer                      │
-│  index.html (Semantic Markup) + style.css (Dark Roast) │
-│  app.js (Client Controller & Validation Subsystem)     │
-└──────────────┬─────────────────────────┬───────────────┘
-               │                         │
-      Payment SDK Callback       Async HTTP POST (text/plain)
-               ▼                         ▼
-┌─────────────────────────┐    ┌──────────────────────────────────┐
-│   Razorpay Gateway SDK  │    │  Google Apps Script (Code.gs)   │
-│  (UPI, Cards, Netbank)  │    │  - Auth Token Security Check    │
-└─────────────────────────┘    │  - Honeypot Bot Trap Filter     │
-                               └─────────┬──────────────┬─────────┘
-                                         │              │
-                                         ▼              ▼
-           ┌──────────────────────────────────┐   ┌───────────────────────────┐
-           │     Google Sheets Database       │   │  Gmail Notification Engine│
-           │  - Sheet1 (B2C, 17 Columns)      │   │  - B2C Saturday Drop HTML │
-           │  - B2B Orders (B2B, 22 Columns)  │   │  - B2B Friday Drop HTML   │
-           └──────────────────────────────────┘   └───────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph Frontend["Client Layer (Frontend UI & Controller)"]
+        UI["index.html + style.css (Dark Roast UI)"]
+        JS["app.js (Dynamic Drop Engine & Validations)"]
+    end
+
+    subgraph Gateway["Payment Gateway"]
+        RZP["Razorpay SDK (UPI / Cards / NetBanking)"]
+    end
+
+    subgraph Serverless["Backend Microservice (Google Apps Script)"]
+        GAS["Code.gs (Auth Token & Bot Trap Verification)"]
+    end
+
+    subgraph Storage["Google Workspace Services"]
+        DB["Google Sheets Database (Sheet1 & B2B Orders)"]
+        Mail["Gmail Dispatch Engine (HTML Order Receipts & GCal)"]
+    end
+
+    UI --> JS
+    JS -->|Payment Modal| RZP
+    JS -->|Async HTTP POST| GAS
+    GAS -->|Append Row| DB
+    GAS -->|Send Confirmation| Mail
+```
+
+### Architecture Data Flow
+
+```text
++-------------------------------------------------------------------------+
+|                              CLIENT LAYER                               |
+|        index.html (Semantic UI)  +  style.css (Dark Roast Palette)      |
+|        app.js (Dynamic Cutoff Engine, Validation & LocalStorage)        |
++--------------------+--------------------------------+-------------------+
+                     |                                |
+         Razorpay SDK Callback             Async HTTP POST (JSON)
+                     |                                |
+                     v                                v
++----------------------------+   +----------------------------------------+
+|    Razorpay Gateway SDK    |   |     Google Apps Script (Code.gs)       |
+|    (UPI / Cards / NetBank) |   |     - Shared Auth Token Security Check |
++----------------------------+   |     - Anti-Bot Honeypot Trap Filter    |
+                                 +--------------------+-------------------+
+                                                      |
+                                     +----------------+---------------+
+                                     |                                |
+                                     v                                v
+       +---------------------------------------------+  +--------------------------------+
+       |           Google Sheets Database            |  |    Gmail Notification Engine   |
+       |  - Tab 1: Sheet1 (B2C Orders, 17 Columns)   |  |  - B2C Saturday Drop Receipt   |
+       |  - Tab 2: B2B Orders (Corporate, 22 Columns)|  |  - B2B Friday Corporate Drop  |
+       +---------------------------------------------+  +--------------------------------+
+```
 
 ---
 
@@ -58,7 +92,7 @@
 * **Segmented Mode Switch**: Smooth toggle between B2C (`#tabB2c`) and B2B (`#tabB2b`).
 * **Interactive Lot Selector**: Single-estate visual cards with tasting notes, roast levels, and acidity/body sensory meters (`#lotGrid`).
 * **Pack Selection Grids**:
-  * B2C: Single Bottle (₹240), Duo Pack (₹480), Weekend Pack (₹899), Weekly Sub (₹1,000).
+  * B2C: Single Bottle (₹240), Duo Pack (₹480), Weekend Pack (₹899), Mega Weekend (6x 250ml, ₹1,200).
   * B2B: Team Pack (₹1,800), Office Batch (₹3,400), Floor Pack (₹6,000), Townhall Bulk (₹8,700).
 * **Customer & Delivery Details**:
   * Returning customer 1-click autofill banner (`#savedProfileBar`).
