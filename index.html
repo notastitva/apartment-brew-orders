@@ -17,7 +17,6 @@
       --text-muted: #9c9589;
       --success: #2d6a4f;
       --error: #e63946;
-      --upi-purple: #5f259f;
     }
 
     * {
@@ -238,54 +237,27 @@
       color: var(--accent);
     }
 
-    /* Payment Tabs (Direct UPI vs Gateway vs Invoice) */
-    .pay-methods {
+    .radio-group {
       display: flex;
-      gap: 8px;
-      margin-top: 6px;
+      gap: 12px;
+      margin-top: 4px;
     }
 
-    .pay-method-opt {
+    .radio-option {
       flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       background: #141312;
       border: 1px solid var(--card-border);
       border-radius: 8px;
       padding: 10px;
-      text-align: center;
-      cursor: pointer;
       font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      transition: all 0.2s;
+      cursor: pointer;
     }
 
-    .pay-method-opt.active {
-      border-color: var(--accent);
-      color: var(--text);
-      background: rgba(212, 163, 115, 0.1);
-    }
-
-    .qr-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      margin: 12px 0;
-      padding: 14px;
-      background: #fff;
-      border-radius: 8px;
-    }
-
-    .qr-container img {
-      width: 150px;
-      height: 150px;
-    }
-
-    .qr-note {
-      font-size: 0.75rem;
-      color: #333;
-      font-weight: 600;
-      text-align: center;
+    .radio-option input[type="radio"] {
+      accent-color: var(--accent);
     }
 
     .btn {
@@ -308,16 +280,10 @@
       opacity: 0.9;
     }
 
-    .btn-upi {
-      background: var(--upi-purple);
-      color: #fff;
-      margin-bottom: 8px;
-    }
-
     .btn-pay {
       background: var(--accent);
       color: #141312;
-      margin-top: 10px;
+      margin-top: 16px;
     }
 
     .btn-pay:disabled {
@@ -415,7 +381,7 @@
       </button>
     </div>
 
-    <!-- Order View -->
+    <!-- Order Form View -->
     <div id="orderFormView">
       <!-- Section 1: Coffee & Pack Selection -->
       <div class="section-card">
@@ -426,7 +392,7 @@
         
         <div class="form-group">
           <label for="coffeeOrigin">Single-Estate Lot Selection</label>
-          <select id="coffeeOrigin" onchange="refreshUpiDetails()">
+          <select id="coffeeOrigin">
             <option value="Ratnagiri Estate (Anaerobic Naturals)">Ratnagiri Estate — Anaerobic Naturals (Fruity & Aromatic)</option>
             <option value="Thogarihunkal Estate (Washed)">Thogarihunkal Estate — Washed (Crisp & Floral)</option>
             <option value="Curated Roaster's Split">Curated Roaster's Split (50% Ratnagiri / 50% Thogarihunkal)</option>
@@ -436,7 +402,7 @@
 
         <label id="choosePackLabel">Choose Pack Tier</label>
         
-        <!-- Individual B2C Packs Container -->
+        <!-- Individual B2C Packs -->
         <div class="pack-grid" id="b2cPacks">
           <div class="pack-option" onclick="selectB2cPack('Single Bottle', 1, 240, this)">
             <div class="pack-name">Single Bottle</div>
@@ -460,7 +426,7 @@
           </div>
         </div>
 
-        <!-- Corporate B2B Packs Container -->
+        <!-- Corporate B2B Packs -->
         <div class="pack-grid" id="b2bPacks" style="display:none;">
           <div class="pack-option active" onclick="selectB2bPack('Team Pack', 10, 1800, this)">
             <div class="pack-name">Team Pack</div>
@@ -495,17 +461,17 @@
         </div>
       </div>
 
-      <!-- Section 2: Delivery & Contact Details -->
+      <!-- Section 2: Customer & Delivery Details -->
       <div class="section-card" style="margin-top: 14px;">
         <div class="section-title">
           <span>2. Customer & Delivery Info</span>
         </div>
 
-        <!-- B2B Specific Corporate Fields -->
+        <!-- B2B Specific Fields -->
         <div id="b2bFields" style="display:none;">
           <div class="form-group">
             <label for="custCompany">Company / Business Name *</label>
-            <input type="text" id="custCompany" placeholder="e.g. Zomato, Google, Razorpay" oninput="refreshUpiDetails()" />
+            <input type="text" id="custCompany" placeholder="e.g. Zomato, Google, Razorpay" />
           </div>
 
           <div class="form-group">
@@ -556,7 +522,7 @@
 
         <div class="form-group">
           <label for="custName" id="labelName">Your Name *</label>
-          <input type="text" id="custName" placeholder="e.g. Rohan Verma" oninput="refreshUpiDetails()" required />
+          <input type="text" id="custName" placeholder="e.g. Rohan Verma" required />
         </div>
 
         <div class="form-group">
@@ -573,62 +539,25 @@
           <label for="custAddress" id="labelAddress">Delivery Address / Floor Details *</label>
           <textarea id="custAddress" rows="2" placeholder="e.g. Flat 402, DLF Phase 5 / Tower B, Cyber City" required></textarea>
         </div>
-      </div>
 
-      <!-- Section 3: Payment & Order Submission -->
-      <div class="section-card" style="margin-top: 14px;">
-        <div class="section-title">
-          <span>3. Payment & Confirmation</span>
-        </div>
-
-        <!-- Payment Method Tabs -->
-        <label>Select Payment Method</label>
-        <div class="pay-methods">
-          <div id="optUpi" class="pay-method-opt active" onclick="selectPayMethod('UPI')">⚡ Instant UPI / QR</div>
-          <div id="optGateway" class="pay-method-opt" onclick="selectPayMethod('GATEWAY')">💳 Cards / NetBanking</div>
-          <div id="optInvoice" class="pay-method-opt" style="display:none;" onclick="selectPayMethod('INVOICE')">📄 Corporate Invoice</div>
-        </div>
-
-        <!-- View A: Direct UPI & Dynamic QR -->
-        <div id="viewUpiPay" style="margin-top: 14px;">
-          <div class="qr-container">
-            <img id="upiQrCode" src="" alt="UPI Payment QR Code" />
-            <div class="qr-note">Scan with GPay / PhonePe / Paytm / CRED / Any UPI App</div>
+        <!-- B2B Payment Mode Selector (Gateway vs Corporate Invoice) -->
+        <div id="b2bPaymentChoiceGroup" style="display:none; margin-top: 12px;">
+          <label>Payment Mode</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="b2bPayOption" value="GATEWAY" checked onclick="setB2bPayOption('GATEWAY')" />
+              <span>Razorpay (UPI / Corporate Card)</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="b2bPayOption" value="INVOICE" onclick="setB2bPayOption('INVOICE')" />
+              <span>Corporate Invoice (Net Terms)</span>
+            </label>
           </div>
-
-          <a id="upiPayBtn" class="btn btn-upi" href="#">
-            <span>⚡ Open UPI App (GPay / PhonePe)</span>
-          </a>
-
-          <div class="form-group" style="margin-top: 10px;">
-            <label for="utrNumber">UPI Ref / Transaction UTR No. (Optional / Last 4 Digits)</label>
-            <input type="text" id="utrNumber" placeholder="e.g. 429182910291 or Paid via GPay" />
-          </div>
-
-          <button id="confirmUpiBtn" class="btn btn-pay" onclick="confirmOrderWithUpi()">
-            <span>✓ Confirm Pre-Order (<span id="upiAmountLabel">₹899</span>)</span>
-          </button>
         </div>
 
-        <!-- View B: Gateway (Razorpay Checkout) -->
-        <div id="viewGatewayPay" style="display:none; margin-top: 14px;">
-          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
-            Pay securely with Corporate Cards, Personal Cards, NetBanking, or Wallet via payment gateway.
-          </p>
-          <button id="payGatewayBtn" class="btn btn-pay" onclick="initiateRazorpayPayment()">
-            <span>💳 Pay & Confirm Pre-Order (<span id="gatewayAmountLabel">₹899</span>)</span>
-          </button>
-        </div>
-
-        <!-- View C: Corporate Invoice / PO -->
-        <div id="viewInvoicePay" style="display:none; margin-top: 14px;">
-          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
-            We will generate an official B2B Tax Invoice with bank NEFT/RTGS details for Net-7 settlement.
-          </p>
-          <button id="payInvoiceBtn" class="btn btn-pay" onclick="confirmOrderWithInvoice()">
-            <span>📄 Request Corporate Invoice & Confirm Drop</span>
-          </button>
-        </div>
+        <button id="payNowBtn" class="btn btn-pay" onclick="handlePayButtonClick()">
+          <span id="btnText">💳 Pay & Confirm Pre-Order (<span id="btnAmount">₹899</span>)</span>
+        </button>
       </div>
     </div>
 
@@ -639,7 +568,7 @@
         <h2 style="font-size: 1.25rem; margin-bottom: 6px;">Thank You for Your Order!</h2>
         
         <div class="info-banner">
-          📧 <strong>Confirmation Email Sent:</strong> A detailed receipt and delivery confirmation have been sent to your email address from our live tracker.
+          📧 <strong>Confirmation Email Sent:</strong> A detailed receipt and delivery confirmation have been dispatched to your email address from our live tracker.
         </div>
 
         <div class="receipt-details">
@@ -656,7 +585,7 @@
             <span class="receipt-val" id="rCompany">-</span>
           </div>
           <div class="receipt-row">
-            <span class="receipt-label">Payment Ref / Mode</span>
+            <span class="receipt-label">Payment ID</span>
             <span class="receipt-val" id="rPayId" style="font-family:monospace;font-size:0.8rem;">pay_1234</span>
           </div>
           <div class="receipt-row">
@@ -697,15 +626,13 @@
   </div>
 
   <script>
-    const BUSINESS_CONFIG = {
-      upiVpa: "astitvagupta1234@okicici",
-      payeeName: "The Apartment Brew Co",
-      razorpayKeyId: "rzp_test_TRVab1bUUwOVN5", // Optional Razorpay Key ID
-      googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbzYlYgCrsV39_ttak__q1W_dTwZJmF7vuIH9GOS9zETUGuOg90F2hGB_8B_FSFQFVsX/exec" // Your Google Apps Script Web App URL
+    const CONFIG = {
+      razorpayKeyId: "rzp_test_TRVab1bUUwOVN5", // Replace with your active Razorpay Key ID
+      googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbzYlYgCrsV39_ttak__q1W_dTwZJmF7vuIH9GOS9zETUGuOg90F2hGB_8B_FSFQFVsX/exec" // Replace with your Google Apps Script Web App URL
     };
 
     let currentMode = "B2C"; // "B2C" or "B2B"
-    let currentPayMethod = "UPI"; // "UPI", "GATEWAY", or "INVOICE"
+    let currentB2bPayOption = "GATEWAY"; // "GATEWAY" or "INVOICE"
 
     let selectedB2cPack = {
       name: "Weekend Pack",
@@ -767,11 +694,11 @@
         document.getElementById('b2bPacks').style.display = 'none';
         document.getElementById('b2bFields').style.display = 'none';
         document.getElementById('b2cCityGroup').style.display = 'flex';
-        document.getElementById('optInvoice').style.display = 'none';
+        document.getElementById('b2bPaymentChoiceGroup').style.display = 'none';
         document.getElementById('labelName').textContent = 'Your Name *';
         document.getElementById('labelEmail').textContent = 'Email Address (For Order Confirmation) *';
         document.getElementById('labelAddress').textContent = 'Delivery Address (Building, Flat, Society) *';
-        if (currentPayMethod === 'INVOICE') selectPayMethod('UPI');
+        currentB2bPayOption = 'GATEWAY';
       } else {
         document.getElementById('dropBanner').textContent = `Next Office Drop: ${getUpcomingFridayFormatted()} (Friday Delivery)`;
         document.getElementById('packSubtext').textContent = 'Friday Office Drop (Order Cutoff: Thu 6 PM)';
@@ -779,7 +706,7 @@
         document.getElementById('b2bPacks').style.display = 'grid';
         document.getElementById('b2bFields').style.display = 'block';
         document.getElementById('b2cCityGroup').style.display = 'none';
-        document.getElementById('optInvoice').style.display = 'block';
+        document.getElementById('b2bPaymentChoiceGroup').style.display = 'block';
         document.getElementById('labelName').textContent = 'Contact Person Name & Role *';
         document.getElementById('labelEmail').textContent = 'Official Work Email (For Tax Invoice & Updates) *';
         document.getElementById('labelAddress').textContent = 'Tower, Floor & Pantry / Desk Details *';
@@ -801,15 +728,9 @@
       updateTotal();
     }
 
-    function selectPayMethod(method) {
-      currentPayMethod = method;
-      document.getElementById('optUpi').classList.toggle('active', method === 'UPI');
-      document.getElementById('optGateway').classList.toggle('active', method === 'GATEWAY');
-      document.getElementById('optInvoice').classList.toggle('active', method === 'INVOICE');
-
-      document.getElementById('viewUpiPay').style.display = method === 'UPI' ? 'block' : 'none';
-      document.getElementById('viewGatewayPay').style.display = method === 'GATEWAY' ? 'block' : 'none';
-      document.getElementById('viewInvoicePay').style.display = method === 'INVOICE' ? 'block' : 'none';
+    function setB2bPayOption(option) {
+      currentB2bPayOption = option;
+      updateTotal();
     }
 
     function calculateTotal() {
@@ -823,25 +744,15 @@
       const formattedTotal = `₹${total.toLocaleString('en-IN')}`;
       
       document.getElementById('totalAmountDisplay').textContent = formattedTotal;
-      document.getElementById('upiAmountLabel').textContent = formattedTotal;
-      document.getElementById('gatewayAmountLabel').textContent = formattedTotal;
       
-      refreshUpiDetails();
-    }
+      const btnAmount = document.getElementById('btnAmount');
+      if (btnAmount) btnAmount.textContent = formattedTotal;
 
-    function refreshUpiDetails() {
-      const total = calculateTotal();
-      const customerName = document.getElementById('custName').value.trim() || (currentMode === 'B2B' ? document.getElementById('custCompany').value.trim() : 'Customer');
-      const note = encodeURIComponent(`The Apartment Brew Co - ${customerName}`);
-
-      const upiUrl = `upi://pay?pa=${BUSINESS_CONFIG.upiVpa}&pn=${encodeURIComponent(BUSINESS_CONFIG.payeeName)}&am=${total}&cu=INR&tn=${note}`;
-      
-      const upiBtn = document.getElementById('upiPayBtn');
-      if (upiBtn) upiBtn.href = upiUrl;
-
-      const qrImg = document.getElementById('upiQrCode');
-      if (qrImg) {
-        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiUrl)}`;
+      const btnText = document.getElementById('btnText');
+      if (currentMode === 'B2B' && currentB2bPayOption === 'INVOICE') {
+        btnText.innerHTML = `📄 Request Corporate Invoice (<span id="btnAmount">${formattedTotal}</span>)`;
+      } else {
+        btnText.innerHTML = `💳 Pay & Confirm Pre-Order (<span id="btnAmount">${formattedTotal}</span>)`;
       }
     }
 
@@ -864,7 +775,7 @@
       } else {
         statusEl.textContent = '✕ Note: We deliver only across Delhi NCR (Gurugram, Delhi, Noida, Faridabad, Ghaziabad).';
         statusEl.className = 'pin-status pin-invalid';
-        isPincodeServiceable = true; // Still allow submission for regional reviews
+        isPincodeServiceable = true;
       }
     }
 
@@ -897,70 +808,46 @@
       return true;
     }
 
-    // Direct UPI Flow (Recommended)
-    function confirmOrderWithUpi() {
+    function handlePayButtonClick() {
       if (!validateFormInputs()) return;
-      const utr = document.getElementById('utrNumber').value.trim() || 'Paid via UPI App';
-      handleOrderSuccess(utr, 'Paid via Direct UPI');
-    }
 
-    // Corporate Invoice Flow
-    function confirmOrderWithInvoice() {
-      if (!validateFormInputs()) return;
-      const invoiceRef = "INV-REQ-" + Math.floor(100000 + Math.random() * 900000);
-      handleOrderSuccess(invoiceRef, 'Corporate Invoice Requested (Net Terms)');
-    }
+      if (currentMode === 'B2B' && currentB2bPayOption === 'INVOICE') {
+        const invoiceRef = "INV-REQ-" + Math.floor(100000 + Math.random() * 900000);
+        handleOrderSuccess(invoiceRef, 'Corporate Invoice Requested (Net Terms)');
+        return;
+      }
 
-    // Razorpay Flow with Error Handling & Fallback
-    function initiateRazorpayPayment() {
-      if (!validateFormInputs()) return;
+      // Razorpay Checkout Gateway
       const total = calculateTotal();
       const name = document.getElementById('custName').value.trim();
       const email = document.getElementById('custEmail').value.trim();
       const phone = document.getElementById('custPhone').value.trim();
       const activePack = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
 
-      if (!BUSINESS_CONFIG.razorpayKeyId || BUSINESS_CONFIG.razorpayKeyId.includes("YOUR_RAZORPAY")) {
-        alert("Payment gateway key is not configured yet. Switching to Direct UPI option!");
-        selectPayMethod('UPI');
-        return;
-      }
+      const options = {
+        key: CONFIG.razorpayKeyId,
+        amount: total * 100,
+        currency: "INR",
+        name: "The Apartment Brew Co.",
+        description: `${currentMode === 'B2B' ? 'Office Drop' : 'Pre-Order'}: ${activePack.name}`,
+        prefill: {
+          name: name,
+          email: email,
+          contact: phone
+        },
+        theme: {
+          color: "#d4a373"
+        },
+        handler: function (response) {
+          handleOrderSuccess(response.razorpay_payment_id, "Paid via Gateway");
+        }
+      };
 
-      try {
-        const options = {
-          key: BUSINESS_CONFIG.razorpayKeyId,
-          amount: total * 100,
-          currency: "INR",
-          name: "The Apartment Brew Co.",
-          description: `${currentMode === 'B2B' ? 'Office Drop' : 'Pre-Order'}: ${activePack.name}`,
-          prefill: {
-            name: name,
-            email: email,
-            contact: phone
-          },
-          theme: {
-            color: "#d4a373"
-          },
-          handler: function (response) {
-            handleOrderSuccess(response.razorpay_payment_id, "Paid via Razorpay");
-          },
-          modal: {
-            ondismiss: function() {
-              console.log("Checkout modal dismissed.");
-            }
-          }
-        };
-
-        const rzp = new Razorpay(options);
-        rzp.on('payment.failed', function (response) {
-          alert('Payment was not completed: ' + (response.error.description || 'Please try UPI.'));
-        });
-        rzp.open();
-      } catch (err) {
-        console.error("Razorpay SDK Error:", err);
-        alert("Gateway initialization encountered an issue. Please use the Instant UPI / QR option.");
-        selectPayMethod('UPI');
-      }
+      const rzp = new Razorpay(options);
+      rzp.on('payment.failed', function (response) {
+        alert('Payment was not completed: ' + (response.error.description || 'Please try again.'));
+      });
+      rzp.open();
     }
 
     async function handleOrderSuccess(paymentId, paymentStatusText) {
@@ -1011,15 +898,15 @@
         quantity: qty,
         bottles: activePack.bottles * qty,
         totalAmount: total,
-        paymentMode: currentPayMethod,
+        paymentMode: "Razorpay Gateway",
         paymentStatus: `${paymentStatusText} (${paymentId})`,
-        notes: `Payment Ref: ${paymentId} | Mode: ${currentMode}`
+        notes: `Payment ID: ${paymentId} | Mode: ${currentMode}`
       };
 
-      // Background dispatch to Google Apps Script (triggers automatic email from tracker)
-      if (BUSINESS_CONFIG.googleSheetEndpoint && !BUSINESS_CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
+      // Dispatch to Google Apps Script / Sheet Endpoint
+      if (CONFIG.googleSheetEndpoint && !CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
         try {
-          fetch(BUSINESS_CONFIG.googleSheetEndpoint, {
+          fetch(CONFIG.googleSheetEndpoint, {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
@@ -1066,9 +953,8 @@
       document.getElementById('custPincode').value = '';
       document.getElementById('custCompany').value = '';
       document.getElementById('custGstin').value = '';
-      document.getElementById('utrNumber').value = '';
       document.getElementById('pinStatus').textContent = '';
-      refreshUpiDetails();
+      document.getElementById('payNowBtn').disabled = false;
     }
 
     // Initialize UI
