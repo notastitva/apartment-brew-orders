@@ -10,6 +10,7 @@ const CONFIG = {
 
 let currentMode = "B2C";
 let currentB2bPayOption = "GATEWAY";
+let selectedBean = "Ratnagiri Estate (Anaerobic Naturals)";
 let isCustomSplit = false;
 let customSplit = { ratnagiri: 2, thogarihunkal: 2 };
 let selectedB2cPack = { name: "Weekend Pack", bottles: 4, unitPrice: 899 };
@@ -55,8 +56,11 @@ function startCutoffCountdown() {
     }
 
     const diff = target - now;
+    const timerEl = document.getElementById('countdownTimer');
+    if (!timerEl) return;
+
     if (diff <= 0) {
-      document.getElementById('countdownTimer').textContent = "⚡ Cutoff reached for next batch. Orders queue for following drop.";
+      timerEl.textContent = "⚡ Cutoff reached for next batch. Orders queue for following drop.";
       return;
     }
 
@@ -65,7 +69,7 @@ function startCutoffCountdown() {
     const secs = Math.floor((diff % (1000 * 60)) / 1000);
 
     const cutoffLabel = isB2c ? "Saturday Drop Cutoff" : "Friday Drop Cutoff";
-    document.getElementById('countdownTimer').textContent = `⏱️ ${cutoffLabel} closes in ${hours}h ${mins}m ${secs}s`;
+    timerEl.textContent = `⏱️ ${cutoffLabel} closes in ${hours}h ${mins}m ${secs}s`;
   }
 
   updateTimer();
@@ -75,23 +79,45 @@ function startCutoffCountdown() {
 // Switch between B2C & B2B Modes
 function switchMode(mode) {
   currentMode = mode;
-  document.getElementById('tabB2c').classList.toggle('active', mode === 'B2C');
-  document.getElementById('tabB2b').classList.toggle('active', mode === 'B2B');
+  const tabB2c = document.getElementById('tabB2c');
+  const tabB2b = document.getElementById('tabB2b');
+  if (tabB2c) tabB2c.classList.toggle('active', mode === 'B2C');
+  if (tabB2b) tabB2b.classList.toggle('active', mode === 'B2B');
 
   const isB2c = mode === 'B2C';
-  document.getElementById('dropBanner').innerHTML = isB2c 
-    ? `<span>⚡</span> Next Fresh Drop: ${getUpcomingSaturdayFormatted()} (Morning)` 
-    : `<span>⚡</span> Next Office Drop: ${getUpcomingFridayFormatted()} (Friday Delivery)`;
-
-  document.getElementById('packSubtext').textContent = isB2c ? 'Saturday Drop' : 'Friday Office Drop (Cutoff: Thu 6 PM)';
-  document.getElementById('b2cPacks').style.display = isB2c ? 'grid' : 'none';
-  document.getElementById('b2bPacks').style.display = isB2c ? 'none' : 'grid';
-  document.getElementById('b2bFields').style.display = isB2c ? 'none' : 'block';
-  document.getElementById('b2cCityGroup').style.display = isB2c ? 'flex' : 'none';
-  document.getElementById('b2bPaymentChoiceGroup').style.display = isB2c ? 'none' : 'block';
-  document.getElementById('labelName').textContent = isB2c ? 'Your Name *' : 'Contact Person Name & Role *';
-  document.getElementById('labelEmail').textContent = isB2c ? 'Email Address *' : 'Work Email *';
-  document.getElementById('labelAddress').textContent = isB2c ? 'Delivery Address (Building, Flat, Society) *' : 'Building / Tower / Floor Details *';
+  const dropBanner = document.getElementById('dropBanner');
+  if (dropBanner) {
+    dropBanner.innerHTML = isB2c 
+      ? `<span>⚡</span> Next Fresh Drop: ${getUpcomingSaturdayFormatted()} (Morning)` 
+      : `<span>⚡</span> Next Office Drop: ${getUpcomingFridayFormatted()} (Friday Delivery)`;
+  }
+  
+  const packSubtext = document.getElementById('packSubtext');
+  if (packSubtext) packSubtext.textContent = isB2c ? 'Saturday Drop' : 'Friday Office Drop (Cutoff: Thu 6 PM)';
+  
+  const b2cPacks = document.getElementById('b2cPacks');
+  if (b2cPacks) b2cPacks.style.display = isB2c ? 'grid' : 'none';
+  
+  const b2bPacks = document.getElementById('b2bPacks');
+  if (b2bPacks) b2bPacks.style.display = isB2c ? 'none' : 'grid';
+  
+  const b2bFields = document.getElementById('b2bFields');
+  if (b2bFields) b2bFields.style.display = isB2c ? 'none' : 'block';
+  
+  const b2cCityGroup = document.getElementById('b2cCityGroup');
+  if (b2cCityGroup) b2cCityGroup.style.display = isB2c ? 'flex' : 'none';
+  
+  const b2bPaymentChoiceGroup = document.getElementById('b2bPaymentChoiceGroup');
+  if (b2bPaymentChoiceGroup) b2bPaymentChoiceGroup.style.display = isB2c ? 'none' : 'block';
+  
+  const labelName = document.getElementById('labelName');
+  if (labelName) labelName.textContent = isB2c ? 'Your Name *' : 'Contact Person Name & Role *';
+  
+  const labelEmail = document.getElementById('labelEmail');
+  if (labelEmail) labelEmail.textContent = isB2c ? 'Email Address *' : 'Work Email *';
+  
+  const labelAddress = document.getElementById('labelAddress');
+  if (labelAddress) labelAddress.textContent = isB2c ? 'Delivery Address (Building, Flat, Society) *' : 'Building / Tower / Floor Details *';
 
   if (isB2c) currentB2bPayOption = 'GATEWAY';
   updateTotal();
@@ -101,22 +127,24 @@ function switchMode(mode) {
 // Visual Lot Selection & Custom Splitter Toggle
 function selectLot(lotName, element) {
   document.querySelectorAll('#lotGrid .lot-card').forEach(el => el.classList.remove('active'));
-  element.classList.add('active');
+  if (element) element.classList.add('active');
+  
+  const customSplitter = document.getElementById('customSplitter');
   if (lotName.includes('Custom Ratio Split')) {
     isCustomSplit = true;
-    document.getElementById('customSplitter').style.display = 'block';
+    if (customSplitter) customSplitter.style.display = 'block';
     rebalanceSplitter();
   } else {
     isCustomSplit = false;
     selectedBean = lotName;
-    document.getElementById('customSplitter').style.display = 'none';
+    if (customSplitter) customSplitter.style.display = 'none';
   }
 }
 
 // Custom Ratio Splitter Logic
 function getTotalBottles() {
   const qtyInput = document.getElementById('packQty');
-  let qty = parseInt(qtyInput.value, 10);
+  let qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
   if (isNaN(qty) || qty < 1) qty = 1;
   const active = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
   return active.bottles * qty;
@@ -151,7 +179,7 @@ function adjustSplit(lot, delta) {
 function renderSplitterUI() {
   const total = getTotalBottles();
   const alloc = customSplit.ratnagiri + customSplit.thogarihunkal;
-
+  
   const allocEl = document.getElementById('allocCount');
   const targetEl = document.getElementById('targetCount');
   const ratEl = document.getElementById('splitRatnagiri');
@@ -169,11 +197,11 @@ function renderSplitterUI() {
 
   if (ratBar) ratBar.style.width = `${ratPercent}%`;
   if (thogBar) thogBar.style.width = `${thogPercent}%`;
+}
 
-// Pack Selection Handlers
 function selectB2cPack(name, bottles, price, el) {
   document.querySelectorAll('#b2cPacks .pack-option').forEach(e => e.classList.remove('active'));
-  el.classList.add('active');
+  if (el) el.classList.add('active');
   selectedB2cPack = { name, bottles, unitPrice: price };
   updateTotal();
   if (isCustomSplit) rebalanceSplitter();
@@ -181,7 +209,7 @@ function selectB2cPack(name, bottles, price, el) {
 
 function selectB2bPack(name, bottles, price, el) {
   document.querySelectorAll('#b2bPacks .pack-option').forEach(e => e.classList.remove('active'));
-  el.classList.add('active');
+  if (el) el.classList.add('active');
   selectedB2bPack = { name, bottles, unitPrice: price };
   updateTotal();
   if (isCustomSplit) rebalanceSplitter();
@@ -189,14 +217,16 @@ function selectB2bPack(name, bottles, price, el) {
 
 function setB2bPayOption(option) {
   currentB2bPayOption = option;
-  document.getElementById('payOptionGateway').classList.toggle('active', option === 'GATEWAY');
-  document.getElementById('payOptionInvoice').classList.toggle('active', option === 'INVOICE');
+  const payOptionGateway = document.getElementById('payOptionGateway');
+  const payOptionInvoice = document.getElementById('payOptionInvoice');
+  if (payOptionGateway) payOptionGateway.classList.toggle('active', option === 'GATEWAY');
+  if (payOptionInvoice) payOptionInvoice.classList.toggle('active', option === 'INVOICE');
   updateTotal();
 }
 
 function calculateTotal() {
   const qtyInput = document.getElementById('packQty');
-  let qty = parseInt(qtyInput.value, 10);
+  let qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
   if (isNaN(qty) || qty < 1) qty = 1;
   const active = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
   return active.unitPrice * qty;
@@ -205,27 +235,38 @@ function calculateTotal() {
 function updateTotal() {
   const total = calculateTotal();
   const formatted = `₹${total.toLocaleString('en-IN')}`;
-  document.getElementById('totalAmountDisplay').textContent = formatted;
-  document.getElementById('btnAmount').textContent = formatted;
+  const totalAmountDisplay = document.getElementById('totalAmountDisplay');
+  const btnAmount = document.getElementById('btnAmount');
+  if (totalAmountDisplay) totalAmountDisplay.textContent = formatted;
+  if (btnAmount) btnAmount.textContent = formatted;
 
   const btnText = document.getElementById('btnText');
-  if (currentMode === 'B2B' && currentB2bPayOption === 'INVOICE') {
-    btnText.innerHTML = `📄 Request Corporate Invoice (<span id="btnAmount">${formatted}</span>)`;
-  } else {
-    btnText.innerHTML = `💳 Pay & Confirm Pre-Order (<span id="btnAmount">${formatted}</span>)`;
+  if (btnText) {
+    if (currentMode === 'B2B' && currentB2bPayOption === 'INVOICE') {
+      btnText.innerHTML = `📄 Request Corporate Invoice (<span id="btnAmount">${formatted}</span>)`;
+    } else {
+      btnText.innerHTML = `💳 Pay & Confirm Pre-Order (<span id="btnAmount">${formatted}</span>)`;
+    }
   }
+
   if (isCustomSplit) rebalanceSplitter();
 }
 
-// 1-Click Returning Customer localStorage Manager
 function checkSavedProfile() {
   try {
     const raw = localStorage.getItem('tabc_customer_profile');
     if (raw) {
       const profile = JSON.parse(raw);
       if (profile && profile.name) {
-        document.getElementById('savedProfileBar').style.display = 'flex';
-        document.getElementById('savedProfileText').textContent = `👋 Welcome back, ${profile.name}! Autofill your details?`;
+        const bar = document.getElementById('savedProfileBar');
+        const text = document.getElementById('savedProfileText');
+        if (bar) bar.style.display = 'flex';
+        if (text) text.textContent = `👋 Welcome back, ${profile.name}! Autofill your details?`;
+      }
+    }
+  } catch (e) {
+    console.log("localStorage not available", e);
+  }
 }
 
 function applySavedProfile() {
@@ -233,19 +274,21 @@ function applySavedProfile() {
     const raw = localStorage.getItem('tabc_customer_profile');
     if (raw) {
       const p = JSON.parse(raw);
-      if (p.name) document.getElementById('custName').value = p.name;
-      if (p.email) document.getElementById('custEmail').value = p.email;
-      if (p.phone) document.getElementById('custPhone').value = p.phone;
-      if (p.pin) {
+      if (p.name && document.getElementById('custName')) document.getElementById('custName').value = p.name;
+      if (p.email && document.getElementById('custEmail')) document.getElementById('custEmail').value = p.email;
+      if (p.phone && document.getElementById('custPhone')) document.getElementById('custPhone').value = p.phone;
+      if (p.pin && document.getElementById('custPincode')) {
         document.getElementById('custPincode').value = p.pin;
         validatePincodeField();
       }
-      if (p.address) document.getElementById('custAddress').value = p.address;
+      if (p.address && document.getElementById('custAddress')) document.getElementById('custAddress').value = p.address;
       if (p.company && document.getElementById('custCompany')) document.getElementById('custCompany').value = p.company;
       if (p.gstin && document.getElementById('custGstin')) document.getElementById('custGstin').value = p.gstin;
       validateAllInputs();
     }
   } catch (e) {
+    console.log("Error loading profile", e);
+  }
 }
 
 function saveCustomerProfile(data) {
@@ -260,19 +303,22 @@ function saveCustomerProfile(data) {
       gstin: data.gstin !== 'N/A' ? data.gstin : ''
     };
     localStorage.setItem('tabc_customer_profile', JSON.stringify(profile));
+  } catch (e) {
+    console.log("Error saving profile", e);
+  }
 }
 
-// Interactive Serving Guide Toggle
 function toggleGuide() {
   const body = document.getElementById('guideBody');
   const arrow = document.getElementById('guideArrow');
+  if (!body) return;
   const isOpen = body.style.display === 'block';
   body.style.display = isOpen ? 'none' : 'block';
-  arrow.textContent = isOpen ? '▼' : '▲';
+  if (arrow) arrow.textContent = isOpen ? '▼' : '▲';
 }
 
-// Real-Time Form Validations
 function setFieldState(inputEl, errorEl, isValid) {
+  if (!inputEl) return isValid;
   if (isValid) {
     inputEl.classList.remove('input-invalid');
     inputEl.classList.add('input-valid');
@@ -287,6 +333,7 @@ function setFieldState(inputEl, errorEl, isValid) {
 
 function validateField(fieldId) {
   const el = document.getElementById(fieldId);
+  if (!el) return true;
   const val = el.value.trim();
   let errEl = null;
 
@@ -305,6 +352,7 @@ function validateField(fieldId) {
 
 function validateEmailField() {
   const el = document.getElementById('custEmail');
+  if (!el) return true;
   const errEl = document.getElementById('errEmail');
   const val = el.value.trim();
   const emailRegex = /^[a-zA-Z0-9._%+-\]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -313,6 +361,7 @@ function validateEmailField() {
 
 function validatePhoneField() {
   const el = document.getElementById('custPhone');
+  if (!el) return true;
   const errEl = document.getElementById('errPhone');
   let val = el.value.replace(/[^0-9]/g, '');
   el.value = val;
@@ -322,30 +371,36 @@ function validatePhoneField() {
 
 function validatePincodeField() {
   const el = document.getElementById('custPincode');
+  if (!el) return true;
   const errEl = document.getElementById('errPincode');
   const statusEl = document.getElementById('pinStatus');
   let val = el.value.replace(/[^0-9]/g, '');
   el.value = val;
 
   if (val.length < 6) {
-    statusEl.textContent = '';
+    if (statusEl) statusEl.textContent = '';
     return setFieldState(el, errEl, false);
   }
 
   const isNcr = /^(11[0-9]{4}|122[0-9]{3}|121[0-9]{3}|201[0-9]{3})$/.test(val);
   if (isNcr) {
-    statusEl.textContent = '✓ Serviceable across Delhi NCR';
-    statusEl.className = 'pin-status pin-valid';
+    if (statusEl) {
+      statusEl.textContent = '✓ Serviceable across Delhi NCR';
+      statusEl.className = 'pin-status pin-valid';
+    }
     return setFieldState(el, errEl, true);
   } else {
-    statusEl.textContent = '✕ Serviceable only in Delhi NCR (11xxxx, 122xxx, 121xxx, 201xxx)';
-    statusEl.className = 'pin-status pin-invalid';
+    if (statusEl) {
+      statusEl.textContent = '✕ Serviceable only in Delhi NCR (11xxxx, 122xxx, 121xxx, 201xxx)';
+      statusEl.className = 'pin-status pin-invalid';
+    }
     return setFieldState(el, errEl, false);
   }
 }
 
 function validateGstinField() {
   const el = document.getElementById('custGstin');
+  if (!el) return true;
   const errEl = document.getElementById('errGstin');
   const val = el.value.trim().toUpperCase();
   el.value = val;
@@ -370,7 +425,7 @@ function validateAllInputs() {
   const isGstinValid = currentMode === 'B2B' ? validateGstinField() : true;
 
   const qtyInput = document.getElementById('packQty');
-  const qty = parseInt(qtyInput.value, 10);
+  const qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
   const isQtyValid = !isNaN(qty) && qty >= 1;
   const errQty = document.getElementById('errQty');
   setFieldState(qtyInput, errQty, isQtyValid);
@@ -378,7 +433,6 @@ function validateAllInputs() {
   return isNameValid && isEmailValid && isPhoneValid && isAddressValid && isPinValid && isCompanyValid && isGstinValid && isQtyValid;
 }
 
-// Payment & Submission Handling
 function handlePayClick() {
   if (!validateAllInputs()) {
     alert('Please correct the highlighted fields before placing your order.');
@@ -396,9 +450,7 @@ function handlePayClick() {
   const email = document.getElementById('custEmail').value.trim();
   const phone = document.getElementById('custPhone').value.trim();
   const activePack = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
-  const coffeeLotDisplay = isCustomSplit 
-    ? `Custom Split (${customSplit.ratnagiri}x Ratnagiri Estate + ${customSplit.thogarihunkal}x Thogarihunkal Estate)`
-    : selectedBean;
+
   if (CONFIG.razorpayKeyId && !CONFIG.razorpayKeyId.includes("YOUR_RAZORPAY")) {
     const options = {
       key: CONFIG.razorpayKeyId,
@@ -417,7 +469,6 @@ function handlePayClick() {
     });
     rzp.open();
   } else {
-    // Development / Demo Fallback
     const demoPayId = "pay_demo_" + Math.random().toString(36).substring(2, 9);
     handleOrderSuccess(demoPayId, "Paid via Gateway (Demo)");
   }
@@ -431,7 +482,7 @@ async function handleOrderSuccess(paymentId, statusText) {
   const qty = parseInt(document.getElementById('packQty').value, 10) || 1;
   const total = calculateTotal();
   const activePack = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
-  const dropInstructions = document.getElementById('dropInstructions').value;
+  const dropInstructions = document.getElementById('dropInstructions') ? document.getElementById('dropInstructions').value : 'Deliver directly to door / desk';
 
   const isB2c = currentMode === 'B2C';
   const orderId = isB2c ? "TABC-" + Math.floor(100000 + Math.random() * 900000) : "TABC-B2B-" + Math.floor(100000 + Math.random() * 900000);
@@ -442,6 +493,10 @@ async function handleOrderSuccess(paymentId, statusText) {
   const gstin = isB2c ? "N/A" : (document.getElementById('custGstin').value.trim() || "N/A");
   const buildingFloor = document.getElementById('custAddress').value.trim();
   const paymentMode = isB2c ? "Razorpay Gateway" : (currentB2bPayOption === 'INVOICE' ? "Corporate Invoice (Net Terms)" : "Razorpay Gateway");
+
+  const coffeeLotDisplay = isCustomSplit 
+    ? `Custom Split (${customSplit.ratnagiri}x Ratnagiri Estate + ${customSplit.thogarihunkal}x Thogarihunkal Estate)`
+    : selectedBean;
 
   const orderPayload = {
     authToken: CONFIG.authToken,
@@ -472,11 +527,8 @@ async function handleOrderSuccess(paymentId, statusText) {
   };
 
   currentOrderDetails = orderPayload;
-
-  // Persist profile to localStorage for 1-click reorders
   saveCustomerProfile(orderPayload);
 
-  // Dispatch to Google Apps Script Backend
   if (CONFIG.googleSheetEndpoint && !CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
     fetch(CONFIG.googleSheetEndpoint, {
       method: "POST",
@@ -486,7 +538,6 @@ async function handleOrderSuccess(paymentId, statusText) {
     }).catch(console.error);
   }
 
-  // Populate & Display Confirmation Screen
   document.getElementById('rOrderId').textContent = orderId;
   document.getElementById('rOrderType').textContent = isB2c ? 'Individual Pre-Order (Sat Drop)' : 'Corporate Office Drop (Fri Drop)';
   document.getElementById('rCompanyRow').style.display = isB2c ? 'none' : 'flex';
@@ -507,21 +558,16 @@ async function handleOrderSuccess(paymentId, statusText) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Google Calendar Event Link Generator
 function addToGoogleCalendar() {
   if (!currentOrderDetails) return;
-
   const d = currentOrderDetails;
   const title = encodeURIComponent(`The Apartment Brew Co. Drop: ${d.orderId}`);
   const details = encodeURIComponent(`Fresh Flash-Brew Specialty Coffee Drop\nOrder ID: ${d.orderId}\nLot: ${d.bean}\nSelection: ${d.pack}\nInstruction: ${d.dropInstructions}\nTotal: ₹${d.totalAmount}\n\nNote: Please refrigerate upon delivery and enjoy within 48 hours for peak flavor!`);
   const location = encodeURIComponent(`${d.buildingFloor}, ${d.techPark} (PIN: ${d.pinCode})`);
-
-  // Format target date for Google Calendar
   const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}`;
   window.open(gcalUrl, '_blank');
 }
 
-// WhatsApp Receipt & Support Trigger
 function sendWhatsAppReceipt() {
   if (!currentOrderDetails) return;
   const d = currentOrderDetails;
@@ -543,7 +589,6 @@ function sendWhatsAppReceipt() {
 
   let cleanPhone = d.phone.replace(/[^0-9]/g, '');
   if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
-
   const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
   window.open(whatsappUrl, '_blank');
 }
@@ -570,4 +615,3 @@ document.addEventListener('DOMContentLoaded', () => {
   startCutoffCountdown();
   checkSavedProfile();
 });
-
