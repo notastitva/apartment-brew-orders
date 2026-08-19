@@ -1,14 +1,13 @@
 const CONFIG = {
   razorpayKeyId: "rzp_test_TRVab1bUUwOVN5", // Replace with your active Key ID
-  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbx7nE2uQV08Ev4UYt8FFkmVZMGMpksvhIjljALGSbXYmc1FEv_1nh34BoR99mdTHic/exec" // Replace with your Web App URL
+  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbx7nE2uQV08Ev4UYt8FFkmVZMGMpksvhIjljALGSbXYmc1FEv_1nh34BoR99mdTHic/exec" // Replace with your Apps Script Web App URL
 };
 
 let currentMode = "B2C";
 let currentB2bPayOption = "GATEWAY";
 
-let selectedB2cPack = { name: "Weekend Pack", bottles: 4, unitPrice: 899 };
-let selectedB2bPack = { name: "Team Pack", bottles: 10, unitPrice: 1800 };
-let isPincodeServiceable = true;
+let selectedB2cPack = { name: "Weekend Pack (4x 250ml)", bottles: 4, unitPrice: 899 };
+let selectedB2bPack = { name: "Team Pack (10x 250ml)", bottles: 10, unitPrice: 1800 };
 
 function getUpcomingFridayFormatted() {
   const d = new Date();
@@ -32,7 +31,7 @@ function switchMode(mode) {
   document.getElementById('tabB2b').classList.toggle('active', mode === 'B2B');
 
   const isB2c = mode === 'B2C';
-  document.getElementById('dropBanner').textContent = isB2c ? `Next Fresh Drop: ${getUpcomingSaturdayFormatted()} (Morning)` : `Next Office Drop: ${getUpcomingFridayFormatted()} (Friday Drop)`;
+  document.getElementById('dropBanner').textContent = isB2c ? `Next Fresh Drop: ${getUpcomingSaturdayFormatted()} (Morning)` : `Next Office Drop: ${getUpcomingFridayFormatted()} (Friday Delivery)`;
   document.getElementById('packSubtext').textContent = isB2c ? 'Saturday Drop' : 'Friday Office Drop (Cutoff: Thu 6 PM)';
   document.getElementById('b2cPacks').style.display = isB2c ? 'grid' : 'none';
   document.getElementById('b2bPacks').style.display = isB2c ? 'none' : 'grid';
@@ -40,8 +39,8 @@ function switchMode(mode) {
   document.getElementById('b2cCityGroup').style.display = isB2c ? 'flex' : 'none';
   document.getElementById('b2bPaymentChoiceGroup').style.display = isB2c ? 'none' : 'block';
   document.getElementById('labelName').textContent = isB2c ? 'Your Name *' : 'Contact Person Name & Role *';
-  document.getElementById('labelEmail').textContent = isB2c ? 'Email Address *' : 'Official Work Email *';
-  document.getElementById('labelAddress').textContent = isB2c ? 'Full Address (Flat/Society) *' : 'Tower, Floor & Pantry Details *';
+  document.getElementById('labelEmail').textContent = isB2c ? 'Email Address *' : 'Work Email *';
+  document.getElementById('labelAddress').textContent = isB2c ? 'Delivery Address (Building, Flat, Society) *' : 'Building / Tower / Floor Details *';
   
   if (isB2c) currentB2bPayOption = 'GATEWAY';
   updateTotal();
@@ -67,7 +66,9 @@ function setB2bPayOption(option) {
 }
 
 function calculateTotal() {
-  const qty = parseInt(document.getElementById('packQty').value, 10) || 1;
+  const qtyInput = document.getElementById('packQty');
+  let qty = parseInt(qtyInput.value, 10);
+  if (isNaN(qty) || qty < 1) qty = 1;
   const active = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
   return active.unitPrice * qty;
 }
@@ -86,28 +87,118 @@ function updateTotal() {
   }
 }
 
-function validatePincode() {
-  const pin = document.getElementById('custPincode').value.trim();
+// ------------------------------------------
+// Real-Time Form Validation Checks
+// ------------------------------------------
+function setFieldState(inputEl, errorEl, isValid) {
+  if (isValid) {
+    inputEl.classList.remove('input-invalid');
+    inputEl.classList.add('input-valid');
+    if (errorEl) errorEl.style.display = 'none';
+  } else {
+    inputEl.classList.add('input-invalid');
+    inputEl.classList.remove('input-valid');
+    if (errorEl) errorEl.style.display = 'block';
+  }
+  return isValid;
+}
+
+function validateField(fieldId) {
+  const el = document.getElementById(fieldId);
+  const val = el.value.trim();
+  let errEl = null;
+
+  if (fieldId === 'custName') {
+    errEl = document.getElementById('errName');
+    return setFieldState(el, errEl, val.length >= 2);
+  } else if (fieldId === 'custCompany') {
+    errEl = document.getElementById('errCompany');
+    return setFieldState(el, errEl, currentMode !== 'B2B' || val.length >= 2);
+  } else if (fieldId === 'custAddress') {
+    errEl = document.getElementById('errAddress');
+    return setFieldState(el, errEl, val.length >= 5);
+  }
+  return true;
+}
+
+function validateEmailField() {
+  const el = document.getElementById('custEmail');
+  const errEl = document.getElementById('errEmail');
+  const val = el.value.trim();
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return setFieldState(el, errEl, emailRegex.test(val));
+}
+
+function validatePhoneField() {
+  const el = document.getElementById('custPhone');
+  const errEl = document.getElementById('errPhone');
+  let val = el.value.replace(/[^0-9]/g, '');
+  el.value = val;
+  const phoneRegex = /^[6-9]\d{9}$/;
+  return setFieldState(el, errEl, phoneRegex.test(val));
+}
+
+function validatePincodeField() {
+  const el = document.getElementById('custPincode');
+  const errEl = document.getElementById('errPincode');
   const statusEl = document.getElementById('pinStatus');
-  if (pin.length < 6) { statusEl.textContent = ''; return; }
-  const isNcr = /^(11[0-9]{4}|122[0-9]{3}|121[0-9]{3}|201[0-9]{3})$/.test(pin);
-  statusEl.textContent = isNcr ? '✓ Serviceable in Delhi NCR' : '✕ Outside Primary NCR Hubs';
-  statusEl.className = isNcr ? 'pin-status pin-valid' : 'pin-status pin-invalid';
+  let val = el.value.replace(/[^0-9]/g, '');
+  el.value = val;
+
+  if (val.length < 6) {
+    statusEl.textContent = '';
+    return setFieldState(el, errEl, false);
+  }
+
+  const isNcr = /^(11[0-9]{4}|122[0-9]{3}|121[0-9]{3}|201[0-9]{3})$/.test(val);
+  if (isNcr) {
+    statusEl.textContent = '✓ Serviceable across Delhi NCR';
+    statusEl.className = 'pin-status pin-valid';
+    return setFieldState(el, errEl, true);
+  } else {
+    statusEl.textContent = '✕ Serviceable only in Delhi NCR (11xxxx, 122xxx, 121xxx, 201xxx)';
+    statusEl.className = 'pin-status pin-invalid';
+    return setFieldState(el, errEl, false);
+  }
+}
+
+function validateGstinField() {
+  const el = document.getElementById('custGstin');
+  const errEl = document.getElementById('errGstin');
+  const val = el.value.trim().toUpperCase();
+  el.value = val;
+
+  if (!val) {
+    el.classList.remove('input-invalid');
+    if (errEl) errEl.style.display = 'none';
+    return true;
+  }
+
+  const gstinRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+  return setFieldState(el, errEl, gstinRegex.test(val));
+}
+
+function validateAllInputs() {
+  const isNameValid = validateField('custName');
+  const isEmailValid = validateEmailField();
+  const isPhoneValid = validatePhoneField();
+  const isAddressValid = validateField('custAddress');
+  const isPinValid = validatePincodeField();
+  const isCompanyValid = currentMode === 'B2B' ? validateField('custCompany') : true;
+  const isGstinValid = currentMode === 'B2B' ? validateGstinField() : true;
+
+  const qtyInput = document.getElementById('packQty');
+  const qty = parseInt(qtyInput.value, 10);
+  const isQtyValid = !isNaN(qty) && qty >= 1;
+  const errQty = document.getElementById('errQty');
+  setFieldState(qtyInput, errQty, isQtyValid);
+
+  return isNameValid && isEmailValid && isPhoneValid && isAddressValid && isPinValid && isCompanyValid && isGstinValid && isQtyValid;
 }
 
 function handlePayClick() {
-  const name = document.getElementById('custName').value.trim();
-  const email = document.getElementById('custEmail').value.trim();
-  const phone = document.getElementById('custPhone').value.trim();
-  const address = document.getElementById('custAddress').value.trim();
-  const pin = document.getElementById('custPincode').value.trim();
-
-  if (!name || !email || !phone || !address || !pin) {
-    alert('Please fill in all required fields.');
-    return;
-  }
-  if (currentMode === 'B2B' && !document.getElementById('custCompany').value.trim()) {
-    alert('Please enter your Company Name.');
+  if (!validateAllInputs()) {
+    alert('Please correct the highlighted fields before placing your order.');
     return;
   }
 
@@ -118,22 +209,25 @@ function handlePayClick() {
   }
 
   const total = calculateTotal();
-  const active = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
+  const name = document.getElementById('custName').value.trim();
+  const email = document.getElementById('custEmail').value.trim();
+  const phone = document.getElementById('custPhone').value.trim();
+  const activePack = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
 
   const options = {
     key: CONFIG.razorpayKeyId,
     amount: total * 100,
     currency: "INR",
     name: "The Apartment Brew Co.",
-    description: `${currentMode === 'B2B' ? 'Office Drop' : 'Pre-Order'}: ${active.name}`,
+    description: `${currentMode === 'B2B' ? 'Office Drop' : 'Pre-Order'}: ${activePack.name}`,
     prefill: { name: name, email: email, contact: phone },
     theme: { color: "#d4a373" },
-    handler: function (res) { handleOrderSuccess(res.razorpay_payment_id, "Paid via Gateway"); }
+    handler: function (response) { handleOrderSuccess(response.razorpay_payment_id, "Paid via Gateway"); }
   };
 
   const rzp = new Razorpay(options);
-  rzp.on('payment.failed', function (res) {
-    alert('Payment was not completed: ' + (res.error.description || 'Please try again.'));
+  rzp.on('payment.failed', function (response) {
+    alert('Payment was not completed: ' + (response.error.description || 'Please try again.'));
   });
   rzp.open();
 }
@@ -146,7 +240,7 @@ async function handleOrderSuccess(paymentId, statusText) {
   const bean = document.getElementById('coffeeOrigin').value;
   const qty = parseInt(document.getElementById('packQty').value, 10) || 1;
   const total = calculateTotal();
-  const active = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
+  const activePack = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
 
   const isB2c = currentMode === 'B2C';
   const orderId = isB2c ? "TABC-" + Math.floor(100000 + Math.random() * 900000) : "TABC-B2B-" + Math.floor(100000 + Math.random() * 900000);
@@ -155,27 +249,31 @@ async function handleOrderSuccess(paymentId, statusText) {
   const deliveryWindow = isB2c ? "Saturday Morning (8:00 AM – 11:00 AM)" : document.getElementById('b2bDeliveryWindow').value;
   const company = isB2c ? "N/A" : document.getElementById('custCompany').value.trim();
   const gstin = isB2c ? "N/A" : (document.getElementById('custGstin').value.trim() || "N/A");
+  const buildingFloor = document.getElementById('custAddress').value.trim();
+  const paymentMode = isB2c ? "Razorpay Gateway" : (currentB2bPayOption === 'INVOICE' ? "Corporate Invoice (Net Terms)" : "Razorpay Gateway");
 
   const orderPayload = {
     orderType: currentMode,
     targetSheet: isB2c ? 'Sheet1' : 'B2B Orders',
     orderId: orderId,
-    dropDate: dropDate,
-    deliveryWindow: deliveryWindow,
     company: company,
-    gstin: gstin,
     name: name,
     email: email,
     phone: phone,
+    gstin: gstin,
     techPark: location,
-    address: `${document.getElementById('custAddress').value.trim()}, ${location} (PIN: ${pin})`,
+    buildingFloor: buildingFloor,
+    pinCode: pin,
+    deliveryWindow: deliveryWindow,
+    dropDate: dropDate,
     bean: bean,
-    pack: `${active.name} (${active.bottles}x 250ml)`,
+    pack: activePack.name,
     quantity: qty,
-    bottles: active.bottles * qty,
+    bottles: activePack.bottles * qty,
     totalAmount: total,
-    paymentMode: "Razorpay Gateway",
+    paymentMode: paymentMode,
     paymentStatus: `${statusText} (${paymentId})`,
+    deliveryStatus: 'Pre-Ordered',
     notes: `Payment ID: ${paymentId} | Mode: ${currentMode}`
   };
 
@@ -188,7 +286,7 @@ async function handleOrderSuccess(paymentId, statusText) {
     }).catch(console.error);
   }
 
-  // Display receipt
+  // Display Confirmation
   document.getElementById('rOrderId').textContent = orderId;
   document.getElementById('rOrderType').textContent = isB2c ? 'Individual Pre-Order' : 'Corporate Office Drop';
   document.getElementById('rCompanyRow').style.display = isB2c ? 'none' : 'flex';
@@ -200,7 +298,7 @@ async function handleOrderSuccess(paymentId, statusText) {
   document.getElementById('rDropDate').textContent = dropDate;
   document.getElementById('rName').textContent = name;
   document.getElementById('rEmail').textContent = email;
-  document.getElementById('rPack').textContent = `${active.name} x ${qty} (${active.bottles * qty} bottles)`;
+  document.getElementById('rPack').textContent = `${activePack.name} x ${qty} (${activePack.bottles * qty} bottles)`;
   document.getElementById('rTotal').textContent = `₹${total.toLocaleString('en-IN')}`;
 
   document.getElementById('orderFormView').style.display = 'none';
@@ -218,6 +316,8 @@ function resetForm() {
   document.getElementById('custCompany').value = '';
   document.getElementById('custGstin').value = '';
   document.getElementById('pinStatus').textContent = '';
+  document.querySelectorAll('input, textarea').forEach(el => el.classList.remove('input-valid', 'input-invalid'));
+  document.querySelectorAll('.field-error').forEach(el => el.style.display = 'none');
 }
 
 switchMode('B2C');

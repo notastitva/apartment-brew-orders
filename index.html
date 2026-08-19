@@ -14,6 +14,16 @@
       <h1 class="brand-title">THE APARTMENT BREW CO.</h1>
       <p class="brand-subtitle">Micro-Batch Flash-Chilled Specialty Coffee • Gurugram</p>
       <div id="dropBanner" class="drop-banner">Next Drop: Loading...</div>
+      
+      <!-- 48-Hour Freshness Callout -->
+      <div class="freshness-callout">
+        <span class="freshness-icon">❄️</span>
+        <div class="freshness-text">
+          <strong>100% Fresh Overnight Brew • 48-Hour Shelf Life</strong><br>
+          Zero preservatives. Extracted hot & flash-chilled over ice. Keep refrigerated and consume within 48 hours.
+        </div>
+      </div>
+
       <div class="geo-badge">📍 Delivering Exclusively Across Delhi NCR</div>
     </header>
 
@@ -33,9 +43,9 @@
         </div>
 
         <div class="form-group">
-          <label for="coffeeOrigin">Single-Estate Lot</label>
+          <label for="coffeeOrigin">Single-Estate Lot Selection</label>
           <select id="coffeeOrigin">
-            <option value="Ratnagiri Estate (Anaerobic Naturals)">Ratnagiri Estate — Anaerobic Naturals (Fruity)</option>
+            <option value="Ratnagiri Estate (Anaerobic Naturals)">Ratnagiri Estate — Anaerobic Naturals (Fruity & Vibrant)</option>
             <option value="Thogarihunkal Estate (Washed)">Thogarihunkal Estate — Washed (Floral & Crisp)</option>
             <option value="Curated Roaster's Split">Curated Roaster's Split (50% / 50%)</option>
             <option value="Seasonal Microlot (Roaster's Choice)">Seasonal Microlot — Roaster's Choice</option>
@@ -44,22 +54,22 @@
 
         <label>Choose Pack Tier</label>
         <div class="pack-grid" id="b2cPacks">
-          <div class="pack-option" onclick="selectB2cPack('Single Bottle', 1, 240, this)">
+          <div class="pack-option" onclick="selectB2cPack('Single Bottle (1x 250ml)', 1, 240, this)">
             <div class="pack-name">Single Bottle</div>
             <div class="pack-price">₹240</div>
             <div class="pack-desc">1x 250ml</div>
           </div>
-          <div class="pack-option" onclick="selectB2cPack('Duo Pack', 2, 480, this)">
+          <div class="pack-option" onclick="selectB2cPack('Duo Pack (2x 250ml)', 2, 480, this)">
             <div class="pack-name">Duo Pack</div>
             <div class="pack-price">₹480</div>
             <div class="pack-desc">2x 250ml</div>
           </div>
-          <div class="pack-option active" onclick="selectB2cPack('Weekend Pack', 4, 899, this)">
+          <div class="pack-option active" onclick="selectB2cPack('Weekend Pack (4x 250ml)', 4, 899, this)">
             <div class="pack-name">Weekend Pack</div>
             <div class="pack-price">₹899</div>
             <div class="pack-desc">4x 250ml</div>
           </div>
-          <div class="pack-option" onclick="selectB2cPack('Weekly Sub', 5, 1000, this)">
+          <div class="pack-option" onclick="selectB2cPack('Weekly Sub (5x 250ml)', 5, 1000, this)">
             <div class="pack-name">Weekly Sub</div>
             <div class="pack-price">₹1,000</div>
             <div class="pack-desc">5x 250ml</div>
@@ -67,22 +77,22 @@
         </div>
 
         <div class="pack-grid" id="b2bPacks" style="display:none;">
-          <div class="pack-option active" onclick="selectB2bPack('Team Pack', 10, 1800, this)">
+          <div class="pack-option active" onclick="selectB2bPack('Team Pack (10x 250ml)', 10, 1800, this)">
             <div class="pack-name">Team Pack</div>
             <div class="pack-price">₹1,800</div>
             <div class="pack-desc">10x 250ml</div>
           </div>
-          <div class="pack-option" onclick="selectB2bPack('Office Batch', 20, 3400, this)">
+          <div class="pack-option" onclick="selectB2bPack('Office Batch (20x 250ml)', 20, 3400, this)">
             <div class="pack-name">Office Batch</div>
             <div class="pack-price">₹3,400</div>
             <div class="pack-desc">20x 250ml</div>
           </div>
-          <div class="pack-option" onclick="selectB2bPack('Floor Pack', 40, 6000, this)">
+          <div class="pack-option" onclick="selectB2bPack('Floor Pack (40x 250ml)', 40, 6000, this)">
             <div class="pack-name">Floor Pack</div>
             <div class="pack-price">₹6,000</div>
             <div class="pack-desc">40x 250ml</div>
           </div>
-          <div class="pack-option" onclick="selectB2bPack('Townhall Bulk', 60, 8700, this)">
+          <div class="pack-option" onclick="selectB2bPack('Townhall Bulk (60x 250ml)', 60, 8700, this)">
             <div class="pack-name">Townhall Bulk</div>
             <div class="pack-price">₹8,700</div>
             <div class="pack-desc">60x 250ml</div>
@@ -91,7 +101,8 @@
 
         <div class="form-group">
           <label for="packQty">Quantity of Packs</label>
-          <input type="number" id="packQty" min="1" value="1" oninput="updateTotal()" />
+          <input type="number" id="packQty" min="1" max="50" value="1" oninput="updateTotal()" />
+          <div id="errQty" class="field-error">Please enter a valid quantity (minimum 1).</div>
         </div>
 
         <div class="summary-box">
@@ -100,25 +111,27 @@
         </div>
       </section>
 
-      <!-- 2. Customer Info -->
+      <!-- 2. Customer & Delivery Info -->
       <section class="section-card">
         <div class="section-title">2. Customer & Delivery Info</div>
 
+        <!-- B2B Fields -->
         <div id="b2bFields" style="display:none;">
           <div class="form-group">
-            <label for="custCompany">Company Name *</label>
-            <input type="text" id="custCompany" placeholder="e.g. Zomato, Google" />
+            <label for="custCompany">Company / Business Name *</label>
+            <input type="text" id="custCompany" placeholder="e.g. Zomato, Google, Razorpay" onblur="validateField('custCompany')" />
+            <div id="errCompany" class="field-error">Please enter your company or business name.</div>
           </div>
           <div class="form-group">
-            <label for="b2bTechPark">Tech Park / Complex *</label>
+            <label for="b2bTechPark">Tech Park / Commercial Complex *</label>
             <select id="b2bTechPark">
-              <option value="DLF Cyber City / Cyber Hub">DLF Cyber City / Cyber Hub</option>
-              <option value="One Horizon Center / Golf Course Rd">One Horizon Center / Golf Course Rd</option>
-              <option value="Candor TechSpace / Sector 48">Candor TechSpace / Sector 48</option>
-              <option value="Cyber Park / Sector 67">Cyber Park / Sector 67</option>
-              <option value="Udyog Vihar">Udyog Vihar</option>
-              <option value="Noida Sector 62 / 126 / 135">Noida Sector 62 / 126 / 135</option>
-              <option value="South / Central Delhi">South / Central Delhi</option>
+              <option value="DLF Cyber City / Cyber Hub (Gurugram)">DLF Cyber City / Cyber Hub (Gurugram)</option>
+              <option value="One Horizon Center / Golf Course Rd (Gurugram)">One Horizon Center / Golf Course Rd</option>
+              <option value="Candor TechSpace / Sector 48 (Gurugram)">Candor TechSpace / Sector 48</option>
+              <option value="Cyber Park / Sector 67 (Gurugram)">Cyber Park / Sector 67</option>
+              <option value="Udyog Vihar Phases 1-5 (Gurugram)">Udyog Vihar</option>
+              <option value="Noida Sector 62 / 126 / 135 Tech Parks">Noida Sector 62 / 126 / 135</option>
+              <option value="South / Central Delhi Office Area">South / Central Delhi</option>
               <option value="Other Commercial Complex">Other Commercial Complex</option>
             </select>
           </div>
@@ -130,13 +143,15 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="custGstin">Company GSTIN (Optional)</label>
-            <input type="text" id="custGstin" placeholder="e.g. 06AAAAA0000A1Z5" maxlength="15" />
+            <label for="custGstin">Company GSTIN (Optional, for Input Tax Credit)</label>
+            <input type="text" id="custGstin" placeholder="e.g. 06AAAAA0000A1Z5" maxlength="15" onblur="validateGstinField()" />
+            <div id="errGstin" class="field-error">Please enter a valid 15-character GSTIN format.</div>
           </div>
         </div>
 
+        <!-- B2C City Dropdown -->
         <div class="form-group" id="b2cCityGroup">
-          <label for="custCity">City / Area</label>
+          <label for="custCity">City / Area (Delhi NCR)</label>
           <select id="custCity">
             <option value="Gurugram (DLF Phase 1-5 / Cyber City / Golf Course Rd)">Gurugram (DLF / Cyber City / Golf Course Rd)</option>
             <option value="South / Central Delhi">South / Central Delhi</option>
@@ -147,30 +162,36 @@
 
         <div class="form-group">
           <label for="custPincode">6-Digit PIN Code *</label>
-          <input type="text" id="custPincode" maxlength="6" placeholder="e.g. 122002" oninput="validatePincode()" required />
+          <input type="text" id="custPincode" maxlength="6" placeholder="e.g. 122002" oninput="validatePincodeField()" onblur="validatePincodeField()" required />
           <div id="pinStatus" class="pin-status"></div>
+          <div id="errPincode" class="field-error">Please enter a valid 6-digit Delhi NCR PIN Code (e.g. 122002).</div>
         </div>
 
         <div class="form-group">
-          <label for="custName" id="labelName">Your Name *</label>
-          <input type="text" id="custName" placeholder="e.g. Rohan Verma" required />
+          <label for="custName" id="labelName">Contact Person Name *</label>
+          <input type="text" id="custName" placeholder="e.g. Rohan Verma" onblur="validateField('custName')" required />
+          <div id="errName" class="field-error">Please enter a valid name (at least 2 characters).</div>
         </div>
 
         <div class="form-group">
-          <label for="custEmail" id="labelEmail">Email Address *</label>
-          <input type="email" id="custEmail" placeholder="e.g. rohan@example.com" required />
+          <label for="custEmail" id="labelEmail">Email Address (For Confirmation & Invoices) *</label>
+          <input type="email" id="custEmail" placeholder="e.g. rohan@example.com" onblur="validateEmailField()" required />
+          <div id="errEmail" class="field-error">Please enter a valid email address.</div>
         </div>
 
         <div class="form-group">
-          <label for="custPhone">Phone Number *</label>
-          <input type="tel" id="custPhone" placeholder="e.g. 9876543210" required />
+          <label for="custPhone">10-Digit Mobile Number *</label>
+          <input type="tel" id="custPhone" maxlength="10" placeholder="e.g. 9876543210" oninput="validatePhoneField()" onblur="validatePhoneField()" required />
+          <div id="errPhone" class="field-error">Please enter a valid 10-digit Indian mobile number (starting with 6-9).</div>
         </div>
 
         <div class="form-group">
-          <label for="custAddress" id="labelAddress">Full Address / Floor Details *</label>
-          <textarea id="custAddress" rows="2" placeholder="Building, Tower, Floor or Society" required></textarea>
+          <label for="custAddress" id="labelAddress">Building / Tower / Floor Details *</label>
+          <textarea id="custAddress" rows="2" placeholder="Building, Tower, Floor, Flat or Society" onblur="validateField('custAddress')" required></textarea>
+          <div id="errAddress" class="field-error">Please enter full address details (at least 5 characters).</div>
         </div>
 
+        <!-- B2B Payment Mode -->
         <div id="b2bPaymentChoiceGroup" style="display:none; margin-top: 10px;">
           <label>Payment Method</label>
           <div class="radio-group">
@@ -196,8 +217,13 @@
       <div class="section-card text-center">
         <div class="success-badge">✓ Order Confirmed</div>
         <h2>Thank You for Your Order!</h2>
+        
         <div class="info-banner">
-          📧 <strong>Confirmation Email Sent:</strong> A detailed receipt has been sent to your email address from our live tracker.
+          📧 <strong>Confirmation Email Dispatched:</strong> A detailed receipt has been sent to your email address from our live tracker.
+        </div>
+
+        <div class="shelf-life-reminder">
+          ❄️ <strong>Freshness Note:</strong> Crafted fresh with zero preservatives. Please refrigerate upon arrival and consume within <strong>48 hours</strong> of delivery!
         </div>
 
         <div class="receipt-details">
