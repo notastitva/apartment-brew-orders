@@ -1,6 +1,11 @@
+// ====================================================================
+// THE APARTMENT BREW CO. — FRONTEND LOGIC (app.js)
+// ====================================================================
+
 const CONFIG = {
-  razorpayKeyId: "rzp_test_TRVab1bUUwOVN5", // Replace with your active Key ID
-  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbx7nE2uQV08Ev4UYt8FFkmVZMGMpksvhIjljALGSbXYmc1FEv_1nh34BoR99mdTHic/exec" // Replace with your Apps Script Web App URL
+  razorpayKeyId: "rzp_test_TRVab1bUUwOVN5", // Replace with your active Live Key ID (rzp_live_...)
+  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbx7nE2uQV08Ev4UYt8FFkmVZMGMpksvhIjljALGSbXYmc1FEv_1nh34BoR99mdTHic/exec", // Replace with your Apps Script Web App URL ending in /exec
+  authToken: "TABC_SECURE_TOKEN_2026" // Shared auth token matching Code.gs
 };
 
 let currentMode = "B2C";
@@ -9,6 +14,7 @@ let currentB2bPayOption = "GATEWAY";
 let selectedB2cPack = { name: "Weekend Pack (4x 250ml)", bottles: 4, unitPrice: 899 };
 let selectedB2bPack = { name: "Team Pack (10x 250ml)", bottles: 10, unitPrice: 1800 };
 
+// Dynamic Friday calculation for B2B
 function getUpcomingFridayFormatted() {
   const d = new Date();
   let days = (5 - d.getDay() + 7) % 7;
@@ -17,6 +23,7 @@ function getUpcomingFridayFormatted() {
   return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
 }
 
+// Dynamic Saturday calculation for B2C
 function getUpcomingSaturdayFormatted() {
   const d = new Date();
   let days = (6 - d.getDay() + 7) % 7;
@@ -87,9 +94,9 @@ function updateTotal() {
   }
 }
 
-// ------------------------------------------
+// ==========================================
 // Real-Time Form Validation Checks
-// ------------------------------------------
+// ==========================================
 function setFieldState(inputEl, errorEl, isValid) {
   if (isValid) {
     inputEl.classList.remove('input-invalid');
@@ -208,6 +215,7 @@ function handlePayClick() {
     return;
   }
 
+  // Razorpay Gateway Flow
   const total = calculateTotal();
   const name = document.getElementById('custName').value.trim();
   const email = document.getElementById('custEmail').value.trim();
@@ -220,9 +228,17 @@ function handlePayClick() {
     currency: "INR",
     name: "The Apartment Brew Co.",
     description: `${currentMode === 'B2B' ? 'Office Drop' : 'Pre-Order'}: ${activePack.name}`,
-    prefill: { name: name, email: email, contact: phone },
-    theme: { color: "#d4a373" },
-    handler: function (response) { handleOrderSuccess(response.razorpay_payment_id, "Paid via Gateway"); }
+    prefill: {
+      name: name,
+      email: email,
+      contact: phone
+    },
+    theme: {
+      color: "#d4a373"
+    },
+    handler: function (response) {
+      handleOrderSuccess(response.razorpay_payment_id, "Paid via Gateway");
+    }
   };
 
   const rzp = new Razorpay(options);
@@ -253,6 +269,8 @@ async function handleOrderSuccess(paymentId, statusText) {
   const paymentMode = isB2c ? "Razorpay Gateway" : (currentB2bPayOption === 'INVOICE' ? "Corporate Invoice (Net Terms)" : "Razorpay Gateway");
 
   const orderPayload = {
+    authToken: CONFIG.authToken,
+    botTrap: "",
     orderType: currentMode,
     targetSheet: isB2c ? 'Sheet1' : 'B2B Orders',
     orderId: orderId,
@@ -286,7 +304,7 @@ async function handleOrderSuccess(paymentId, statusText) {
     }).catch(console.error);
   }
 
-  // Display Confirmation
+  // Display Confirmation Screen
   document.getElementById('rOrderId').textContent = orderId;
   document.getElementById('rOrderType').textContent = isB2c ? 'Individual Pre-Order' : 'Corporate Office Drop';
   document.getElementById('rCompanyRow').style.display = isB2c ? 'none' : 'flex';
