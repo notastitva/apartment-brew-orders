@@ -2,158 +2,236 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pre-Order | The Apartment Brew Co.</title>
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>The Apartment Brew Co. | Fresh Flash-Chilled Specialty Coffee Drop</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
   <div class="container">
-    <!-- Header -->
-    <header class="header-card">
-      <h1 class="brand-title">THE APARTMENT BREW CO.</h1>
-      <p class="brand-subtitle">Micro-Batch Flash-Chilled Specialty Coffee • Gurugram</p>
-      <div id="dropBanner" class="drop-banner">Next Drop: Loading...</div>
+    
+    <!-- Branding Header -->
+    <div class="header-card">
+      <div class="brand-title">The Apartment Brew Co.</div>
+      <div class="brand-subtitle">Micro-Batch Flash-Chilled Specialty Coffee • Gurugram</div>
       
-      <!-- 48-Hour Freshness Callout -->
-      <div class="freshness-callout">
-        <span class="freshness-icon">❄️</span>
-        <div class="freshness-text">
-          <strong>100% Fresh Overnight Brew • 48-Hour Shelf Life</strong><br>
-          Zero preservatives. Extracted hot & flash-chilled over ice. Keep refrigerated and consume within 48 hours.
+      <div class="drop-banner" id="dropBanner">
+        <span>⚡</span> Next Fresh Drop: Saturday Morning
+      </div>
+      <div class="countdown-timer" id="countdownTimer">Cutoff closes in: Loading...</div>
+
+      <!-- Scarcity Bar -->
+      <div class="scarcity-bar-container">
+        <div class="scarcity-label">
+          <span>🔥 Limited Batch Capacity</span>
+          <span id="scarcityText">38 / 50 Bottles Reserved</span>
+        </div>
+        <div class="scarcity-progress-track">
+          <div class="scarcity-progress-fill" id="scarcityFill"></div>
         </div>
       </div>
 
-      <div class="geo-badge">📍 Delivering Exclusively Across Delhi NCR</div>
-    </header>
+      <div class="geo-badge">
+        📍 Delivering Exclusively Across Gurugram & Delhi NCR Tech Parks & Residences
+      </div>
+    </div>
 
-    <!-- Mode Switcher -->
-    <nav class="tab-switcher">
-      <button id="tabB2c" class="tab-btn active" onclick="switchMode('B2C')">☕ Individual Pre-Order (Sat)</button>
-      <button id="tabB2b" class="tab-btn" onclick="switchMode('B2B')">🏢 Office & Team Drop (Fri)</button>
-    </nav>
+    <!-- Mode Selector: B2C vs B2B -->
+    <div class="mode-switch">
+      <button class="mode-tab active" id="tabB2c" onclick="switchMode('B2C')">☕ Individual Pre-Order (Sat)</button>
+      <button class="mode-tab" id="tabB2b" onclick="switchMode('B2B')">🏢 Office & Team Drop (Fri)</button>
+    </div>
 
-    <!-- Order Form -->
-    <main id="orderFormView">
-      <!-- 1. Selection -->
-      <section class="section-card">
+    <!-- Order Form View -->
+    <div id="orderFormView">
+      
+      <!-- Section 1: Coffee Lot & Packs -->
+      <div class="section-card">
         <div class="section-title">
-          <span>1. Select Your Brew</span>
-          <span id="packSubtext" class="badge-subtext">Saturday Drop</span>
+          <span>1. Select Coffee Lot</span>
+          <span class="section-subtitle">Single-Estate Harvests</span>
         </div>
 
-        <div class="form-group">
-          <label for="coffeeOrigin">Single-Estate Lot Selection</label>
-          <select id="coffeeOrigin">
-            <option value="Ratnagiri Estate (Anaerobic Naturals)">Ratnagiri Estate — Anaerobic Naturals (Fruity & Vibrant)</option>
-            <option value="Thogarihunkal Estate (Washed)">Thogarihunkal Estate — Washed (Floral & Crisp)</option>
-            <option value="Curated Roaster's Split">Curated Roaster's Split (50% / 50%)</option>
-            <option value="Seasonal Microlot (Roaster's Choice)">Seasonal Microlot — Roaster's Choice</option>
-          </select>
+        <div class="lot-grid" id="lotGrid">
+          <div class="lot-card active" onclick="selectLot('Ratnagiri Estate (Anaerobic Naturals)', this)">
+            <div class="lot-header">
+              <span class="lot-name">Ratnagiri Estate</span>
+              <span class="lot-tag">Anaerobic Naturals</span>
+            </div>
+            <div class="lot-notes">🍓 Wild Raspberry, Stone Fruit & Dark Cacao</div>
+            <div class="flavor-pills">
+              <span class="flavor-pill">Fruity</span>
+              <span class="flavor-pill">High Acidity</span>
+              <span class="flavor-pill">Medium Roast</span>
+            </div>
+            <div class="sensory-meters">
+              <div class="meter-row">
+                <span>Acidity</span>
+                <div class="meter-bar"><div class="meter-fill" style="width: 85%;"></div></div>
+              </div>
+              <div class="meter-row">
+                <span>Body</span>
+                <div class="meter-bar"><div class="meter-fill" style="width: 70%;"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lot-card" onclick="selectLot('Thogarihunkal Estate (Washed)', this)">
+            <div class="lot-header">
+              <span class="lot-name">Thogarihunkal Estate</span>
+              <span class="lot-tag">Washed Lot</span>
+            </div>
+            <div class="lot-notes">🌸 Orange Blossom, Jasmine & Crisp Green Apple</div>
+            <div class="flavor-pills">
+              <span class="flavor-pill">Floral</span>
+              <span class="flavor-pill">Clean Crisp</span>
+              <span class="flavor-pill">Light-Med Roast</span>
+            </div>
+            <div class="sensory-meters">
+              <div class="meter-row">
+                <span>Acidity</span>
+                <div class="meter-bar"><div class="meter-fill" style="width: 75%;"></div></div>
+              </div>
+              <div class="meter-row">
+                <span>Body</span>
+                <div class="meter-bar"><div class="meter-fill" style="width: 60%;"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lot-card" onclick="selectLot('Curated Roaster\'s Split (50% Ratnagiri / 50% Thogarihunkal)', this)">
+            <div class="lot-header">
+              <span class="lot-name">Curated Roaster's Split</span>
+              <span class="lot-tag">50 / 50 Split</span>
+            </div>
+            <div class="lot-notes">⚖️ Equal blend of Fruity Anaerobic & Floral Washed bottles</div>
+            <div class="flavor-pills">
+              <span class="flavor-pill">Balanced Flight</span>
+            </div>
+          </div>
         </div>
 
-        <label>Choose Pack Tier</label>
+        <div class="section-title" style="margin-top: 16px;">
+          <span>Choose Pack Tier</span>
+          <span class="section-subtitle" id="packSubtext">Saturday Drop</span>
+        </div>
+
+        <!-- B2C Packs -->
         <div class="pack-grid" id="b2cPacks">
-          <div class="pack-option" onclick="selectB2cPack('Single Bottle (1x 250ml)', 1, 240, this)">
+          <div class="pack-option" onclick="selectB2cPack('Single Bottle', 1, 240, this)">
             <div class="pack-name">Single Bottle</div>
             <div class="pack-price">₹240</div>
             <div class="pack-desc">1x 250ml</div>
           </div>
-          <div class="pack-option" onclick="selectB2cPack('Duo Pack (2x 250ml)', 2, 480, this)">
+          <div class="pack-option" onclick="selectB2cPack('Duo Pack', 2, 480, this)">
             <div class="pack-name">Duo Pack</div>
             <div class="pack-price">₹480</div>
-            <div class="pack-desc">2x 250ml</div>
+            <div class="pack-desc">2x 250ml (MOQ)</div>
           </div>
-          <div class="pack-option active" onclick="selectB2cPack('Weekend Pack (4x 250ml)', 4, 899, this)">
+          <div class="pack-option active" onclick="selectB2cPack('Weekend Pack', 4, 899, this)">
+            <div class="pack-badge">Popular</div>
             <div class="pack-name">Weekend Pack</div>
             <div class="pack-price">₹899</div>
             <div class="pack-desc">4x 250ml</div>
           </div>
-          <div class="pack-option" onclick="selectB2cPack('Weekly Sub (6x 250ml)', 5, 1200, this)">
-            <div class="pack-name">Mega Weekend</div>
-            <div class="pack-price">₹1,200</div>
-            <div class="pack-desc">6x 250ml</div>
+          <div class="pack-option" onclick="selectB2cPack('Weekly Sub', 5, 1000, this)">
+            <div class="pack-badge">Value</div>
+            <div class="pack-name">Weekly Sub</div>
+            <div class="pack-price">₹1,000</div>
+            <div class="pack-desc">5x 250ml (@ ₹200)</div>
           </div>
         </div>
 
-        <div class="pack-grid" id="b2bPacks" style="display:none;">
+        <!-- B2B Packs -->
+        <div class="pack-grid" id="b2bPacks" style="display: none;">
           <div class="pack-option active" onclick="selectB2bPack('Team Pack (10x 250ml)', 10, 1800, this)">
             <div class="pack-name">Team Pack</div>
             <div class="pack-price">₹1,800</div>
-            <div class="pack-desc">10x 250ml</div>
+            <div class="pack-desc">10x 250ml (₹180/ea)</div>
           </div>
           <div class="pack-option" onclick="selectB2bPack('Office Batch (20x 250ml)', 20, 3400, this)">
             <div class="pack-name">Office Batch</div>
             <div class="pack-price">₹3,400</div>
-            <div class="pack-desc">20x 250ml</div>
+            <div class="pack-desc">20x 250ml (₹170/ea)</div>
           </div>
           <div class="pack-option" onclick="selectB2bPack('Floor Pack (40x 250ml)', 40, 6000, this)">
             <div class="pack-name">Floor Pack</div>
             <div class="pack-price">₹6,000</div>
-            <div class="pack-desc">40x 250ml</div>
+            <div class="pack-desc">40x 250ml (₹150/ea)</div>
           </div>
           <div class="pack-option" onclick="selectB2bPack('Townhall Bulk (60x 250ml)', 60, 8700, this)">
             <div class="pack-name">Townhall Bulk</div>
             <div class="pack-price">₹8,700</div>
-            <div class="pack-desc">60x 250ml</div>
+            <div class="pack-desc">60x 250ml (₹145/ea)</div>
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="packQty">Quantity of Packs</label>
-          <input type="number" id="packQty" min="1" max="50" value="1" oninput="updateTotal()" />
-          <div id="errQty" class="field-error">Please enter a valid quantity (minimum 1).</div>
+        <div class="form-group" style="margin-top: 10px;">
+          <label for="packQty">Quantity of Selected Packs</label>
+          <input type="number" id="packQty" min="1" value="1" oninput="updateTotal()" />
+          <div class="field-error" id="errQty">Please enter a valid pack quantity (minimum 1).</div>
         </div>
 
         <div class="summary-box">
-          <span>Total Amount (Free Delivery):</span>
-          <span id="totalAmountDisplay" class="summary-total">₹899</span>
+          <span style="font-size:0.85rem; color:var(--text-muted);">Total (Free Delhi NCR Drop):</span>
+          <span class="summary-total" id="totalAmountDisplay">₹899</span>
         </div>
-      </section>
+      </div>
 
-      <!-- 2. Customer & Delivery Info -->
-      <section class="section-card">
-        <div class="section-title">2. Customer & Delivery Info</div>
+      <!-- Section 2: Delivery & Contact Details -->
+      <div class="section-card" style="margin-top: 14px;">
+        <div class="section-title">
+          <span>2. Delivery & Contact Details</span>
+        </div>
+
+        <!-- 1-Click Saved Profile Banner -->
+        <div class="saved-profile-bar" id="savedProfileBar">
+          <span id="savedProfileText">👋 Welcome back! Autofill previous order info?</span>
+          <button class="saved-profile-btn" onclick="applySavedProfile()">Autofill</button>
+        </div>
 
         <!-- B2B Fields -->
-        <div id="b2bFields" style="display:none;">
+        <div id="b2bFields" style="display: none;">
           <div class="form-group">
             <label for="custCompany">Company / Business Name *</label>
-            <input type="text" id="custCompany" placeholder="e.g. Zomato, Google, Razorpay" onblur="validateField('custCompany')" />
-            <div id="errCompany" class="field-error">Please enter your company or business name.</div>
+            <input type="text" id="custCompany" placeholder="e.g. Google India / Zomato" oninput="validateField('custCompany')" />
+            <div class="field-error" id="errCompany">Please enter your company or organization name.</div>
           </div>
+
           <div class="form-group">
-            <label for="b2bTechPark">Tech Park / Commercial Complex *</label>
+            <label for="b2bTechPark">Tech Park / Commercial Hub *</label>
             <select id="b2bTechPark">
               <option value="DLF Cyber City / Cyber Hub (Gurugram)">DLF Cyber City / Cyber Hub (Gurugram)</option>
-              <option value="One Horizon Center / Golf Course Rd (Gurugram)">One Horizon Center / Golf Course Rd</option>
-              <option value="Candor TechSpace / Sector 48 (Gurugram)">Candor TechSpace / Sector 48</option>
-              <option value="Cyber Park / Sector 67 (Gurugram)">Cyber Park / Sector 67</option>
-              <option value="Udyog Vihar Phases 1-5 (Gurugram)">Udyog Vihar</option>
-              <option value="Noida Sector 62 / 126 / 135 Tech Parks">Noida Sector 62 / 126 / 135</option>
-              <option value="South / Central Delhi Office Area">South / Central Delhi</option>
+              <option value="One Horizon Center / Golf Course Rd (Gurugram)">One Horizon Center / Golf Course Rd (Gurugram)</option>
+              <option value="Candor TechSpace / Sector 48 (Gurugram)">Candor TechSpace / Sector 48 (Gurugram)</option>
+              <option value="Cyber Park / Sector 67 (Gurugram)">Cyber Park / Sector 67 (Gurugram)</option>
+              <option value="Udyog Vihar Phases 1-5 (Gurugram)">Udyog Vihar Phases 1-5 (Gurugram)</option>
+              <option value="Noida Sector 62 / 126 / 135 Tech Parks">Noida Sector 62 / 126 / 135 Tech Parks</option>
+              <option value="South / Central Delhi Office Area">South / Central Delhi Office Area</option>
               <option value="Other Commercial Complex">Other Commercial Complex</option>
             </select>
           </div>
+
           <div class="form-group">
-            <label for="b2bDeliveryWindow">Friday Delivery Slot *</label>
+            <label for="b2bDeliveryWindow">Friday Delivery Window *</label>
             <select id="b2bDeliveryWindow">
               <option value="Morning Kickoff (9:30 AM – 11:30 AM)">Morning Kickoff (9:30 AM – 11:30 AM)</option>
               <option value="Afternoon Recharge (2:00 PM – 4:00 PM)">Afternoon Recharge (2:00 PM – 4:00 PM)</option>
             </select>
           </div>
+
           <div class="form-group">
-            <label for="custGstin">Company GSTIN (Optional, for Input Tax Credit)</label>
-            <input type="text" id="custGstin" placeholder="e.g. 06AAAAA0000A1Z5" maxlength="15" onblur="validateGstinField()" />
-            <div id="errGstin" class="field-error">Please enter a valid 15-character GSTIN format.</div>
+            <label for="custGstin">Company GSTIN (Optional, for 18% Input Tax Credit)</label>
+            <input type="text" id="custGstin" placeholder="e.g. 06AAAAA0000A1Z5" maxlength="15" oninput="validateGstinField()" />
+            <div class="field-error" id="errGstin">Please enter a valid 15-character GSTIN.</div>
           </div>
         </div>
 
-        <!-- B2C City Dropdown -->
+        <!-- B2C City / Region -->
         <div class="form-group" id="b2cCityGroup">
-          <label for="custCity">City / Area (Delhi NCR)</label>
+          <label for="custCity">City / Region (Delhi NCR Only)</label>
           <select id="custCity">
-            <option value="Gurugram (DLF Phase 1-5 / Cyber City / Golf Course Rd)">Gurugram (DLF / Cyber City / Golf Course Rd)</option>
+            <option value="Gurugram (DLF Phase 1-5 / Cyber City / Golf Course Rd)">Gurugram (DLF Phase 1-5 / Cyber City / Golf Course Rd)</option>
             <option value="South / Central Delhi">South / Central Delhi</option>
             <option value="Noida / Greater Noida">Noida / Greater Noida</option>
             <option value="Faridabad / Ghaziabad">Faridabad / Ghaziabad</option>
@@ -162,86 +240,150 @@
 
         <div class="form-group">
           <label for="custPincode">6-Digit PIN Code *</label>
-          <input type="text" id="custPincode" maxlength="6" placeholder="e.g. 122002" oninput="validatePincodeField()" onblur="validatePincodeField()" required />
+          <input type="text" id="custPincode" maxlength="6" placeholder="e.g. 122002" oninput="validatePincodeField()" />
           <div id="pinStatus" class="pin-status"></div>
-          <div id="errPincode" class="field-error">Please enter a valid 6-digit Delhi NCR PIN Code (e.g. 122002).</div>
+          <div class="field-error" id="errPincode">Please enter a valid 6-digit Delhi NCR PIN code.</div>
         </div>
 
         <div class="form-group">
-          <label for="custName" id="labelName">Contact Person Name *</label>
-          <input type="text" id="custName" placeholder="e.g. Rohan Verma" onblur="validateField('custName')" required />
-          <div id="errName" class="field-error">Please enter a valid name (at least 2 characters).</div>
+          <label id="labelName" for="custName">Your Name *</label>
+          <input type="text" id="custName" placeholder="e.g. Astitva Gupta" oninput="validateField('custName')" />
+          <div class="field-error" id="errName">Please enter your name (at least 2 characters).</div>
         </div>
 
         <div class="form-group">
-          <label for="custEmail" id="labelEmail">Email Address (For Confirmation & Invoices) *</label>
-          <input type="email" id="custEmail" placeholder="e.g. rohan@example.com" onblur="validateEmailField()" required />
-          <div id="errEmail" class="field-error">Please enter a valid email address.</div>
+          <label id="labelEmail" for="custEmail">Email Address (For Order Updates & Invoices) *</label>
+          <input type="email" id="custEmail" placeholder="e.g. astitva@example.com" oninput="validateEmailField()" />
+          <div class="field-error" id="errEmail">Please enter a valid email address.</div>
         </div>
 
         <div class="form-group">
-          <label for="custPhone">10-Digit Mobile Number *</label>
-          <input type="tel" id="custPhone" maxlength="10" placeholder="e.g. 9876543210" oninput="validatePhoneField()" onblur="validatePhoneField()" required />
-          <div id="errPhone" class="field-error">Please enter a valid 10-digit Indian mobile number (starting with 6-9).</div>
+          <label for="custPhone">WhatsApp / Mobile Number *</label>
+          <input type="tel" id="custPhone" placeholder="e.g. 9876543210" maxlength="10" oninput="validatePhoneField()" />
+          <div class="field-error" id="errPhone">Please enter a valid 10-digit Indian mobile number.</div>
         </div>
 
         <div class="form-group">
-          <label for="custAddress" id="labelAddress">Building / Tower / Floor Details *</label>
-          <textarea id="custAddress" rows="2" placeholder="Building, Tower, Floor, Flat or Society" onblur="validateField('custAddress')" required></textarea>
-          <div id="errAddress" class="field-error">Please enter full address details (at least 5 characters).</div>
+          <label id="labelAddress" for="custAddress">Delivery Address (Building, Flat, Society) *</label>
+          <textarea id="custAddress" rows="2" placeholder="e.g. Flat 402, Tower 3, DLF Phase 5" oninput="validateField('custAddress')"></textarea>
+          <div class="field-error" id="errAddress">Please enter your complete address.</div>
         </div>
 
-        <!-- B2B Payment Mode -->
-        <div id="b2bPaymentChoiceGroup" style="display:none; margin-top: 10px;">
+        <div class="form-group">
+          <label for="dropInstructions">Delivery / Gate Drop Preference</label>
+          <select id="dropInstructions">
+            <option value="Deliver directly to door / desk">Deliver directly to door / desk</option>
+            <option value="Leave with Tower Security / Concierge Desk">Leave with Tower Security / Concierge Desk</option>
+            <option value="Call upon arrival for pickup">Call upon arrival for pickup</option>
+          </select>
+        </div>
+
+        <!-- B2B Payment Choice -->
+        <div class="form-group" id="b2bPaymentChoiceGroup" style="display: none; margin-top: 8px;">
           <label>Payment Method</label>
-          <div class="radio-group">
-            <label class="radio-option">
-              <input type="radio" name="b2bPayOption" value="GATEWAY" checked onclick="setB2bPayOption('GATEWAY')" />
-              <span>Razorpay (Cards/UPI)</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="b2bPayOption" value="INVOICE" onclick="setB2bPayOption('INVOICE')" />
-              <span>Corporate Invoice</span>
-            </label>
+          <div style="display: flex; gap: 8px; margin-top: 4px;">
+            <button type="button" class="mode-tab active" id="payOptionGateway" style="flex:1; border:1px solid var(--card-border);" onclick="setB2bPayOption('GATEWAY')">💳 Razorpay (Cards/UPI)</button>
+            <button type="button" class="mode-tab" id="payOptionInvoice" style="flex:1; border:1px solid var(--card-border);" onclick="setB2bPayOption('INVOICE')">📄 Corporate Invoice (Net-7)</button>
           </div>
         </div>
 
         <button id="payNowBtn" class="btn btn-pay" onclick="handlePayClick()">
           <span id="btnText">💳 Pay & Confirm Pre-Order (<span id="btnAmount">₹899</span>)</span>
         </button>
-      </section>
-    </main>
+      </div>
+
+      <!-- Freshness Guide Accordion -->
+      <div class="guide-accordion">
+        <div class="guide-header" onclick="toggleGuide()">
+          <span>❄️ Why Flash-Brew? (48-Hour Freshness Guide)</span>
+          <span id="guideArrow">▼</span>
+        </div>
+        <div class="guide-body" id="guideBody">
+          <div class="guide-step">
+            <strong>1. Extracted Hot, Chilled Instantly:</strong> Captures delicate floral and fruit aromatics that standard cold brew loses to oxidation.
+          </div>
+          <div class="guide-step">
+            <strong>2. 100% Preservative Free:</strong> Micro-batched overnight for your morning drop. Zero shelf-stabilizers.
+          </div>
+          <div class="guide-step">
+            <strong>3. Peak Window:</strong> Refrigerate upon delivery. Enjoy poured over clean ice within <strong>48 hours</strong> of drop!
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Confirmation View -->
-    <aside id="confirmationView">
-      <div class="section-card text-center">
+    <div id="confirmationView">
+      <div class="section-card" style="text-align: center;">
         <div class="success-badge">✓ Order Confirmed</div>
-        <h2>Thank You for Your Order!</h2>
-        
-        <div class="info-banner">
-          📧 <strong>Confirmation Email Dispatched:</strong> A detailed receipt has been sent to your email address from our live tracker.
-        </div>
+        <h2 style="font-size: 1.3rem; margin-bottom: 4px;">Thank You for Your Order!</h2>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">Your micro-batch is scheduled for fresh roast & chilled delivery.</p>
 
-        <div class="shelf-life-reminder">
-          ❄️ <strong>Freshness Note:</strong> Crafted fresh with zero preservatives. Please refrigerate upon arrival and consume within <strong>48 hours</strong> of delivery!
+        <div class="freshness-alert">
+          ❄️ <strong>48-Hour Freshness Guarantee:</strong> Crafted fresh with zero preservatives. Keep refrigerated upon arrival and consume within 48 hours for peak tasting notes!
         </div>
 
         <div class="receipt-details">
-          <div class="receipt-row"><span>Order ID</span><strong id="rOrderId">-</strong></div>
-          <div class="receipt-row"><span>Order Type</span><strong id="rOrderType">-</strong></div>
-          <div class="receipt-row" id="rCompanyRow" style="display:none;"><span>Company</span><strong id="rCompany">-</strong></div>
-          <div class="receipt-row"><span>Payment ID</span><code id="rPayId">-</code></div>
-          <div class="receipt-row"><span>Delivery Date</span><strong id="rDropDate" class="accent-text">-</strong></div>
-          <div class="receipt-row" id="rWindowRow" style="display:none;"><span>Delivery Slot</span><strong id="rWindow">-</strong></div>
-          <div class="receipt-row"><span>Customer</span><strong id="rName">-</strong></div>
-          <div class="receipt-row"><span>Email</span><span id="rEmail">-</span></div>
-          <div class="receipt-row"><span>Selection</span><strong id="rPack">-</strong></div>
-          <div class="receipt-row"><span>Total Amount</span><strong id="rTotal" class="accent-text">-</strong></div>
+          <div class="receipt-row">
+            <span class="receipt-label">Order ID</span>
+            <span class="receipt-val" id="rOrderId" style="font-family: monospace;">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Order Type</span>
+            <span class="receipt-val" id="rOrderType">-</span>
+          </div>
+          <div class="receipt-row" id="rCompanyRow" style="display:none;">
+            <span class="receipt-label">Company</span>
+            <span class="receipt-val" id="rCompany">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Payment Ref</span>
+            <span class="receipt-val" id="rPayId" style="font-family: monospace; font-size: 0.78rem;">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Delivery Date</span>
+            <span class="receipt-val" id="rDropDate" style="color: var(--accent);">-</span>
+          </div>
+          <div class="receipt-row" id="rWindowRow" style="display:none;">
+            <span class="receipt-label">Delivery Slot</span>
+            <span class="receipt-val" id="rWindow">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Customer</span>
+            <span class="receipt-val" id="rName">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Email</span>
+            <span class="receipt-val" id="rEmail">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Coffee Lot</span>
+            <span class="receipt-val" id="rBean">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Selection</span>
+            <span class="receipt-val" id="rPack">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Total Amount</span>
+            <span class="receipt-val" id="rTotal" style="color: var(--accent); font-size: 1.05rem;">-</span>
+          </div>
         </div>
 
-        <button class="btn btn-secondary" onclick="resetForm()">+ Place Another Order</button>
+        <button class="btn btn-calendar" onclick="addToGoogleCalendar()">
+          <span>📅 Add Delivery Window to Google Calendar</span>
+        </button>
+
+        <button class="btn btn-whatsapp" onclick="sendWhatsAppReceipt()">
+          <span>📱 Send Receipt / Updates to My WhatsApp</span>
+        </button>
+
+        <button class="btn btn-secondary" onclick="resetForm()">
+          <span>+ Place Another Pre-Order</span>
+        </button>
       </div>
-    </aside>
+    </div>
+
   </div>
 
   <script src="app.js"></script>

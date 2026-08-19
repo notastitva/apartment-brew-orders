@@ -1,20 +1,20 @@
 // ====================================================================
-// THE APARTMENT BREW CO. — FRONTEND LOGIC (app.js)
+// THE APARTMENT BREW CO. — FRONTEND CONTROLLER (app.js)
 // ====================================================================
 
 const CONFIG = {
-  razorpayKeyId: "rzp_test_TRVab1bUUwOVN5", // Replace with your active Live Key ID (rzp_live_...)
-  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbx7nE2uQV08Ev4UYt8FFkmVZMGMpksvhIjljALGSbXYmc1FEv_1nh34BoR99mdTHic/exec", // Replace with your Apps Script Web App URL ending in /exec
-  authToken: "TABC_SECURE_TOKEN_2026" // Shared auth token matching Code.gs
+  razorpayKeyId: "rzp_test_TRVab1bUUwOVN5",
+  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbx7nE2uQV08Ev4UYt8FFkmVZMGMpksvhIjljALGSbXYmc1FEv_1nh34BoR99mdTHic/exec",
+  authToken: "TABC_SECURE_TOKEN_2026"
 };
 
 let currentMode = "B2C";
 let currentB2bPayOption = "GATEWAY";
-
-let selectedB2cPack = { name: "Weekend Pack (4x 250ml)", bottles: 4, unitPrice: 899 };
+let selectedBean = "Ratnagiri Estate (Anaerobic Naturals)";
+let selectedB2cPack = { name: "Weekend Pack", bottles: 4, unitPrice: 899 };
 let selectedB2bPack = { name: "Team Pack (10x 250ml)", bottles: 10, unitPrice: 1800 };
+let currentOrderDetails = null;
 
-// Dynamic Friday calculation for B2B
 function getUpcomingFridayFormatted() {
   const d = new Date();
   let days = (5 - d.getDay() + 7) % 7;
@@ -23,7 +23,6 @@ function getUpcomingFridayFormatted() {
   return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-// Dynamic Saturday calculation for B2C
 function getUpcomingSaturdayFormatted() {
   const d = new Date();
   let days = (6 - d.getDay() + 7) % 7;
@@ -32,13 +31,52 @@ function getUpcomingSaturdayFormatted() {
   return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
 }
 
+function startCutoffCountdown() {
+  function updateTimer() {
+    const now = new Date();
+    const isB2c = currentMode === "B2C";
+    const target = new Date();
+
+    if (isB2c) {
+      let daysUntilFri = (5 - now.getDay() + 7) % 7;
+      if (daysUntilFri === 0 && now.getHours() >= 22) daysUntilFri = 7;
+      target.setDate(now.getDate() + daysUntilFri);
+      target.setHours(22, 0, 0, 0);
+    } else {
+      let daysUntilThu = (4 - now.getDay() + 7) % 7;
+      if (daysUntilThu === 0 && now.getHours() >= 18) daysUntilThu = 7;
+      target.setDate(now.getDate() + daysUntilThu);
+      target.setHours(18, 0, 0, 0);
+    }
+
+    const diff = target - now;
+    if (diff <= 0) {
+      document.getElementById('countdownTimer').textContent = "⚡ Cutoff reached for next batch. Orders queue for following drop.";
+      return;
+    }
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+    const cutoffLabel = isB2c ? "Saturday Drop Cutoff" : "Friday Drop Cutoff";
+    document.getElementById('countdownTimer').textContent = `⏱️ ${cutoffLabel} closes in ${hours}h ${mins}m ${secs}s`;
+  }
+
+  updateTimer();
+  setInterval(updateTimer, 1000);
+}
+
 function switchMode(mode) {
   currentMode = mode;
   document.getElementById('tabB2c').classList.toggle('active', mode === 'B2C');
   document.getElementById('tabB2b').classList.toggle('active', mode === 'B2B');
 
   const isB2c = mode === 'B2C';
-  document.getElementById('dropBanner').textContent = isB2c ? `Next Fresh Drop: ${getUpcomingSaturdayFormatted()} (Morning)` : `Next Office Drop: ${getUpcomingFridayFormatted()} (Friday Delivery)`;
+  document.getElementById('dropBanner').innerHTML = isB2c 
+    ? `<span>⚡</span> Next Fresh Drop: ${getUpcomingSaturdayFormatted()} (Morning)` 
+    : `<span>⚡</span> Next Office Drop: ${getUpcomingFridayFormatted()} (Friday Delivery)`;
+  
   document.getElementById('packSubtext').textContent = isB2c ? 'Saturday Drop' : 'Friday Office Drop (Cutoff: Thu 6 PM)';
   document.getElementById('b2cPacks').style.display = isB2c ? 'grid' : 'none';
   document.getElementById('b2bPacks').style.display = isB2c ? 'none' : 'grid';
@@ -48,9 +86,15 @@ function switchMode(mode) {
   document.getElementById('labelName').textContent = isB2c ? 'Your Name *' : 'Contact Person Name & Role *';
   document.getElementById('labelEmail').textContent = isB2c ? 'Email Address *' : 'Work Email *';
   document.getElementById('labelAddress').textContent = isB2c ? 'Delivery Address (Building, Flat, Society) *' : 'Building / Tower / Floor Details *';
-  
+
   if (isB2c) currentB2bPayOption = 'GATEWAY';
   updateTotal();
+}
+
+function selectLot(lotName, element) {
+  document.querySelectorAll('#lotGrid .lot-card').forEach(el => el.classList.remove('active'));
+  element.classList.add('active');
+  selectedBean = lotName;
 }
 
 function selectB2cPack(name, bottles, price, el) {
@@ -69,6 +113,8 @@ function selectB2bPack(name, bottles, price, el) {
 
 function setB2bPayOption(option) {
   currentB2bPayOption = option;
+  document.getElementById('payOptionGateway').classList.toggle('active', option === 'GATEWAY');
+  document.getElementById('payOptionInvoice').classList.toggle('active', option === 'INVOICE');
   updateTotal();
 }
 
@@ -94,9 +140,62 @@ function updateTotal() {
   }
 }
 
-// ==========================================
-// Real-Time Form Validation Checks
-// ==========================================
+function checkSavedProfile() {
+  try {
+    const raw = localStorage.getItem('tabc_customer_profile');
+    if (raw) {
+      const profile = JSON.parse(raw);
+      if (profile && profile.name) {
+        document.getElementById('savedProfileBar').style.display = 'flex';
+        document.getElementById('savedProfileText').textContent = `👋 Welcome back, ${profile.name}! Autofill your details?`;
+      }
+    }
+  } catch (e) {}
+}
+
+function applySavedProfile() {
+  try {
+    const raw = localStorage.getItem('tabc_customer_profile');
+    if (raw) {
+      const p = JSON.parse(raw);
+      if (p.name) document.getElementById('custName').value = p.name;
+      if (p.email) document.getElementById('custEmail').value = p.email;
+      if (p.phone) document.getElementById('custPhone').value = p.phone;
+      if (p.pin) {
+        document.getElementById('custPincode').value = p.pin;
+        validatePincodeField();
+      }
+      if (p.address) document.getElementById('custAddress').value = p.address;
+      if (p.company && document.getElementById('custCompany')) document.getElementById('custCompany').value = p.company;
+      if (p.gstin && document.getElementById('custGstin')) document.getElementById('custGstin').value = p.gstin;
+      validateAllInputs();
+    }
+  } catch (e) {}
+}
+
+function saveCustomerProfile(data) {
+  try {
+    const profile = {
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      pin: data.pinCode,
+      address: data.buildingFloor,
+      company: data.company !== 'N/A' ? data.company : '',
+      gstin: data.gstin !== 'N/A' ? data.gstin : ''
+    };
+    localStorage.setItem('tabc_customer_profile', JSON.stringify(profile));
+  } catch (e) {}
+}
+
+function toggleGuide() {
+  const body = document.getElementById('guideBody');
+  const arrow = document.getElementById('guideArrow');
+  const isOpen = body.style.display === 'block';
+  body.style.display = isOpen ? 'none' : 'block';
+  arrow.textContent = isOpen ? '▼' : '▲';
+}
+
 function setFieldState(inputEl, errorEl, isValid) {
   if (isValid) {
     inputEl.classList.remove('input-invalid');
@@ -132,7 +231,7 @@ function validateEmailField() {
   const el = document.getElementById('custEmail');
   const errEl = document.getElementById('errEmail');
   const val = el.value.trim();
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-\]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return setFieldState(el, errEl, emailRegex.test(val));
 }
 
@@ -215,37 +314,33 @@ function handlePayClick() {
     return;
   }
 
-  // Razorpay Gateway Flow
   const total = calculateTotal();
   const name = document.getElementById('custName').value.trim();
   const email = document.getElementById('custEmail').value.trim();
   const phone = document.getElementById('custPhone').value.trim();
   const activePack = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
 
-  const options = {
-    key: CONFIG.razorpayKeyId,
-    amount: total * 100,
-    currency: "INR",
-    name: "The Apartment Brew Co.",
-    description: `${currentMode === 'B2B' ? 'Office Drop' : 'Pre-Order'}: ${activePack.name}`,
-    prefill: {
-      name: name,
-      email: email,
-      contact: phone
-    },
-    theme: {
-      color: "#d4a373"
-    },
-    handler: function (response) {
-      handleOrderSuccess(response.razorpay_payment_id, "Paid via Gateway");
-    }
-  };
+  if (CONFIG.razorpayKeyId && !CONFIG.razorpayKeyId.includes("YOUR_RAZORPAY")) {
+    const options = {
+      key: CONFIG.razorpayKeyId,
+      amount: total * 100,
+      currency: "INR",
+      name: "The Apartment Brew Co.",
+      description: `${currentMode === 'B2B' ? 'Office Drop' : 'Pre-Order'}: ${activePack.name}`,
+      prefill: { name: name, email: email, contact: phone },
+      theme: { color: "#d4a373" },
+      handler: function (response) { handleOrderSuccess(response.razorpay_payment_id, "Paid via Gateway"); }
+    };
 
-  const rzp = new Razorpay(options);
-  rzp.on('payment.failed', function (response) {
-    alert('Payment was not completed: ' + (response.error.description || 'Please try again.'));
-  });
-  rzp.open();
+    const rzp = new Razorpay(options);
+    rzp.on('payment.failed', function (response) {
+      alert('Payment was not completed: ' + (response.error.description || 'Please try again.'));
+    });
+    rzp.open();
+  } else {
+    const demoPayId = "pay_demo_" + Math.random().toString(36).substring(2, 9);
+    handleOrderSuccess(demoPayId, "Paid via Gateway (Demo)");
+  }
 }
 
 async function handleOrderSuccess(paymentId, statusText) {
@@ -253,10 +348,10 @@ async function handleOrderSuccess(paymentId, statusText) {
   const email = document.getElementById('custEmail').value.trim();
   const phone = document.getElementById('custPhone').value.trim();
   const pin = document.getElementById('custPincode').value.trim();
-  const bean = document.getElementById('coffeeOrigin').value;
   const qty = parseInt(document.getElementById('packQty').value, 10) || 1;
   const total = calculateTotal();
   const activePack = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
+  const dropInstructions = document.getElementById('dropInstructions').value;
 
   const isB2c = currentMode === 'B2C';
   const orderId = isB2c ? "TABC-" + Math.floor(100000 + Math.random() * 900000) : "TABC-B2B-" + Math.floor(100000 + Math.random() * 900000);
@@ -281,10 +376,11 @@ async function handleOrderSuccess(paymentId, statusText) {
     gstin: gstin,
     techPark: location,
     buildingFloor: buildingFloor,
+    dropInstructions: dropInstructions,
     pinCode: pin,
     deliveryWindow: deliveryWindow,
     dropDate: dropDate,
-    bean: bean,
+    bean: selectedBean,
     pack: activePack.name,
     quantity: qty,
     bottles: activePack.bottles * qty,
@@ -292,8 +388,11 @@ async function handleOrderSuccess(paymentId, statusText) {
     paymentMode: paymentMode,
     paymentStatus: `${statusText} (${paymentId})`,
     deliveryStatus: 'Pre-Ordered',
-    notes: `Payment ID: ${paymentId} | Mode: ${currentMode}`
+    notes: `Payment ID: ${paymentId} | Mode: ${currentMode} | Instruction: ${dropInstructions}`
   };
+
+  currentOrderDetails = orderPayload;
+  saveCustomerProfile(orderPayload);
 
   if (CONFIG.googleSheetEndpoint && !CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
     fetch(CONFIG.googleSheetEndpoint, {
@@ -304,23 +403,59 @@ async function handleOrderSuccess(paymentId, statusText) {
     }).catch(console.error);
   }
 
-  // Display Confirmation Screen
   document.getElementById('rOrderId').textContent = orderId;
-  document.getElementById('rOrderType').textContent = isB2c ? 'Individual Pre-Order' : 'Corporate Office Drop';
+  document.getElementById('rOrderType').textContent = isB2c ? 'Individual Pre-Order (Sat Drop)' : 'Corporate Office Drop (Fri Drop)';
   document.getElementById('rCompanyRow').style.display = isB2c ? 'none' : 'flex';
   if (!isB2c) document.getElementById('rCompany').textContent = company;
-  document.getElementById('rWindowRow').style.display = isB2c ? 'none' : 'flex';
-  if (!isB2c) document.getElementById('rWindow').textContent = deliveryWindow;
+  document.getElementById('rWindowRow').style.display = 'flex';
+  document.getElementById('rWindow').textContent = deliveryWindow;
 
   document.getElementById('rPayId').textContent = paymentId;
   document.getElementById('rDropDate').textContent = dropDate;
   document.getElementById('rName').textContent = name;
   document.getElementById('rEmail').textContent = email;
+  document.getElementById('rBean').textContent = selectedBean;
   document.getElementById('rPack').textContent = `${activePack.name} x ${qty} (${activePack.bottles * qty} bottles)`;
   document.getElementById('rTotal').textContent = `₹${total.toLocaleString('en-IN')}`;
 
   document.getElementById('orderFormView').style.display = 'none';
   document.getElementById('confirmationView').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function addToGoogleCalendar() {
+  if (!currentOrderDetails) return;
+  const d = currentOrderDetails;
+  const title = encodeURIComponent(`The Apartment Brew Co. Drop: ${d.orderId}`);
+  const details = encodeURIComponent(`Fresh Flash-Brew Specialty Coffee Drop\nOrder ID: ${d.orderId}\nLot: ${d.bean}\nSelection: ${d.pack}\nTotal: ₹${d.totalAmount}\n\nNote: Please refrigerate upon delivery and enjoy within 48 hours for peak flavor!`);
+  const location = encodeURIComponent(`${d.buildingFloor}, ${d.techPark} (PIN: ${d.pinCode})`);
+  const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}`;
+  window.open(gcalUrl, '_blank');
+}
+
+function sendWhatsAppReceipt() {
+  if (!currentOrderDetails) return;
+  const d = currentOrderDetails;
+
+  const message = `*☕ ORDER & DELIVERY CONFIRMATION — THE APARTMENT BREW CO.*\n` +
+                  `------------------------------------\n` +
+                  `*Order ID:* ${d.orderId}\n` +
+                  `*Delivery Date:* ${d.dropDate} (${d.deliveryWindow})\n` +
+                  `*Customer:* ${d.name} (${d.phone})\n` +
+                  `*Delivery Address:* ${d.buildingFloor}, ${d.techPark}\n` +
+                  `*Drop Note:* ${d.dropInstructions}\n` +
+                  `------------------------------------\n` +
+                  `*Coffee Lot:* ${d.bean}\n` +
+                  `*Selection:* ${d.pack}\n` +
+                  `*Total Bottles:* ${d.bottles}x 250ml\n` +
+                  `*Total Paid:* ₹${d.totalAmount} (${d.paymentStatus})\n` +
+                  `------------------------------------\n` +
+                  `_Freshness Reminder: Extracted hot and flash-chilled with zero preservatives. Please refrigerate and consume within 48 hours!_`;
+
+  let cleanPhone = d.phone.replace(/[^0-9]/g, '');
+  if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
+  const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+  window.open(whatsappUrl, '_blank');
 }
 
 function resetForm() {
@@ -336,6 +471,11 @@ function resetForm() {
   document.getElementById('pinStatus').textContent = '';
   document.querySelectorAll('input, textarea').forEach(el => el.classList.remove('input-valid', 'input-invalid'));
   document.querySelectorAll('.field-error').forEach(el => el.style.display = 'none');
+  checkSavedProfile();
 }
 
-switchMode('B2C');
+document.addEventListener('DOMContentLoaded', () => {
+  switchMode('B2C');
+  startCutoffCountdown();
+  checkSavedProfile();
+});
