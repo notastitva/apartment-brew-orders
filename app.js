@@ -3,18 +3,20 @@
 // ====================================================================
 
 const CONFIG = {
-  razorpayKeyId: "rzp_test_TRVab1bUUwOVN5",
-  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbx7nE2uQV08Ev4UYt8FFkmVZMGMpksvhIjljALGSbXYmc1FEv_1nh34BoR99mdTHic/exec",
-  authToken: "TABC_SECURE_TOKEN_2026"
+  razorpayKeyId: "YOUR_RAZORPAY_KEY_ID_HERE", // Replace with your active Key ID (rzp_live_...)
+  googleSheetEndpoint: "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE", // Replace with Apps Script Web App URL ending in /exec
+  authToken: "TABC_SECURE_TOKEN_2026" // Shared auth token matching Code.gs
 };
 
 let currentMode = "B2C";
 let currentB2bPayOption = "GATEWAY";
-let selectedBean = "Ratnagiri Estate (Anaerobic Naturals)";
+let isCustomSplit = false;
+let customSplit = { ratnagiri: 2, thogarihunkal: 2 };
 let selectedB2cPack = { name: "Weekend Pack", bottles: 4, unitPrice: 899 };
 let selectedB2bPack = { name: "Team Pack (10x 250ml)", bottles: 10, unitPrice: 1800 };
 let currentOrderDetails = null;
 
+// Dynamic Date Calculations
 function getUpcomingFridayFormatted() {
   const d = new Date();
   let days = (5 - d.getDay() + 7) % 7;
@@ -31,6 +33,7 @@ function getUpcomingSaturdayFormatted() {
   return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
 }
 
+// Live Countdown Timer for Pre-Order Cutoff
 function startCutoffCountdown() {
   function updateTimer() {
     const now = new Date();
@@ -38,11 +41,13 @@ function startCutoffCountdown() {
     const target = new Date();
 
     if (isB2c) {
+      // B2C Saturday Drop: Cutoff is Friday 10:00 PM
       let daysUntilFri = (5 - now.getDay() + 7) % 7;
       if (daysUntilFri === 0 && now.getHours() >= 22) daysUntilFri = 7;
       target.setDate(now.getDate() + daysUntilFri);
       target.setHours(22, 0, 0, 0);
     } else {
+      // B2B Friday Drop: Cutoff is Thursday 6:00 PM
       let daysUntilThu = (4 - now.getDay() + 7) % 7;
       if (daysUntilThu === 0 && now.getHours() >= 18) daysUntilThu = 7;
       target.setDate(now.getDate() + daysUntilThu);
@@ -67,6 +72,7 @@ function startCutoffCountdown() {
   setInterval(updateTimer, 1000);
 }
 
+// Switch between B2C & B2B Modes
 function switchMode(mode) {
   currentMode = mode;
   document.getElementById('tabB2c').classList.toggle('active', mode === 'B2C');
@@ -76,7 +82,7 @@ function switchMode(mode) {
   document.getElementById('dropBanner').innerHTML = isB2c 
     ? `<span>⚡</span> Next Fresh Drop: ${getUpcomingSaturdayFormatted()} (Morning)` 
     : `<span>⚡</span> Next Office Drop: ${getUpcomingFridayFormatted()} (Friday Delivery)`;
-  
+
   document.getElementById('packSubtext').textContent = isB2c ? 'Saturday Drop' : 'Friday Office Drop (Cutoff: Thu 6 PM)';
   document.getElementById('b2cPacks').style.display = isB2c ? 'grid' : 'none';
   document.getElementById('b2bPacks').style.display = isB2c ? 'none' : 'grid';
@@ -89,19 +95,88 @@ function switchMode(mode) {
 
   if (isB2c) currentB2bPayOption = 'GATEWAY';
   updateTotal();
+  rebalanceSplitter();
 }
 
+// Visual Lot Selection & Custom Splitter Toggle
 function selectLot(lotName, element) {
   document.querySelectorAll('#lotGrid .lot-card').forEach(el => el.classList.remove('active'));
   element.classList.add('active');
-  selectedBean = lotName;
+  if (lotName.includes('Custom Ratio Split')) {
+    isCustomSplit = true;
+    document.getElementById('customSplitter').style.display = 'block';
+    rebalanceSplitter();
+  } else {
+    isCustomSplit = false;
+    selectedBean = lotName;
+    document.getElementById('customSplitter').style.display = 'none';
+  }
 }
 
+// Custom Ratio Splitter Logic
+function getTotalBottles() {
+  const qtyInput = document.getElementById('packQty');
+  let qty = parseInt(qtyInput.value, 10);
+  if (isNaN(qty) || qty < 1) qty = 1;
+  const active = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
+  return active.bottles * qty;
+}
+
+function rebalanceSplitter() {
+  const total = getTotalBottles();
+  const half = Math.floor(total / 2);
+  customSplit.ratnagiri = half;
+  customSplit.thogarihunkal = total - half;
+  renderSplitterUI();
+}
+
+function adjustSplit(lot, delta) {
+  const total = getTotalBottles();
+  if (lot === 'ratnagiri') {
+    let newRat = customSplit.ratnagiri + delta;
+    if (newRat >= 0 && newRat <= total) {
+      customSplit.ratnagiri = newRat;
+      customSplit.thogarihunkal = total - newRat;
+    }
+  } else {
+    let newThog = customSplit.thogarihunkal + delta;
+    if (newThog >= 0 && newThog <= total) {
+      customSplit.thogarihunkal = newThog;
+      customSplit.ratnagiri = total - newThog;
+    }
+  }
+  renderSplitterUI();
+}
+
+function renderSplitterUI() {
+  const total = getTotalBottles();
+  const alloc = customSplit.ratnagiri + customSplit.thogarihunkal;
+
+  const allocEl = document.getElementById('allocCount');
+  const targetEl = document.getElementById('targetCount');
+  const ratEl = document.getElementById('splitRatnagiri');
+  const thogEl = document.getElementById('splitThogarihunkal');
+  const ratBar = document.getElementById('ratioBarRatnagiri');
+  const thogBar = document.getElementById('ratioBarThogarihunkal');
+
+  if (allocEl) allocEl.textContent = alloc;
+  if (targetEl) targetEl.textContent = total;
+  if (ratEl) ratEl.textContent = customSplit.ratnagiri;
+  if (thogEl) thogEl.textContent = customSplit.thogarihunkal;
+
+  const ratPercent = total > 0 ? (customSplit.ratnagiri / total) * 100 : 50;
+  const thogPercent = total > 0 ? (customSplit.thogarihunkal / total) * 100 : 50;
+
+  if (ratBar) ratBar.style.width = `${ratPercent}%`;
+  if (thogBar) thogBar.style.width = `${thogPercent}%`;
+
+// Pack Selection Handlers
 function selectB2cPack(name, bottles, price, el) {
   document.querySelectorAll('#b2cPacks .pack-option').forEach(e => e.classList.remove('active'));
   el.classList.add('active');
   selectedB2cPack = { name, bottles, unitPrice: price };
   updateTotal();
+  if (isCustomSplit) rebalanceSplitter();
 }
 
 function selectB2bPack(name, bottles, price, el) {
@@ -109,6 +184,7 @@ function selectB2bPack(name, bottles, price, el) {
   el.classList.add('active');
   selectedB2bPack = { name, bottles, unitPrice: price };
   updateTotal();
+  if (isCustomSplit) rebalanceSplitter();
 }
 
 function setB2bPayOption(option) {
@@ -138,8 +214,10 @@ function updateTotal() {
   } else {
     btnText.innerHTML = `💳 Pay & Confirm Pre-Order (<span id="btnAmount">${formatted}</span>)`;
   }
+  if (isCustomSplit) rebalanceSplitter();
 }
 
+// 1-Click Returning Customer localStorage Manager
 function checkSavedProfile() {
   try {
     const raw = localStorage.getItem('tabc_customer_profile');
@@ -148,9 +226,6 @@ function checkSavedProfile() {
       if (profile && profile.name) {
         document.getElementById('savedProfileBar').style.display = 'flex';
         document.getElementById('savedProfileText').textContent = `👋 Welcome back, ${profile.name}! Autofill your details?`;
-      }
-    }
-  } catch (e) {}
 }
 
 function applySavedProfile() {
@@ -170,7 +245,7 @@ function applySavedProfile() {
       if (p.gstin && document.getElementById('custGstin')) document.getElementById('custGstin').value = p.gstin;
       validateAllInputs();
     }
-  } catch (e) {}
+  } catch (e) {
 }
 
 function saveCustomerProfile(data) {
@@ -185,9 +260,9 @@ function saveCustomerProfile(data) {
       gstin: data.gstin !== 'N/A' ? data.gstin : ''
     };
     localStorage.setItem('tabc_customer_profile', JSON.stringify(profile));
-  } catch (e) {}
 }
 
+// Interactive Serving Guide Toggle
 function toggleGuide() {
   const body = document.getElementById('guideBody');
   const arrow = document.getElementById('guideArrow');
@@ -196,6 +271,7 @@ function toggleGuide() {
   arrow.textContent = isOpen ? '▼' : '▲';
 }
 
+// Real-Time Form Validations
 function setFieldState(inputEl, errorEl, isValid) {
   if (isValid) {
     inputEl.classList.remove('input-invalid');
@@ -302,6 +378,7 @@ function validateAllInputs() {
   return isNameValid && isEmailValid && isPhoneValid && isAddressValid && isPinValid && isCompanyValid && isGstinValid && isQtyValid;
 }
 
+// Payment & Submission Handling
 function handlePayClick() {
   if (!validateAllInputs()) {
     alert('Please correct the highlighted fields before placing your order.');
@@ -319,7 +396,9 @@ function handlePayClick() {
   const email = document.getElementById('custEmail').value.trim();
   const phone = document.getElementById('custPhone').value.trim();
   const activePack = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
-
+  const coffeeLotDisplay = isCustomSplit 
+    ? `Custom Split (${customSplit.ratnagiri}x Ratnagiri Estate + ${customSplit.thogarihunkal}x Thogarihunkal Estate)`
+    : selectedBean;
   if (CONFIG.razorpayKeyId && !CONFIG.razorpayKeyId.includes("YOUR_RAZORPAY")) {
     const options = {
       key: CONFIG.razorpayKeyId,
@@ -338,6 +417,7 @@ function handlePayClick() {
     });
     rzp.open();
   } else {
+    // Development / Demo Fallback
     const demoPayId = "pay_demo_" + Math.random().toString(36).substring(2, 9);
     handleOrderSuccess(demoPayId, "Paid via Gateway (Demo)");
   }
@@ -380,7 +460,7 @@ async function handleOrderSuccess(paymentId, statusText) {
     pinCode: pin,
     deliveryWindow: deliveryWindow,
     dropDate: dropDate,
-    bean: selectedBean,
+    bean: coffeeLotDisplay,
     pack: activePack.name,
     quantity: qty,
     bottles: activePack.bottles * qty,
@@ -392,8 +472,11 @@ async function handleOrderSuccess(paymentId, statusText) {
   };
 
   currentOrderDetails = orderPayload;
+
+  // Persist profile to localStorage for 1-click reorders
   saveCustomerProfile(orderPayload);
 
+  // Dispatch to Google Apps Script Backend
   if (CONFIG.googleSheetEndpoint && !CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
     fetch(CONFIG.googleSheetEndpoint, {
       method: "POST",
@@ -403,6 +486,7 @@ async function handleOrderSuccess(paymentId, statusText) {
     }).catch(console.error);
   }
 
+  // Populate & Display Confirmation Screen
   document.getElementById('rOrderId').textContent = orderId;
   document.getElementById('rOrderType').textContent = isB2c ? 'Individual Pre-Order (Sat Drop)' : 'Corporate Office Drop (Fri Drop)';
   document.getElementById('rCompanyRow').style.display = isB2c ? 'none' : 'flex';
@@ -414,7 +498,7 @@ async function handleOrderSuccess(paymentId, statusText) {
   document.getElementById('rDropDate').textContent = dropDate;
   document.getElementById('rName').textContent = name;
   document.getElementById('rEmail').textContent = email;
-  document.getElementById('rBean').textContent = selectedBean;
+  document.getElementById('rBean').textContent = coffeeLotDisplay;
   document.getElementById('rPack').textContent = `${activePack.name} x ${qty} (${activePack.bottles * qty} bottles)`;
   document.getElementById('rTotal').textContent = `₹${total.toLocaleString('en-IN')}`;
 
@@ -423,16 +507,21 @@ async function handleOrderSuccess(paymentId, statusText) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// Google Calendar Event Link Generator
 function addToGoogleCalendar() {
   if (!currentOrderDetails) return;
+
   const d = currentOrderDetails;
   const title = encodeURIComponent(`The Apartment Brew Co. Drop: ${d.orderId}`);
   const details = encodeURIComponent(`Fresh Flash-Brew Specialty Coffee Drop\nOrder ID: ${d.orderId}\nLot: ${d.bean}\nSelection: ${d.pack}\nInstruction: ${d.dropInstructions}\nTotal: ₹${d.totalAmount}\n\nNote: Please refrigerate upon delivery and enjoy within 48 hours for peak flavor!`);
   const location = encodeURIComponent(`${d.buildingFloor}, ${d.techPark} (PIN: ${d.pinCode})`);
+
+  // Format target date for Google Calendar
   const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}`;
   window.open(gcalUrl, '_blank');
 }
 
+// WhatsApp Receipt & Support Trigger
 function sendWhatsAppReceipt() {
   if (!currentOrderDetails) return;
   const d = currentOrderDetails;
@@ -454,6 +543,7 @@ function sendWhatsAppReceipt() {
 
   let cleanPhone = d.phone.replace(/[^0-9]/g, '');
   if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
+
   const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
   window.open(whatsappUrl, '_blank');
 }
@@ -474,8 +564,10 @@ function resetForm() {
   checkSavedProfile();
 }
 
+// Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
   switchMode('B2C');
   startCutoffCountdown();
   checkSavedProfile();
 });
+

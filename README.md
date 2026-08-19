@@ -90,6 +90,7 @@ flowchart TD
 ### 1. `index.html` (Frontend Structure)
 * **Branding Header**: Brand titles, active drop announcement (`#dropBanner`), live cutoff countdown (`#countdownTimer`), and limited batch scarcity progress bar (`#scarcityText`, `#scarcityFill`).
 * **Segmented Mode Switch**: Smooth toggle between B2C (`#tabB2c`) and B2B (`#tabB2b`).
+* **Build Your Own Batch (Custom Ratio Splitter)**: Features dynamic bottle counters (+ / -) for customizing exact lot ratios between Ratnagiri Anaerobic and Thogarihunkal Washed across any pack size, supported by automatic allocation rebalancing and a live dual-tone ratio bar visualization.
 * **Interactive Lot Selector**: Single-estate visual cards with tasting notes, roast levels, and acidity/body sensory meters (`#lotGrid`).
 * **Pack Selection Grids**:
   * B2C: Single Bottle (₹240), Duo Pack (₹480), Weekend Pack (₹899), Mega Weekend (6x 250ml, ₹1,200).

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,12 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>The Apartment Brew Co. | Fresh Flash-Chilled Specialty Coffee Drop</title>
   <link rel="stylesheet" href="style.css" />
+  <!-- Razorpay Standard Checkout SDK -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
   <div class="container">
     
-    <!-- Header Card -->
+    <!-- Branding Header -->
     <div class="header-card">
       <div class="brand-title">The Apartment Brew Co.</div>
       <div class="brand-subtitle">Micro-Batch Flash-Chilled Specialty Coffee • Gurugram</div>
@@ -20,6 +22,7 @@
       </div>
       <div class="countdown-timer" id="countdownTimer">Cutoff closes in: Loading...</div>
 
+      <!-- Scarcity Bar -->
       <div class="scarcity-bar-container">
         <div class="scarcity-label">
           <span>🔥 Limited Batch Capacity</span>
@@ -35,7 +38,7 @@
       </div>
     </div>
 
-    <!-- Mode Selector -->
+    <!-- Mode Selector: B2C vs B2B -->
     <div class="mode-switch">
       <button class="mode-tab active" id="tabB2c" onclick="switchMode('B2C')">☕ Individual Pre-Order (Sat)</button>
       <button class="mode-tab" id="tabB2b" onclick="switchMode('B2B')">🏢 Office & Team Drop (Fri)</button>
@@ -98,15 +101,51 @@
             </div>
           </div>
 
-          <div class="lot-card" onclick="selectLot('Curated Roaster\'s Split (50% Ratnagiri / 50% Thogarihunkal)', this)">
+          <div class="lot-card" onclick="selectLot('Custom Ratio Split (Build Your Own Batch)', this)">
             <div class="lot-header">
-              <span class="lot-name">Curated Roaster's Split</span>
-              <span class="lot-tag">50 / 50 Split</span>
+              <span class="lot-name">Custom Ratio Split</span>
+              <span class="lot-tag">Mix & Match</span>
             </div>
-            <div class="lot-notes">⚖️ Equal blend of Fruity Anaerobic & Floral Washed bottles</div>
+            <div class="lot-notes">🎛️ Customize your exact bottle ratio between Ratnagiri Anaerobic & Thogarihunkal Washed</div>
             <div class="flavor-pills">
-              <span class="flavor-pill">Balanced Flight</span>
+              <span class="flavor-pill">Personalized Flight</span>
             </div>
+          </div>
+        </div>
+
+        <!-- Custom Ratio Splitter Module -->
+        <div class="custom-splitter-card" id="customSplitter" style="display: none;">
+          <div class="splitter-header">
+            <span class="splitter-title">🎛️ Build Your Own Batch Ratio</span>
+            <span class="splitter-tally" id="splitterTally">Allocated: <strong><span id="allocCount">4</span> / <span id="targetCount">4</span></strong> bottles</span>
+          </div>
+          <div class="splitter-controls">
+            <div class="splitter-row">
+              <div class="splitter-lot-info">
+                <span class="splitter-lot-name">Ratnagiri Estate</span>
+                <span class="splitter-lot-sub">Anaerobic Naturals (Fruity & Berry)</span>
+              </div>
+              <div class="qty-stepper">
+                <button type="button" class="stepper-btn" onclick="adjustSplit('ratnagiri', -1)">–</button>
+                <span class="stepper-val" id="splitRatnagiri">2</span>
+                <button type="button" class="stepper-btn" onclick="adjustSplit('ratnagiri', 1)">+</button>
+              </div>
+            </div>
+            <div class="splitter-row">
+              <div class="splitter-lot-info">
+                <span class="splitter-lot-name">Thogarihunkal Estate</span>
+                <span class="splitter-lot-sub">Washed Lot (Floral & Crisp Apple)</span>
+              </div>
+              <div class="qty-stepper">
+                <button type="button" class="stepper-btn" onclick="adjustSplit('thogarihunkal', -1)">–</button>
+                <span class="stepper-val" id="splitThogarihunkal">2</span>
+                <button type="button" class="stepper-btn" onclick="adjustSplit('thogarihunkal', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="splitter-ratio-bar">
+            <div class="ratio-segment ratio-ratnagiri" id="ratioBarRatnagiri" style="width: 50%;"></div>
+            <div class="ratio-segment ratio-thogarihunkal" id="ratioBarThogarihunkal" style="width: 50%;"></div>
           </div>
         </div>
 
@@ -324,9 +363,6 @@
         <div class="receipt-details">
           <div class="receipt-row">
             <span class="receipt-label">Order ID</span>
-            <span class="receipt-val">
-          <div class="receipt-row">
-            <span class="receipt-label">Order ID</span>
             <span class="receipt-val" id="rOrderId" style="font-family: monospace;">-</span>
           </div>
           <div class="receipt-row">
@@ -390,3 +426,5 @@
   <script src="app.js"></script>
 </body>
 </html>
+
+

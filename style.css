@@ -1,3 +1,7 @@
+/* ==================================================================== */
+/* THE APARTMENT BREW CO. — STYLESHEET (style.css)                     */
+/* ==================================================================== */
+
 :root {
   --bg: #141312;
   --card-bg: #1f1d1a;
@@ -15,13 +19,14 @@
   --error: #e63946;
   --error-light: #ff8fa3;
   --info-blue: #90e0ef;
+  --badge-bg: rgba(144, 224, 239, 0.1);
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
 body {
@@ -41,6 +46,7 @@ body {
   gap: 16px;
 }
 
+/* Header & Branding */
 .header-card {
   background: linear-gradient(145deg, #25221e, #1a1816);
   border: 1px solid var(--card-border);
@@ -64,6 +70,7 @@ body {
   margin-top: 4px;
 }
 
+/* Live Countdown & Scarcity */
 .drop-banner {
   display: inline-flex;
   align-items: center;
@@ -115,6 +122,7 @@ body {
   width: 76%;
   background: linear-gradient(90deg, var(--accent), #e76f51);
   border-radius: 3px;
+  transition: width 0.4s ease;
 }
 
 .geo-badge {
@@ -129,6 +137,7 @@ body {
   line-height: 1.35;
 }
 
+/* Mode Tabs (B2C vs B2B) */
 .mode-switch {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -156,8 +165,10 @@ body {
   background: var(--card-bg);
   color: var(--accent);
   border: 1px solid var(--card-border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
+/* Cards & Form Sections */
 .section-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
@@ -185,6 +196,7 @@ body {
   text-transform: none;
 }
 
+/* Coffee Lot Visual Cards */
 .lot-grid {
   display: flex;
   flex-direction: column;
@@ -199,6 +211,7 @@ body {
   padding: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
+  position: relative;
 }
 
 .lot-card.active {
@@ -281,6 +294,7 @@ body {
   background: var(--accent);
 }
 
+/* Pack Selection Grids */
 .pack-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -334,6 +348,7 @@ body {
   color: var(--text-muted);
 }
 
+/* Summary & Pricing Display */
 .summary-box {
   background: var(--card-inner);
   border: 1px dashed var(--card-border);
@@ -351,6 +366,7 @@ body {
   color: var(--accent);
 }
 
+/* Forms & Inputs */
 .form-group {
   margin-bottom: 12px;
   display: flex;
@@ -372,19 +388,38 @@ input, select, textarea {
   color: var(--text);
   font-size: 0.9rem;
   outline: none;
+  transition: border-color 0.2s ease;
 }
 
 input:focus, select:focus, textarea:focus {
   border-color: var(--accent);
 }
 
-.input-valid { border-color: var(--success) !important; }
-.input-invalid { border-color: var(--error) !important; }
-.field-error { color: var(--error-light); font-size: 0.72rem; display: none; margin-top: 2px; }
-.pin-status { font-size: 0.75rem; margin-top: 3px; font-weight: 600; }
+.input-valid {
+  border-color: var(--success) !important;
+}
+
+.input-invalid {
+  border-color: var(--error) !important;
+}
+
+.field-error {
+  color: var(--error-light);
+  font-size: 0.72rem;
+  display: none;
+  margin-top: 2px;
+}
+
+.pin-status {
+  font-size: 0.75rem;
+  margin-top: 3px;
+  font-weight: 600;
+}
+
 .pin-valid { color: var(--success-light); }
 .pin-invalid { color: var(--error-light); }
 
+/* Returning Customer Autofill Pill */
 .saved-profile-bar {
   display: none;
   background: rgba(212, 163, 115, 0.1);
@@ -408,6 +443,7 @@ input:focus, select:focus, textarea:focus {
   cursor: pointer;
 }
 
+/* Accordion Serving Guide */
 .guide-accordion {
   background: var(--card-inner);
   border: 1px solid var(--card-border);
@@ -436,9 +472,15 @@ input:focus, select:focus, textarea:focus {
   border-top: 1px solid #24221f;
 }
 
-.guide-step { margin-top: 8px; }
-.guide-step strong { color: var(--text); }
+.guide-step {
+  margin-top: 8px;
+}
 
+.guide-step strong {
+  color: var(--text);
+}
+
+/* Action Buttons */
 .btn {
   width: 100%;
   padding: 14px;
@@ -452,16 +494,54 @@ input:focus, select:focus, textarea:focus {
   justify-content: center;
   gap: 8px;
   text-decoration: none;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.1s ease;
 }
 
-.btn:hover { opacity: 0.92; }
-.btn-pay { background: var(--accent); color: #141312; margin-top: 14px; }
-.btn-calendar { background: #1a73e8; color: #fff; margin-top: 10px; }
-.btn-whatsapp { background: var(--whatsapp); color: #fff; margin-top: 10px; }
-.btn-secondary { background: #2a2724; color: var(--text); border: 1px solid var(--card-border); margin-top: 10px; }
+.btn:hover {
+  opacity: 0.92;
+}
 
-#confirmationView { display: none; }
+.btn:active {
+  transform: scale(0.99);
+}
+
+.btn-pay {
+  background: var(--accent);
+  color: #141312;
+  margin-top: 14px;
+}
+
+.btn-pay:disabled {
+  background: #383430;
+  color: #777;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btn-calendar {
+  background: #1a73e8;
+  color: #fff;
+  margin-top: 10px;
+}
+
+.btn-whatsapp {
+  background: var(--whatsapp);
+  color: #fff;
+  margin-top: 10px;
+}
+
+.btn-secondary {
+  background: #2a2724;
+  color: var(--text);
+  border: 1px solid var(--card-border);
+  margin-top: 10px;
+}
+
+/* Post-Purchase Confirmation View */
+#confirmationView {
+  display: none;
+}
+
 .success-badge {
   background: rgba(45, 106, 79, 0.25);
   border: 1px solid var(--success);
@@ -495,9 +575,20 @@ input:focus, select:focus, textarea:focus {
   padding-bottom: 8px;
 }
 
-.receipt-row:last-child { border-bottom: none; padding-bottom: 0; }
-.receipt-label { color: var(--text-muted); }
-.receipt-val { font-weight: 700; text-align: right; }
+.receipt-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.receipt-label {
+  color: var(--text-muted);
+}
+
+.receipt-val {
+  font-weight: 700;
+  text-align: right;
+}
+
 .freshness-alert {
   background: rgba(144, 224, 239, 0.08);
   border: 1px solid rgba(144, 224, 239, 0.25);
@@ -508,4 +599,141 @@ input:focus, select:focus, textarea:focus {
   line-height: 1.4;
   margin: 12px 0;
   text-align: left;
+}
+
+/* ==================================================================== */
+/* Interactive Custom Ratio Splitter ("Build Your Own Batch")          */
+/* ==================================================================== */
+
+.custom-splitter-card {
+  background: rgba(212, 163, 115, 0.06);
+  border: 1.5px dashed var(--accent);
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 12px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.splitter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(212, 163, 115, 0.2);
+}
+
+.splitter-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.splitter-tally {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.splitter-tally strong {
+  color: var(--text);
+}
+
+.splitter-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.splitter-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--card-inner);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.splitter-lot-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.splitter-lot-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.splitter-lot-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.qty-stepper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #141312;
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  padding: 2px 4px;
+}
+
+.stepper-btn {
+  background: #2a2724;
+  color: var(--text);
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  width: 26px;
+  height: 26px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.stepper-btn:hover {
+  background: var(--accent);
+  color: #141312;
+  border-color: var(--accent);
+}
+
+.stepper-val {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--accent);
+  min-width: 18px;
+  text-align: center;
+}
+
+.splitter-ratio-bar {
+  display: flex;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 12px;
+  background: #2a2724;
+}
+
+.ratio-segment {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.ratio-ratnagiri {
+  background: #e76f51; /* Warm berry orange */
+}
+
+.ratio-thogarihunkal {
+  background: #2a9d8f; /* Fresh floral teal */
 }
