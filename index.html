@@ -2,407 +2,47 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pre-Order | The Apartment Brew Co.</title>
-  <!-- Razorpay Standard Checkout SDK -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-  <style>
-    :root {
-      --bg: #141312;
-      --card-bg: #1f1d1a;
-      --card-border: #332f2b;
-      --accent: #d4a373;
-      --accent-hover: #b08968;
-      --text: #fefae0;
-      --text-muted: #9c9589;
-      --success: #2d6a4f;
-      --error: #e63946;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      padding: 16px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 520px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .header-card {
-      background: linear-gradient(145deg, #25221e, #1a1816);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-    }
-
-    .brand-title {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--accent);
-      letter-spacing: 0.5px;
-    }
-
-    .brand-subtitle {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .drop-banner {
-      display: inline-block;
-      background: rgba(212, 163, 115, 0.15);
-      border: 1px solid rgba(212, 163, 115, 0.3);
-      color: var(--accent);
-      font-size: 0.75rem;
-      padding: 4px 12px;
-      border-radius: 20px;
-      margin-top: 10px;
-      font-weight: 600;
-    }
-
-    .geo-badge {
-      display: block;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px dashed var(--card-border);
-      color: var(--text-muted);
-      font-size: 0.75rem;
-      padding: 6px;
-      border-radius: 6px;
-      margin-top: 8px;
-    }
-
-    /* Segmented Tab Switcher */
-    .tab-switcher {
-      display: flex;
-      background: #141312;
-      border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 4px;
-      gap: 4px;
-    }
-
-    .tab-btn {
-      flex: 1;
-      padding: 10px 8px;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-size: 0.82rem;
-      font-weight: 600;
-      border-radius: 7px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .tab-btn.active {
-      background: var(--card-bg);
-      color: var(--accent);
-      border: 1px solid var(--card-border);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    .section-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 16px;
-    }
-
-    .section-title {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--accent);
-      margin-bottom: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .badge-subtext {
-      font-size: 0.7rem;
-      font-weight: 400;
-      color: var(--text-muted);
-      text-transform: none;
-    }
-
-    .form-group {
-      margin-bottom: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    input, select, textarea {
-      background: #141312;
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
-      padding: 10px 12px;
-      color: var(--text);
-      font-size: 0.9rem;
-      outline: none;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--accent);
-    }
-
-    .pin-status {
-      font-size: 0.75rem;
-      margin-top: 2px;
-      font-weight: 600;
-    }
-
-    .pin-valid { color: #95d5b2; }
-    .pin-invalid { color: #ff8fa3; }
-
-    .pack-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .pack-option {
-      background: #151413;
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
-      padding: 10px;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s;
-    }
-
-    .pack-option.active {
-      border-color: var(--accent);
-      background: rgba(212, 163, 115, 0.1);
-    }
-
-    .pack-name {
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-
-    .pack-price {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--accent);
-      margin-top: 2px;
-    }
-
-    .pack-desc {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-    }
-
-    .summary-box {
-      background: #151413;
-      border: 1px dashed var(--card-border);
-      border-radius: 8px;
-      padding: 12px;
-      margin-top: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .summary-total {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    .radio-group {
-      display: flex;
-      gap: 12px;
-      margin-top: 4px;
-    }
-
-    .radio-option {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: #141312;
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
-      padding: 10px;
-      font-size: 0.8rem;
-      cursor: pointer;
-    }
-
-    .radio-option input[type="radio"] {
-      accent-color: var(--accent);
-    }
-
-    .btn {
-      width: 100%;
-      padding: 14px;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-
-    .btn:hover {
-      opacity: 0.9;
-    }
-
-    .btn-pay {
-      background: var(--accent);
-      color: #141312;
-      margin-top: 16px;
-    }
-
-    .btn-pay:disabled {
-      background: #383430;
-      color: #777;
-      cursor: not-allowed;
-      opacity: 0.7;
-    }
-
-    .btn-secondary {
-      background: #2a2724;
-      color: var(--text);
-      border: 1px solid var(--card-border);
-      margin-top: 12px;
-    }
-
-    /* Confirmation View */
-    #confirmationView {
-      display: none;
-    }
-
-    .success-badge {
-      background: rgba(45, 106, 79, 0.2);
-      border: 1px solid var(--success);
-      color: #95d5b2;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      display: inline-block;
-      margin-bottom: 12px;
-    }
-
-    .info-banner {
-      background: rgba(212, 163, 115, 0.1);
-      border: 1px solid rgba(212, 163, 115, 0.25);
-      border-radius: 8px;
-      padding: 12px;
-      margin: 12px 0;
-      font-size: 0.8rem;
-      color: var(--accent);
-      line-height: 1.4;
-    }
-
-    .receipt-details {
-      background: #151413;
-      border-radius: 8px;
-      border: 1px solid var(--card-border);
-      padding: 14px;
-      margin: 14px 0;
-      font-size: 0.85rem;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .receipt-row {
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px solid #262320;
-      padding-bottom: 6px;
-    }
-
-    .receipt-row:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .receipt-label {
-      color: var(--text-muted);
-    }
-
-    .receipt-val {
-      font-weight: 600;
-      text-align: right;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <div class="header-card">
-      <div class="brand-title">THE APARTMENT BREW CO.</div>
-      <div class="brand-subtitle">Micro-Batch Flash-Chilled Specialty Coffee • Gurugram</div>
-      <div class="drop-banner" id="dropBanner">Next Drop: Loading...</div>
-      <div class="geo-badge">📍 Delivering Exclusively Across Delhi NCR Tech Parks & Residences</div>
-    </div>
+    <!-- Header -->
+    <header class="header-card">
+      <h1 class="brand-title">THE APARTMENT BREW CO.</h1>
+      <p class="brand-subtitle">Micro-Batch Flash-Chilled Specialty Coffee • Gurugram</p>
+      <div id="dropBanner" class="drop-banner">Next Drop: Loading...</div>
+      <div class="geo-badge">📍 Delivering Exclusively Across Delhi NCR</div>
+    </header>
 
-    <!-- Segmented Tab Toggle -->
-    <div class="tab-switcher">
-      <button id="tabB2c" class="tab-btn active" onclick="switchMode('B2C')">
-        ☕ Individual Pre-Order (Sat)
-      </button>
-      <button id="tabB2b" class="tab-btn" onclick="switchMode('B2B')">
-        🏢 Office & Team Drop (Fri)
-      </button>
-    </div>
+    <!-- Mode Switcher -->
+    <nav class="tab-switcher">
+      <button id="tabB2c" class="tab-btn active" onclick="switchMode('B2C')">☕ Individual Pre-Order (Sat)</button>
+      <button id="tabB2b" class="tab-btn" onclick="switchMode('B2B')">🏢 Office & Team Drop (Fri)</button>
+    </nav>
 
-    <!-- Order Form View -->
-    <div id="orderFormView">
-      <!-- Section 1: Coffee & Pack Selection -->
-      <div class="section-card">
+    <!-- Order Form -->
+    <main id="orderFormView">
+      <!-- 1. Selection -->
+      <section class="section-card">
         <div class="section-title">
           <span>1. Select Your Brew</span>
-          <span class="badge-subtext" id="packSubtext">Saturday Morning Drop</span>
+          <span id="packSubtext" class="badge-subtext">Saturday Drop</span>
         </div>
-        
+
         <div class="form-group">
-          <label for="coffeeOrigin">Single-Estate Lot Selection</label>
+          <label for="coffeeOrigin">Single-Estate Lot</label>
           <select id="coffeeOrigin">
-            <option value="Ratnagiri Estate (Anaerobic Naturals)">Ratnagiri Estate — Anaerobic Naturals (Fruity & Aromatic)</option>
-            <option value="Thogarihunkal Estate (Washed)">Thogarihunkal Estate — Washed (Crisp & Floral)</option>
-            <option value="Curated Roaster's Split">Curated Roaster's Split (50% Ratnagiri / 50% Thogarihunkal)</option>
+            <option value="Ratnagiri Estate (Anaerobic Naturals)">Ratnagiri Estate — Anaerobic Naturals (Fruity)</option>
+            <option value="Thogarihunkal Estate (Washed)">Thogarihunkal Estate — Washed (Floral & Crisp)</option>
+            <option value="Curated Roaster's Split">Curated Roaster's Split (50% / 50%)</option>
             <option value="Seasonal Microlot (Roaster's Choice)">Seasonal Microlot — Roaster's Choice</option>
           </select>
         </div>
 
-        <label id="choosePackLabel">Choose Pack Tier</label>
-        
-        <!-- Individual B2C Packs -->
+        <label>Choose Pack Tier</label>
         <div class="pack-grid" id="b2cPacks">
           <div class="pack-option" onclick="selectB2cPack('Single Bottle', 1, 240, this)">
             <div class="pack-name">Single Bottle</div>
@@ -412,111 +52,102 @@
           <div class="pack-option" onclick="selectB2cPack('Duo Pack', 2, 480, this)">
             <div class="pack-name">Duo Pack</div>
             <div class="pack-price">₹480</div>
-            <div class="pack-desc">2x 250ml (MOQ)</div>
+            <div class="pack-desc">2x 250ml</div>
           </div>
           <div class="pack-option active" onclick="selectB2cPack('Weekend Pack', 4, 899, this)">
             <div class="pack-name">Weekend Pack</div>
             <div class="pack-price">₹899</div>
-            <div class="pack-desc">4x 250ml (Popular)</div>
+            <div class="pack-desc">4x 250ml</div>
           </div>
           <div class="pack-option" onclick="selectB2cPack('Weekly Sub', 5, 1000, this)">
             <div class="pack-name">Weekly Sub</div>
             <div class="pack-price">₹1,000</div>
-            <div class="pack-desc">5x 250ml (@ ₹200)</div>
+            <div class="pack-desc">5x 250ml</div>
           </div>
         </div>
 
-        <!-- Corporate B2B Packs -->
         <div class="pack-grid" id="b2bPacks" style="display:none;">
           <div class="pack-option active" onclick="selectB2bPack('Team Pack', 10, 1800, this)">
             <div class="pack-name">Team Pack</div>
             <div class="pack-price">₹1,800</div>
-            <div class="pack-desc">10x 250ml (₹180/ea)</div>
+            <div class="pack-desc">10x 250ml</div>
           </div>
           <div class="pack-option" onclick="selectB2bPack('Office Batch', 20, 3400, this)">
             <div class="pack-name">Office Batch</div>
             <div class="pack-price">₹3,400</div>
-            <div class="pack-desc">20x 250ml (₹170/ea)</div>
+            <div class="pack-desc">20x 250ml</div>
           </div>
           <div class="pack-option" onclick="selectB2bPack('Floor Pack', 40, 6000, this)">
             <div class="pack-name">Floor Pack</div>
             <div class="pack-price">₹6,000</div>
-            <div class="pack-desc">40x 250ml (₹150/ea)</div>
+            <div class="pack-desc">40x 250ml</div>
           </div>
           <div class="pack-option" onclick="selectB2bPack('Townhall Bulk', 60, 8700, this)">
             <div class="pack-name">Townhall Bulk</div>
             <div class="pack-price">₹8,700</div>
-            <div class="pack-desc">60x 250ml (₹145/ea)</div>
+            <div class="pack-desc">60x 250ml</div>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="packQty">Quantity of Selected Packs</label>
+          <label for="packQty">Quantity of Packs</label>
           <input type="number" id="packQty" min="1" value="1" oninput="updateTotal()" />
         </div>
 
         <div class="summary-box">
-          <span style="font-size:0.85rem; color:var(--text-muted);">Total Amount (Free Delhi NCR Delivery):</span>
-          <span class="summary-total" id="totalAmountDisplay">₹899</span>
+          <span>Total Amount (Free Delivery):</span>
+          <span id="totalAmountDisplay" class="summary-total">₹899</span>
         </div>
-      </div>
+      </section>
 
-      <!-- Section 2: Customer & Delivery Details -->
-      <div class="section-card" style="margin-top: 14px;">
-        <div class="section-title">
-          <span>2. Customer & Delivery Info</span>
-        </div>
+      <!-- 2. Customer Info -->
+      <section class="section-card">
+        <div class="section-title">2. Customer & Delivery Info</div>
 
-        <!-- B2B Specific Fields -->
         <div id="b2bFields" style="display:none;">
           <div class="form-group">
-            <label for="custCompany">Company / Business Name *</label>
-            <input type="text" id="custCompany" placeholder="e.g. Zomato, Google, Razorpay" />
+            <label for="custCompany">Company Name *</label>
+            <input type="text" id="custCompany" placeholder="e.g. Zomato, Google" />
           </div>
-
           <div class="form-group">
-            <label for="b2bTechPark">Tech Park / Commercial Hub *</label>
+            <label for="b2bTechPark">Tech Park / Complex *</label>
             <select id="b2bTechPark">
-              <option value="DLF Cyber City / Cyber Hub (Gurugram)">DLF Cyber City / Cyber Hub (Gurugram)</option>
-              <option value="One Horizon Center / Golf Course Rd (Gurugram)">One Horizon Center / Golf Course Rd (Gurugram)</option>
-              <option value="Candor TechSpace / Sector 48 (Gurugram)">Candor TechSpace / Sector 48 (Gurugram)</option>
-              <option value="Cyber Park / Sector 67 (Gurugram)">Cyber Park / Sector 67 (Gurugram)</option>
-              <option value="Udyog Vihar Phases 1-5 (Gurugram)">Udyog Vihar Phases 1-5 (Gurugram)</option>
-              <option value="Noida Sector 62 / 126 / 135 Tech Parks">Noida Sector 62 / 126 / 135 Tech Parks</option>
-              <option value="South / Central Delhi Office Area">South / Central Delhi Office Area</option>
+              <option value="DLF Cyber City / Cyber Hub">DLF Cyber City / Cyber Hub</option>
+              <option value="One Horizon Center / Golf Course Rd">One Horizon Center / Golf Course Rd</option>
+              <option value="Candor TechSpace / Sector 48">Candor TechSpace / Sector 48</option>
+              <option value="Cyber Park / Sector 67">Cyber Park / Sector 67</option>
+              <option value="Udyog Vihar">Udyog Vihar</option>
+              <option value="Noida Sector 62 / 126 / 135">Noida Sector 62 / 126 / 135</option>
+              <option value="South / Central Delhi">South / Central Delhi</option>
               <option value="Other Commercial Complex">Other Commercial Complex</option>
             </select>
           </div>
-
           <div class="form-group">
-            <label for="b2bDeliveryWindow">Friday Delivery Window *</label>
+            <label for="b2bDeliveryWindow">Friday Delivery Slot *</label>
             <select id="b2bDeliveryWindow">
               <option value="Morning Kickoff (9:30 AM – 11:30 AM)">Morning Kickoff (9:30 AM – 11:30 AM)</option>
               <option value="Afternoon Recharge (2:00 PM – 4:00 PM)">Afternoon Recharge (2:00 PM – 4:00 PM)</option>
             </select>
           </div>
-
           <div class="form-group">
-            <label for="custGstin">Company GSTIN (Optional, for B2B Tax Invoice)</label>
+            <label for="custGstin">Company GSTIN (Optional)</label>
             <input type="text" id="custGstin" placeholder="e.g. 06AAAAA0000A1Z5" maxlength="15" />
           </div>
         </div>
 
-        <!-- B2C Specific Region Dropdown -->
         <div class="form-group" id="b2cCityGroup">
-          <label for="custCity">City / Region (Delhi NCR Only)</label>
+          <label for="custCity">City / Area</label>
           <select id="custCity">
-            <option value="Gurugram (DLF Phase 1-5 / Cyber City / Golf Course Rd)">Gurugram (DLF Phase 1-5 / Cyber City / Golf Course Rd)</option>
+            <option value="Gurugram (DLF Phase 1-5 / Cyber City / Golf Course Rd)">Gurugram (DLF / Cyber City / Golf Course Rd)</option>
             <option value="South / Central Delhi">South / Central Delhi</option>
             <option value="Noida / Greater Noida">Noida / Greater Noida</option>
             <option value="Faridabad / Ghaziabad">Faridabad / Ghaziabad</option>
-            <option value="Other Delhi NCR Area">Other Delhi NCR Area</option>
           </select>
         </div>
 
         <div class="form-group">
           <label for="custPincode">6-Digit PIN Code *</label>
-          <input type="text" id="custPincode" maxlength="6" placeholder="e.g. 122002" oninput="validateDelhiNcrPincode()" required />
+          <input type="text" id="custPincode" maxlength="6" placeholder="e.g. 122002" oninput="validatePincode()" required />
           <div id="pinStatus" class="pin-status"></div>
         </div>
 
@@ -526,439 +157,67 @@
         </div>
 
         <div class="form-group">
-          <label for="custEmail" id="labelEmail">Email Address (For Order Confirmation & Invoice) *</label>
+          <label for="custEmail" id="labelEmail">Email Address *</label>
           <input type="email" id="custEmail" placeholder="e.g. rohan@example.com" required />
         </div>
-        
+
         <div class="form-group">
           <label for="custPhone">Phone Number *</label>
           <input type="tel" id="custPhone" placeholder="e.g. 9876543210" required />
         </div>
-        
+
         <div class="form-group">
-          <label for="custAddress" id="labelAddress">Delivery Address / Floor Details *</label>
-          <textarea id="custAddress" rows="2" placeholder="e.g. Flat 402, DLF Phase 5 / Tower B, Cyber City" required></textarea>
+          <label for="custAddress" id="labelAddress">Full Address / Floor Details *</label>
+          <textarea id="custAddress" rows="2" placeholder="Building, Tower, Floor or Society" required></textarea>
         </div>
 
-        <!-- B2B Payment Mode Selector (Gateway vs Corporate Invoice) -->
-        <div id="b2bPaymentChoiceGroup" style="display:none; margin-top: 12px;">
-          <label>Payment Mode</label>
+        <div id="b2bPaymentChoiceGroup" style="display:none; margin-top: 10px;">
+          <label>Payment Method</label>
           <div class="radio-group">
             <label class="radio-option">
               <input type="radio" name="b2bPayOption" value="GATEWAY" checked onclick="setB2bPayOption('GATEWAY')" />
-              <span>Razorpay (UPI / Corporate Card)</span>
+              <span>Razorpay (Cards/UPI)</span>
             </label>
             <label class="radio-option">
               <input type="radio" name="b2bPayOption" value="INVOICE" onclick="setB2bPayOption('INVOICE')" />
-              <span>Corporate Invoice (Net Terms)</span>
+              <span>Corporate Invoice</span>
             </label>
           </div>
         </div>
 
-        <button id="payNowBtn" class="btn btn-pay" onclick="handlePayButtonClick()">
+        <button id="payNowBtn" class="btn btn-pay" onclick="handlePayClick()">
           <span id="btnText">💳 Pay & Confirm Pre-Order (<span id="btnAmount">₹899</span>)</span>
         </button>
-      </div>
-    </div>
+      </section>
+    </main>
 
-    <!-- Confirmation View (Email-Grounded, No WhatsApp) -->
-    <div id="confirmationView">
-      <div class="section-card" style="text-align: center;">
+    <!-- Confirmation View -->
+    <aside id="confirmationView">
+      <div class="section-card text-center">
         <div class="success-badge">✓ Order Confirmed</div>
-        <h2 style="font-size: 1.25rem; margin-bottom: 6px;">Thank You for Your Order!</h2>
-        
+        <h2>Thank You for Your Order!</h2>
         <div class="info-banner">
-          📧 <strong>Confirmation Email Sent:</strong> A detailed receipt and delivery confirmation have been dispatched to your email address from our live tracker.
+          📧 <strong>Confirmation Email Sent:</strong> A detailed receipt has been sent to your email address from our live tracker.
         </div>
 
         <div class="receipt-details">
-          <div class="receipt-row">
-            <span class="receipt-label">Order ID</span>
-            <span class="receipt-val" id="rOrderId">TABC-0000</span>
-          </div>
-          <div class="receipt-row">
-            <span class="receipt-label">Order Type</span>
-            <span class="receipt-val" id="rOrderType">Individual Pre-Order</span>
-          </div>
-          <div class="receipt-row" id="rCompanyRow" style="display:none;">
-            <span class="receipt-label">Company</span>
-            <span class="receipt-val" id="rCompany">-</span>
-          </div>
-          <div class="receipt-row">
-            <span class="receipt-label">Payment ID</span>
-            <span class="receipt-val" id="rPayId" style="font-family:monospace;font-size:0.8rem;">pay_1234</span>
-          </div>
-          <div class="receipt-row">
-            <span class="receipt-label">Delivery Date</span>
-            <span class="receipt-val" id="rDropDate" style="color:var(--accent);">Saturday Morning</span>
-          </div>
-          <div class="receipt-row" id="rWindowRow" style="display:none;">
-            <span class="receipt-label">Delivery Slot</span>
-            <span class="receipt-val" id="rWindow">-</span>
-          </div>
-          <div class="receipt-row">
-            <span class="receipt-label">Customer Name</span>
-            <span class="receipt-val" id="rName">-</span>
-          </div>
-          <div class="receipt-row">
-            <span class="receipt-label">Email</span>
-            <span class="receipt-val" id="rEmail">-</span>
-          </div>
-          <div class="receipt-row">
-            <span class="receipt-label">Coffee Lot</span>
-            <span class="receipt-val" id="rBean">-</span>
-          </div>
-          <div class="receipt-row">
-            <span class="receipt-label">Selection</span>
-            <span class="receipt-val" id="rPack">-</span>
-          </div>
-          <div class="receipt-row">
-            <span class="receipt-label">Total Amount</span>
-            <span class="receipt-val" style="color:var(--accent);" id="rTotal">₹0</span>
-          </div>
+          <div class="receipt-row"><span>Order ID</span><strong id="rOrderId">-</strong></div>
+          <div class="receipt-row"><span>Order Type</span><strong id="rOrderType">-</strong></div>
+          <div class="receipt-row" id="rCompanyRow" style="display:none;"><span>Company</span><strong id="rCompany">-</strong></div>
+          <div class="receipt-row"><span>Payment ID</span><code id="rPayId">-</code></div>
+          <div class="receipt-row"><span>Delivery Date</span><strong id="rDropDate" class="accent-text">-</strong></div>
+          <div class="receipt-row" id="rWindowRow" style="display:none;"><span>Delivery Slot</span><strong id="rWindow">-</strong></div>
+          <div class="receipt-row"><span>Customer</span><strong id="rName">-</strong></div>
+          <div class="receipt-row"><span>Email</span><span id="rEmail">-</span></div>
+          <div class="receipt-row"><span>Selection</span><strong id="rPack">-</strong></div>
+          <div class="receipt-row"><span>Total Amount</span><strong id="rTotal" class="accent-text">-</strong></div>
         </div>
 
-        <button class="btn btn-secondary" onclick="resetForm()">
-          <span>+ Place Another Order</span>
-        </button>
+        <button class="btn btn-secondary" onclick="resetForm()">+ Place Another Order</button>
       </div>
-    </div>
+    </aside>
   </div>
 
-  <script>
-    const CONFIG = {
-      razorpayKeyId: "rzp_test_TRVab1bUUwOVN5", // Replace with your active Razorpay Key ID
-      googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbzYlYgCrsV39_ttak__q1W_dTwZJmF7vuIH9GOS9zETUGuOg90F2hGB_8B_FSFQFVsX/exec" // Replace with your Google Apps Script Web App URL
-    };
-
-    let currentMode = "B2C"; // "B2C" or "B2B"
-    let currentB2bPayOption = "GATEWAY"; // "GATEWAY" or "INVOICE"
-
-    let selectedB2cPack = {
-      name: "Weekend Pack",
-      bottles: 4,
-      unitPrice: 899
-    };
-
-    let selectedB2bPack = {
-      name: "Team Pack",
-      bottles: 10,
-      unitPrice: 1800
-    };
-
-    let isPincodeServiceable = true;
-
-    // Calculate upcoming Friday
-    function getUpcomingFridayFormatted() {
-      const d = new Date();
-      const currentDay = d.getDay(); // 0=Sun, 5=Fri
-      let daysUntilFriday = (5 - currentDay + 7) % 7;
-      if (daysUntilFriday === 0 && d.getHours() >= 12) {
-        daysUntilFriday = 7;
-      }
-      d.setDate(d.getDate() + daysUntilFriday);
-      return d.toLocaleDateString('en-IN', {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric'
-      });
-    }
-
-    // Calculate upcoming Saturday
-    function getUpcomingSaturdayFormatted() {
-      const d = new Date();
-      const currentDay = d.getDay();
-      let daysUntilSaturday = (6 - currentDay + 7) % 7;
-      if (daysUntilSaturday === 0 && d.getHours() >= 10) {
-        daysUntilSaturday = 7;
-      }
-      d.setDate(d.getDate() + daysUntilSaturday);
-      return d.toLocaleDateString('en-IN', {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric'
-      });
-    }
-
-    function switchMode(mode) {
-      currentMode = mode;
-      document.getElementById('tabB2c').classList.toggle('active', mode === 'B2C');
-      document.getElementById('tabB2b').classList.toggle('active', mode === 'B2B');
-
-      if (mode === 'B2C') {
-        document.getElementById('dropBanner').textContent = `Next Fresh Drop: ${getUpcomingSaturdayFormatted()} (Morning Drop)`;
-        document.getElementById('packSubtext').textContent = 'Saturday Morning Drop';
-        document.getElementById('b2cPacks').style.display = 'grid';
-        document.getElementById('b2bPacks').style.display = 'none';
-        document.getElementById('b2bFields').style.display = 'none';
-        document.getElementById('b2cCityGroup').style.display = 'flex';
-        document.getElementById('b2bPaymentChoiceGroup').style.display = 'none';
-        document.getElementById('labelName').textContent = 'Your Name *';
-        document.getElementById('labelEmail').textContent = 'Email Address (For Order Confirmation) *';
-        document.getElementById('labelAddress').textContent = 'Delivery Address (Building, Flat, Society) *';
-        currentB2bPayOption = 'GATEWAY';
-      } else {
-        document.getElementById('dropBanner').textContent = `Next Office Drop: ${getUpcomingFridayFormatted()} (Friday Delivery)`;
-        document.getElementById('packSubtext').textContent = 'Friday Office Drop (Order Cutoff: Thu 6 PM)';
-        document.getElementById('b2cPacks').style.display = 'none';
-        document.getElementById('b2bPacks').style.display = 'grid';
-        document.getElementById('b2bFields').style.display = 'block';
-        document.getElementById('b2cCityGroup').style.display = 'none';
-        document.getElementById('b2bPaymentChoiceGroup').style.display = 'block';
-        document.getElementById('labelName').textContent = 'Contact Person Name & Role *';
-        document.getElementById('labelEmail').textContent = 'Official Work Email (For Tax Invoice & Updates) *';
-        document.getElementById('labelAddress').textContent = 'Tower, Floor & Pantry / Desk Details *';
-      }
-      updateTotal();
-    }
-
-    function selectB2cPack(name, bottles, price, element) {
-      document.querySelectorAll('#b2cPacks .pack-option').forEach(el => el.classList.remove('active'));
-      element.classList.add('active');
-      selectedB2cPack = { name, bottles, unitPrice: price };
-      updateTotal();
-    }
-
-    function selectB2bPack(name, bottles, price, element) {
-      document.querySelectorAll('#b2bPacks .pack-option').forEach(el => el.classList.remove('active'));
-      element.classList.add('active');
-      selectedB2bPack = { name, bottles, unitPrice: price };
-      updateTotal();
-    }
-
-    function setB2bPayOption(option) {
-      currentB2bPayOption = option;
-      updateTotal();
-    }
-
-    function calculateTotal() {
-      const qty = parseInt(document.getElementById('packQty').value, 10) || 1;
-      const activePack = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
-      return activePack.unitPrice * qty;
-    }
-
-    function updateTotal() {
-      const total = calculateTotal();
-      const formattedTotal = `₹${total.toLocaleString('en-IN')}`;
-      
-      document.getElementById('totalAmountDisplay').textContent = formattedTotal;
-      
-      const btnAmount = document.getElementById('btnAmount');
-      if (btnAmount) btnAmount.textContent = formattedTotal;
-
-      const btnText = document.getElementById('btnText');
-      if (currentMode === 'B2B' && currentB2bPayOption === 'INVOICE') {
-        btnText.innerHTML = `📄 Request Corporate Invoice (<span id="btnAmount">${formattedTotal}</span>)`;
-      } else {
-        btnText.innerHTML = `💳 Pay & Confirm Pre-Order (<span id="btnAmount">${formattedTotal}</span>)`;
-      }
-    }
-
-    function validateDelhiNcrPincode() {
-      const pinInput = document.getElementById('custPincode').value.trim();
-      const statusEl = document.getElementById('pinStatus');
-
-      if (pinInput.length < 6) {
-        statusEl.textContent = '';
-        isPincodeServiceable = false;
-        return;
-      }
-
-      const isNcr = /^(11[0-9]{4}|122[0-9]{3}|121[0-9]{3}|201[0-9]{3})$/.test(pinInput);
-
-      if (isNcr) {
-        statusEl.textContent = '✓ Serviceable in Delhi NCR Tech Hubs & Residences';
-        statusEl.className = 'pin-status pin-valid';
-        isPincodeServiceable = true;
-      } else {
-        statusEl.textContent = '✕ Note: We deliver only across Delhi NCR (Gurugram, Delhi, Noida, Faridabad, Ghaziabad).';
-        statusEl.className = 'pin-status pin-invalid';
-        isPincodeServiceable = true;
-      }
-    }
-
-    function validateFormInputs() {
-      const name = document.getElementById('custName').value.trim();
-      const email = document.getElementById('custEmail').value.trim();
-      const phone = document.getElementById('custPhone').value.trim();
-      const address = document.getElementById('custAddress').value.trim();
-      const pin = document.getElementById('custPincode').value.trim();
-
-      if (!name || !email || !phone || !address || !pin) {
-        alert('Please fill in all required fields (Name, Email, Phone, PIN Code, and Delivery Address).');
-        return false;
-      }
-
-      if (currentMode === 'B2B') {
-        const company = document.getElementById('custCompany').value.trim();
-        if (!company) {
-          alert('Please enter your Company / Business Name.');
-          return false;
-        }
-      }
-
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        alert('Please enter a valid email address.');
-        return false;
-      }
-
-      return true;
-    }
-
-    function handlePayButtonClick() {
-      if (!validateFormInputs()) return;
-
-      if (currentMode === 'B2B' && currentB2bPayOption === 'INVOICE') {
-        const invoiceRef = "INV-REQ-" + Math.floor(100000 + Math.random() * 900000);
-        handleOrderSuccess(invoiceRef, 'Corporate Invoice Requested (Net Terms)');
-        return;
-      }
-
-      // Razorpay Checkout Gateway
-      const total = calculateTotal();
-      const name = document.getElementById('custName').value.trim();
-      const email = document.getElementById('custEmail').value.trim();
-      const phone = document.getElementById('custPhone').value.trim();
-      const activePack = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
-
-      const options = {
-        key: CONFIG.razorpayKeyId,
-        amount: total * 100,
-        currency: "INR",
-        name: "The Apartment Brew Co.",
-        description: `${currentMode === 'B2B' ? 'Office Drop' : 'Pre-Order'}: ${activePack.name}`,
-        prefill: {
-          name: name,
-          email: email,
-          contact: phone
-        },
-        theme: {
-          color: "#d4a373"
-        },
-        handler: function (response) {
-          handleOrderSuccess(response.razorpay_payment_id, "Paid via Gateway");
-        }
-      };
-
-      const rzp = new Razorpay(options);
-      rzp.on('payment.failed', function (response) {
-        alert('Payment was not completed: ' + (response.error.description || 'Please try again.'));
-      });
-      rzp.open();
-    }
-
-    async function handleOrderSuccess(paymentId, paymentStatusText) {
-      const name = document.getElementById('custName').value.trim();
-      const email = document.getElementById('custEmail').value.trim();
-      const phone = document.getElementById('custPhone').value.trim();
-      const pin = document.getElementById('custPincode').value.trim();
-      const bean = document.getElementById('coffeeOrigin').value;
-      const qty = parseInt(document.getElementById('packQty').value, 10) || 1;
-      const total = calculateTotal();
-      const activePack = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
-
-      let orderId, dropDate, cityOrTechPark, deliveryWindow, company, gstin, fullAddress;
-
-      if (currentMode === 'B2C') {
-        orderId = "TABC-" + Math.floor(100000 + Math.random() * 900000);
-        dropDate = getUpcomingSaturdayFormatted();
-        cityOrTechPark = document.getElementById('custCity').value;
-        deliveryWindow = "Saturday Morning (8:00 AM – 11:00 AM)";
-        company = "N/A (Individual)";
-        gstin = "N/A";
-        fullAddress = `${document.getElementById('custAddress').value.trim()}, ${cityOrTechPark} (PIN: ${pin})`;
-      } else {
-        orderId = "TABC-B2B-" + Math.floor(100000 + Math.random() * 900000);
-        dropDate = getUpcomingFridayFormatted();
-        cityOrTechPark = document.getElementById('b2bTechPark').value;
-        deliveryWindow = document.getElementById('b2bDeliveryWindow').value;
-        company = document.getElementById('custCompany').value.trim();
-        gstin = document.getElementById('custGstin').value.trim() || "N/A";
-        fullAddress = `${document.getElementById('custAddress').value.trim()}, ${cityOrTechPark} (PIN: ${pin})`;
-      }
-
-      const orderPayload = {
-        orderType: currentMode,
-        targetSheet: currentMode === 'B2B' ? 'B2B Orders' : 'Sheet1',
-        orderId: orderId,
-        dropDate: dropDate,
-        deliveryWindow: deliveryWindow,
-        company: company,
-        gstin: gstin,
-        name: name,
-        email: email,
-        phone: phone,
-        techPark: cityOrTechPark,
-        address: fullAddress,
-        bean: bean,
-        pack: `${activePack.name} (${activePack.bottles}x 250ml)`,
-        quantity: qty,
-        bottles: activePack.bottles * qty,
-        totalAmount: total,
-        paymentMode: "Razorpay Gateway",
-        paymentStatus: `${paymentStatusText} (${paymentId})`,
-        notes: `Payment ID: ${paymentId} | Mode: ${currentMode}`
-      };
-
-      // Dispatch to Google Apps Script / Sheet Endpoint
-      if (CONFIG.googleSheetEndpoint && !CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
-        try {
-          fetch(CONFIG.googleSheetEndpoint, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify(orderPayload)
-          });
-        } catch (e) {
-          console.error("Sheet dispatch error:", e);
-        }
-      }
-
-      // Display on-screen confirmation
-      document.getElementById('rOrderId').textContent = orderId;
-      document.getElementById('rOrderType').textContent = currentMode === 'B2B' ? 'Corporate / Office Drop' : 'Individual Pre-Order';
-      
-      if (currentMode === 'B2B') {
-        document.getElementById('rCompanyRow').style.display = 'flex';
-        document.getElementById('rCompany').textContent = company;
-        document.getElementById('rWindowRow').style.display = 'flex';
-        document.getElementById('rWindow').textContent = deliveryWindow;
-      } else {
-        document.getElementById('rCompanyRow').style.display = 'none';
-        document.getElementById('rWindowRow').style.display = 'none';
-      }
-
-      document.getElementById('rPayId').textContent = paymentId;
-      document.getElementById('rDropDate').textContent = `${dropDate} (${currentMode === 'B2B' ? 'Friday' : 'Saturday'} Drop)`;
-      document.getElementById('rName').textContent = name;
-      document.getElementById('rEmail').textContent = email;
-      document.getElementById('rBean').textContent = bean;
-      document.getElementById('rPack').textContent = `${activePack.name} x ${qty} (${activePack.bottles * qty} bottles)`;
-      document.getElementById('rTotal').textContent = `₹${total.toLocaleString('en-IN')}`;
-
-      document.getElementById('orderFormView').style.display = 'none';
-      document.getElementById('confirmationView').style.display = 'block';
-    }
-
-    function resetForm() {
-      document.getElementById('orderFormView').style.display = 'block';
-      document.getElementById('confirmationView').style.display = 'none';
-      document.getElementById('custName').value = '';
-      document.getElementById('custEmail').value = '';
-      document.getElementById('custPhone').value = '';
-      document.getElementById('custAddress').value = '';
-      document.getElementById('custPincode').value = '';
-      document.getElementById('custCompany').value = '';
-      document.getElementById('custGstin').value = '';
-      document.getElementById('pinStatus').textContent = '';
-      document.getElementById('payNowBtn').disabled = false;
-    }
-
-    // Initialize UI
-    switchMode('B2C');
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
