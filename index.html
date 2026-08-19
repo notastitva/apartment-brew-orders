@@ -5,13 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>The Apartment Brew Co. | Fresh Flash-Chilled Specialty Coffee Drop</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- Razorpay Standard Checkout SDK -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
   <div class="container">
     
-    <!-- Branding Header -->
+    <!-- Header Card -->
     <div class="header-card">
       <div class="brand-title">The Apartment Brew Co.</div>
       <div class="brand-subtitle">Micro-Batch Flash-Chilled Specialty Coffee • Gurugram</div>
@@ -21,7 +20,6 @@
       </div>
       <div class="countdown-timer" id="countdownTimer">Cutoff closes in: Loading...</div>
 
-      <!-- Scarcity Bar -->
       <div class="scarcity-bar-container">
         <div class="scarcity-label">
           <span>🔥 Limited Batch Capacity</span>
@@ -37,7 +35,7 @@
       </div>
     </div>
 
-    <!-- Mode Selector: B2C vs B2B -->
+    <!-- Mode Selector -->
     <div class="mode-switch">
       <button class="mode-tab active" id="tabB2c" onclick="switchMode('B2C')">☕ Individual Pre-Order (Sat)</button>
       <button class="mode-tab" id="tabB2b" onclick="switchMode('B2B')">🏢 Office & Team Drop (Fri)</button>
@@ -135,11 +133,11 @@
             <div class="pack-price">₹899</div>
             <div class="pack-desc">4x 250ml</div>
           </div>
-          <div class="pack-option" onclick="selectB2cPack('Weekly Sub', 5, 1000, this)">
+          <div class="pack-option" onclick="selectB2cPack('Mega Weekend', 6, 1200, this)">
             <div class="pack-badge">Value</div>
-            <div class="pack-name">Weekly Sub</div>
-            <div class="pack-price">₹1,000</div>
-            <div class="pack-desc">5x 250ml (@ ₹200)</div>
+            <div class="pack-name">Mega Weekend</div>
+            <div class="pack-price">₹1,200</div>
+            <div class="pack-desc">6x 250ml (@ ₹200)</div>
           </div>
         </div>
 
@@ -185,7 +183,6 @@
           <span>2. Delivery & Contact Details</span>
         </div>
 
-        <!-- 1-Click Saved Profile Banner -->
         <div class="saved-profile-bar" id="savedProfileBar">
           <span id="savedProfileText">👋 Welcome back! Autofill previous order info?</span>
           <button class="saved-profile-btn" onclick="applySavedProfile()">Autofill</button>
@@ -228,7 +225,7 @@
           </div>
         </div>
 
-        <!-- B2C City / Region -->
+        <!-- B2C Region -->
         <div class="form-group" id="b2cCityGroup">
           <label for="custCity">City / Region (Delhi NCR Only)</label>
           <select id="custCity">
@@ -325,6 +322,9 @@
         </div>
 
         <div class="receipt-details">
+          <div class="receipt-row">
+            <span class="receipt-label">Order ID</span>
+            <span class="receipt-val">
           <div class="receipt-row">
             <span class="receipt-label">Order ID</span>
             <span class="receipt-val" id="rOrderId" style="font-family: monospace;">-</span>

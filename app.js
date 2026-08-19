@@ -3,9 +3,9 @@
 // ====================================================================
 
 const CONFIG = {
-  razorpayKeyId: "rzp_test_TRVab1bUUwOVN5", // Replace with your active Key ID (rzp_live_...)
-  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbx7nE2uQV08Ev4UYt8FFkmVZMGMpksvhIjljALGSbXYmc1FEv_1nh34BoR99mdTHic/exec", // Replace with Apps Script Web App URL ending in /exec
-  authToken: "TABC_SECURE_TOKEN_2026" // Shared auth token matching Code.gs
+  razorpayKeyId: "rzp_test_TRVab1bUUwOVN5",
+  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbx7nE2uQV08Ev4UYt8FFkmVZMGMpksvhIjljALGSbXYmc1FEv_1nh34BoR99mdTHic/exec",
+  authToken: "TABC_SECURE_TOKEN_2026"
 };
 
 let currentMode = "B2C";
