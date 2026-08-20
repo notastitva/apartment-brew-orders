@@ -1,20 +1,26 @@
-# **☕ The Apartment Brew Co. — Web Portal & Order Intake System**
+# ☕ The Apartment Brew Co. — Web Portal & Order Intake System
 
-## **Micro-Batch Flash-Chilled Specialty Coffee • Gurugram & Delhi NCR**
+## Micro-Batch Flash-Chilled Specialty Coffee • Gurugram & Delhi NCR
 
-A lightweight, serverless e-commerce and order intake portal designed for scheduled micro-batch coffee drops, direct payment gateway integration, live order tracking, and automated customer notifications.
+A lightweight, high-performance, serverless e-commerce and order intake portal designed for scheduled micro-batch craft coffee drops, dynamic Google Sheets headless CMS configuration, direct payment gateway integration, live order tracking, and automated customer notifications.
 
-# **📌 1\. Overview & Business Model**
+---
 
-The Apartment Brew Co. operates an asset-light, pre-order only micro-batch coffee model:
+## 📌 1. Overview & Business Model
 
-* **Extraction & Freshness**: Coffee is extracted hot to capture volatile aromatics and flash-chilled immediately over ice. Zero preservatives with a strict 48-hour peak freshness window.  
-* **Dual Delivery Pathways**:  
-  * **B2C (Individual Saturday Morning Drops)**: Pre-orders close Friday 10:00 PM; delivered Saturday 8:00 AM – 11:00 AM.  
-  * **B2B (Corporate Friday Office Drops)**: Orders close Thursday 6:00 PM; delivered Friday (Morning Kickoff or Afternoon Recharge).  
-* **Coverage**: Hyper-local Delhi NCR (Gurugram DLF Phases 1-5, Cyber City, Golf Course Rd, Candor TechSpace, Udyog Vihar, Noida, South Delhi).
+The Apartment Brew Co. operates an asset-light, pre-order only micro-batch craft coffee roastery:
 
-# **🏗️ 2\. System Architecture**
+* **Extraction & Peak Freshness:** Coffee is extracted hot to capture delicate floral and fruity aromatics and flash-chilled immediately over ice. 100% preservative-free with a strict **48-hour peak freshness window**.
+* **Dual Delivery Pathways:**
+  * **B2C (Individual Saturday Morning Drops):** Pre-orders close Friday 10:00 PM; delivered Saturday 8:00 AM – 11:00 AM.
+  * **B2B (Corporate Friday Office Drops):** Orders close Thursday 6:00 PM; delivered Friday (Morning Kickoff 9:30–11:30 AM or Afternoon Recharge 2:00–4:00 PM).
+* **Delivery Coverage:** Hyper-local Delhi NCR (Gurugram DLF Phases 1–5, Cyber City, Golf Course Rd, Candor TechSpace, Udyog Vihar, Noida Tech Parks, and Central/South Delhi).
+
+---
+
+## 🏗️ 2. System Architecture
+
+
 
 ```
 flowchart TD
@@ -73,95 +79,145 @@ flowchart TD
        +---------------------------------------------+  +--------------------------------+
 ```
 
-# **📂 3\. Repository File Structure**
 
-* **index.html**: Main single-page application structure & DOM hierarchy; includes preconnect/dns-prefetch resource hints, deferred Razorpay SDK script loading, and PWA Service Worker integration.  
-* style.css: Modular stylesheet with CSS custom properties, animations, CSS containment (contain: content) on cards, GPU-accelerated transforms (transform: scaleX) for scarcity tracks and ratio meters, and hardware-accelerated micro-interactions.  
-* app.js: Frontend logic, validation, countdowns, and payment flow with centralized DOM query caching, input validation debouncing, in-memory profile caching, and an automated localStorage offline order retry queue.  
-* **Code.gs**: Google Apps Script backend controller & email dispatcher.  
-* **README.md**: Comprehensive documentation covering the full system architecture, featuring the Google Sheets Headless CMS ('Menu & Config' tab), the Code.gs microservice (doGet for live config/coupons and doPost for order intake), scoped coupon engine, custom ratio batch splitter logic, and database schemas for Sheet1 (B2C) and B2B Orders. Includes operational SOPs and a zero-code operator guide for non-technical management of menu items, pricing, and scarcity tracking directly within Google Sheets.
+---
 
-# **🚀 4\. Detailed Component Breakdown**
+## 🎛️ 3. Google Sheets Headless CMS ("Menu & Config")
 
-## **1\. index.html (Frontend Structure)**
+The website is 100% data-driven by the **`Menu & Config`** tab in the Google Spreadsheet. Non-technical roastery operators can control the live website directly from Google Sheets without writing code:
 
-* **Branding Header**: Brand titles, active drop announcement (`#dropBanner`), live cutoff countdown (`#countdownTimer`), and limited batch scarcity progress bar (`#scarcityText`, `#scarcityFill`) optimized via GPU-accelerated transforms and preconnect resource hints.  
-* **Segmented Mode Switch**: Smooth toggle between B2C (`#tabB2c`) and B2B (`#tabB2b`).  
-* **Build Your Own Batch (Custom Ratio Splitter)**: Features dynamic bottle counters (+ / \-) for customizing exact lot ratios between Ratnagiri Anaerobic and Thogarihunkal Washed across any pack size, supported by automatic allocation rebalancing and a live dual-tone ratio bar visualization.  
-* **Interactive Lot Selector**: Single-estate visual cards with tasting notes, roast levels, and acidity/body sensory meters (`#lotGrid`).  
-* **Pack Selection Grids**:  
-  * **B2C**: Single Bottle (₹240), Duo Pack (₹480), Weekend Pack (₹899), Mega Weekend (6x 250ml, ₹1,200).  
-  * **B2B**: Team Pack (₹1,800), Office Batch (₹3,400), Floor Pack (₹6,000), Townhall Bulk (₹8,700).  
-* **Customer & Delivery Details**:  
-  * Returning customer 1-click autofill banner (`#savedProfileBar`).  
-  * PIN Code validator with live Delhi NCR serviceability feedback (`#pinStatus`).  
-  * Drop & gate instruction selector (Door drop vs Security / Concierge desk).  
-* **Interactive Freshness Accordion**: 48-Hour storage and serving guide (`.guide-accordion`).  
-* **Confirmation View**: Order receipt, Google Calendar 1-click reminder button (`.btn-calendar`), and formatted WhatsApp receipt trigger (`.btn-whatsapp`).
+### 1. Store Status Control
+* **`OPEN`**: Pre-orders active; payment gateway enabled.
+* **`PAUSED`**: Displays roastery preparation banner; temporarily disables checkout buttons.
+* **`SOLD_OUT`**: Displays sold-out notice; alerts customers for the next batch release.
 
-## **2\. style.css (Design System)**
+### 2. Batch Capacity & Scarcity Progress Bar
+* **`Batch Capacity`**: Sets the total roasted batch bottle limit (e.g., `60`, `100`, `200`).
+* **Live Reservation Tally**: `doGet` automatically sums active bottles from `Sheet1` (B2C) and `B2B Orders` to display `X / [Capacity] Bottles Reserved` on the frontend.
 
-* **Color Palette**: Dark roast aesthetic (`--bg: #141312`, `--card-bg: #1f1d1a`, `--card-inner: #151413`) with coffee gold accents (`--accent: #d4a373`) and status indicators (`--whatsapp: #25d366`, `--success: #2d6a4f`, `--info-blue: #90e0ef`).  
-* **Responsive Layout**: Mobile-first flex container capped at 520px width.  
-* **Component Styling**: Styled lot cards with CSS containment (contain: content), sensory meter fill bars using GPU acceleration, scarcity tracks, and hardware-accelerated micro-interactions.
+### 3. Coffee Harvest Lots Management
+* Edit lot estate names, processing methods (e.g. *Anaerobic Naturals*, *Washed Lot*), tasting notes, flavor pill tags, acidity %, and body %.
+* Setting `Active (TRUE/FALSE)` to `FALSE` immediately removes the lot from the frontend.
+* The interactive **Custom Ratio Splitter** automatically updates its lot labels and split controls based on the active harvests.
 
-## **3\. app.js (Frontend Controller)**
+### 4. B2C & B2B Pack Tiers Management
+* Edit pack names, bottle quantities, unit prices (₹), and marketing badges (e.g. `Popular`, `Value`, `MOQ`).
 
-* **Configuration & Core Logic**: Manages Razorpay Key ID, Google Apps Script endpoint URL, and shared authentication token using centralized DOM query caching and deferred script loading for the Razorpay SDK.  
-* **Dynamic Cutoff Engine**: Calculates closest Saturday morning delivery for B2C and Friday for B2B. Computes live ticking countdown to Thursday 6:00 PM (B2B) and Friday 10:00 PM (B2C) cutoffs.  
-* **Profile & Offline Management**: Features in-memory profile caching and saves customer details in browser `localStorage` (`tabc_customer_profile`) for instant re-ordering, supported by an automated localStorage offline order retry queue and PWA Service Worker integration.  
-* Validation Subsystem: Implements input validation debouncing to minimize main-thread load.  
-  * **Delhi NCR PIN Code**: `^(11[0-9]{4}|122[0-9]{3}|121[0-9]{3}|201[0-9]{3})$`  
-    |---|---|`^[6-9]\d{9}$`  
-  * **GSTIN (15-char)**: `^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$`  
-* **Checkout & Dispatch**: Opens Razorpay checkout modal or generates corporate invoice IDs (`INV-REQ-xxxxxx`), then dispatches payload to Apps Script via `fetch(..., { mode: 'no-cors' })`.  
-* **Google Calendar Link Generator**: Generates formatted Google Calendar URL with delivery window, order ID, and refrigeration reminders.  
-* **WhatsApp Sync**: Formats structured WhatsApp pre-filled text receipts.
+### 5. Coupon Discount Engine
+* Define flat (₹) or percentage (%) discount coupon codes with minimum order thresholds and mode applicability (`B2C`, `B2B`, `ALL`).
 
-## **4\. Code.gs (Backend Microservice)**
+---
 
-* **Security Checks**: Verifies `authToken === 'TABC_SECURE_TOKEN_2026'` and rejects bots using honeypot detection (`botTrap`).  
-* **Database Routing**: B2C orders append to `Sheet1` (17 columns, instruction in Column G), while B2B orders append to `B2B Orders` (22 columns, instruction in Column K).  
-* **Email Generator**: Dispatches inline-styled HTML confirmation emails via `GmailApp.sendEmail` with order details, 48-hour shelf-life guidelines, and Google Calendar event links.
+## 🔄 4. Capacity Reset & Fulfillment Lifecycle SOP
 
-# **📊 5\. Google Sheets Database Schema**
+To reset the capacity counter (the "$X$" in "$X$ / 200 Bottles Reserved") between weekly drops:
 
-## **Sheet1 (B2C Orders — 17 Columns)**
+1. **Mark Orders as Delivered / Cancelled (Recommended):**
+   * In **`Sheet1`** (B2C): Set **Column P** (`Delivery Status`) to `Delivered` or `Cancelled`.
+   * In **`B2B Orders`**: Set **Column U** (`Delivery Status`) to `Delivered` or `Cancelled`.
+   * The backend automatically excludes fulfilled orders and resets the reserved bottle counter back to `0` for the upcoming drop while preserving historical order logs.
+2. **Clear / Delete Test Rows:**
+   * Select test order rows (row 2 downwards) in `Sheet1` or `B2B Orders` and delete them.
+3. **Change Total Batch Limit:**
+   * In the `Menu & Config` tab, change Cell **B3** (`Batch Capacity`) to the new batch target.
 
-## 
+---
 
-| Order Timestamp | Order ID | Customer Name | WhatsApp Number | Email Address | Delivery Address / Area | Delivery / Gate Instruction | Delivery Date | Coffee Bean Lot | Pack Selected | Quantity | Total Bottles | Total Amount (₹) | Payment Preference | Payment Status | Delivery Status | Notes / UTR |
-| :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- |
+## 📁 5. Repository File Structure & Breakdown
 
-## **B2B Orders (Corporate Drops — 22 Columns)**
+* **`index.html`**: Semantic single-page application structure featuring dynamic rendering containers (`#lotGrid`, `#b2cPacks`, `#b2bPacks`, `#storeStatusBanner`), preconnect resource hints, deferred Razorpay SDK script loading, and PWA Service Worker integration.
+* **`style.css`**: Design system utilizing CSS Custom Properties, CSS containment (`contain: layout style;`), and GPU compositor transforms (`scaleX`) for smooth progress bars.
+* **`app.js`**: Frontend controller featuring:
+  * **Dynamic CMS Rendering:** Builds coffee lot cards, sensory meters, pack option buttons, and custom ratio splitter controls directly from `Menu & Config`.
+  * **Stale-While-Revalidate (SWR) Caching:** Stores fetched config in `localStorage` (`tabc_live_config`) for instant zero-latency rendering on page reload.
+  * **Background Polling:** Re-fetches config every 60 seconds to keep scarcity counters synced.
+  * **Input Validation Subsystem:** Real-time regex validation for Delhi NCR PIN codes (`11xxxx`, `122xxx`, `121xxx`, `201xxx`), 10-digit Indian phone numbers, and 15-character GSTINs.
+  * **Offline Order Queue:** Queues 10-digit Indian phone numbers, and 15-character GSTINs.
+  * **Offline Order Queue:** Queues failed order submissions in `localStorage` (`tabc_pending_orders`) and dispatches them automatically upon network reconnection (`window.addEventListener('online')`).
+  * **1-Click Customer Profile Autofill:** Saves customer details locally for returning customers.
+* **`Code.gs`**: Google Apps Script backend:
+  * **`doGet(e)`**: Serves parsed JSON payload of `Menu & Config` settings, active lots, packs, coupons, and live reservation calculations.
+  * **`doPost(e)`**: Handles secure order ingestion, honeypot spam filtering, shared auth token verification, spreadsheet logging, and HTML receipt dispatch via Gmail.
+  * **Test Runners (`testDoGet`, `testDoPost`)**: Enables direct in-editor execution and one-click Google OAuth permission authorization.
 
-## 
+---
 
-| Order Timestamp | Order ID | Company / Business Name | Contact Person Name | Work Email | WhatsApp / Phone | GSTIN | Tech Park / Commercial Complex | Building / Tower / Floor | PIN Code | Delivery / Gate Instruction | Delivery Window | Delivery Date (Friday Drop) | Coffee Lot Selection | Pack Tier | Quantity | Total Bottles | Total Amount (₹) | Payment Method | Payment Status | Delivery Status | Notes / Payment Ref / PO Number |
-| :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- |
+## 📊 6. Google Sheets Database Schema
 
-# **⚙️ 6\. Deployment & Configuration Guide**
+### Sheet1 (B2C Orders — 17 Columns)
+| Col | Field Name | Description |
+|:---:|:---|:---|
+| A | Order Timestamp | Date and time order was placed |
+| B | Order ID | Unique B2C identifier (e.g. `TABC-856192`) |
+| C | Customer Name | Customer full name |
+| D | WhatsApp Number | 10-digit phone number |
+| E | Email Address | Customer email |
+| F | Delivery Address / Area | Building, flat, society, region, and PIN |
+| G | Delivery / Gate Instruction | Door drop / security desk preference |
+| H | Delivery Date | Saturday morning drop date |
+| I | Coffee Bean Lot | Selected harvest lot or custom split ratio |
+| J | Pack Selected | Pack tier name (e.g. `Weekend Pack`) |
+| K | Quantity | Quantity of packs |
+| L | Total Bottles | Total 250ml bottles ordered |
+| M | Total Amount (₹) | Total paid amount |
+| N | Payment Preference | `Razorpay Gateway` |
+| O | Payment Status | Gateway transaction reference |
+| P | Delivery Status | `Pre-Ordered` / `Brewing` / `Dispatched` / `Delivered` |
+| Q | Notes / UTR | Additional delivery and payment metadata |
 
-## **1\. Deploy Google Apps Script**
+### B2B Orders (Corporate Drops — 22 Columns)
+| Col | Field Name | Description |
+|:---:|:---|:---|
+| A | Order Timestamp | Date and time order was placed |
+| B | Order ID | Unique B2B identifier (e.g. `TABC-B2B-417722`) |
+| C | Company / Business Name | Company or organization name |
+| D | Contact Person Name | Contact name & role |
+| E | Work Email | Corporate email address |
+| F | WhatsApp / Phone | Contact phone number |
+| G | GSTIN | 15-character GSTIN (or `N/A`) |
+| H | Tech Park / Commercial Complex | Selected commercial complex hub |
+| I | Building / Tower / Floor | Specific office building and floor details |
+| J | PIN Code | 6-digit Delhi NCR PIN code |
+| K | Delivery / Gate Instruction | Gate drop / desk delivery preference |
+| L | Delivery Window | Morning Kickoff or Afternoon Recharge slot |
+| M | Delivery Date | Friday office drop date |
+| N | Coffee Lot Selection | Selected harvest lot or custom split ratio |
+| O | Pack Tier | Pack tier name (e.g. `Team Pack`) |
+| P | Quantity | Quantity of packs |
+| Q | Total Bottles | Total 250ml bottles ordered |
+| R | Total Amount (₹) | Total order value |
+| S | Payment Method | `Razorpay Gateway` or `Corporate Invoice (Net Terms)` |
+| T | Payment Status | Gateway ID or Invoice request reference |
+| U | Delivery Status | `Pre-Ordered` / `Brewing` / `Dispatched` / `Delivered` |
+| V | Notes / Payment Ref / PO Number | Corporate billing and dispatch notes |
 
-* Open your Google Sheet (`The Apartment Brew Co. — Live Order Tracker`).  
-* Navigate to **Extensions \> Apps Script** and paste `Code.gs`.  
-* Click **Deploy \> New Deployment**, select **Web App**, set *Execute as* to **Me**, and *Who has access* to **Anyone**.  
-* Copy the generated Web App URL (`https://script.google.com/macros/s/.../exec`).
+---
 
-## **2\. Configure Frontend**
+## ⚙️ 7. Deployment & Configuration Guide
 
-* In `app.js`, set `CONFIG.googleSheetEndpoint` to your deployed Apps Script Web App URL.  
-* Set `CONFIG.razorpayKeyId` to your active Razorpay Key (`rzp_live_...` or `rzp_test_...`).  
-* Set `CONFIG.authToken` to match `AUTH_TOKEN` in `Code.gs`.
+### 1. Deploy Google Apps Script
+1. Open your Google Spreadsheet (**The Apartment Brew Co. — Live Order Tracker**).
+2. Go to **Extensions > Apps Script** and paste `Code.gs`.
+3. Select `testDoGet` in the toolbar dropdown and click **Run** to authorize permissions (Spreadsheet & Gmail).
+4. Click **Deploy > New Deployment** (or **Manage Deployments > Edit > New Version**).
+5. Configure:
+   * **Execute as:** `Me (your email)`
+   * **Who has access:** `Anyone`
+6. Click **Deploy** and copy the Web App URL (ending in `/exec`).
 
-## **3\. Deploy Web Application**
+### 2. Configure Frontend (`app.js`)
+1. In `app.js`, set `CONFIG.googleSheetEndpoint` to your deployed Apps Script Web App URL.
+2. Set `CONFIG.razorpayKeyId` to your active Razorpay Key (`rzp_live_...` for production or `rzp_test_...` for testing).
+3. Ensure `CONFIG.authToken` matches `AUTH_TOKEN` in `Code.gs`.
 
-* Host `index.html`, `style.css`, and `app.js` on GitHub Pages, Cloudflare Pages, Vercel, or Netlify.
+### 3. Deploy Web Application
+Host `index.html`, `style.css`, and `app.js` on GitHub Pages, Cloudflare Pages, Vercel, or Netlify.
 
-# **⚡ 7\. Performance & Optimization Architecture**
+---
 
-The system is engineered for high-performance rendering and resilience against network drops, focusing on Core Web Vitals and offline reliability:
+## ⚡ 8. Core Web Vitals & Optimization Architecture
 
-* **Core Web Vitals**: Enhancements to FCP and LCP via resource hints (preconnect/dns-prefetch) and deferred SDK loading. CLS is minimized through CSS containment and GPU-accelerated tracks. INP is optimized using centralized DOM query caching and debounced validation.  
-* **Network Resilience**: Integrated PWA Service Workers ensure the UI remains accessible during connectivity drops, while the automated localStorage retry queue preserves and re-attempts order dispatches once the connection is restored.
+* **First Contentful Paint (FCP) & Largest Contentful Paint (LCP):** Optimized via `preconnect` and `dns-prefetch` resource hints for `checkout.razorpay.com` and deferred SDK script loading.
+* **Cumulative Layout Shift (CLS):** Eliminated via CSS layout containment (`contain: layout style;`) on all cards and containers.
+* **Interaction to Next Paint (INP):** Optimized by eliminating synchronous layout thrashing and executing instant Stale-While-Revalidate cache reads.
+* **Network & Offline Fault Tolerance:** PWA Service Worker caching and an automated localStorage retry queue guarantee that customer orders are never lost during intermittent mobile network dropouts.
