@@ -25,35 +25,34 @@
 
 ```mermaid
 flowchart TD
-    subgraph SheetsCMS["Google Sheets Headless CMS (Admin Panel)"]
-        Config["'Menu & Config' Tab\n(Lots, Packs, Pricing, Store Status, Coupons)"]
-        LiveDB["Order Database\n(Sheet1: 17 Cols | B2B Orders: 22 Cols)"]
+    subgraph SheetsCMS [Google Sheets Headless CMS]
+        Config["Menu & Config Tab: Lots, Pricing and Store Status"]
+        LiveDB["Order Database: Sheet1 and B2B Orders"]
     end
 
-    subgraph Backend["Backend Microservice (Google Apps Script — Code.gs)"]
-        DoGet["doGet() - Live JSON Config Server & Scoped Coupon Validator"]
-        DoPost["doPost() - Order Ingestion & Anti-Bot Honeypot Filter"]
-        Mailer["Gmail Notification Engine (HTML Receipts & GCal Links)"]
+    subgraph Backend [Google Apps Script Backend]
+        DoGet["doGet: Live Config Server and Coupon Validator"]
+        DoPost["doPost: Order Ingestion and Bot Trap Filter"]
+        Mailer["Gmail Notification Engine: HTML Receipts and Calendar"]
     end
 
-    subgraph Frontend["Client Layer (Frontend UI & Controller)"]
-        UI["index.html + style.css (Dark Roast Aesthetic)"]
-        JS["app.js (Dynamic Loader, Custom Splitter & Checkout)"]
+    subgraph Frontend [Client Layer Frontend]
+        UI["index.html + style.css: Dark Roast Interface"]
+        JS["app.js: Controller, Batch Splitter and Cart"]
     end
 
-    subgraph Payments["Payment Gateway"]
-        RZP["Razorpay SDK (UPI / Cards / NetBanking / Net-7 Invoices)"]
+    subgraph Payments [Payment Gateway]
+        RZP["Razorpay SDK: UPI, Cards and Corporate Invoices"]
     end
 
-    %% Data Flow
-    Config -->|Reads Live Lots, Prices & Formulas| DoGet
-    DoGet -->|HTTP GET JSON (Cache-Busted)| JS
-    JS -->|Dynamically Renders Lots & Packs| UI
-    UI -->|Checkout Action| JS
-    JS -->|Payment Modal / Invoice Req| RZP
-    JS -->|HTTP POST JSON| DoPost
-    DoPost -->|Appends Structured Row| LiveDB
-    DoPost -->|Dispatches HTML Receipt| Mailer
+    Config -->|Reads Live Config & Formulas| DoGet
+    DoGet -->|HTTP GET Config JSON| JS
+    JS -->|Renders Menu & Dynamic Lots| UI
+    UI -->|Customer Checkout Action| JS
+    JS -->|Payment Modal or Invoice| RZP
+    JS -->|HTTP POST Order JSON| DoPost
+    DoPost -->|Appends Order Row| LiveDB
+    DoPost -->|Sends Confirmation Email| Mailer
 ```
 
 ### Architecture Data Flow
