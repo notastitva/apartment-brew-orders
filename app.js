@@ -8,12 +8,12 @@ const CONFIG = {
   authToken: "TABC_SECURE_TOKEN_2026" // Shared auth token matching Code.gs
 };
 
-// Built-In Resilient Default Fallbacks (Zero Downtime if Offline)
+// Resilient Default Fallbacks (Instant Zero-Downtime Loading)
 const DEFAULT_CONFIG = {
   storeStatus: "OPEN",
-  batchCapacity: 50,
+  batchCapacity: 60,
   reservedBottles: 38,
-  announcementBanner: "⚡ Fresh Overnight Flash-Brew Drop",
+  announcementBanner: "Fresh Overnight Flash-Brew Drop",
   lots: [
     {
       id: "LOT-01",
@@ -58,7 +58,7 @@ let isCustomSplit = false;
 let customSplit = { ratnagiri: 2, thogarihunkal: 2 };
 let selectedB2cPack = { name: "Weekend Pack", bottles: 4, unitPrice: 899 };
 let selectedB2bPack = { name: "Team Pack (10x 250ml)", bottles: 10, unitPrice: 1800 };
-let appliedCoupon = null;
+let appliedCoupon = null; // { code, type, value, minOrder, allowedMode, discountAmount }
 let currentOrderDetails = null;
 
 // Dynamic Date Calculations
@@ -78,7 +78,34 @@ function getUpcomingSaturdayFormatted() {
   return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-// Fetch Dynamic Configuration from Google Sheets
+// Scarcity Cache Manager (Prevents Flickering on Load)
+function loadCachedScarcity() {
+  try {
+    const raw = sessionStorage.getItem('tabc_scarcity_cache');
+    if (raw) {
+      const cached = JSON.parse(raw);
+      if (cached && cached.capacity) {
+        liveConfig.batchCapacity = cached.capacity;
+        liveConfig.reservedBottles = cached.reserved || 0;
+        updateScarcityUI(cached.capacity, cached.reserved || 0);
+      }
+    }
+  } catch (e) {}
+}
+
+function updateScarcityUI(capacity, reserved) {
+  const cap = capacity || liveConfig.batchCapacity || 60;
+  const res = reserved !== undefined ? reserved : liveConfig.reservedBottles || 0;
+  const textEl = document.getElementById('scarcityText');
+  const fillEl = document.getElementById('scarcityFill');
+  if (textEl) textEl.textContent = res + " / " + cap + " Bottles Reserved";
+  if (fillEl) {
+    const pct = Math.min(100, Math.round((res / cap) * 100));
+    fillEl.style.width = pct + "%";
+  }
+}
+
+// Fetch Dynamic Live Config from Google Sheets
 async function fetchLiveConfig() {
   if (!CONFIG.googleSheetEndpoint || CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
     renderUIFromConfig(DEFAULT_CONFIG);
@@ -86,40 +113,35 @@ async function fetchLiveConfig() {
   }
 
   try {
-    const res = await fetch(CONFIG.googleSheetEndpoint + '?action=getConfig', { method: 'GET' });
+    const url = CONFIG.googleSheetEndpoint + '?action=getConfig&_t=' + Date.now();
+    const res = await fetch(url, { method: 'GET' });
     const json = await res.json();
     if (json && json.status === 'success' && json.data) {
       liveConfig = json.data;
+      try {
+        sessionStorage.setItem('tabc_scarcity_cache', JSON.stringify({
+          capacity: liveConfig.batchCapacity,
+          reserved: liveConfig.reservedBottles
+        }));
+      } catch (e) {}
       renderUIFromConfig(liveConfig);
     } else {
       renderUIFromConfig(DEFAULT_CONFIG);
     }
   } catch (err) {
-    console.log("Using cached menu config", err);
+    console.log("Using cached/fallback menu config", err);
     renderUIFromConfig(DEFAULT_CONFIG);
   }
 }
 
 function renderUIFromConfig(config) {
   // 1. Scarcity & Capacity
-  const capacity = config.batchCapacity || 50;
-  const reserved = config.reservedBottles || 0;
-  const scarcityText = document.getElementById('scarcityText');
-  const scarcityFill = document.getElementById('scarcityFill');
-  if (scarcityText) scarcityText.textContent = reserved + ' / ' + capacity + ' Bottles Reserved';
-  if (scarcityFill) {
-    const percent = Math.min(100, Math.round((reserved / capacity) * 100));
-    scarcityFill.style.width = percent + '%';
-  }
+  updateScarcityUI(config.batchCapacity, config.reservedBottles);
 
-  // 2. Announcement Banner
-  const dropBanner = document.getElementById('dropBanner');
-  if (dropBanner && config.announcementBanner) {
-    const dropDateText = currentMode === 'B2C' ? getUpcomingSaturdayFormatted() : getUpcomingFridayFormatted();
-    dropBanner.innerHTML = '<span>&#9889;</span> ' + config.announcementBanner + ': ' + dropDateText;
-  }
+  // 2. Banner Text (Single Spark Enforced)
+  updateBannerText();
 
-  // 3. Store Status
+  // 3. Store Status (OPEN / PAUSED / SOLD_OUT)
   const status = config.storeStatus || "OPEN";
   const storeBanner = document.getElementById('storeStatusBanner');
   const payBtn = document.getElementById('payNowBtn');
@@ -141,10 +163,24 @@ function renderUIFromConfig(config) {
   }
 
   // 4. Render Lots
-  renderLotGrid(config.lots || DEFAULT_CONFIG.lots);
+  const activeLots = (config.lots && config.lots.length > 0) ? config.lots : DEFAULT_CONFIG.lots;
+  renderLotGrid(activeLots);
 
   // 5. Render Packs
-  renderPackGrids(config.b2cPacks || DEFAULT_CONFIG.b2cPacks, config.b2bPacks || DEFAULT_CONFIG.b2bPacks);
+  const b2cPacks = (config.b2cPacks && config.b2cPacks.length > 0) ? config.b2cPacks : DEFAULT_CONFIG.b2cPacks;
+  const b2bPacks = (config.b2bPacks && config.b2bPacks.length > 0) ? config.b2bPacks : DEFAULT_CONFIG.b2bPacks;
+  renderPackGrids(b2cPacks, b2bPacks);
+}
+
+function updateBannerText() {
+  const bannerTextEl = document.getElementById('dropBannerText');
+  if (!bannerTextEl) return;
+  const rawAnnouncement = (liveConfig.announcementBanner || "Fresh Overnight Flash-Brew Drop").replace(/^⚡\s*/, '');
+  if (currentMode === 'B2C') {
+    bannerTextEl.textContent = rawAnnouncement + ": " + getUpcomingSaturdayFormatted() + " (Morning)";
+  } else {
+    bannerTextEl.textContent = "Next Office Drop: " + getUpcomingFridayFormatted() + " (Friday Delivery)";
+  }
 }
 
 function renderLotGrid(lots) {
@@ -253,6 +289,49 @@ function renderPackGrids(b2cPacks, b2bPacks) {
   updateTotal();
 }
 
+// Switch between B2C & B2B Modes
+function switchMode(mode) {
+  currentMode = mode;
+  const tabB2c = document.getElementById('tabB2c');
+  const tabB2b = document.getElementById('tabB2b');
+  if (tabB2c) tabB2c.classList.toggle('active', mode === 'B2C');
+  if (tabB2b) tabB2b.classList.toggle('active', mode === 'B2B');
+
+  const isB2c = mode === 'B2C';
+  updateBannerText();
+  
+  const packSubtext = document.getElementById('packSubtext');
+  if (packSubtext) packSubtext.textContent = isB2c ? 'Saturday Drop' : 'Friday Office Drop (Cutoff: Thu 6 PM)';
+  
+  const b2cPacks = document.getElementById('b2cPacks');
+  if (b2cPacks) b2cPacks.style.display = isB2c ? 'grid' : 'none';
+  
+  const b2bPacks = document.getElementById('b2bPacks');
+  if (b2bPacks) b2bPacks.style.display = isB2c ? 'none' : 'grid';
+  
+  const b2bFields = document.getElementById('b2bFields');
+  if (b2bFields) b2bFields.style.display = isB2c ? 'none' : 'block';
+  
+  const b2cCityGroup = document.getElementById('b2cCityGroup');
+  if (b2cCityGroup) b2cCityGroup.style.display = isB2c ? 'flex' : 'none';
+  
+  const b2bPaymentChoiceGroup = document.getElementById('b2bPaymentChoiceGroup');
+  if (b2bPaymentChoiceGroup) b2bPaymentChoiceGroup.style.display = isB2c ? 'none' : 'block';
+  
+  const labelName = document.getElementById('labelName');
+  if (labelName) labelName.textContent = isB2c ? 'Your Name *' : 'Contact Person Name & Role *';
+  
+  const labelEmail = document.getElementById('labelEmail');
+  if (labelEmail) labelEmail.textContent = isB2c ? 'Email Address *' : 'Work Email *';
+  
+  const labelAddress = document.getElementById('labelAddress');
+  if (labelAddress) labelAddress.textContent = isB2c ? 'Delivery Address (Building, Flat, Society) *' : 'Building / Tower / Floor Details *';
+
+  if (isB2c) currentB2bPayOption = 'GATEWAY';
+  updateTotal();
+  rebalanceSplitter();
+}
+
 // Live Countdown Timer for Pre-Order Cutoff
 function startCutoffCountdown() {
   function updateTimer() {
@@ -291,54 +370,6 @@ function startCutoffCountdown() {
 
   updateTimer();
   setInterval(updateTimer, 1000);
-}
-
-// Switch between B2C & B2B Modes
-function switchMode(mode) {
-  currentMode = mode;
-  const tabB2c = document.getElementById('tabB2c');
-  const tabB2b = document.getElementById('tabB2b');
-  if (tabB2c) tabB2c.classList.toggle('active', mode === 'B2C');
-  if (tabB2b) tabB2b.classList.toggle('active', mode === 'B2B');
-
-  const isB2c = mode === 'B2C';
-  const dropBanner = document.getElementById('dropBanner');
-  if (dropBanner) {
-    dropBanner.innerHTML = isB2c 
-      ? "<span>&#9889;</span> Next Fresh Drop: " + getUpcomingSaturdayFormatted() + " (Morning)" 
-      : "<span>&#9889;</span> Next Office Drop: " + getUpcomingFridayFormatted() + " (Friday Delivery)";
-  }
-  
-  const packSubtext = document.getElementById('packSubtext');
-  if (packSubtext) packSubtext.textContent = isB2c ? 'Saturday Drop' : 'Friday Office Drop (Cutoff: Thu 6 PM)';
-  
-  const b2cPacks = document.getElementById('b2cPacks');
-  if (b2cPacks) b2cPacks.style.display = isB2c ? 'grid' : 'none';
-  
-  const b2bPacks = document.getElementById('b2bPacks');
-  if (b2bPacks) b2bPacks.style.display = isB2c ? 'none' : 'grid';
-  
-  const b2bFields = document.getElementById('b2bFields');
-  if (b2bFields) b2bFields.style.display = isB2c ? 'none' : 'block';
-  
-  const b2cCityGroup = document.getElementById('b2cCityGroup');
-  if (b2cCityGroup) b2cCityGroup.style.display = isB2c ? 'flex' : 'none';
-  
-  const b2bPaymentChoiceGroup = document.getElementById('b2bPaymentChoiceGroup');
-  if (b2bPaymentChoiceGroup) b2bPaymentChoiceGroup.style.display = isB2c ? 'none' : 'block';
-  
-  const labelName = document.getElementById('labelName');
-  if (labelName) labelName.textContent = isB2c ? 'Your Name *' : 'Contact Person Name & Role *';
-  
-  const labelEmail = document.getElementById('labelEmail');
-  if (labelEmail) labelEmail.textContent = isB2c ? 'Email Address *' : 'Work Email *';
-  
-  const labelAddress = document.getElementById('labelAddress');
-  if (labelAddress) labelAddress.textContent = isB2c ? 'Delivery Address (Building, Flat, Society) *' : 'Building / Tower / Floor Details *';
-
-  if (isB2c) currentB2bPayOption = 'GATEWAY';
-  updateTotal();
-  rebalanceSplitter();
 }
 
 // Visual Lot Selection & Custom Splitter Toggle
@@ -449,30 +480,75 @@ function calculateBaseTotal() {
   return active.unitPrice * qty;
 }
 
+// Dynamic Scoped Discount Recalculator
+function recalculateDiscount() {
+  const msgEl = document.getElementById('couponMsg');
+  const discountRow = document.getElementById('discountRow');
+  const discountDisplay = document.getElementById('discountDisplay');
+
+  if (!appliedCoupon) {
+    if (discountRow) discountRow.style.display = 'none';
+    return 0;
+  }
+
+  const baseTotal = calculateBaseTotal();
+
+  // 1. Validate Mode Scope
+  if (appliedCoupon.allowedMode !== 'ALL' && appliedCoupon.allowedMode !== currentMode) {
+    const requiredMode = appliedCoupon.allowedMode === 'B2B' ? 'Office & Team Drops' : 'Individual Pre-Orders';
+    if (msgEl) {
+      msgEl.textContent = `Coupon '${appliedCoupon.code}' is only valid for ${requiredMode}.`;
+      msgEl.className = 'coupon-msg coupon-error';
+    }
+    appliedCoupon = null;
+    if (discountRow) discountRow.style.display = 'none';
+    return 0;
+  }
+
+  // 2. Validate Minimum Order
+  if (baseTotal < appliedCoupon.minOrder) {
+    if (msgEl) {
+      msgEl.textContent = `Coupon removed: Minimum order for '${appliedCoupon.code}' is ₹${appliedCoupon.minOrder}.`;
+      msgEl.className = 'coupon-msg coupon-error';
+    }
+    appliedCoupon = null;
+    if (discountRow) discountRow.style.display = 'none';
+    return 0;
+  }
+
+  // 3. Recalculate Discount Amount based on current base total
+  let discount = 0;
+  if (appliedCoupon.type === 'PERCENT') {
+    discount = Math.round(baseTotal * (appliedCoupon.value / 100));
+  } else {
+    discount = Math.min(baseTotal, appliedCoupon.value);
+  }
+
+  appliedCoupon.discountAmount = discount;
+
+  if (discountRow) discountRow.style.display = 'flex';
+  if (discountDisplay) discountDisplay.textContent = `- ₹${discount.toLocaleString('en-IN')}`;
+  if (msgEl) {
+    msgEl.textContent = `Coupon '${appliedCoupon.code}' applied! Saved ₹${discount}.`;
+    msgEl.className = 'coupon-msg coupon-success';
+  }
+
+  return discount;
+}
+
 function calculateFinalTotal() {
   const base = calculateBaseTotal();
-  const discount = appliedCoupon ? appliedCoupon.discountAmount : 0;
+  const discount = recalculateDiscount();
   return Math.max(0, base - discount);
 }
 
 function updateTotal() {
-  const baseTotal = calculateBaseTotal();
   const finalTotal = calculateFinalTotal();
-  
   const formatted = "₹" + finalTotal.toLocaleString('en-IN');
   const totalAmountDisplay = document.getElementById('totalAmountDisplay');
   const btnAmount = document.getElementById('btnAmount');
   if (totalAmountDisplay) totalAmountDisplay.textContent = formatted;
   if (btnAmount) btnAmount.textContent = formatted;
-
-  const discountRow = document.getElementById('discountRow');
-  const discountDisplay = document.getElementById('discountDisplay');
-  if (appliedCoupon && appliedCoupon.discountAmount > 0) {
-    if (discountRow) discountRow.style.display = 'flex';
-    if (discountDisplay) discountDisplay.textContent = '- ₹' + appliedCoupon.discountAmount;
-  } else {
-    if (discountRow) discountRow.style.display = 'none';
-  }
 
   const btnText = document.getElementById('btnText');
   if (btnText) {
@@ -503,15 +579,40 @@ async function applyCoupon() {
 
   if (!CONFIG.googleSheetEndpoint || CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
     // Local Fallback Check
-    if (code === 'FRESHDROP' && baseTotal >= 480) {
-      appliedCoupon = { code: 'FRESHDROP', discountAmount: 100 };
-      msgEl.textContent = 'Coupon FRESHDROP applied! Saved ₹100.';
-      msgEl.className = 'coupon-msg coupon-success';
-    } else if (code === 'NCRFIRST' && baseTotal >= 240) {
-      const disc = Math.round(baseTotal * 0.10);
-      appliedCoupon = { code: 'NCRFIRST', discountAmount: disc };
-      msgEl.textContent = `Coupon NCRFIRST applied! Saved ₹${disc} (10%).`;
-      msgEl.className = 'coupon-msg coupon-success';
+    if (code === 'FRESHDROP') {
+      if (currentMode !== 'B2C') {
+        msgEl.textContent = "Coupon 'FRESHDROP' is only valid for Individual Pre-Orders.";
+        msgEl.className = 'coupon-msg coupon-error';
+        appliedCoupon = null;
+      } else if (baseTotal < 480) {
+        msgEl.textContent = "Minimum order for 'FRESHDROP' is ₹480.";
+        msgEl.className = 'coupon-msg coupon-error';
+        appliedCoupon = null;
+      } else {
+        appliedCoupon = { code: 'FRESHDROP', type: 'FLAT', value: 100, minOrder: 480, allowedMode: 'B2C', discountAmount: 100 };
+      }
+    } else if (code === 'OFFICE10') {
+      if (currentMode !== 'B2B') {
+        msgEl.textContent = "Coupon 'OFFICE10' is only valid for Office & Team Drops.";
+        msgEl.className = 'coupon-msg coupon-error';
+        appliedCoupon = null;
+      } else if (baseTotal < 1800) {
+        msgEl.textContent = "Minimum order for 'OFFICE10' is ₹1,800.";
+        msgEl.className = 'coupon-msg coupon-error';
+        appliedCoupon = null;
+      } else {
+        const disc = Math.round(baseTotal * 0.10);
+        appliedCoupon = { code: 'OFFICE10', type: 'PERCENT', value: 10, minOrder: 1800, allowedMode: 'B2B', discountAmount: disc };
+      }
+    } else if (code === 'NCRFIRST') {
+      if (baseTotal < 240) {
+        msgEl.textContent = "Minimum order for 'NCRFIRST' is ₹240.";
+        msgEl.className = 'coupon-msg coupon-error';
+        appliedCoupon = null;
+      } else {
+        const disc = Math.round(baseTotal * 0.10);
+        appliedCoupon = { code: 'NCRFIRST', type: 'PERCENT', value: 10, minOrder: 240, allowedMode: 'ALL', discountAmount: disc };
+      }
     } else {
       appliedCoupon = null;
       msgEl.textContent = 'Invalid or expired coupon code.';
@@ -524,11 +625,19 @@ async function applyCoupon() {
   try {
     msgEl.textContent = 'Verifying coupon...';
     msgEl.className = 'coupon-msg';
-    const res = await fetch(`${CONFIG.googleSheetEndpoint}?action=validateCoupon&code=${encodeURIComponent(code)}&total=${baseTotal}`);
+    const url = `${CONFIG.googleSheetEndpoint}?action=validateCoupon&code=${encodeURIComponent(code)}&total=${baseTotal}&mode=${currentMode}&_t=${Date.now()}`;
+    const res = await fetch(url);
     const json = await res.json();
 
     if (json.valid) {
-      appliedCoupon = { code: json.code, discountAmount: json.discountAmount };
+      appliedCoupon = {
+        code: json.code,
+        type: json.type,
+        value: json.value,
+        minOrder: json.minOrder,
+        allowedMode: json.allowedMode,
+        discountAmount: json.discountAmount
+      };
       msgEl.textContent = json.message;
       msgEl.className = 'coupon-msg coupon-success';
     } else {
@@ -907,6 +1016,7 @@ function resetForm() {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
+  loadCachedScarcity();
   switchMode('B2C');
   startCutoffCountdown();
   checkSavedProfile();
