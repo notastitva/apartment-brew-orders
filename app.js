@@ -36,26 +36,41 @@ function getUpcomingSaturdayFormatted() {
   return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-// Live Config & Scarcity Capacity Fetcher from Google Sheets (Menu & Config)
+// Live Config & Scarcity Capacity Fetcher (Menu & Config with SWR Caching)
+function applyConfigToUI(data) {
+  if (!data) return;
+  const cap = data.batchCapacity || 60;
+  const resCount = data.reservedBottles || 0;
+  const scarcityText = document.getElementById('scarcityText');
+  const scarcityFill = document.getElementById('scarcityFill');
+
+  if (scarcityText) {
+    scarcityText.textContent = `${resCount} / ${cap} Bottles Reserved`;
+  }
+  if (scarcityFill) {
+    const pct = Math.min(Math.round((resCount / cap) * 100), 100);
+    scarcityFill.style.transform = `scaleX(${pct / 100})`;
+  }
+}
+
 function fetchLiveConfig() {
+  // 1. Instant Cache Render (Stale-While-Revalidate)
+  try {
+    const cached = JSON.parse(localStorage.getItem('tabc_live_config'));
+    if (cached) {
+      applyConfigToUI(cached);
+    }
+  } catch (e) {}
+
+  // 2. Fetch Fresh Data from Google Apps Script (doGet)
   if (!CONFIG.googleSheetEndpoint || CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) return;
 
   fetch(CONFIG.googleSheetEndpoint)
     .then(res => res.json())
     .then(data => {
       if (data && data.status === 'success') {
-        const cap = data.batchCapacity || 60;
-        const resCount = data.reservedBottles || 0;
-        const scarcityText = document.getElementById('scarcityText');
-        const scarcityFill = document.getElementById('scarcityFill');
-
-        if (scarcityText) {
-          scarcityText.textContent = `${resCount} / ${cap} Bottles Reserved`;
-        }
-        if (scarcityFill) {
-          const pct = Math.min(Math.round((resCount / cap) * 100), 100);
-          scarcityFill.style.transform = `scaleX(${pct / 100})`;
-        }
+        localStorage.setItem('tabc_live_config', JSON.stringify(data));
+        applyConfigToUI(data);
       }
     })
     .catch(() => {});
@@ -72,13 +87,11 @@ function startCutoffCountdown() {
     const target = new Date();
 
     if (isB2c) {
-      // B2C Saturday Drop: Cutoff is Friday 10:00 PM
       let daysUntilFri = (5 - now.getDay() + 7) % 7;
       if (daysUntilFri === 0 && now.getHours() >= 22) daysUntilFri = 7;
       target.setDate(now.getDate() + daysUntilFri);
       target.setHours(22, 0, 0, 0);
     } else {
-      // B2B Friday Drop: Cutoff is Thursday 6:00 PM
       let daysUntilThu = (4 - now.getDay() + 7) % 7;
       if (daysUntilThu === 0 && now.getHours() >= 18) daysUntilThu = 7;
       target.setDate(now.getDate() + daysUntilThu);
@@ -707,4 +720,5 @@ document.addEventListener('DOMContentLoaded', () => {
   startCutoffCountdown();
   checkSavedProfile();
   fetchLiveConfig();
+  setInterval(fetchLiveConfig, 60000);
 });

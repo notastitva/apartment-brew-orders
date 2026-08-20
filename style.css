@@ -220,7 +220,7 @@ body {
   background: linear-gradient(90deg, var(--accent), #e76f51);
   transform-origin: left;
   will-change: transform;
-  transform: scaleX(0.76);
+  transform: scaleX(0);
 
   border-radius: 3px;
 
