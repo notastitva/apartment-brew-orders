@@ -6,12 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>The Apartment Brew Co. | Fresh Flash-Chilled Specialty Coffee Drop</title>
   <link rel="stylesheet" href="style.css" />
-
+  
   <!-- Resource Hints for Payment SDK -->
   <link rel="preconnect" href="https://checkout.razorpay.com" />
   <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
+  
   <!-- Razorpay Standard Checkout SDK -->
-
   <script defer src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
@@ -31,13 +31,15 @@
       <div class="scarcity-bar-container">
         <div class="scarcity-label">
           <span>&#128293; Limited Batch Capacity</span>
-
-<span id="scarcityText">Loading batch availability...</span>
+          <span id="scarcityText">Loading batch availability...</span>
         </div>
         <div class="scarcity-progress-track">
           <div class="scarcity-progress-fill" id="scarcityFill"></div>
         </div>
       </div>
+
+      <!-- Store Status Banner (Dynamic for PAUSED / SOLD_OUT) -->
+      <div class="store-status-banner" id="storeStatusBanner" style="display: none;"></div>
 
       <div class="geo-badge">
         &#128205; Delivering Exclusively Across Gurugram &amp; Delhi NCR Tech Parks &amp; Residences
@@ -60,64 +62,8 @@
           <span class="section-subtitle">Single-Estate Harvests</span>
         </div>
 
-        <div class="lot-grid" id="lotGrid">
-          <div class="lot-card active" onclick="selectLot('Ratnagiri Estate (Anaerobic Naturals)', this)">
-            <div class="lot-header">
-              <span class="lot-name">Ratnagiri Estate</span>
-              <span class="lot-tag">Anaerobic Naturals</span>
-            </div>
-            <div class="lot-notes">&#127827; Wild Raspberry, Stone Fruit &amp; Dark Cacao</div>
-            <div class="flavor-pills">
-              <span class="flavor-pill">Fruity</span>
-              <span class="flavor-pill">High Acidity</span>
-              <span class="flavor-pill">Medium Roast</span>
-            </div>
-            <div class="sensory-meters">
-              <div class="meter-row">
-                <span>Acidity</span>
-                <div class="meter-bar"><div class="meter-fill" style="width: 85%;"></div></div>
-              </div>
-              <div class="meter-row">
-                <span>Body</span>
-                <div class="meter-bar"><div class="meter-fill" style="width: 70%;"></div></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="lot-card" onclick="selectLot('Thogarihunkal Estate (Washed)', this)">
-            <div class="lot-header">
-              <span class="lot-name">Thogarihunkal Estate</span>
-              <span class="lot-tag">Washed Lot</span>
-            </div>
-            <div class="lot-notes">&#127800; Orange Blossom, Jasmine &amp; Crisp Green Apple</div>
-            <div class="flavor-pills">
-              <span class="flavor-pill">Floral</span>
-              <span class="flavor-pill">Clean Crisp</span>
-              <span class="flavor-pill">Light-Med Roast</span>
-            </div>
-            <div class="sensory-meters">
-              <div class="meter-row">
-                <span>Acidity</span>
-                <div class="meter-bar"><div class="meter-fill" style="width: 75%;"></div></div>
-              </div>
-              <div class="meter-row">
-                <span>Body</span>
-                <div class="meter-bar"><div class="meter-fill" style="width: 60%;"></div></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="lot-card" onclick="selectLot('Custom Ratio Split (Build Your Own Batch)', this)">
-            <div class="lot-header">
-              <span class="lot-name">Custom Ratio Split</span>
-              <span class="lot-tag">Mix &amp; Match</span>
-            </div>
-            <div class="lot-notes">&#127915; Customize your exact bottle ratio between Ratnagiri Anaerobic &amp; Thogarihunkal Washed</div>
-            <div class="flavor-pills">
-              <span class="flavor-pill">Personalized Flight</span>
-            </div>
-          </div>
-        </div>
+        <!-- Dynamic Coffee Lot Grid -->
+        <div class="lot-grid" id="lotGrid"></div>
 
         <!-- Custom Ratio Splitter Module -->
         <div class="custom-splitter-card" id="customSplitter" style="display: none;">
@@ -128,30 +74,30 @@
           <div class="splitter-controls">
             <div class="splitter-row">
               <div class="splitter-lot-info">
-                <span class="splitter-lot-name">Ratnagiri Estate</span>
-                <span class="splitter-lot-sub">Anaerobic Naturals (Fruity &amp; Berry)</span>
+                <span class="splitter-lot-name" id="splitLot1Name">Lot 1</span>
+                <span class="splitter-lot-sub" id="splitLot1Sub">Anaerobic Naturals</span>
               </div>
               <div class="qty-stepper">
-                <button type="button" class="stepper-btn" onclick="adjustSplit('ratnagiri', -1)">&ndash;</button>
-                <span class="stepper-val" id="splitRatnagiri">2</span>
-                <button type="button" class="stepper-btn" onclick="adjustSplit('ratnagiri', 1)">+</button>
+                <button type="button" class="stepper-btn" onclick="adjustSplit('lot1', -1)">&ndash;</button>
+                <span class="stepper-val" id="splitLot1Count">2</span>
+                <button type="button" class="stepper-btn" onclick="adjustSplit('lot1', 1)">+</button>
               </div>
             </div>
             <div class="splitter-row">
               <div class="splitter-lot-info">
-                <span class="splitter-lot-name">Thogarihunkal Estate</span>
-                <span class="splitter-lot-sub">Washed Lot (Floral &amp; Crisp Apple)</span>
+                <span class="splitter-lot-name" id="splitLot2Name">Lot 2</span>
+                <span class="splitter-lot-sub" id="splitLot2Sub">Washed Lot</span>
               </div>
               <div class="qty-stepper">
-                <button type="button" class="stepper-btn" onclick="adjustSplit('thogarihunkal', -1)">&ndash;</button>
-                <span class="stepper-val" id="splitThogarihunkal">2</span>
-                <button type="button" class="stepper-btn" onclick="adjustSplit('thogarihunkal', 1)">+</button>
+                <button type="button" class="stepper-btn" onclick="adjustSplit('lot2', -1)">&ndash;</button>
+                <span class="stepper-val" id="splitLot2Count">2</span>
+                <button type="button" class="stepper-btn" onclick="adjustSplit('lot2', 1)">+</button>
               </div>
             </div>
           </div>
           <div class="splitter-ratio-bar">
-            <div class="ratio-segment ratio-ratnagiri" id="ratioBarRatnagiri" style="width: 50%;"></div>
-            <div class="ratio-segment ratio-thogarihunkal" id="ratioBarThogarihunkal" style="width: 50%;"></div>
+            <div class="ratio-segment ratio-ratnagiri" id="ratioBarLot1" style="width: 50%;"></div>
+            <div class="ratio-segment ratio-thogarihunkal" id="ratioBarLot2" style="width: 50%;"></div>
           </div>
         </div>
 
@@ -160,55 +106,11 @@
           <span class="section-subtitle" id="packSubtext">Saturday Drop</span>
         </div>
 
-        <!-- B2C Packs -->
-        <div class="pack-grid" id="b2cPacks">
-          <div class="pack-option" onclick="selectB2cPack('Single Bottle', 1, 240, this)">
-            <div class="pack-name">Single Bottle</div>
-            <div class="pack-price">&#8377;240</div>
-            <div class="pack-desc">1x 250ml</div>
-          </div>
-          <div class="pack-option" onclick="selectB2cPack('Duo Pack', 2, 480, this)">
-            <div class="pack-name">Duo Pack</div>
-            <div class="pack-price">&#8377;480</div>
-            <div class="pack-desc">2x 250ml (MOQ)</div>
-          </div>
-          <div class="pack-option active" onclick="selectB2cPack('Weekend Pack', 4, 899, this)">
-            <div class="pack-badge">Popular</div>
-            <div class="pack-name">Weekend Pack</div>
-            <div class="pack-price">&#8377;899</div>
-            <div class="pack-desc">4x 250ml</div>
-          </div>
-          <div class="pack-option" onclick="selectB2cPack('Mega Weekend', 6, 1200, this)">
-            <div class="pack-badge">Value</div>
-            <div class="pack-name">Mega Weekend</div>
-            <div class="pack-price">&#8377;1,200</div>
-            <div class="pack-desc">6x 250ml (@ &#8377;200)</div>
-          </div>
-        </div>
+        <!-- Dynamic B2C Packs Grid -->
+        <div class="pack-grid" id="b2cPacks"></div>
 
-        <!-- B2B Packs -->
-        <div class="pack-grid" id="b2bPacks" style="display: none;">
-          <div class="pack-option active" onclick="selectB2bPack('Team Pack (10x 250ml)', 10, 1800, this)">
-            <div class="pack-name">Team Pack</div>
-            <div class="pack-price">&#8377;1,800</div>
-            <div class="pack-desc">10x 250ml (&#8377;180/ea)</div>
-          </div>
-          <div class="pack-option" onclick="selectB2bPack('Office Batch (20x 250ml)', 20, 3400, this)">
-            <div class="pack-name">Office Batch</div>
-            <div class="pack-price">&#8377;3,400</div>
-            <div class="pack-desc">20x 250ml (&#8377;170/ea)</div>
-          </div>
-          <div class="pack-option" onclick="selectB2bPack('Floor Pack (40x 250ml)', 40, 6000, this)">
-            <div class="pack-name">Floor Pack</div>
-            <div class="pack-price">&#8377;6,000</div>
-            <div class="pack-desc">40x 250ml (&#8377;150/ea)</div>
-          </div>
-          <div class="pack-option" onclick="selectB2bPack('Townhall Bulk (60x 250ml)', 60, 8700, this)">
-            <div class="pack-name">Townhall Bulk</div>
-            <div class="pack-price">&#8377;8,700</div>
-            <div class="pack-desc">60x 250ml (&#8377;145/ea)</div>
-          </div>
-        </div>
+        <!-- Dynamic B2B Packs Grid -->
+        <div class="pack-grid" id="b2bPacks" style="display: none;"></div>
 
         <div class="form-group" style="margin-top: 10px;">
           <label for="packQty">Quantity of Selected Packs</label>
@@ -429,17 +331,14 @@
 
   </div>
 
-
-<!-- Service Worker Registration -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW error:', err));
-    });
-  }
-</script>
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW error:', err));
+      });
+    }
+  </script>
   <script src="app.js"></script>
 </body>
 </html>
-
-

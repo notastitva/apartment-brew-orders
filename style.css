@@ -1205,3 +1205,18 @@ input:focus, select:focus, textarea:focus {
 .ratio-thogarihunkal {
   background: #2a9d8f; /* Fresh floral teal */
 }
+
+
+/* Store Status Banner */
+.store-status-banner {
+  background: rgba(230, 57, 70, 0.15);
+  border: 1px solid var(--error);
+  color: #ff8fa3;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 10px;
+  line-height: 1.4;
+}

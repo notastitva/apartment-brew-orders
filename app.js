@@ -12,11 +12,33 @@ let cachedProfile = null;
 
 let currentMode = "B2C";
 let currentB2bPayOption = "GATEWAY";
+let currentStoreStatus = "OPEN";
+
+// Default Dynamic State (Overridden by live Google Sheets Menu & Config)
+let availableLots = [
+  { id: "LOT-01", name: "Ratnagiri Estate", process: "Anaerobic Naturals", notes: "Wild Raspberry, Stone Fruit & Dark Cacao", pills: ["Fruity", "High Acidity", "Medium Roast"], acidity: 85, body: 70 },
+  { id: "LOT-02", name: "Blueberry Estate", process: "Washed Lot", notes: "Orange Blossom, Jasmine & Crisp Green Apple", pills: ["Floral", "Clean Crisp", "Light-Med Roast"], acidity: 75, body: 60 }
+];
+
+let availableB2cPacks = [
+  { id: "B2C-01", name: "Single Bottle", bottles: 1, price: 240, badge: "" },
+  { id: "B2C-02", name: "Duo Pack", bottles: 2, price: 480, badge: "MOQ" },
+  { id: "B2C-03", name: "Weekend Pack", bottles: 4, price: 899, badge: "Popular" },
+  { id: "B2C-04", name: "Mega Week", bottles: 6, price: 1200, badge: "Value" }
+];
+
+let availableB2bPacks = [
+  { id: "B2B-01", name: "Team Pack", bottles: 10, price: 1800 },
+  { id: "B2B-02", name: "Office Batch", bottles: 20, price: 3400 },
+  { id: "B2B-03", name: "Floor Pack", bottles: 40, price: 6000 },
+  { id: "B2B-04", name: "Townhall Bulk", bottles: 60, price: 8700 }
+];
+
 let selectedBean = "Ratnagiri Estate (Anaerobic Naturals)";
 let isCustomSplit = false;
-let customSplit = { ratnagiri: 2, thogarihunkal: 2 };
+let customSplit = { lot1: 2, lot2: 2 };
 let selectedB2cPack = { name: "Weekend Pack", bottles: 4, unitPrice: 899 };
-let selectedB2bPack = { name: "Team Pack (10x 250ml)", bottles: 10, unitPrice: 1800 };
+let selectedB2bPack = { name: "Team Pack", bottles: 10, unitPrice: 1800 };
 let currentOrderDetails = null;
 
 // Dynamic Date Calculations
@@ -36,9 +58,155 @@ function getUpcomingSaturdayFormatted() {
   return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-// Live Config & Scarcity Capacity Fetcher (Menu & Config with SWR Caching)
+// Dynamic Menu & Config Rendering (Data-Driven from Google Sheets)
+function renderLots(lots) {
+  if (!Array.isArray(lots) || lots.length === 0) return;
+  availableLots = lots;
+
+  const lotGrid = document.getElementById('lotGrid');
+  if (!lotGrid) return;
+
+  let html = '';
+  lots.forEach((lot, idx) => {
+    const fullName = `${lot.name} (${lot.process})`;
+    const isFirstActive = idx === 0 && !isCustomSplit;
+    const pillsHtml = (lot.pills || []).map(p => `<span class="flavor-pill">${p}</span>`).join('');
+
+    html += `
+      <div class="lot-card ${isFirstActive ? 'active' : ''}" onclick="selectLot('${fullName}', this)">
+        <div class="lot-header">
+          <span class="lot-name">${lot.name}</span>
+          <span class="lot-tag">${lot.process}</span>
+        </div>
+        <div class="lot-notes">${lot.notes}</div>
+        <div class="flavor-pills">${pillsHtml}</div>
+        <div class="sensory-meters">
+          <div class="meter-row">
+            <span>Acidity</span>
+            <div class="meter-bar"><div class="meter-fill" style="width: ${lot.acidity || 75}%;"></div></div>
+          </div>
+          <div class="meter-row">
+            <span>Body</span>
+            <div class="meter-bar"><div class="meter-fill" style="width: ${lot.body || 65}%;"></div></div>
+          </div>
+        </div>
+      </div>`;
+  });
+
+  // Append Custom Ratio Split Card if multiple lots are active
+  if (lots.length >= 2) {
+    html += `
+      <div class="lot-card ${isCustomSplit ? 'active' : ''}" onclick="selectLot('Custom Ratio Split (Build Your Own Batch)', this)">
+        <div class="lot-header">
+          <span class="lot-name">Custom Ratio Split</span>
+          <span class="lot-tag">Mix &amp; Match</span>
+        </div>
+        <div class="lot-notes">&#127915; Customize your exact bottle ratio between ${lots[0].name} &amp; ${lots[1].name}</div>
+        <div class="flavor-pills">
+          <span class="flavor-pill">Personalized Flight</span>
+        </div>
+      </div>`;
+
+    const l1Name = document.getElementById('splitLot1Name');
+    const l1Sub = document.getElementById('splitLot1Sub');
+    const l2Name = document.getElementById('splitLot2Name');
+    const l2Sub = document.getElementById('splitLot2Sub');
+
+    if (l1Name) l1Name.textContent = lots[0].name;
+    if (l1Sub) l1Sub.textContent = lots[0].process;
+    if (l2Name) l2Name.textContent = lots[1].name;
+    if (l2Sub) l2Sub.textContent = lots[1].process;
+  }
+
+  lotGrid.innerHTML = html;
+
+  if (!isCustomSplit && lots[0]) {
+    selectedBean = `${lots[0].name} (${lots[0].process})`;
+  }
+}
+
+function renderPacks(b2cPacks, b2bPacks) {
+  if (Array.isArray(b2cPacks) && b2cPacks.length > 0) {
+    availableB2cPacks = b2cPacks;
+    const b2cGrid = document.getElementById('b2cPacks');
+    if (b2cGrid) {
+      let b2cHtml = '';
+      b2cPacks.forEach((p, idx) => {
+        const isDefault = p.name === selectedB2cPack.name || (idx === 2 && !selectedB2cPack.name);
+        const badgeHtml = p.badge ? `<div class="pack-badge">${p.badge}</div>` : '';
+        const perBottle = p.bottles > 1 ? ` (@ ₹${Math.round(p.price / p.bottles)})` : '';
+        
+        b2cHtml += `
+          <div class="pack-option ${isDefault ? 'active' : ''}" onclick="selectB2cPack('${p.name}', ${p.bottles}, ${p.price}, this)">
+            ${badgeHtml}
+            <div class="pack-name">${p.name}</div>
+            <div class="pack-price">&#8377;${p.price.toLocaleString('en-IN')}</div>
+            <div class="pack-desc">${p.bottles}x 250ml${perBottle}</div>
+          </div>`;
+
+        if (isDefault) {
+          selectedB2cPack = { name: p.name, bottles: p.bottles, unitPrice: p.price };
+        }
+      });
+      b2cGrid.innerHTML = b2cHtml;
+    }
+  }
+
+  if (Array.isArray(b2bPacks) && b2bPacks.length > 0) {
+    availableB2bPacks = b2bPacks;
+    const b2bGrid = document.getElementById('b2bPacks');
+    if (b2bGrid) {
+      let b2bHtml = '';
+      b2bPacks.forEach((p, idx) => {
+        const isDefault = p.name === selectedB2bPack.name || (idx === 0 && !selectedB2bPack.name);
+        const perBottle = ` (₹${Math.round(p.price / p.bottles)}/ea)`;
+        
+        b2bHtml += `
+          <div class="pack-option ${isDefault ? 'active' : ''}" onclick="selectB2bPack('${p.name}', ${p.bottles}, ${p.price}, this)">
+            <div class="pack-name">${p.name}</div>
+            <div class="pack-price">&#8377;${p.price.toLocaleString('en-IN')}</div>
+            <div class="pack-desc">${p.bottles}x 250ml${perBottle}</div>
+          </div>`;
+
+        if (isDefault) {
+          selectedB2bPack = { name: p.name, bottles: p.bottles, unitPrice: p.price };
+        }
+      });
+      b2bGrid.innerHTML = b2bHtml;
+    }
+  }
+}
+
+function applyStoreStatus(status) {
+  currentStoreStatus = (status || 'OPEN').toUpperCase();
+  const banner = document.getElementById('storeStatusBanner');
+  const payBtn = document.getElementById('payNowBtn');
+  const btnText = document.getElementById('btnText');
+
+  if (currentStoreStatus === 'PAUSED') {
+    if (banner) {
+      banner.textContent = '⚠️ Pre-orders are currently paused by the roastery. Batch in preparation.';
+      banner.style.display = 'block';
+    }
+    if (payBtn) payBtn.disabled = true;
+    if (btnText) btnText.innerHTML = '🚫 Pre-Orders Temporarily Paused';
+  } else if (currentStoreStatus === 'SOLD_OUT') {
+    if (banner) {
+      banner.textContent = '⚡ Batch Capacity Reached (Sold Out). Next drop opens Monday.';
+      banner.style.display = 'block';
+    }
+    if (payBtn) payBtn.disabled = true;
+    if (btnText) btnText.innerHTML = '🚫 Sold Out for This Drop';
+  } else {
+    if (banner) banner.style.display = 'none';
+    if (payBtn) payBtn.disabled = false;
+    updateTotal();
+  }
+}
+
 function applyConfigToUI(data) {
   if (!data) return;
+
   const cap = data.batchCapacity || 60;
   const resCount = data.reservedBottles || 0;
   const scarcityText = document.getElementById('scarcityText');
@@ -51,10 +219,16 @@ function applyConfigToUI(data) {
     const pct = Math.min(Math.round((resCount / cap) * 100), 100);
     scarcityFill.style.transform = `scaleX(${pct / 100})`;
   }
+
+  if (data.lots) renderLots(data.lots);
+  if (data.b2cPacks || data.b2bPacks) renderPacks(data.b2cPacks, data.b2bPacks);
+  if (data.storeStatus) applyStoreStatus(data.storeStatus);
+
+  updateTotal();
+  if (isCustomSplit) rebalanceSplitter();
 }
 
 function fetchLiveConfig() {
-  // 1. Instant Cache Render (Stale-While-Revalidate)
   try {
     const cached = JSON.parse(localStorage.getItem('tabc_live_config'));
     if (cached) {
@@ -62,7 +236,6 @@ function fetchLiveConfig() {
     }
   } catch (e) {}
 
-  // 2. Fetch Fresh Data from Google Apps Script (doGet)
   if (!CONFIG.googleSheetEndpoint || CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) return;
 
   fetch(CONFIG.googleSheetEndpoint)
@@ -190,24 +363,24 @@ function getTotalBottles() {
 function rebalanceSplitter() {
   const total = getTotalBottles();
   const half = Math.floor(total / 2);
-  customSplit.ratnagiri = half;
-  customSplit.thogarihunkal = total - half;
+  customSplit.lot1 = half;
+  customSplit.lot2 = total - half;
   renderSplitterUI();
 }
 
-function adjustSplit(lot, delta) {
+function adjustSplit(lotKey, delta) {
   const total = getTotalBottles();
-  if (lot === 'ratnagiri') {
-    let newRat = customSplit.ratnagiri + delta;
-    if (newRat >= 0 && newRat <= total) {
-      customSplit.ratnagiri = newRat;
-      customSplit.thogarihunkal = total - newRat;
+  if (lotKey === 'lot1') {
+    let newL1 = customSplit.lot1 + delta;
+    if (newL1 >= 0 && newL1 <= total) {
+      customSplit.lot1 = newL1;
+      customSplit.lot2 = total - newL1;
     }
   } else {
-    let newThog = customSplit.thogarihunkal + delta;
-    if (newThog >= 0 && newThog <= total) {
-      customSplit.thogarihunkal = newThog;
-      customSplit.ratnagiri = total - newThog;
+    let newL2 = customSplit.lot2 + delta;
+    if (newL2 >= 0 && newL2 <= total) {
+      customSplit.lot2 = newL2;
+      customSplit.lot1 = total - newL2;
     }
   }
   renderSplitterUI();
@@ -215,25 +388,25 @@ function adjustSplit(lot, delta) {
 
 function renderSplitterUI() {
   const total = getTotalBottles();
-  const alloc = customSplit.ratnagiri + customSplit.thogarihunkal;
+  const alloc = customSplit.lot1 + customSplit.lot2;
 
   const allocEl = document.getElementById('allocCount');
   const targetEl = document.getElementById('targetCount');
-  const ratEl = document.getElementById('splitRatnagiri');
-  const thogEl = document.getElementById('splitThogarihunkal');
-  const ratBar = document.getElementById('ratioBarRatnagiri');
-  const thogBar = document.getElementById('ratioBarThogarihunkal');
+  const l1Count = document.getElementById('splitLot1Count');
+  const l2Count = document.getElementById('splitLot2Count');
+  const bar1 = document.getElementById('ratioBarLot1');
+  const bar2 = document.getElementById('ratioBarLot2');
 
   if (allocEl) allocEl.textContent = alloc;
   if (targetEl) targetEl.textContent = total;
-  if (ratEl) ratEl.textContent = customSplit.ratnagiri;
-  if (thogEl) thogEl.textContent = customSplit.thogarihunkal;
+  if (l1Count) l1Count.textContent = customSplit.lot1;
+  if (l2Count) l2Count.textContent = customSplit.lot2;
 
-  const ratPercent = total > 0 ? (customSplit.ratnagiri / total) * 100 : 50;
-  const thogPercent = total > 0 ? (customSplit.thogarihunkal / total) * 100 : 50;
+  const l1Percent = total > 0 ? (customSplit.lot1 / total) * 100 : 50;
+  const l2Percent = total > 0 ? (customSplit.lot2 / total) * 100 : 50;
 
-  if (ratBar) ratBar.style.width = `${ratPercent}%`;
-  if (thogBar) thogBar.style.width = `${thogPercent}%`;
+  if (bar1) bar1.style.width = `${l1Percent}%`;
+  if (bar2) bar2.style.width = `${l2Percent}%`;
 }
 
 // Pack Selection Handlers
@@ -282,7 +455,7 @@ function updateTotal() {
   if (totalDisplay) totalDisplay.textContent = formatted;
   if (btnAmount) btnAmount.textContent = formatted;
 
-  if (btnText) {
+  if (btnText && currentStoreStatus === 'OPEN') {
     if (currentMode === 'B2B' && currentB2bPayOption === 'INVOICE') {
       btnText.innerHTML = `📄 Request Corporate Invoice (<span id="btnAmount">${formatted}</span>)`;
     } else {
@@ -491,6 +664,11 @@ function validateAllInputs() {
 
 // Payment & Submission Handling
 function handlePayClick() {
+  if (currentStoreStatus === 'PAUSED' || currentStoreStatus === 'SOLD_OUT') {
+    alert('Pre-orders are currently closed for this drop.');
+    return;
+  }
+
   if (!validateAllInputs()) {
     alert('Please correct the highlighted fields before placing your order.');
     return;
@@ -551,8 +729,11 @@ async function handleOrderSuccess(paymentId, statusText) {
   const buildingFloor = (document.getElementById('custAddress')?.value || '').trim();
   const paymentMode = isB2c ? "Razorpay Gateway" : (currentB2bPayOption === 'INVOICE' ? "Corporate Invoice (Net Terms)" : "Razorpay Gateway");
 
+  const lot1Name = availableLots[0] ? availableLots[0].name : "Lot 1";
+  const lot2Name = availableLots[1] ? availableLots[1].name : "Lot 2";
+
   const coffeeLotDisplay = isCustomSplit 
-    ? `Custom Split (${customSplit.ratnagiri}x Ratnagiri Estate + ${customSplit.thogarihunkal}x Thogarihunkal Estate)`
+    ? `Custom Split (${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name})`
     : selectedBean;
 
   const orderPayload = {
@@ -716,6 +897,8 @@ function resetForm() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  renderLots(availableLots);
+  renderPacks(availableB2cPacks, availableB2bPacks);
   switchMode('B2C');
   startCutoffCountdown();
   checkSavedProfile();
