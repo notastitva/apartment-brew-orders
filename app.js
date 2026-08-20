@@ -62,18 +62,29 @@ function getUpcomingSaturdayFormatted() {
 function renderLots(lots) {
   if (!Array.isArray(lots) || lots.length === 0) return;
   availableLots = lots;
-
   const lotGrid = document.getElementById('lotGrid');
   if (!lotGrid) return;
 
   let html = '';
   lots.forEach((lot, idx) => {
     const fullName = `${lot.name} (${lot.process})`;
-    const isFirstActive = idx === 0 && !isCustomSplit;
-    const pillsHtml = (lot.pills || []).map(p => `<span class="flavor-pill">${p}</span>`).join('');
+    const isSoldOut = lot.isSoldOut;
+    const isFirstActive = idx === 0 && !isSoldOut && !isCustomSplit;
+
+    // Remaining stock pill
+    let stockBadge = '';
+    if (lot.isSoldOut) {
+      stockBadge = '<span class="flavor-pill" style="background: rgba(230, 57, 70, 0.2); color: #e63946; border-color: #e63946;">Sold Out</span>';
+    } else if (lot.remainingBottles && lot.remainingBottles <= 15) {
+      stockBadge = `<span class="flavor-pill" style="background: rgba(244, 162, 97, 0.2); color: #f4a261; border-color: #f4a261;">Only ${lot.remainingBottles} left</span>`;
+    }
+
+    const pillsHtml = (lot.pills || []).map(p => `<span class="flavor-pill">${p}</span>`).join('') + stockBadge;
 
     html += `
-      <div class="lot-card ${isFirstActive ? 'active' : ''}" onclick="selectLot('${fullName}', this)">
+      <div class="lot-card ${isFirstActive ? 'active' : ''} ${isSoldOut ? 'disabled-card' : ''}" 
+           ${!isSoldOut ? `onclick="selectLot('${fullName}', this)"` : ''} 
+           style="${isSoldOut ? 'opacity: 0.55; cursor: not-allowed;' : ''}">
         <div class="lot-header">
           <span class="lot-name">${lot.name}</span>
           <span class="lot-tag">${lot.process}</span>
@@ -93,36 +104,7 @@ function renderLots(lots) {
       </div>`;
   });
 
-  // Append Custom Ratio Split Card if multiple lots are active
-  if (lots.length >= 2) {
-    html += `
-      <div class="lot-card ${isCustomSplit ? 'active' : ''}" onclick="selectLot('Custom Ratio Split (Build Your Own Batch)', this)">
-        <div class="lot-header">
-          <span class="lot-name">Custom Ratio Split</span>
-          <span class="lot-tag">Mix &amp; Match</span>
-        </div>
-        <div class="lot-notes">&#127915; Customize your exact bottle ratio between ${lots[0].name} &amp; ${lots[1].name}</div>
-        <div class="flavor-pills">
-          <span class="flavor-pill">Personalized Flight</span>
-        </div>
-      </div>`;
-
-    const l1Name = document.getElementById('splitLot1Name');
-    const l1Sub = document.getElementById('splitLot1Sub');
-    const l2Name = document.getElementById('splitLot2Name');
-    const l2Sub = document.getElementById('splitLot2Sub');
-
-    if (l1Name) l1Name.textContent = lots[0].name;
-    if (l1Sub) l1Sub.textContent = lots[0].process;
-    if (l2Name) l2Name.textContent = lots[1].name;
-    if (l2Sub) l2Sub.textContent = lots[1].process;
-  }
-
   lotGrid.innerHTML = html;
-
-  if (!isCustomSplit && lots[0]) {
-    selectedBean = `${lots[0].name} (${lots[0].process})`;
-  }
 }
 
 function renderPacks(b2cPacks, b2bPacks) {
@@ -287,6 +269,24 @@ function startCutoffCountdown() {
 
   updateTimer();
   setInterval(updateTimer, 1000);
+}
+
+function updateClusterSlotAvailability(clusters) {
+  const parkSelect = document.getElementById('b2bTechPark');
+  const windowSelect = document.getElementById('b2bDeliveryWindow');
+  if (!parkSelect || !windowSelect || !clusters) return;
+
+  const selectedPark = parkSelect.value;
+  Array.from(windowSelect.options).forEach(opt => {
+    const cluster = clusters.find(c => c.techPark === selectedPark && c.deliveryWindow === opt.value);
+    if (cluster && cluster.isFull) {
+      opt.disabled = true;
+      opt.text = `${opt.value} (Slot Full — Next Available Drop)`;
+    } else {
+      opt.disabled = false;
+      opt.text = opt.value;
+    }
+  });
 }
 
 // Switch between B2C & B2B Modes
