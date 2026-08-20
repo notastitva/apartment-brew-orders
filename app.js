@@ -3,8 +3,8 @@
 // ====================================================================
 
 const CONFIG = {
-  razorpayKeyId: "rzp_test_TRVab1bUUwOVN5", // Replace with your active Key ID (rzp_live_...)
-  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbx7nE2uQV08Ev4UYt8FFkmVZMGMpksvhIjljALGSbXYmc1FEv_1nh34BoR99mdTHic/exec", // Replace with Apps Script Web App URL ending in /exec
+  razorpayKeyId: "YOUR_RAZORPAY_KEY_ID_HERE", // Replace with your active Key ID (rzp_live_...)
+  googleSheetEndpoint: "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE", // Replace with Apps Script Web App URL ending in /exec
   authToken: "TABC_SECURE_TOKEN_2026" // Shared auth token matching Code.gs
 };
 
@@ -34,6 +34,31 @@ function getUpcomingSaturdayFormatted() {
   if (days === 0 && d.getHours() >= 10) days = 7;
   d.setDate(d.getDate() + days);
   return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+// Live Config & Scarcity Capacity Fetcher from Google Sheets (Menu & Config)
+function fetchLiveConfig() {
+  if (!CONFIG.googleSheetEndpoint || CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) return;
+
+  fetch(CONFIG.googleSheetEndpoint)
+    .then(res => res.json())
+    .then(data => {
+      if (data && data.status === 'success') {
+        const cap = data.batchCapacity || 60;
+        const resCount = data.reservedBottles || 0;
+        const scarcityText = document.getElementById('scarcityText');
+        const scarcityFill = document.getElementById('scarcityFill');
+
+        if (scarcityText) {
+          scarcityText.textContent = `${resCount} / ${cap} Bottles Reserved`;
+        }
+        if (scarcityFill) {
+          const pct = Math.min(Math.round((resCount / cap) * 100), 100);
+          scarcityFill.style.transform = `scaleX(${pct / 100})`;
+        }
+      }
+    })
+    .catch(() => {});
 }
 
 // Live Countdown Timer for Pre-Order Cutoff
@@ -280,7 +305,7 @@ function checkSavedProfile() {
 
 function applySavedProfile() {
   try {
-    const profile = cachedProfile || JSON.parse(localStorage.getItem('tabc_customer_profile') || '{}');
+    const profile = cachedProfile || JSON.parse(localStorage.getItem('tabc_customer_profile' || '{}'));
     if (profile && profile.name) {
       const nameInput = document.getElementById('custName');
       const emailInput = document.getElementById('custEmail');
@@ -488,7 +513,6 @@ function handlePayClick() {
     });
     rzp.open();
   } else {
-    // Development / Demo Fallback
     const demoPayId = "pay_demo_" + Math.random().toString(36).substring(2, 9);
     handleOrderSuccess(demoPayId, "Paid via Gateway (Demo)");
   }
@@ -547,11 +571,8 @@ async function handleOrderSuccess(paymentId, statusText) {
   };
 
   currentOrderDetails = orderPayload;
-
-  // Persist profile to localStorage for 1-click reorders
   saveCustomerProfile(orderPayload);
 
-  // Dispatch to Google Apps Script Backend
   if (CONFIG.googleSheetEndpoint && !CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
     fetch(CONFIG.googleSheetEndpoint, {
       method: "POST",
@@ -567,7 +588,6 @@ async function handleOrderSuccess(paymentId, statusText) {
     });
   }
 
-  // Populate & Display Confirmation Screen
   const rOrderId = document.getElementById('rOrderId');
   const rOrderType = document.getElementById('rOrderType');
   const rCompanyRow = document.getElementById('rCompanyRow');
@@ -605,7 +625,6 @@ async function handleOrderSuccess(paymentId, statusText) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Online Listener for Offline Order Queue Retry
 window.addEventListener('online', () => {
   try {
     const pending = JSON.parse(localStorage.getItem('tabc_pending_orders') || "[]");
@@ -625,7 +644,6 @@ window.addEventListener('online', () => {
   } catch (e) {}
 });
 
-// Google Calendar Event Link Generator
 function addToGoogleCalendar() {
   if (!currentOrderDetails) return;
 
@@ -638,7 +656,6 @@ function addToGoogleCalendar() {
   window.open(gcalUrl, '_blank');
 }
 
-// WhatsApp Receipt & Support Trigger
 function sendWhatsAppReceipt() {
   if (!currentOrderDetails) return;
   const d = currentOrderDetails;
@@ -685,9 +702,9 @@ function resetForm() {
   checkSavedProfile();
 }
 
-// Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
   switchMode('B2C');
   startCutoffCountdown();
   checkSavedProfile();
+  fetchLiveConfig();
 });
