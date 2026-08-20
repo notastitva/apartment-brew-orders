@@ -73,59 +73,6 @@ flowchart TD
        +---------------------------------------------+  +--------------------------------+
 ```
 
-# **📂 3\. Repository File Structure**
-
-# **☕ The Apartment Brew Co. — Web Portal & Order Intake System**
-
-## **Micro-Batch Flash-Chilled Specialty Coffee • Gurugram & Delhi NCR**
-
-A lightweight, high-performance, serverless e-commerce and order intake portal designed for scheduled micro-batch craft coffee drops, dynamic Google Sheets headless CMS configuration, direct payment gateway integration, live order tracking, and automated customer notifications.  
----
-
-# **📌 1\. Overview & Business Model**
-
-The Apartment Brew Co. operates an asset-light, pre-order only micro-batch craft coffee roastery:
-
-* **Extraction & Peak Freshness:** Coffee is extracted hot to capture delicate floral and fruity aromatics and flash-chilled immediately over ice. 100% preservative-free with a strict **48-hour peak freshness window**.  
-* **Dual Delivery Pathways:**  
-  * **B2C (Individual Saturday Morning Drops):** Pre-orders close Friday 10:00 PM; delivered Saturday 8:00 AM – 11:00 AM.  
-  * **B2B (Corporate Friday Office Drops):** Orders close Thursday 6:00 PM; delivered Friday (Morning Kickoff 9:30–11:30 AM or Afternoon Recharge 2:00–4:00 PM).  
-* **Delivery Coverage:** Hyper-local Delhi NCR (Gurugram DLF Phases 1–5, Cyber City, Golf Course Rd, Candor TechSpace, Udyog Vihar, Noida Tech Parks, and Central/South Delhi).
-
----
-
-# **🏗️ 2\. System Architecture**
-
-```
-+-----------------------------------------------------------------------------------+
-|                                   CLIENT LAYER                                    |
-|   index.html (Semantic UI)  +  style.css (Dark Roast Design System)               |
-|   app.js (Dynamic CMS Render, SWR Caching, Real-time Validation, Offline Queue)  |
-+--------------------------+------------------------------------+-------------------+
-                           |                                    |
-                Payment Gateway Callback                HTTP GET / POST (JSON)
-                           |                                    |
-                           v                                    v
-+-------------------------------------+      +--------------------------------------+
-|        Razorpay Gateway SDK         |      |     Google Apps Script (Code.gs)     |
-|       (UPI / Cards / NetBank)       |      |     - doGet: Serve Menu & Config     |
-+-------------------------------------+      |     - doPost: Order Intake Engine    |
-                                             |     - Auth Token & Honeypot Trap     |
-                                             +------------------+-------------------+
-                                                                |
-                                             +------------------+-------------------+
-                                             |                                      |
-                                             v                                      v
-              +----------------------------------------------+      +-------------------------------+
-              |            Google Sheets Database            |      |   Gmail Notification Engine   |
-              |  - Tab 1: Menu & Config (Headless CMS)       |      |  - B2C Saturday Drop Receipt  |
-              |  - Tab 2: Sheet1 (B2C Orders, 17 Columns)    |      |  - B2B Friday Corporate Drop  |
-              |  - Tab 3: B2B Orders (Corporate, 22 Columns) |      |  - 1-Click Calendar Links     |
-              +----------------------------------------------+      +-------------------------------+
-```
-
----
-
 # **🎛️ 3\. Google Sheets Headless CMS ("Menu & Config")**
 
 The website is 100% data-driven by the **Menu & Config** tab in the Google Spreadsheet. Non-technical roastery operators can control the live website directly from Google Sheets without writing code:
