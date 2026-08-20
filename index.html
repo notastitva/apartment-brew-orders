@@ -6,8 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>The Apartment Brew Co. | Fresh Flash-Chilled Specialty Coffee Drop</title>
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Resource Hints for Payment SDK -->
+  <link rel="preconnect" href="https://checkout.razorpay.com" />
+  <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
   <!-- Razorpay Standard Checkout SDK -->
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <script defer src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
   <div class="container">
@@ -18,7 +23,7 @@
       <div class="brand-subtitle">Micro-Batch Flash-Chilled Specialty Coffee &bull; Gurugram</div>
       
       <div class="drop-banner" id="dropBanner">
-        <span class="banner-spark">&#9889;</span> <span id="dropBannerText">Next Fresh Drop: Saturday Morning</span>
+        <span>&#9889;</span> Next Fresh Drop: Saturday Morning
       </div>
       <div class="countdown-timer" id="countdownTimer">Cutoff closes in: Loading...</div>
 
@@ -26,7 +31,7 @@
       <div class="scarcity-bar-container">
         <div class="scarcity-label">
           <span>&#128293; Limited Batch Capacity</span>
-          <span id="scarcityText">Loading batch capacity...</span>
+          <span id="scarcityText">38 / 50 Bottles Reserved</span>
         </div>
         <div class="scarcity-progress-track">
           <div class="scarcity-progress-fill" id="scarcityFill"></div>
@@ -34,17 +39,14 @@
       </div>
 
       <div class="geo-badge">
-        &#128205; Delivering Exclusively Across Gurugram & Delhi NCR Tech Parks & Residences
+        &#128205; Delivering Exclusively Across Gurugram &amp; Delhi NCR Tech Parks &amp; Residences
       </div>
     </div>
-
-    <!-- Store Status Banner (Dynamic Sold Out / Paused Alert) -->
-    <div class="store-status-banner" id="storeStatusBanner" style="display: none;"></div>
 
     <!-- Mode Selector: B2C vs B2B -->
     <div class="mode-switch">
       <button class="mode-tab active" id="tabB2c" onclick="switchMode('B2C')">&#9749; Individual Pre-Order (Sat)</button>
-      <button class="mode-tab" id="tabB2b" onclick="switchMode('B2B')">&#127970; Office & Team Drop (Fri)</button>
+      <button class="mode-tab" id="tabB2b" onclick="switchMode('B2B')">&#127970; Office &amp; Team Drop (Fri)</button>
     </div>
 
     <!-- Order Form View -->
@@ -57,9 +59,63 @@
           <span class="section-subtitle">Single-Estate Harvests</span>
         </div>
 
-        <!-- Dynamically Populated Lot Grid -->
         <div class="lot-grid" id="lotGrid">
-          <!-- Populated by app.js from Google Sheets / Default Fallback -->
+          <div class="lot-card active" onclick="selectLot('Ratnagiri Estate (Anaerobic Naturals)', this)">
+            <div class="lot-header">
+              <span class="lot-name">Ratnagiri Estate</span>
+              <span class="lot-tag">Anaerobic Naturals</span>
+            </div>
+            <div class="lot-notes">&#127827; Wild Raspberry, Stone Fruit &amp; Dark Cacao</div>
+            <div class="flavor-pills">
+              <span class="flavor-pill">Fruity</span>
+              <span class="flavor-pill">High Acidity</span>
+              <span class="flavor-pill">Medium Roast</span>
+            </div>
+            <div class="sensory-meters">
+              <div class="meter-row">
+                <span>Acidity</span>
+                <div class="meter-bar"><div class="meter-fill" style="width: 85%;"></div></div>
+              </div>
+              <div class="meter-row">
+                <span>Body</span>
+                <div class="meter-bar"><div class="meter-fill" style="width: 70%;"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lot-card" onclick="selectLot('Thogarihunkal Estate (Washed)', this)">
+            <div class="lot-header">
+              <span class="lot-name">Thogarihunkal Estate</span>
+              <span class="lot-tag">Washed Lot</span>
+            </div>
+            <div class="lot-notes">&#127800; Orange Blossom, Jasmine &amp; Crisp Green Apple</div>
+            <div class="flavor-pills">
+              <span class="flavor-pill">Floral</span>
+              <span class="flavor-pill">Clean Crisp</span>
+              <span class="flavor-pill">Light-Med Roast</span>
+            </div>
+            <div class="sensory-meters">
+              <div class="meter-row">
+                <span>Acidity</span>
+                <div class="meter-bar"><div class="meter-fill" style="width: 75%;"></div></div>
+              </div>
+              <div class="meter-row">
+                <span>Body</span>
+                <div class="meter-bar"><div class="meter-fill" style="width: 60%;"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="lot-card" onclick="selectLot('Custom Ratio Split (Build Your Own Batch)', this)">
+            <div class="lot-header">
+              <span class="lot-name">Custom Ratio Split</span>
+              <span class="lot-tag">Mix &amp; Match</span>
+            </div>
+            <div class="lot-notes">&#127915; Customize your exact bottle ratio between Ratnagiri Anaerobic &amp; Thogarihunkal Washed</div>
+            <div class="flavor-pills">
+              <span class="flavor-pill">Personalized Flight</span>
+            </div>
+          </div>
         </div>
 
         <!-- Custom Ratio Splitter Module -->
@@ -72,7 +128,7 @@
             <div class="splitter-row">
               <div class="splitter-lot-info">
                 <span class="splitter-lot-name">Ratnagiri Estate</span>
-                <span class="splitter-lot-sub">Anaerobic Naturals (Fruity & Berry)</span>
+                <span class="splitter-lot-sub">Anaerobic Naturals (Fruity &amp; Berry)</span>
               </div>
               <div class="qty-stepper">
                 <button type="button" class="stepper-btn" onclick="adjustSplit('ratnagiri', -1)">&ndash;</button>
@@ -83,7 +139,7 @@
             <div class="splitter-row">
               <div class="splitter-lot-info">
                 <span class="splitter-lot-name">Thogarihunkal Estate</span>
-                <span class="splitter-lot-sub">Washed Lot (Floral & Crisp Apple)</span>
+                <span class="splitter-lot-sub">Washed Lot (Floral &amp; Crisp Apple)</span>
               </div>
               <div class="qty-stepper">
                 <button type="button" class="stepper-btn" onclick="adjustSplit('thogarihunkal', -1)">&ndash;</button>
@@ -103,14 +159,54 @@
           <span class="section-subtitle" id="packSubtext">Saturday Drop</span>
         </div>
 
-        <!-- Dynamically Populated B2C Packs -->
+        <!-- B2C Packs -->
         <div class="pack-grid" id="b2cPacks">
-          <!-- Populated by app.js from Google Sheets / Default Fallback -->
+          <div class="pack-option" onclick="selectB2cPack('Single Bottle', 1, 240, this)">
+            <div class="pack-name">Single Bottle</div>
+            <div class="pack-price">&#8377;240</div>
+            <div class="pack-desc">1x 250ml</div>
+          </div>
+          <div class="pack-option" onclick="selectB2cPack('Duo Pack', 2, 480, this)">
+            <div class="pack-name">Duo Pack</div>
+            <div class="pack-price">&#8377;480</div>
+            <div class="pack-desc">2x 250ml (MOQ)</div>
+          </div>
+          <div class="pack-option active" onclick="selectB2cPack('Weekend Pack', 4, 899, this)">
+            <div class="pack-badge">Popular</div>
+            <div class="pack-name">Weekend Pack</div>
+            <div class="pack-price">&#8377;899</div>
+            <div class="pack-desc">4x 250ml</div>
+          </div>
+          <div class="pack-option" onclick="selectB2cPack('Mega Weekend', 6, 1200, this)">
+            <div class="pack-badge">Value</div>
+            <div class="pack-name">Mega Weekend</div>
+            <div class="pack-price">&#8377;1,200</div>
+            <div class="pack-desc">6x 250ml (@ &#8377;200)</div>
+          </div>
         </div>
 
-        <!-- Dynamically Populated B2B Packs -->
+        <!-- B2B Packs -->
         <div class="pack-grid" id="b2bPacks" style="display: none;">
-          <!-- Populated by app.js from Google Sheets / Default Fallback -->
+          <div class="pack-option active" onclick="selectB2bPack('Team Pack (10x 250ml)', 10, 1800, this)">
+            <div class="pack-name">Team Pack</div>
+            <div class="pack-price">&#8377;1,800</div>
+            <div class="pack-desc">10x 250ml (&#8377;180/ea)</div>
+          </div>
+          <div class="pack-option" onclick="selectB2bPack('Office Batch (20x 250ml)', 20, 3400, this)">
+            <div class="pack-name">Office Batch</div>
+            <div class="pack-price">&#8377;3,400</div>
+            <div class="pack-desc">20x 250ml (&#8377;170/ea)</div>
+          </div>
+          <div class="pack-option" onclick="selectB2bPack('Floor Pack (40x 250ml)', 40, 6000, this)">
+            <div class="pack-name">Floor Pack</div>
+            <div class="pack-price">&#8377;6,000</div>
+            <div class="pack-desc">40x 250ml (&#8377;150/ea)</div>
+          </div>
+          <div class="pack-option" onclick="selectB2bPack('Townhall Bulk (60x 250ml)', 60, 8700, this)">
+            <div class="pack-name">Townhall Bulk</div>
+            <div class="pack-price">&#8377;8,700</div>
+            <div class="pack-desc">60x 250ml (&#8377;145/ea)</div>
+          </div>
         </div>
 
         <div class="form-group" style="margin-top: 10px;">
@@ -120,12 +216,7 @@
         </div>
 
         <div class="summary-box">
-          <div style="display:flex; flex-direction:column; gap:2px;">
-            <span style="font-size:0.85rem; color:var(--text-muted);">Total (Free Delhi NCR Drop):</span>
-            <div id="discountRow" style="display:none; font-size:0.75rem; color:var(--success-light);">
-              <span>Discount Applied: </span><span id="discountDisplay">-₹0</span>
-            </div>
-          </div>
+          <span style="font-size:0.85rem; color:var(--text-muted);">Total (Free Delhi NCR Drop):</span>
           <span class="summary-total" id="totalAmountDisplay">&#8377;899</span>
         </div>
       </div>
@@ -133,7 +224,7 @@
       <!-- Section 2: Delivery & Contact Details -->
       <div class="section-card" style="margin-top: 14px;">
         <div class="section-title">
-          <span>2. Delivery & Contact Details</span>
+          <span>2. Delivery &amp; Contact Details</span>
         </div>
 
         <div class="saved-profile-bar" id="savedProfileBar">
@@ -203,7 +294,7 @@
         </div>
 
         <div class="form-group">
-          <label id="labelEmail" for="custEmail">Email Address (For Order Updates & Invoices) *</label>
+          <label id="labelEmail" for="custEmail">Email Address (For Order Updates &amp; Invoices) *</label>
           <input type="email" id="custEmail" placeholder="e.g. astitva@example.com" oninput="validateEmailField()" />
           <div class="field-error" id="errEmail">Please enter a valid email address.</div>
         </div>
@@ -223,8 +314,8 @@
         <div class="form-group">
           <label for="dropInstructions">Delivery / Gate Drop Preference</label>
           <select id="dropInstructions">
-            <option value="Deliver directly to door/desk">Deliver directly to door/desk</option>
-            <option value="Leave with Tower Security/Concierge Desk">Leave with Tower Security/Concierge Desk</option>
+            <option value="Deliver directly to door / desk">Deliver directly to door / desk</option>
+            <option value="Leave with Tower Security / Concierge Desk">Leave with Tower Security / Concierge Desk</option>
             <option value="Call upon arrival for pickup">Call upon arrival for pickup</option>
           </select>
         </div>
@@ -238,18 +329,8 @@
           </div>
         </div>
 
-        <!-- Promo / Coupon Code Input -->
-        <div class="form-group coupon-group" style="margin-top: 14px;">
-          <label for="couponInput">Have a Promo / Referral Code?</label>
-          <div class="coupon-input-row">
-            <input type="text" id="couponInput" placeholder="e.g. FRESHDROP" style="text-transform: uppercase;" />
-            <button type="button" class="btn-coupon" onclick="applyCoupon()">Apply</button>
-          </div>
-          <div class="coupon-msg" id="couponMsg"></div>
-        </div>
-
         <button id="payNowBtn" class="btn btn-pay" onclick="handlePayClick()">
-          <span id="btnText">&#128179; Pay & Confirm Pre-Order (<span id="btnAmount">&#8377;899</span>)</span>
+          <span id="btnText">&#128179; Pay &amp; Confirm Pre-Order (<span id="btnAmount">&#8377;899</span>)</span>
         </button>
       </div>
 
@@ -278,7 +359,7 @@
       <div class="section-card" style="text-align: center;">
         <div class="success-badge">&#10003; Order Confirmed</div>
         <h2 style="font-size: 1.3rem; margin-bottom: 4px;">Thank You for Your Order!</h2>
-        <p style="font-size: 0.82rem; color: var(--text-muted);">Your micro-batch is scheduled for fresh roast & chilled delivery.</p>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">Your micro-batch is scheduled for fresh roast &amp; chilled delivery.</p>
 
         <div class="freshness-alert">
           &#10052; <strong>48-Hour Freshness Guarantee:</strong> Crafted fresh with zero preservatives. Keep refrigerated upon arrival and consume within 48 hours for peak tasting notes!
@@ -332,7 +413,7 @@
         </div>
 
         <button class="btn btn-calendar" onclick="addToGoogleCalendar()">
-          <span>&#128197; Add Delivery Slot to Google Calendar</span>
+          <span>&#128197; Add Delivery Window to Google Calendar</span>
         </button>
 
         <button class="btn btn-whatsapp" onclick="sendWhatsAppReceipt()">
@@ -347,6 +428,17 @@
 
   </div>
 
+
+<!-- Service Worker Registration -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW error:', err));
+    });
+  }
+</script>
   <script src="app.js"></script>
 </body>
 </html>
+
+
