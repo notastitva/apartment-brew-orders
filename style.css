@@ -137,6 +137,19 @@ body {
   line-height: 1.35;
 }
 
+/* Store Status Alert Banner */
+.store-status-banner {
+  background: rgba(230, 57, 70, 0.15);
+  border: 1px solid var(--error);
+  color: var(--error-light);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 12px;
+  border-radius: 10px;
+  text-align: center;
+  animation: fadeIn 0.3s ease;
+}
+
 /* Mode Tabs (B2C vs B2B) */
 .mode-switch {
   display: grid;
@@ -443,6 +456,49 @@ input:focus, select:focus, textarea:focus {
   cursor: pointer;
 }
 
+/* Coupon Promo Row */
+.coupon-input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.coupon-input-row input {
+  flex: 1;
+  text-transform: uppercase;
+}
+
+.btn-coupon {
+  background: #2a2724;
+  border: 1px solid var(--card-border);
+  color: var(--accent);
+  border-radius: 8px;
+  padding: 0 16px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-coupon:hover {
+  background: var(--accent);
+  color: #141312;
+  border-color: var(--accent);
+}
+
+.coupon-msg {
+  font-size: 0.72rem;
+  margin-top: 3px;
+  font-weight: 600;
+}
+
+.coupon-success {
+  color: var(--success-light);
+}
+
+.coupon-error {
+  color: var(--error-light);
+}
+
 /* Accordion Serving Guide */
 .guide-accordion {
   background: var(--card-inner);
@@ -601,10 +657,7 @@ input:focus, select:focus, textarea:focus {
   text-align: left;
 }
 
-/* ==================================================================== */
-/* Interactive Custom Ratio Splitter ("Build Your Own Batch")          */
-/* ==================================================================== */
-
+/* Interactive Custom Ratio Splitter */
 .custom-splitter-card {
   background: rgba(212, 163, 115, 0.06);
   border: 1.5px dashed var(--accent);

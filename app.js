@@ -1,5 +1,5 @@
 // ====================================================================
-// THE APARTMENT BREW CO. — FRONTEND CONTROLLER (app.js)
+// THE APARTMENT BREW CO. — DYNAMIC FRONTEND CONTROLLER (app.js)
 // ====================================================================
 
 const CONFIG = {
@@ -8,6 +8,49 @@ const CONFIG = {
   authToken: "TABC_SECURE_TOKEN_2026" // Shared auth token matching Code.gs
 };
 
+// Built-In Resilient Default Fallbacks (Zero Downtime if Offline)
+const DEFAULT_CONFIG = {
+  storeStatus: "OPEN",
+  batchCapacity: 50,
+  reservedBottles: 38,
+  announcementBanner: "⚡ Fresh Overnight Flash-Brew Drop",
+  lots: [
+    {
+      id: "LOT-01",
+      name: "Ratnagiri Estate",
+      tag: "Anaerobic Naturals",
+      notes: "Wild Raspberry, Stone Fruit & Dark Cacao",
+      pills: ["Fruity", "High Acidity", "Medium Roast"],
+      acidity: 85,
+      body: 70,
+      active: true
+    },
+    {
+      id: "LOT-02",
+      name: "Thogarihunkal Estate",
+      tag: "Washed Lot",
+      notes: "Orange Blossom, Jasmine & Crisp Green Apple",
+      pills: ["Floral", "Clean Crisp", "Light-Med Roast"],
+      acidity: 75,
+      body: 60,
+      active: true
+    }
+  ],
+  b2cPacks: [
+    { id: "B2C-01", name: "Single Bottle", bottles: 1, price: 240, badge: "", active: true },
+    { id: "B2C-02", name: "Duo Pack", bottles: 2, price: 480, badge: "MOQ", active: true },
+    { id: "B2C-03", name: "Weekend Pack", bottles: 4, price: 899, badge: "Popular", active: true },
+    { id: "B2C-04", name: "Mega Weekend", bottles: 6, price: 1200, badge: "Value", active: true }
+  ],
+  b2bPacks: [
+    { id: "B2B-01", name: "Team Pack (10x 250ml)", bottles: 10, price: 1800, active: true },
+    { id: "B2B-02", name: "Office Batch (20x 250ml)", bottles: 20, price: 3400, active: true },
+    { id: "B2B-03", name: "Floor Pack (40x 250ml)", bottles: 40, price: 6000, active: true },
+    { id: "B2B-04", name: "Townhall Bulk (60x 250ml)", bottles: 60, price: 8700, active: true }
+  ]
+};
+
+let liveConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
 let currentMode = "B2C";
 let currentB2bPayOption = "GATEWAY";
 let selectedBean = "Ratnagiri Estate (Anaerobic Naturals)";
@@ -15,6 +58,7 @@ let isCustomSplit = false;
 let customSplit = { ratnagiri: 2, thogarihunkal: 2 };
 let selectedB2cPack = { name: "Weekend Pack", bottles: 4, unitPrice: 899 };
 let selectedB2bPack = { name: "Team Pack (10x 250ml)", bottles: 10, unitPrice: 1800 };
+let appliedCoupon = null;
 let currentOrderDetails = null;
 
 // Dynamic Date Calculations
@@ -34,6 +78,181 @@ function getUpcomingSaturdayFormatted() {
   return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
 }
 
+// Fetch Dynamic Configuration from Google Sheets
+async function fetchLiveConfig() {
+  if (!CONFIG.googleSheetEndpoint || CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
+    renderUIFromConfig(DEFAULT_CONFIG);
+    return;
+  }
+
+  try {
+    const res = await fetch(CONFIG.googleSheetEndpoint + '?action=getConfig', { method: 'GET' });
+    const json = await res.json();
+    if (json && json.status === 'success' && json.data) {
+      liveConfig = json.data;
+      renderUIFromConfig(liveConfig);
+    } else {
+      renderUIFromConfig(DEFAULT_CONFIG);
+    }
+  } catch (err) {
+    console.log("Using cached menu config", err);
+    renderUIFromConfig(DEFAULT_CONFIG);
+  }
+}
+
+function renderUIFromConfig(config) {
+  // 1. Scarcity & Capacity
+  const capacity = config.batchCapacity || 50;
+  const reserved = config.reservedBottles || 0;
+  const scarcityText = document.getElementById('scarcityText');
+  const scarcityFill = document.getElementById('scarcityFill');
+  if (scarcityText) scarcityText.textContent = reserved + ' / ' + capacity + ' Bottles Reserved';
+  if (scarcityFill) {
+    const percent = Math.min(100, Math.round((reserved / capacity) * 100));
+    scarcityFill.style.width = percent + '%';
+  }
+
+  // 2. Announcement Banner
+  const dropBanner = document.getElementById('dropBanner');
+  if (dropBanner && config.announcementBanner) {
+    const dropDateText = currentMode === 'B2C' ? getUpcomingSaturdayFormatted() : getUpcomingFridayFormatted();
+    dropBanner.innerHTML = '<span>&#9889;</span> ' + config.announcementBanner + ': ' + dropDateText;
+  }
+
+  // 3. Store Status
+  const status = config.storeStatus || "OPEN";
+  const storeBanner = document.getElementById('storeStatusBanner');
+  const payBtn = document.getElementById('payNowBtn');
+  if (status === 'SOLD_OUT') {
+    if (storeBanner) {
+      storeBanner.style.display = 'block';
+      storeBanner.textContent = '⚡ Current batch is completely sold out! Next pre-orders open Monday.';
+    }
+    if (payBtn) payBtn.disabled = true;
+  } else if (status === 'PAUSED') {
+    if (storeBanner) {
+      storeBanner.style.display = 'block';
+      storeBanner.textContent = '⏸ Pre-orders are temporarily paused for kitchen batch roasting.';
+    }
+    if (payBtn) payBtn.disabled = true;
+  } else {
+    if (storeBanner) storeBanner.style.display = 'none';
+    if (payBtn) payBtn.disabled = false;
+  }
+
+  // 4. Render Lots
+  renderLotGrid(config.lots || DEFAULT_CONFIG.lots);
+
+  // 5. Render Packs
+  renderPackGrids(config.b2cPacks || DEFAULT_CONFIG.b2cPacks, config.b2bPacks || DEFAULT_CONFIG.b2bPacks);
+}
+
+function renderLotGrid(lots) {
+  const lotGrid = document.getElementById('lotGrid');
+  if (!lotGrid) return;
+  lotGrid.innerHTML = '';
+
+  let isFirst = true;
+  lots.forEach(lot => {
+    if (!lot.active) return;
+    const card = document.createElement('div');
+    card.className = 'lot-card' + (isFirst ? ' active' : '');
+    if (isFirst) {
+      selectedBean = lot.name + ' (' + lot.tag + ')';
+      isFirst = false;
+    }
+
+    const pillsHtml = (lot.pills || []).map(p => '<span class="flavor-pill">' + p + '</span>').join('');
+    
+    card.innerHTML = `
+      <div class="lot-header">
+        <span class="lot-name">${lot.name}</span>
+        <span class="lot-tag">${lot.tag}</span>
+      </div>
+      <div class="lot-notes">&#127827; ${lot.notes}</div>
+      <div class="flavor-pills">${pillsHtml}</div>
+      <div class="sensory-meters">
+        <div class="meter-row">
+          <span>Acidity</span>
+          <div class="meter-bar"><div class="meter-fill" style="width: ${lot.acidity}%;"></div></div>
+        </div>
+        <div class="meter-row">
+          <span>Body</span>
+          <div class="meter-bar"><div class="meter-fill" style="width: ${lot.body}%;"></div></div>
+        </div>
+      </div>
+    `;
+
+    card.onclick = function() { selectLot(lot.name + ' (' + lot.tag + ')', card); };
+    lotGrid.appendChild(card);
+  });
+
+  // Append Custom Split Lot Card
+  const splitCard = document.createElement('div');
+  splitCard.className = 'lot-card';
+  splitCard.innerHTML = `
+    <div class="lot-header">
+      <span class="lot-name">Custom Ratio Split</span>
+      <span class="lot-tag">Mix & Match</span>
+    </div>
+    <div class="lot-notes">&#127915; Customize your exact bottle ratio between available single-estate lots</div>
+    <div class="flavor-pills"><span class="flavor-pill">Personalized Flight</span></div>
+  `;
+  splitCard.onclick = function() { selectLot('Custom Ratio Split (Build Your Own Batch)', splitCard); };
+  lotGrid.appendChild(splitCard);
+}
+
+function renderPackGrids(b2cPacks, b2bPacks) {
+  const b2cGrid = document.getElementById('b2cPacks');
+  const b2bGrid = document.getElementById('b2bPacks');
+
+  if (b2cGrid) {
+    b2cGrid.innerHTML = '';
+    let firstB2c = true;
+    b2cPacks.forEach(pack => {
+      if (!pack.active) return;
+      const el = document.createElement('div');
+      el.className = 'pack-option' + (firstB2c ? ' active' : '');
+      if (firstB2c) {
+        selectedB2cPack = { name: pack.name, bottles: pack.bottles, unitPrice: pack.price };
+        firstB2c = false;
+      }
+      
+      const badgeHtml = pack.badge ? '<div class="pack-badge">' + pack.badge + '</div>' : '';
+      el.innerHTML = badgeHtml + `
+        <div class="pack-name">${pack.name}</div>
+        <div class="pack-price">&#8377;${pack.price.toLocaleString('en-IN')}</div>
+        <div class="pack-desc">${pack.bottles}x 250ml</div>
+      `;
+      el.onclick = function() { selectB2cPack(pack.name, pack.bottles, pack.price, el); };
+      b2cGrid.appendChild(el);
+    });
+  }
+
+  if (b2bGrid) {
+    b2bGrid.innerHTML = '';
+    let firstB2b = true;
+    b2bPacks.forEach(pack => {
+      if (!pack.active) return;
+      const el = document.createElement('div');
+      el.className = 'pack-option' + (firstB2b ? ' active' : '');
+      if (firstB2b) {
+        selectedB2bPack = { name: pack.name, bottles: pack.bottles, unitPrice: pack.price };
+        firstB2b = false;
+      }
+      el.innerHTML = `
+        <div class="pack-name">${pack.name}</div>
+        <div class="pack-price">&#8377;${pack.price.toLocaleString('en-IN')}</div>
+        <div class="pack-desc">${pack.bottles}x 250ml (&#8377;${Math.round(pack.price / pack.bottles)}/ea)</div>
+      `;
+      el.onclick = function() { selectB2bPack(pack.name, pack.bottles, pack.price, el); };
+      b2bGrid.appendChild(el);
+    });
+  }
+
+  updateTotal();
+}
+
 // Live Countdown Timer for Pre-Order Cutoff
 function startCutoffCountdown() {
   function updateTimer() {
@@ -42,13 +261,11 @@ function startCutoffCountdown() {
     const target = new Date();
 
     if (isB2c) {
-      // B2C Saturday Drop: Cutoff is Friday 10:00 PM
       let daysUntilFri = (5 - now.getDay() + 7) % 7;
       if (daysUntilFri === 0 && now.getHours() >= 22) daysUntilFri = 7;
       target.setDate(now.getDate() + daysUntilFri);
       target.setHours(22, 0, 0, 0);
     } else {
-      // B2B Friday Drop: Cutoff is Thursday 6:00 PM
       let daysUntilThu = (4 - now.getDay() + 7) % 7;
       if (daysUntilThu === 0 && now.getHours() >= 18) daysUntilThu = 7;
       target.setDate(now.getDate() + daysUntilThu);
@@ -60,7 +277,7 @@ function startCutoffCountdown() {
     if (!timerEl) return;
 
     if (diff <= 0) {
-      timerEl.textContent = "⚡ Cutoff reached for next batch. Orders queue for following drop.";
+      timerEl.textContent = "Cutoff reached for next batch. Orders queue for following drop.";
       return;
     }
 
@@ -69,7 +286,7 @@ function startCutoffCountdown() {
     const secs = Math.floor((diff % (1000 * 60)) / 1000);
 
     const cutoffLabel = isB2c ? "Saturday Drop Cutoff" : "Friday Drop Cutoff";
-    timerEl.textContent = `⏱️ ${cutoffLabel} closes in ${hours}h ${mins}m ${secs}s`;
+    timerEl.textContent = cutoffLabel + " closes in " + hours + "h " + mins + "m " + secs + "s";
   }
 
   updateTimer();
@@ -88,8 +305,8 @@ function switchMode(mode) {
   const dropBanner = document.getElementById('dropBanner');
   if (dropBanner) {
     dropBanner.innerHTML = isB2c 
-      ? `<span>⚡</span> Next Fresh Drop: ${getUpcomingSaturdayFormatted()} (Morning)` 
-      : `<span>⚡</span> Next Office Drop: ${getUpcomingFridayFormatted()} (Friday Delivery)`;
+      ? "<span>&#9889;</span> Next Fresh Drop: " + getUpcomingSaturdayFormatted() + " (Morning)" 
+      : "<span>&#9889;</span> Next Office Drop: " + getUpcomingFridayFormatted() + " (Friday Delivery)";
   }
   
   const packSubtext = document.getElementById('packSubtext');
@@ -195,8 +412,8 @@ function renderSplitterUI() {
   const ratPercent = total > 0 ? (customSplit.ratnagiri / total) * 100 : 50;
   const thogPercent = total > 0 ? (customSplit.thogarihunkal / total) * 100 : 50;
 
-  if (ratBar) ratBar.style.width = `${ratPercent}%`;
-  if (thogBar) thogBar.style.width = `${thogPercent}%`;
+  if (ratBar) ratBar.style.width = ratPercent + "%";
+  if (thogBar) thogBar.style.width = thogPercent + "%";
 }
 
 function selectB2cPack(name, bottles, price, el) {
@@ -224,7 +441,7 @@ function setB2bPayOption(option) {
   updateTotal();
 }
 
-function calculateTotal() {
+function calculateBaseTotal() {
   const qtyInput = document.getElementById('packQty');
   let qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
   if (isNaN(qty) || qty < 1) qty = 1;
@@ -232,24 +449,98 @@ function calculateTotal() {
   return active.unitPrice * qty;
 }
 
+function calculateFinalTotal() {
+  const base = calculateBaseTotal();
+  const discount = appliedCoupon ? appliedCoupon.discountAmount : 0;
+  return Math.max(0, base - discount);
+}
+
 function updateTotal() {
-  const total = calculateTotal();
-  const formatted = `₹${total.toLocaleString('en-IN')}`;
+  const baseTotal = calculateBaseTotal();
+  const finalTotal = calculateFinalTotal();
+  
+  const formatted = "₹" + finalTotal.toLocaleString('en-IN');
   const totalAmountDisplay = document.getElementById('totalAmountDisplay');
   const btnAmount = document.getElementById('btnAmount');
   if (totalAmountDisplay) totalAmountDisplay.textContent = formatted;
   if (btnAmount) btnAmount.textContent = formatted;
 
+  const discountRow = document.getElementById('discountRow');
+  const discountDisplay = document.getElementById('discountDisplay');
+  if (appliedCoupon && appliedCoupon.discountAmount > 0) {
+    if (discountRow) discountRow.style.display = 'flex';
+    if (discountDisplay) discountDisplay.textContent = '- ₹' + appliedCoupon.discountAmount;
+  } else {
+    if (discountRow) discountRow.style.display = 'none';
+  }
+
   const btnText = document.getElementById('btnText');
   if (btnText) {
     if (currentMode === 'B2B' && currentB2bPayOption === 'INVOICE') {
-      btnText.innerHTML = `📄 Request Corporate Invoice (<span id="btnAmount">${formatted}</span>)`;
+      btnText.innerHTML = "<span>&#128196;</span> Request Corporate Invoice (<span id=\"btnAmount\">" + formatted + "</span>)";
     } else {
-      btnText.innerHTML = `💳 Pay & Confirm Pre-Order (<span id="btnAmount">${formatted}</span>)`;
+      btnText.innerHTML = "<span>&#128179;</span> Pay & Confirm Pre-Order (<span id=\"btnAmount\">" + formatted + "</span>)";
     }
   }
 
   if (isCustomSplit) rebalanceSplitter();
+}
+
+// Dynamic Coupon Validator
+async function applyCoupon() {
+  const input = document.getElementById('couponInput');
+  const msgEl = document.getElementById('couponMsg');
+  if (!input || !msgEl) return;
+  const code = input.value.trim().toUpperCase();
+
+  if (!code) {
+    msgEl.textContent = 'Please enter a coupon code.';
+    msgEl.className = 'coupon-msg coupon-error';
+    return;
+  }
+
+  const baseTotal = calculateBaseTotal();
+
+  if (!CONFIG.googleSheetEndpoint || CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
+    // Local Fallback Check
+    if (code === 'FRESHDROP' && baseTotal >= 480) {
+      appliedCoupon = { code: 'FRESHDROP', discountAmount: 100 };
+      msgEl.textContent = 'Coupon FRESHDROP applied! Saved ₹100.';
+      msgEl.className = 'coupon-msg coupon-success';
+    } else if (code === 'NCRFIRST' && baseTotal >= 240) {
+      const disc = Math.round(baseTotal * 0.10);
+      appliedCoupon = { code: 'NCRFIRST', discountAmount: disc };
+      msgEl.textContent = `Coupon NCRFIRST applied! Saved ₹${disc} (10%).`;
+      msgEl.className = 'coupon-msg coupon-success';
+    } else {
+      appliedCoupon = null;
+      msgEl.textContent = 'Invalid or expired coupon code.';
+      msgEl.className = 'coupon-msg coupon-error';
+    }
+    updateTotal();
+    return;
+  }
+
+  try {
+    msgEl.textContent = 'Verifying coupon...';
+    msgEl.className = 'coupon-msg';
+    const res = await fetch(`${CONFIG.googleSheetEndpoint}?action=validateCoupon&code=${encodeURIComponent(code)}&total=${baseTotal}`);
+    const json = await res.json();
+
+    if (json.valid) {
+      appliedCoupon = { code: json.code, discountAmount: json.discountAmount };
+      msgEl.textContent = json.message;
+      msgEl.className = 'coupon-msg coupon-success';
+    } else {
+      appliedCoupon = null;
+      msgEl.textContent = json.message || 'Invalid coupon code.';
+      msgEl.className = 'coupon-msg coupon-error';
+    }
+  } catch (e) {
+    msgEl.textContent = 'Could not verify coupon. Please try again.';
+    msgEl.className = 'coupon-msg coupon-error';
+  }
+  updateTotal();
 }
 
 function checkSavedProfile() {
@@ -261,7 +552,7 @@ function checkSavedProfile() {
         const bar = document.getElementById('savedProfileBar');
         const text = document.getElementById('savedProfileText');
         if (bar) bar.style.display = 'flex';
-        if (text) text.textContent = `👋 Welcome back, ${profile.name}! Autofill your details?`;
+        if (text) text.textContent = "Welcome back, " + profile.name + "! Autofill your details?";
       }
     }
   } catch (e) {
@@ -445,7 +736,7 @@ function handlePayClick() {
     return;
   }
 
-  const total = calculateTotal();
+  const total = calculateFinalTotal();
   const name = document.getElementById('custName').value.trim();
   const email = document.getElementById('custEmail').value.trim();
   const phone = document.getElementById('custPhone').value.trim();
@@ -457,7 +748,7 @@ function handlePayClick() {
       amount: total * 100,
       currency: "INR",
       name: "The Apartment Brew Co.",
-      description: `${currentMode === 'B2B' ? 'Office Drop' : 'Pre-Order'}: ${activePack.name}`,
+      description: (currentMode === 'B2B' ? 'Office Drop' : 'Pre-Order') + ': ' + activePack.name,
       prefill: { name: name, email: email, contact: phone },
       theme: { color: "#d4a373" },
       handler: function (response) { handleOrderSuccess(response.razorpay_payment_id, "Paid via Gateway"); }
@@ -480,7 +771,7 @@ async function handleOrderSuccess(paymentId, statusText) {
   const phone = document.getElementById('custPhone').value.trim();
   const pin = document.getElementById('custPincode').value.trim();
   const qty = parseInt(document.getElementById('packQty').value, 10) || 1;
-  const total = calculateTotal();
+  const total = calculateFinalTotal();
   const activePack = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
   const dropInstructions = document.getElementById('dropInstructions') ? document.getElementById('dropInstructions').value : 'Deliver directly to door / desk';
 
@@ -495,8 +786,10 @@ async function handleOrderSuccess(paymentId, statusText) {
   const paymentMode = isB2c ? "Razorpay Gateway" : (currentB2bPayOption === 'INVOICE' ? "Corporate Invoice (Net Terms)" : "Razorpay Gateway");
 
   const coffeeLotDisplay = isCustomSplit 
-    ? `Custom Split (${customSplit.ratnagiri}x Ratnagiri Estate + ${customSplit.thogarihunkal}x Thogarihunkal Estate)`
+    ? "Custom Split (" + customSplit.ratnagiri + "x Ratnagiri Estate + " + customSplit.thogarihunkal + "x Thogarihunkal Estate)"
     : selectedBean;
+
+  const couponNote = appliedCoupon ? ` | Coupon: ${appliedCoupon.code} (-₹${appliedCoupon.discountAmount})` : '';
 
   const orderPayload = {
     authToken: CONFIG.authToken,
@@ -521,9 +814,9 @@ async function handleOrderSuccess(paymentId, statusText) {
     bottles: activePack.bottles * qty,
     totalAmount: total,
     paymentMode: paymentMode,
-    paymentStatus: `${statusText} (${paymentId})`,
+    paymentStatus: statusText + " (" + paymentId + ")",
     deliveryStatus: 'Pre-Ordered',
-    notes: `Payment ID: ${paymentId} | Mode: ${currentMode} | Instruction: ${dropInstructions}`
+    notes: "Payment ID: " + paymentId + " | Mode: " + currentMode + " | Instruction: " + dropInstructions + couponNote
   };
 
   currentOrderDetails = orderPayload;
@@ -550,8 +843,8 @@ async function handleOrderSuccess(paymentId, statusText) {
   document.getElementById('rName').textContent = name;
   document.getElementById('rEmail').textContent = email;
   document.getElementById('rBean').textContent = coffeeLotDisplay;
-  document.getElementById('rPack').textContent = `${activePack.name} x ${qty} (${activePack.bottles * qty} bottles)`;
-  document.getElementById('rTotal').textContent = `₹${total.toLocaleString('en-IN')}`;
+  document.getElementById('rPack').textContent = activePack.name + " x " + qty + " (" + (activePack.bottles * qty) + " bottles)";
+  document.getElementById('rTotal').textContent = "₹" + total.toLocaleString('en-IN');
 
   document.getElementById('orderFormView').style.display = 'none';
   document.getElementById('confirmationView').style.display = 'block';
@@ -561,10 +854,10 @@ async function handleOrderSuccess(paymentId, statusText) {
 function addToGoogleCalendar() {
   if (!currentOrderDetails) return;
   const d = currentOrderDetails;
-  const title = encodeURIComponent(`The Apartment Brew Co. Drop: ${d.orderId}`);
-  const details = encodeURIComponent(`Fresh Flash-Brew Specialty Coffee Drop\nOrder ID: ${d.orderId}\nLot: ${d.bean}\nSelection: ${d.pack}\nInstruction: ${d.dropInstructions}\nTotal: ₹${d.totalAmount}\n\nNote: Please refrigerate upon delivery and enjoy within 48 hours for peak flavor!`);
-  const location = encodeURIComponent(`${d.buildingFloor}, ${d.techPark} (PIN: ${d.pinCode})`);
-  const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}`;
+  const title = encodeURIComponent("The Apartment Brew Co. Drop: " + d.orderId);
+  const details = encodeURIComponent("Fresh Flash-Brew Specialty Coffee Drop\nOrder ID: " + d.orderId + "\nLot: " + d.bean + "\nSelection: " + d.pack + "\nInstruction: " + d.dropInstructions + "\nTotal: ₹" + d.totalAmount + "\n\nNote: Please refrigerate upon delivery and enjoy within 48 hours for peak flavor!");
+  const location = encodeURIComponent(d.buildingFloor + ", " + d.techPark + " (PIN: " + d.pinCode + ")");
+  const gcalUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + title + "&details=" + details + "&location=" + location;
   window.open(gcalUrl, '_blank');
 }
 
@@ -572,24 +865,24 @@ function sendWhatsAppReceipt() {
   if (!currentOrderDetails) return;
   const d = currentOrderDetails;
 
-  const message = `*☕ ORDER & DELIVERY CONFIRMATION — THE APARTMENT BREW CO.*\n` +
-                  `------------------------------------\n` +
-                  `*Order ID:* ${d.orderId}\n` +
-                  `*Delivery Date:* ${d.dropDate} (${d.deliveryWindow})\n` +
-                  `*Customer:* ${d.name} (${d.phone})\n` +
-                  `*Delivery Address:* ${d.buildingFloor}, ${d.techPark}\n` +
-                  `*Drop Note:* ${d.dropInstructions}\n` +
-                  `------------------------------------\n` +
-                  `*Coffee Lot:* ${d.bean}\n` +
-                  `*Selection:* ${d.pack}\n` +
-                  `*Total Bottles:* ${d.bottles}x 250ml\n` +
-                  `*Total Paid:* ₹${d.totalAmount} (${d.paymentStatus})\n` +
-                  `------------------------------------\n` +
-                  `_Freshness Reminder: Extracted hot and flash-chilled with zero preservatives. Please refrigerate and consume within 48 hours!_`;
+  const message = "*ORDER & DELIVERY CONFIRMATION — THE APARTMENT BREW CO.*\n" +
+                  "------------------------------------\n" +
+                  "*Order ID:* " + d.orderId + "\n" +
+                  "*Delivery Date:* " + d.dropDate + " (" + d.deliveryWindow + ")\n" +
+                  "*Customer:* " + d.name + " (" + d.phone + ")\n" +
+                  "*Delivery Address:* " + d.buildingFloor + ", " + d.techPark + "\n" +
+                  "*Drop Note:* " + d.dropInstructions + "\n" +
+                  "------------------------------------\n" +
+                  "*Coffee Lot:* " + d.bean + "\n" +
+                  "*Selection:* " + d.pack + "\n" +
+                  "*Total Bottles:* " + d.bottles + "x 250ml\n" +
+                  "*Total Paid:* ₹" + d.totalAmount + " (" + d.paymentStatus + ")\n" +
+                  "------------------------------------\n" +
+                  "_Freshness Reminder: Extracted hot and flash-chilled with zero preservatives. Please refrigerate and consume within 48 hours!_";
 
   let cleanPhone = d.phone.replace(/[^0-9]/g, '');
   if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
-  const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+  const whatsappUrl = "https://wa.me/" + cleanPhone + "?text=" + encodeURIComponent(message);
   window.open(whatsappUrl, '_blank');
 }
 
@@ -604,6 +897,9 @@ function resetForm() {
   document.getElementById('custCompany').value = '';
   document.getElementById('custGstin').value = '';
   document.getElementById('pinStatus').textContent = '';
+  if (document.getElementById('couponInput')) document.getElementById('couponInput').value = '';
+  if (document.getElementById('couponMsg')) document.getElementById('couponMsg').textContent = '';
+  appliedCoupon = null;
   document.querySelectorAll('input, textarea').forEach(el => el.classList.remove('input-valid', 'input-invalid'));
   document.querySelectorAll('.field-error').forEach(el => el.style.display = 'none');
   checkSavedProfile();
@@ -614,4 +910,5 @@ document.addEventListener('DOMContentLoaded', () => {
   switchMode('B2C');
   startCutoffCountdown();
   checkSavedProfile();
+  fetchLiveConfig();
 });

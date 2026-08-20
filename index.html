@@ -1,8 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>The Apartment Brew Co. | Fresh Flash-Chilled Specialty Coffee Drop</title>
   <link rel="stylesheet" href="style.css" />
@@ -15,17 +15,17 @@
     <!-- Branding Header -->
     <div class="header-card">
       <div class="brand-title">The Apartment Brew Co.</div>
-      <div class="brand-subtitle">Micro-Batch Flash-Chilled Specialty Coffee • Gurugram</div>
+      <div class="brand-subtitle">Micro-Batch Flash-Chilled Specialty Coffee &bull; Gurugram</div>
       
       <div class="drop-banner" id="dropBanner">
-        <span>⚡</span> Next Fresh Drop: Saturday Morning
+        <span>&#9889;</span> Next Fresh Drop: Saturday Morning
       </div>
       <div class="countdown-timer" id="countdownTimer">Cutoff closes in: Loading...</div>
 
       <!-- Scarcity Bar -->
       <div class="scarcity-bar-container">
         <div class="scarcity-label">
-          <span>🔥 Limited Batch Capacity</span>
+          <span>&#128293; Limited Batch Capacity</span>
           <span id="scarcityText">38 / 50 Bottles Reserved</span>
         </div>
         <div class="scarcity-progress-track">
@@ -34,14 +34,17 @@
       </div>
 
       <div class="geo-badge">
-        📍 Delivering Exclusively Across Gurugram & Delhi NCR Tech Parks & Residences
+        &#128205; Delivering Exclusively Across Gurugram & Delhi NCR Tech Parks & Residences
       </div>
     </div>
 
+    <!-- Store Status Banner (Dynamic Sold Out / Paused Alert) -->
+    <div class="store-status-banner" id="storeStatusBanner" style="display: none;"></div>
+
     <!-- Mode Selector: B2C vs B2B -->
     <div class="mode-switch">
-      <button class="mode-tab active" id="tabB2c" onclick="switchMode('B2C')">☕ Individual Pre-Order (Sat)</button>
-      <button class="mode-tab" id="tabB2b" onclick="switchMode('B2B')">🏢 Office & Team Drop (Fri)</button>
+      <button class="mode-tab active" id="tabB2c" onclick="switchMode('B2C')">&#9749; Individual Pre-Order (Sat)</button>
+      <button class="mode-tab" id="tabB2b" onclick="switchMode('B2B')">&#127970; Office & Team Drop (Fri)</button>
     </div>
 
     <!-- Order Form View -->
@@ -54,69 +57,15 @@
           <span class="section-subtitle">Single-Estate Harvests</span>
         </div>
 
+        <!-- Dynamically Populated Lot Grid -->
         <div class="lot-grid" id="lotGrid">
-          <div class="lot-card active" onclick="selectLot('Ratnagiri Estate (Anaerobic Naturals)', this)">
-            <div class="lot-header">
-              <span class="lot-name">Ratnagiri Estate</span>
-              <span class="lot-tag">Anaerobic Naturals</span>
-            </div>
-            <div class="lot-notes">🍓 Wild Raspberry, Stone Fruit & Dark Cacao</div>
-            <div class="flavor-pills">
-              <span class="flavor-pill">Fruity</span>
-              <span class="flavor-pill">High Acidity</span>
-              <span class="flavor-pill">Medium Roast</span>
-            </div>
-            <div class="sensory-meters">
-              <div class="meter-row">
-                <span>Acidity</span>
-                <div class="meter-bar"><div class="meter-fill" style="width: 85%;"></div></div>
-              </div>
-              <div class="meter-row">
-                <span>Body</span>
-                <div class="meter-bar"><div class="meter-fill" style="width: 70%;"></div></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="lot-card" onclick="selectLot('Thogarihunkal Estate (Washed)', this)">
-            <div class="lot-header">
-              <span class="lot-name">Thogarihunkal Estate</span>
-              <span class="lot-tag">Washed Lot</span>
-            </div>
-            <div class="lot-notes">🌸 Orange Blossom, Jasmine & Crisp Green Apple</div>
-            <div class="flavor-pills">
-              <span class="flavor-pill">Floral</span>
-              <span class="flavor-pill">Clean Crisp</span>
-              <span class="flavor-pill">Light-Med Roast</span>
-            </div>
-            <div class="sensory-meters">
-              <div class="meter-row">
-                <span>Acidity</span>
-                <div class="meter-bar"><div class="meter-fill" style="width: 75%;"></div></div>
-              </div>
-              <div class="meter-row">
-                <span>Body</span>
-                <div class="meter-bar"><div class="meter-fill" style="width: 60%;"></div></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="lot-card" onclick="selectLot('Custom Ratio Split (Build Your Own Batch)', this)">
-            <div class="lot-header">
-              <span class="lot-name">Custom Ratio Split</span>
-              <span class="lot-tag">Mix & Match</span>
-            </div>
-            <div class="lot-notes">🎛️ Customize your exact bottle ratio between Ratnagiri Anaerobic & Thogarihunkal Washed</div>
-            <div class="flavor-pills">
-              <span class="flavor-pill">Personalized Flight</span>
-            </div>
-          </div>
+          <!-- Populated by app.js from Google Sheets / Default Fallback -->
         </div>
 
         <!-- Custom Ratio Splitter Module -->
         <div class="custom-splitter-card" id="customSplitter" style="display: none;">
           <div class="splitter-header">
-            <span class="splitter-title">🎛️ Build Your Own Batch Ratio</span>
+            <span class="splitter-title">&#127915; Build Your Own Batch Ratio</span>
             <span class="splitter-tally" id="splitterTally">Allocated: <strong><span id="allocCount">4</span> / <span id="targetCount">4</span></strong> bottles</span>
           </div>
           <div class="splitter-controls">
@@ -126,7 +75,7 @@
                 <span class="splitter-lot-sub">Anaerobic Naturals (Fruity & Berry)</span>
               </div>
               <div class="qty-stepper">
-                <button type="button" class="stepper-btn" onclick="adjustSplit('ratnagiri', -1)">–</button>
+                <button type="button" class="stepper-btn" onclick="adjustSplit('ratnagiri', -1)">&ndash;</button>
                 <span class="stepper-val" id="splitRatnagiri">2</span>
                 <button type="button" class="stepper-btn" onclick="adjustSplit('ratnagiri', 1)">+</button>
               </div>
@@ -137,7 +86,7 @@
                 <span class="splitter-lot-sub">Washed Lot (Floral & Crisp Apple)</span>
               </div>
               <div class="qty-stepper">
-                <button type="button" class="stepper-btn" onclick="adjustSplit('thogarihunkal', -1)">–</button>
+                <button type="button" class="stepper-btn" onclick="adjustSplit('thogarihunkal', -1)">&ndash;</button>
                 <span class="stepper-val" id="splitThogarihunkal">2</span>
                 <button type="button" class="stepper-btn" onclick="adjustSplit('thogarihunkal', 1)">+</button>
               </div>
@@ -154,54 +103,14 @@
           <span class="section-subtitle" id="packSubtext">Saturday Drop</span>
         </div>
 
-        <!-- B2C Packs -->
+        <!-- Dynamically Populated B2C Packs -->
         <div class="pack-grid" id="b2cPacks">
-          <div class="pack-option" onclick="selectB2cPack('Single Bottle', 1, 240, this)">
-            <div class="pack-name">Single Bottle</div>
-            <div class="pack-price">₹240</div>
-            <div class="pack-desc">1x 250ml</div>
-          </div>
-          <div class="pack-option" onclick="selectB2cPack('Duo Pack', 2, 480, this)">
-            <div class="pack-name">Duo Pack</div>
-            <div class="pack-price">₹480</div>
-            <div class="pack-desc">2x 250ml (MOQ)</div>
-          </div>
-          <div class="pack-option active" onclick="selectB2cPack('Weekend Pack', 4, 899, this)">
-            <div class="pack-badge">Popular</div>
-            <div class="pack-name">Weekend Pack</div>
-            <div class="pack-price">₹899</div>
-            <div class="pack-desc">4x 250ml</div>
-          </div>
-          <div class="pack-option" onclick="selectB2cPack('Mega Weekend', 6, 1200, this)">
-            <div class="pack-badge">Value</div>
-            <div class="pack-name">Mega Weekend</div>
-            <div class="pack-price">₹1,200</div>
-            <div class="pack-desc">6x 250ml (@ ₹200)</div>
-          </div>
+          <!-- Populated by app.js from Google Sheets / Default Fallback -->
         </div>
 
-        <!-- B2B Packs -->
+        <!-- Dynamically Populated B2B Packs -->
         <div class="pack-grid" id="b2bPacks" style="display: none;">
-          <div class="pack-option active" onclick="selectB2bPack('Team Pack (10x 250ml)', 10, 1800, this)">
-            <div class="pack-name">Team Pack</div>
-            <div class="pack-price">₹1,800</div>
-            <div class="pack-desc">10x 250ml (₹180/ea)</div>
-          </div>
-          <div class="pack-option" onclick="selectB2bPack('Office Batch (20x 250ml)', 20, 3400, this)">
-            <div class="pack-name">Office Batch</div>
-            <div class="pack-price">₹3,400</div>
-            <div class="pack-desc">20x 250ml (₹170/ea)</div>
-          </div>
-          <div class="pack-option" onclick="selectB2bPack('Floor Pack (40x 250ml)', 40, 6000, this)">
-            <div class="pack-name">Floor Pack</div>
-            <div class="pack-price">₹6,000</div>
-            <div class="pack-desc">40x 250ml (₹150/ea)</div>
-          </div>
-          <div class="pack-option" onclick="selectB2bPack('Townhall Bulk (60x 250ml)', 60, 8700, this)">
-            <div class="pack-name">Townhall Bulk</div>
-            <div class="pack-price">₹8,700</div>
-            <div class="pack-desc">60x 250ml (₹145/ea)</div>
-          </div>
+          <!-- Populated by app.js from Google Sheets / Default Fallback -->
         </div>
 
         <div class="form-group" style="margin-top: 10px;">
@@ -211,8 +120,13 @@
         </div>
 
         <div class="summary-box">
-          <span style="font-size:0.85rem; color:var(--text-muted);">Total (Free Delhi NCR Drop):</span>
-          <span class="summary-total" id="totalAmountDisplay">₹899</span>
+          <div style="display:flex; flex-direction:column; gap:2px;">
+            <span style="font-size:0.85rem; color:var(--text-muted);">Total (Free Delhi NCR Drop):</span>
+            <div id="discountRow" style="display:none; font-size:0.75rem; color:var(--success-light);">
+              <span>Discount Applied: </span><span id="discountDisplay">-₹0</span>
+            </div>
+          </div>
+          <span class="summary-total" id="totalAmountDisplay">&#8377;899</span>
         </div>
       </div>
 
@@ -223,7 +137,7 @@
         </div>
 
         <div class="saved-profile-bar" id="savedProfileBar">
-          <span id="savedProfileText">👋 Welcome back! Autofill previous order info?</span>
+          <span id="savedProfileText">&#128075; Welcome back! Autofill previous order info?</span>
           <button class="saved-profile-btn" onclick="applySavedProfile()">Autofill</button>
         </div>
 
@@ -252,8 +166,8 @@
           <div class="form-group">
             <label for="b2bDeliveryWindow">Friday Delivery Window *</label>
             <select id="b2bDeliveryWindow">
-              <option value="Morning Kickoff (9:30 AM – 11:30 AM)">Morning Kickoff (9:30 AM – 11:30 AM)</option>
-              <option value="Afternoon Recharge (2:00 PM – 4:00 PM)">Afternoon Recharge (2:00 PM – 4:00 PM)</option>
+              <option value="Morning Kickoff (9:30 AM &ndash; 11:30 AM)">Morning Kickoff (9:30 AM &ndash; 11:30 AM)</option>
+              <option value="Afternoon Recharge (2:00 PM &ndash; 4:00 PM)">Afternoon Recharge (2:00 PM &ndash; 4:00 PM)</option>
             </select>
           </div>
 
@@ -319,21 +233,31 @@
         <div class="form-group" id="b2bPaymentChoiceGroup" style="display: none; margin-top: 8px;">
           <label>Payment Method</label>
           <div style="display: flex; gap: 8px; margin-top: 4px;">
-            <button type="button" class="mode-tab active" id="payOptionGateway" style="flex:1; border:1px solid var(--card-border);" onclick="setB2bPayOption('GATEWAY')">💳 Razorpay (Cards/UPI)</button>
-            <button type="button" class="mode-tab" id="payOptionInvoice" style="flex:1; border:1px solid var(--card-border);" onclick="setB2bPayOption('INVOICE')">📄 Corporate Invoice (Net-7)</button>
+            <button type="button" class="mode-tab active" id="payOptionGateway" style="flex:1; border:1px solid var(--card-border);" onclick="setB2bPayOption('GATEWAY')">&#128179; Razorpay (Cards/UPI)</button>
+            <button type="button" class="mode-tab" id="payOptionInvoice" style="flex:1; border:1px solid var(--card-border);" onclick="setB2bPayOption('INVOICE')">&#128196; Corporate Invoice (Net-7)</button>
           </div>
         </div>
 
+        <!-- Promo / Coupon Code Input -->
+        <div class="form-group coupon-group" style="margin-top: 14px;">
+          <label for="couponInput">Have a Promo / Referral Code?</label>
+          <div class="coupon-input-row">
+            <input type="text" id="couponInput" placeholder="e.g. FRESHDROP" style="text-transform: uppercase;" />
+            <button type="button" class="btn-coupon" onclick="applyCoupon()">Apply</button>
+          </div>
+          <div class="coupon-msg" id="couponMsg"></div>
+        </div>
+
         <button id="payNowBtn" class="btn btn-pay" onclick="handlePayClick()">
-          <span id="btnText">💳 Pay & Confirm Pre-Order (<span id="btnAmount">₹899</span>)</span>
+          <span id="btnText">&#128179; Pay & Confirm Pre-Order (<span id="btnAmount">&#8377;899</span>)</span>
         </button>
       </div>
 
       <!-- Freshness Guide Accordion -->
       <div class="guide-accordion">
         <div class="guide-header" onclick="toggleGuide()">
-          <span>❄️ Why Flash-Brew? (48-Hour Freshness Guide)</span>
-          <span id="guideArrow">▼</span>
+          <span>&#10052; Why Flash-Brew? (48-Hour Freshness Guide)</span>
+          <span id="guideArrow">&#9660;</span>
         </div>
         <div class="guide-body" id="guideBody">
           <div class="guide-step">
@@ -352,12 +276,12 @@
     <!-- Confirmation View -->
     <div id="confirmationView">
       <div class="section-card" style="text-align: center;">
-        <div class="success-badge">✓ Order Confirmed</div>
+        <div class="success-badge">&#10003; Order Confirmed</div>
         <h2 style="font-size: 1.3rem; margin-bottom: 4px;">Thank You for Your Order!</h2>
         <p style="font-size: 0.82rem; color: var(--text-muted);">Your micro-batch is scheduled for fresh roast & chilled delivery.</p>
 
         <div class="freshness-alert">
-          ❄️ <strong>48-Hour Freshness Guarantee:</strong> Crafted fresh with zero preservatives. Keep refrigerated upon arrival and consume within 48 hours for peak tasting notes!
+          &#10052; <strong>48-Hour Freshness Guarantee:</strong> Crafted fresh with zero preservatives. Keep refrigerated upon arrival and consume within 48 hours for peak tasting notes!
         </div>
 
         <div class="receipt-details">
@@ -408,11 +332,11 @@
         </div>
 
         <button class="btn btn-calendar" onclick="addToGoogleCalendar()">
-          <span>📅 Add Delivery Window to Google Calendar</span>
+          <span>&#128197; Add Delivery Slot to Google Calendar</span>
         </button>
 
         <button class="btn btn-whatsapp" onclick="sendWhatsAppReceipt()">
-          <span>📱 Send Receipt / Updates to My WhatsApp</span>
+          <span>&#128241; Send Receipt / Updates to My WhatsApp</span>
         </button>
 
         <button class="btn btn-secondary" onclick="resetForm()">
@@ -426,5 +350,3 @@
   <script src="app.js"></script>
 </body>
 </html>
-
-
