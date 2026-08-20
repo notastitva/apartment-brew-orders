@@ -1,17 +1,22 @@
 # ☕ The Apartment Brew Co. — Web Portal & Order Intake System
 
 > **Micro-Batch Flash-Chilled Specialty Coffee • Gurugram & Delhi NCR**  
-> A lightweight, serverless e-commerce and order intake portal powered by a **Google Sheets Headless CMS**, featuring live menu rotations, dynamic pricing, automated batch scarcity tracking, payment gateway integration, and instant transactional email confirmations.
+> A lightweight, serverless e-commerce and order intake portal powered by a **Google Sheets Headless CMS**, featuring live menu rotations, dynamic pricing, automated batch scarcity tracking, custom flight batch builders, payment gateway integration, scoped promo codes, and transactional email confirmations with 1-click Google Calendar reminders.
 
 ---
 
 ## 📌 1. Overview & Business Model
 
-**The Apartment Brew Co.** operates an asset-light, pre-order only micro-batch coffee venture:
-* **Extraction & Freshness**: Coffee is extracted hot to capture volatile aromatics and flash-chilled immediately over ice. Zero preservatives with a strict **48-hour peak freshness window**.
+**The Apartment Brew Co.** operates an asset-light, pre-order only micro-batch coffee venture in Gurugram, delivering across Delhi NCR:
+
+* **Extraction & Freshness Protocol**: Coffee is extracted hot to dissolve volatile aromatics and flash-chilled immediately over ice below 3°C. Zero preservatives or additives with a strict **48-hour peak freshness window**.
 * **Dual Delivery Pathways**:
-  * **B2C (Individual Saturday Morning Drops)**: Pre-orders close Friday 10:00 PM; delivered Saturday 8:00 AM – 11:00 AM.
-  * **B2B (Corporate Friday Office Drops)**: Orders close Thursday 6:00 PM; delivered Friday (Morning Kickoff or Afternoon Recharge).
+  * **B2C (Individual Saturday Morning Drops)**: Pre-orders open Monday and close Friday 10:00 PM; delivered Saturday 8:00 AM – 11:00 AM.
+  * **B2B (Corporate Friday Office Drops)**: Orders close Thursday 6:00 PM; delivered Friday (Morning Kickoff 9:30–11:30 AM or Afternoon Recharge 2:00–4:00 PM).
+* **Delivery & Gate Instructions**: 3 standardized drop preferences:
+  1. `Deliver directly to door / desk`
+  2. `Leave with Tower Security / Concierge Desk`
+  3. `Call upon arrival for pickup`
 * **Coverage**: Hyper-local Delhi NCR (Gurugram DLF Phases 1-5, Cyber City, Golf Course Rd, Candor TechSpace, Udyog Vihar, Noida, South Delhi).
 
 ---
@@ -21,34 +26,34 @@
 ```mermaid
 flowchart TD
     subgraph SheetsCMS["Google Sheets Headless CMS (Admin Panel)"]
-        Config["'Menu & Config' Tab (Lots, Packs, Pricing, Store Status, Coupons)"]
-        LiveDB["Order Database (Sheet1: 17 Cols | B2B Orders: 22 Cols)"]
+        Config["'Menu & Config' Tab\n(Lots, Packs, Pricing, Store Status, Coupons)"]
+        LiveDB["Order Database\n(Sheet1: 17 Cols | B2B Orders: 22 Cols)"]
     end
 
-    subgraph Backend["Backend Microservice (Google Apps Script)"]
-        DoGet["doGet() - Live JSON Config Server & Coupon Validator"]
-        DoPost["doPost() - Order Ingestion & Bot Filter"]
-        Mailer["Gmail Dispatcher (HTML Receipts & GCal Links)"]
+    subgraph Backend["Backend Microservice (Google Apps Script — Code.gs)"]
+        DoGet["doGet() - Live JSON Config Server & Scoped Coupon Validator"]
+        DoPost["doPost() - Order Ingestion & Anti-Bot Honeypot Filter"]
+        Mailer["Gmail Notification Engine (HTML Receipts & GCal Links)"]
     end
 
     subgraph Frontend["Client Layer (Frontend UI & Controller)"]
-        UI["index.html + style.css (Dark Roast UI)"]
-        JS["app.js (Dynamic Config Loader, Splitter & Checkout)"]
+        UI["index.html + style.css (Dark Roast Aesthetic)"]
+        JS["app.js (Dynamic Loader, Custom Splitter & Checkout)"]
     end
 
     subgraph Payments["Payment Gateway"]
-        RZP["Razorpay SDK (UPI / Cards / NetBanking)"]
+        RZP["Razorpay SDK (UPI / Cards / NetBanking / Net-7 Invoices)"]
     end
 
-    %% Flow
-    Config -->|Reads Live Menu & Formula Totals| DoGet
-    DoGet -->|HTTP GET JSON| JS
-    JS -->|Renders UI & Dynamic Lots| UI
+    %% Data Flow
+    Config -->|Reads Live Lots, Prices & Formulas| DoGet
+    DoGet -->|HTTP GET JSON (Cache-Busted)| JS
+    JS -->|Dynamically Renders Lots & Packs| UI
     UI -->|Checkout Action| JS
-    JS -->|Payment Modal| RZP
+    JS -->|Payment Modal / Invoice Req| RZP
     JS -->|HTTP POST JSON| DoPost
-    DoPost -->|Appends Row| LiveDB
-    DoPost -->|Dispatches Email| Mailer
+    DoPost -->|Appends Structured Row| LiveDB
+    DoPost -->|Dispatches HTML Receipt| Mailer
 ```
 
 ### Architecture Data Flow
@@ -57,8 +62,9 @@ flowchart TD
 +-------------------------------------------------------------------------+
 |                  GOOGLE SHEETS HEADLESS CMS & DATABASE                  |
 |  - Tab 1: 'Menu & Config' (Lots, Packs, Pricing, Store Status, Coupons) |
-|  - Tab 2: 'Sheet1' (B2C Orders — 17 Columns)                           |
-|  - Tab 3: 'B2B Orders' (Corporate Drops — 22 Columns)                  |
+|  - Tab 2: 'Sheet1' (B2C Individual Orders — 17 Columns)                 |
+|  - Tab 3: 'B2B Orders' (Corporate Friday Drops — 22 Columns)            |
+|  - Tab 4: 'Instructions' (Operational SOPs & Freshness Protocols)       |
 +--------------------+--------------------------------+-------------------+
                      ^                                |
        doPost() Order Log               doGet() Live Config Feed
@@ -82,11 +88,11 @@ flowchart TD
 
 ## 📂 3. Repository File Structure
 
-* `index.html` - Semantic single-page structure, dynamic lot/pack grids, coupon field, and receipt view.
-* `style.css` - Dark-roast design tokens, sensory meters, custom ratio splitters, coupon badges, and responsive layouts.
-* `app.js` - Dynamic configuration fetcher, offline fallback cache, custom split balancing, live cutoff countdown, and validation.
-* `Code.gs` - Google Apps Script backend controller, `doGet` config server, `doPost` order ingestion, and email dispatcher.
-* `README.md` - Complete architectural guide, database schemas, and operator SOPs.
+* `index.html` - Semantic single-page application structure, dynamic lot/pack grids, custom ratio splitter, promo coupon row, and confirmation receipt.
+* `style.css` - Dark-roast CSS design system (`:root` tokens), sensory meter bars, custom splitter steppers, dual-tone ratio tracks, coupon badges, and responsive layouts.
+* `app.js` - Dynamic configuration loader, session cache manager, custom ratio balancing engine, live countdown timer, scoped coupon validator, and validation subsystem.
+* `Code.gs` - Backend microservice serving `doGet` (dynamic CMS & coupon validation) and `doPost` (order ingestion & HTML email receipts).
+* `README.md` - Complete architectural guide, database schemas, operator SOPs, and deployment steps.
 
 ---
 
@@ -95,10 +101,12 @@ flowchart TD
 ### 1. `index.html` (Frontend Structure)
 * **Branding Header**: Brand logo, active drop banner (`#dropBanner`), live countdown timer (`#countdownTimer`), and capacity scarcity bar (`#scarcityText`, `#scarcityFill`).
 * **Store Status Alert**: Top banner (`#storeStatusBanner`) that dynamically displays alerts if drops are paused or sold out.
-* **Mode Switcher**: Toggle between B2C (`#tabB2c`) and B2B (`#tabB2b`).
+* **Mode Switcher**: Segmented toggle between B2C (`#tabB2c`) and B2B (`#tabB2b`).
 * **Dynamic Lot Selector (`#lotGrid`)**: Populated dynamically from Google Sheets with tasting notes, roast levels, and acidity/body sensory meters.
 * **Build Your Own Batch (Custom Ratio Splitter)**: Dynamic bottle steppers (`+` / `–`) allowing customers to customize exact lot ratios between Ratnagiri Anaerobic and Thogarihunkal Washed with an interactive dual-tone ratio bar.
-* **Dynamic Pack Grids (`#b2cPacks`, `#b2bPacks`)**: Renders pack tiers and prices live from Google Sheets.
+* **Dynamic Pack Grids (`#b2cPacks`, `#b2bPacks`)**: Renders pack tiers and prices live from Google Sheets:
+  * **B2C**: Single Bottle (₹240), Duo Pack (₹480), Weekend Pack (₹899), Mega Weekend (6x 250ml, ₹1,200).
+  * **B2B**: Team Pack (₹1,800), Office Batch (₹3,400), Floor Pack (₹6,000), Townhall Bulk (₹8,700).
 * **Promo & Coupon Input**: `#couponInput` and `#btn-coupon` for instant discount validation.
 * **Customer & Delivery Fields**: Autocomplete returning customer banner (`#savedProfileBar`), Delhi NCR PIN code validator, and 3-option gate delivery preference selector.
 * **Freshness Accordion**: 48-Hour storage and serving guide (`.guide-accordion`).
@@ -111,8 +119,9 @@ flowchart TD
 
 ### 3. `app.js` (Frontend Controller)
 * **Dynamic Config Fetcher (`fetchLiveConfig`)**: Loads menu lots, packs, scarcity counts, and store status from Google Sheets on page load with built-in instant fallback if offline.
+* **Scarcity Session Caching (`loadCachedScarcity`)**: Prevents UI flickering by caching latest batch capacity in `sessionStorage`.
 * **Dynamic Cutoff Engine**: Computes ticking countdown to Thursday 6:00 PM (B2B) and Friday 10:00 PM (B2C) cutoffs.
-* **Promo Code Engine (`applyCoupon`)**: Calls backend API to validate coupon codes and apply percentage or flat discounts dynamically.
+* **Scoped Coupon Engine (`recalculateDiscount`, `applyCoupon`)**: Automatically re-calculates percentage discounts against active cart totals and validates channel eligibility (B2C vs B2B) to prevent discount leakage.
 * **1-Click Profile Caching**: Saves customer details in browser `localStorage` (`tabc_customer_profile`) for instant re-ordering.
 * **Validation Subsystem**:
   * Delhi NCR PIN Code RegEx: `^(11[0-9]{4}|122[0-9]{3}|121[0-9]{3}|201[0-9]{3})$`
@@ -122,9 +131,10 @@ flowchart TD
 
 ### 4. `Code.gs` (Backend Microservice)
 * **`doGet(e)` Server**:
-  * Auto-initializes the `Menu & Config` sheet if missing.
+  * Auto-initializes and repairs the `Menu & Config` sheet if missing or incomplete with 8-column normalization.
   * Serves live lots, pricing, store status, and automated reserved bottle counts (`=SUM(Sheet1!L2:L)`).
-  * Validates promo coupons with minimum order checks.
+  * Validates promo coupons with minimum order checks and channel mode restrictions (`B2C`, `B2B`, `ALL`).
+  * Self-healing reset endpoint (`?action=resetConfig`).
 * **`doPost(e)` Order Ingestion**:
   * Shared token security check (`TABC_SECURE_TOKEN_2026`) & honeypot bot trap.
   * Appends B2C orders to `Sheet1` (17 columns, instruction in Column G).
@@ -136,17 +146,20 @@ flowchart TD
 ## 📊 5. Google Sheets Database Schema
 
 ### 1. `Menu & Config` (Headless CMS)
-* **General Settings**: `Store Status` (OPEN / PAUSED / SOLD_OUT), `Batch Capacity` (e.g. 50), `Announcement Banner`
+* **General Settings**: `Store Status` (OPEN / PAUSED / SOLD_OUT), `Batch Capacity` (e.g. 60), `Announcement Banner`
 * **Coffee Lots Table**: `Lot ID` | `Estate Name` | `Process Tag` | `Tasting Notes` | `Flavor Pills` | `Acidity %` | `Body %` | `Active`
 * **B2C Packs Table**: `Pack ID` | `Pack Name` | `Bottles` | `Price (₹)` | `Badge` | `Active`
 * **B2B Packs Table**: `Pack ID` | `Pack Name` | `Bottles` | `Price (₹)` | `Active`
-* **Coupons Table**: `Coupon Code` | `Discount Type` (PERCENT / FLAT) | `Discount Value` | `Min Order (₹)` | `Active`
+* **Coupons Table**: `Coupon Code` | `Discount Type` (PERCENT / FLAT) | `Discount Value` | `Min Order (₹)` | `Applicable Mode` (B2C / B2B / ALL) | `Active`
 
 ### 2. `Sheet1` (B2C Orders — 17 Columns)
 `Order Timestamp` | `Order ID` | `Customer Name` | `WhatsApp Number` | `Email Address` | `Delivery Address / Area` | `Delivery / Gate Instruction` | `Delivery Date` | `Coffee Bean Lot` | `Pack Selected` | `Quantity` | `Total Bottles` | `Total Amount (₹)` | `Payment Preference` | `Payment Status` | `Delivery Status` | `Notes / UTR`
 
 ### 3. `B2B Orders` (Corporate Drops — 22 Columns)
 `Order Timestamp` | `Order ID` | `Company / Business Name` | `Contact Person Name` | `Work Email` | `WhatsApp / Phone` | `GSTIN` | `Tech Park / Commercial Complex` | `Building / Tower / Floor` | `PIN Code` | `Delivery / Gate Instruction` | `Delivery Window` | `Delivery Date (Friday Drop)` | `Coffee Lot Selection` | `Pack Tier` | `Quantity` | `Total Bottles` | `Total Amount (₹)` | `Payment Method` | `Payment Status` | `Delivery Status` | `Notes / Payment Ref / PO Number`
+
+### 4. `Instructions` (Operational SOPs)
+Contains batch extraction schedules, 48-hour shelf-life rules, delivery cutoff timelines, pricing reference tables, and tech park reception drop-off guidelines.
 
 ---
 
@@ -163,8 +176,10 @@ flowchart TD
 2. Set `CONFIG.razorpayKeyId` to your active Razorpay Key (`rzp_live_...` or `rzp_test_...`).
 3. Set `CONFIG.authToken` to match `AUTH_TOKEN` in `Code.gs`.
 
-### 3. How to Update Menu & Pricing (No Code)
-* **Rotate a Bean**: Open the `Menu & Config` tab in Google Sheets, change the `Estate Name`, `Tasting Notes`, or `Acidity %`. The website updates live.
-* **Mark Lot Sold Out**: In the Coffee Lots table, change `Active` to `FALSE`.
-* **Pause Drop Orders**: In cell B2 (`Store Status`), change `OPEN` to `PAUSED` or `SOLD_OUT`.
-* **Add a Promo Code**: Add a new row to the `--- COUPONS ---` table in Sheets (e.g. `WEEKEND20`, `PERCENT`, `20`, `480`, `TRUE`).
+### 3. How to Manage Weekly Drops in Google Sheets (Zero Code)
+* **Rotate Coffee Lots**: In the `Menu & Config` tab, edit `Estate Name`, `Tasting Notes`, or `Acidity %`. The website updates live.
+* **Mark Lot Sold Out**: Change `Active` from `TRUE` to `FALSE` next to that coffee lot.
+* **Adjust Batch Capacity**: Edit cell B3 (`Batch Capacity`). The progress bar updates in real time.
+* **Pause Pre-Orders**: Change cell B2 (`Store Status`) to `PAUSED` or `SOLD_OUT`.
+* **Add a Promo Code**: Add a row to `--- COUPONS ---` (e.g. `WEEKEND20`, `PERCENT`, `20`, `480`, `B2C`, `TRUE`).
+* **Reset / Repair Config**: Open `https://script.google.com/macros/s/.../exec?action=resetConfig` in your browser to auto-populate all tables and styling.
