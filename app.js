@@ -1,6 +1,6 @@
 const CONFIG = {
-  razorpayKeyId: "YOUR_RAZORPAY_KEY_ID_HERE",
-  googleSheetEndpoint: "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE",
+  razorpayKeyId: "rzp_test_TRVab1bUUwOVN5",
+  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbx7nE2uQV08Ev4UYt8FFkmVZMGMpksvhIjljALGSbXYmc1FEv_1nh34BoR99mdTHic/exec",
   authToken: "TABC_SECURE_TOKEN_2026"
 };
 
@@ -1129,5 +1129,4 @@ if (document.readyState !== "loading") {
   document.addEventListener("DOMContentLoaded", initApp);
 
 }
-
 
