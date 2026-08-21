@@ -14,7 +14,7 @@ The Apartment Brew Co. operates an asset-light, pre-order only micro-batch craft
   * B2C (Individual Saturday Morning Drops): Pre-orders close Friday 10:00 PM; delivered Saturday 8:00 AM – 11:00 AM.  
   * B2B (Corporate Friday Office Drops): Orders close Thursday 6:00 PM; delivered Friday (Morning Kickoff 9:30–11:30 AM or Afternoon Recharge 2:00–4:00 PM).  
 * Delivery Coverage: Hyper-local Delhi NCR (Gurugram DLF Phases 1–5, Cyber City, Golf Course Rd, Candor TechSpace, Udyog Vihar, Noida Tech Parks, and Central/South Delhi).  
-* **Tasting Sampler Flights (Discovery Packs):** Curated 2-bottle sampler packs (1 bottle each of active single-estate harvests) built on the custom ratio splitter to allow new customers to explore the full roast lineup in a single drop.
+* **Tasting Sampler Flights (Discovery Packs):** Curated 2-bottle sampler packs (1 bottle each of active single-estate harvests) built on the custom ratio splitter. Dynamically scales across multi-pack orders (e.g. 2 packs \= 2x Lot 1 \+ 2x Lot 2\) while allowing full bottle-level ratio customization, making it easy for new and returning customers to explore the full roast lineup.
 
 ---
 
@@ -112,7 +112,7 @@ To reset the capacity counter between weekly drops:
 
 #### **3\. app.js (Frontend Controller)**
 
-* Configuration & Core Logic: Manages Razorpay Key ID, Google Apps Script endpoint URL, and shared authentication token using centralized DOM query caching and deferred script loading for the Razorpay SDK. The Custom Ratio Splitter automatically defaults to an equal 1:1 harvest distribution (1x Lot 1 \+ 1x Lot 2\) for 2-bottle discovery packs when custom ratio split is engaged.  
+* **Custom Ratio Splitter & Discovery Engine:** Features dynamic bottle counters (+ / \-) for customizing exact lot ratios between harvests across any pack size. For Discovery Sampler packs, defaults automatically to a balanced 50/50 split across active single-estate harvests (scaling dynamically with pack quantity: 1 pack \= 1:1, 2 packs \= 2:2, etc.) and preserves custom proportional ratios when pack quantities change.  
 * Dynamic Cutoff Engine: Calculates closest Saturday morning delivery for B2C and Friday for B2B. Computes live ticking countdown to Thursday 6:00 PM (B2B) and Friday 10:00 PM (B2C) cutoffs.  
 * Profile & Offline Management: Features in-memory profile caching and saves customer details in browser localStorage (tabc\_customer\_profile) for instant re-ordering, supported by an automated localStorage offline order retry queue and PWA Service Worker integration.  
 * Validation Subsystem: Debounced input validation for Delhi NCR PIN codes, 10-digit Indian phone numbers, and 15-character GSTINs.  
@@ -184,17 +184,9 @@ To reset the capacity counter between weekly drops:
 
 ### **⚙️ 7\. Deployment & Configuration Guide**
 
-1. 1\. Deploy Google Apps Script:  
-   1. Open your Google Spreadsheet (The Apartment Brew Co. — Live Order Tracker).  
-   2. Navigate to Extensions \> Apps Script and paste Code.gs.  
-   3. Click Deploy \> New Deployment, select Web App, set Execute as to Me, and Who has access to Anyone.  
-   4. Copy the generated Web App URL (https://script.google.com/macros/s/.../exec).  
-2. 2\. Configure Frontend (app.js):  
-   1. In app.js, set CONFIG.googleSheetEndpoint to your deployed Apps Script Web App URL.  
-   2. Set CONFIG.razorpayKeyId to your active Razorpay Key (rzp\_live\_... or rzp\_test\_...).  
-   3. Set CONFIG.authToken to match AUTH\_TOKEN in Code.gs.  
-3. 3\. Deploy Web Application:  
-   1. Host index.html, style.css, and app.js on GitHub Pages, Cloudflare Pages, Vercel, or Netlify.
+1. **1\. Deploy Google Apps Script:** Open your Google Spreadsheet (*The Apartment Brew Co. — Live Order Tracker*), navigate to Extensions \> Apps Script, paste Code.gs, click Deploy \> New Deployment (Web App, Execute as: Me, Access: Anyone), and copy the Web App URL.  
+2. 2\. Configure Frontend (app.js): In app.js, set CONFIG.googleSheetEndpoint to your deployed Apps Script URL, CONFIG.razorpayKeyId to your active key, and CONFIG.authToken to match AUTH\_TOKEN in Code.gs.  
+3. 3\. Deploy Web Application: Host index.html, style.css, and app.js on GitHub Pages, Cloudflare Pages, Vercel, or Netlify.
 
 ---
 
@@ -204,4 +196,3 @@ The system is engineered for high-performance rendering and resilience against n
 
 * Core Web Vitals: Enhancements to FCP and LCP via resource hints (preconnect/dns-prefetch) and deferred SDK loading. CLS is minimized through CSS containment and GPU-accelerated tracks. INP is optimized using centralized DOM query caching and debounced validation.  
 * Network Resilience: Integrated PWA Service Workers ensure the UI remains accessible during connectivity drops, while an automated localStorage retry queue preserves and re-attempts order dispatches.  
-* 
