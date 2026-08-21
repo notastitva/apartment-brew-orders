@@ -13,7 +13,8 @@ The Apartment Brew Co. operates an asset-light, pre-order only micro-batch craft
 * Dual Delivery Pathways:  
   * B2C (Individual Saturday Morning Drops): Pre-orders close Friday 10:00 PM; delivered Saturday 8:00 AM – 11:00 AM.  
   * B2B (Corporate Friday Office Drops): Orders close Thursday 6:00 PM; delivered Friday (Morning Kickoff 9:30–11:30 AM or Afternoon Recharge 2:00–4:00 PM).  
-* Delivery Coverage: Hyper-local Delhi NCR (Gurugram DLF Phases 1–5, Cyber City, Golf Course Rd, Candor TechSpace, Udyog Vihar, Noida Tech Parks, and Central/South Delhi).
+* Delivery Coverage: Hyper-local Delhi NCR (Gurugram DLF Phases 1–5, Cyber City, Golf Course Rd, Candor TechSpace, Udyog Vihar, Noida Tech Parks, and Central/South Delhi).  
+* **Tasting Sampler Flights (Discovery Packs):** Curated 2-bottle sampler packs (1 bottle each of active single-estate harvests) built on the custom ratio splitter to allow new customers to explore the full roast lineup in a single drop.
 
 ---
 
@@ -65,9 +66,9 @@ The website is 100% data-driven by the Menu & Config tab in the Google Spreadshe
    1. Configure lot estate names, processing methods (e.g. Anaerobic Naturals, Washed Lot), tasting notes, flavor pills, acidity %, and body %.  
    2. Max Bottles column: Defines the maximum bottle ceiling for each lot to enforce lot-level inventory caps and prevent overselling scarce beans.  
    3. Setting Active to FALSE immediately removes the lot from the frontend.  
-   4. The interactive Custom Ratio Splitter automatically updates its lot labels and split controls based on active harvests.  
+   4. The interactive Custom Ratio Splitter automatically updates its lot labels and split controls based on active harvests, allowing 2-bottle Duo Packs to be configured as Discovery Sampler Flights with custom 1:1 split ratios.  
 4. B2C & B2B Pack Tiers Management:  
-   1. Edit pack names, bottle quantities, unit prices (₹), and marketing badges (e.g. Popular, Value, MOQ).  
+   1. Edit pack names, bottle quantities, unit prices (₹), and marketing badges (e.g. Popular, Value, MOQ). Note that 2-bottle Duo Packs can be configured as Discovery Sampler Flights with custom 1:1 split ratios between active single-estate harvests.  
 5. Coupon Discount Engine:  
    1. Define flat (₹) or percentage (%) discount coupon codes with minimum order thresholds and mode applicability (B2C, B2B, ALL).  
 6. Delivery Clusters & Slot Throttling:  
@@ -94,10 +95,10 @@ To reset the capacity counter between weekly drops:
 
 * Branding Header: Brand titles, active drop announcement banner (\#dropBanner), live cutoff countdown (\#countdownTimer), and limited batch scarcity progress bar (\#scarcityText, \#scarcityFill).  
 * Segmented Mode Switch: Smooth toggle between B2C (\#tabB2c) and B2B (\#tabB2b).  
-* Build Your Own Batch (Custom Ratio Splitter): Features dynamic bottle counters (+ / \-) for customizing exact lot ratios between harvests across any pack size, supported by automatic allocation rebalancing and a live dual-tone ratio bar visualization.  
+* Build Your Own Batch (Custom Ratio Splitter): Features dynamic bottle counters (+ / \-) for customizing exact lot ratios between harvests across any pack size, supported by automatic allocation rebalancing and a live dual-tone ratio bar visualization. Includes a 2-bottle Curated Discovery Flight preset (1:1 auto-split across active estates).  
 * Interactive Lot Selector: Single-estate visual cards with tasting notes, roast levels, and acidity/body sensory meters (\#lotGrid).  
 * Pack Selection Grids:  
-  * B2C: Single Bottle (₹240), Duo Pack (₹480), Weekend Pack (₹899), Mega Weekend (6x 250ml, ₹1,200).  
+  * B2C: Single Bottle (₹240), Duo Pack / Discovery Sampler Flight (2x 250ml, ₹480), Weekend Pack (₹899), Mega Weekend (6x 250ml, ₹1,200).  
   * B2B: Team Pack (₹1,800), Office Batch (₹3,400), Floor Pack (₹6,000), Townhall Bulk (₹8,700).  
 * Customer & Delivery Details: Returning customer 1-click autofill banner (\#savedProfileBar), PIN Code validator (\#pinStatus), and drop & gate instruction selector (Door drop vs Security / Concierge desk).  
 * Interactive Freshness Accordion: 48-Hour storage and serving guide (.guide-accordion).  
@@ -111,7 +112,7 @@ To reset the capacity counter between weekly drops:
 
 #### **3\. app.js (Frontend Controller)**
 
-* Configuration & Core Logic: Manages Razorpay Key ID, Google Apps Script endpoint URL, and shared authentication token using centralized DOM query caching and deferred script loading for the Razorpay SDK.  
+* Configuration & Core Logic: Manages Razorpay Key ID, Google Apps Script endpoint URL, and shared authentication token using centralized DOM query caching and deferred script loading for the Razorpay SDK. The Custom Ratio Splitter automatically defaults to an equal 1:1 harvest distribution (1x Lot 1 \+ 1x Lot 2\) for 2-bottle discovery packs when custom ratio split is engaged.  
 * Dynamic Cutoff Engine: Calculates closest Saturday morning delivery for B2C and Friday for B2B. Computes live ticking countdown to Thursday 6:00 PM (B2B) and Friday 10:00 PM (B2C) cutoffs.  
 * Profile & Offline Management: Features in-memory profile caching and saves customer details in browser localStorage (tabc\_customer\_profile) for instant re-ordering, supported by an automated localStorage offline order retry queue and PWA Service Worker integration.  
 * Validation Subsystem: Debounced input validation for Delhi NCR PIN codes, 10-digit Indian phone numbers, and 15-character GSTINs.  
@@ -203,3 +204,4 @@ The system is engineered for high-performance rendering and resilience against n
 
 * Core Web Vitals: Enhancements to FCP and LCP via resource hints (preconnect/dns-prefetch) and deferred SDK loading. CLS is minimized through CSS containment and GPU-accelerated tracks. INP is optimized using centralized DOM query caching and debounced validation.  
 * Network Resilience: Integrated PWA Service Workers ensure the UI remains accessible during connectivity drops, while an automated localStorage retry queue preserves and re-attempts order dispatches.  
+* 
