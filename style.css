@@ -1206,7 +1206,6 @@ input:focus, select:focus, textarea:focus {
   background: #2a9d8f; /* Fresh floral teal */
 }
 
-
 /* Store Status Banner */
 .store-status-banner {
   background: rgba(230, 57, 70, 0.15);
@@ -1220,3 +1219,51 @@ input:focus, select:focus, textarea:focus {
   margin-top: 10px;
   line-height: 1.4;
 }
+
+/* Top Navigation Bar */
+.top-nav-bar { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 12px 18px; border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 100; }
+.nav-btn { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); cursor: pointer; padding: 6px 12px; border-radius: 6px; transition: all 0.2s ease; }
+.nav-btn.active { color: var(--accent); background: var(--accent-light); }
+
+/* Live Sync Status Pill */
+.sync-status-pill { display: inline-flex; align-items: center; gap: 8px; background: var(--card-inner); border: 1px solid var(--card-border); padding: 4px 10px; border-radius: 12px; font-size: 0.72rem; color: var(--text-muted); }
+.sync-indicator-dot { width: 8px; height: 8px; border-radius: 50%; background: #555; }
+.dot-pulsing { animation: pulse 1.5s infinite; }
+.dot-warning { background: var(--error-light); }
+.dot-success { background: var(--success); }
+.btn-sync-retry { background: none; border: none; color: var(--info-blue); text-decoration: underline; cursor: pointer; font-size: 0.7rem; padding: 0; }
+
+/* Coupon Code Input & Status Messages */
+.coupon-container { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--card-border); }
+.coupon-input-group { display: flex; gap: 8px; margin-bottom: 6px; }
+.btn-coupon { background: var(--card-inner); border: 1px solid var(--card-border); color: var(--text); padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+.coupon-status-msg { font-size: 0.72rem; font-weight: 500; display: none; }
+.msg-success { color: var(--success-light); display: block; }
+.msg-error { color: var(--error-light); display: block; }
+
+/* Summary Breakdown Lines */
+.summary-breakdown { width: 100%; margin-bottom: 12px; }
+.summary-line { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; }
+.discount-line { color: var(--success-light); font-weight: 600; }
+.total-line { border-top: 1px solid var(--card-border); margin-top: 8px; padding-top: 8px; color: var(--text); font-weight: 800; font-size: 1rem; }
+
+/* Inventory Badges & Sold-Out States */
+.lot-card.sold-out { opacity: 0.6; filter: grayscale(1); cursor: not-allowed; }
+.sold-out-badge { position: absolute; top: 12px; right: 12px; background: var(--error); color: #fff; font-size: 0.65rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; }
+.stock-badge { font-size: 0.65rem; color: var(--info-blue); background: var(--badge-bg); padding: 2px 6px; border-radius: 4px; }
+.lot-footer-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+
+/* Order Tracker Modal & Timeline Step Bar */
+.tracker-card { background: var(--card-bg); border-radius: 14px; padding: 20px; border: 1px solid var(--card-border); box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+.tracker-header { margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; }
+.status-pill { background: var(--accent-light); color: var(--accent); font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 12px; }
+.timeline-bar { display: flex; justify-content: space-between; position: relative; margin: 30px 0; }
+.timeline-bar::before { content: ""; position: absolute; top: 11px; left: 0; width: 100%; height: 2px; background: var(--card-border); z-index: 0; }
+.step-item { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; z-index: 1; }
+.step-dot { width: 24px; height: 24px; border-radius: 50%; background: var(--bg); border: 2px solid var(--card-border); display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+.step-label { font-size: 0.65rem; font-weight: 600; color: var(--text-muted); text-align: center; }
+.step-done .step-dot { border-color: var(--success); background: var(--success); color: #fff; }
+.step-active .step-dot { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-light); }
+.step-active .step-label { color: var(--text); }
+.tracker-meta { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; background: var(--card-inner); padding: 12px; border-radius: 8px; }
+.search-input-group { position: relative; margin-bottom: 14px; }

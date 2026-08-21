@@ -69,9 +69,9 @@ The website is 100% data-driven by the Menu & Config tab in the Google Spreadshe
    4. The interactive Custom Ratio Splitter automatically updates its lot labels and split controls based on active harvests, allowing 2-bottle Duo Packs to be configured as Discovery Sampler Flights with custom 1:1 split ratios.  
 4. B2C & B2B Pack Tiers Management:  
    1. Edit pack names, bottle quantities, unit prices (₹), and marketing badges (e.g. Popular, Value, MOQ). Note that 2-bottle Duo Packs can be configured as Discovery Sampler Flights with custom 1:1 split ratios between active single-estate harvests.  
-5. Coupon Discount Engine:  
+5. **Coupon Discount & Audit Engine:** Define flat (₹) or percentage (%) discount codes with minimum order thresholds and mode applicability (B2C, B2B, ALL). Features frontend promo validation and backend audit logging for usage tracking.  
    1. Define flat (₹) or percentage (%) discount coupon codes with minimum order thresholds and mode applicability (B2C, B2B, ALL).  
-6. Delivery Clusters & Slot Throttling:  
+6. **Delivery Clusters & Slot Throttling:** Configure maximum order capacities per tech park/commercial complex and delivery window (e.g. DLF Cyber City Morning Kickoff max 15 orders). The system enforces capacity limits by automatically disabling slots to balance logistics and courier load.  
    1. Configure maximum order capacities per tech park/commercial complex and delivery window (e.g. DLF Cyber City Morning Kickoff max 15 orders) to balance logistics and courier load.
 
 ---
@@ -95,14 +95,14 @@ To reset the capacity counter between weekly drops:
 
 * Branding Header: Brand titles, active drop announcement banner (\#dropBanner), live cutoff countdown (\#countdownTimer), and limited batch scarcity progress bar (\#scarcityText, \#scarcityFill).  
 * Segmented Mode Switch: Smooth toggle between B2C (\#tabB2c) and B2B (\#tabB2b).  
-* Build Your Own Batch (Custom Ratio Splitter): Features dynamic bottle counters (+ / \-) for customizing exact lot ratios between harvests across any pack size, supported by automatic allocation rebalancing and a live dual-tone ratio bar visualization. Includes a 2-bottle Curated Discovery Flight preset (1:1 auto-split across active estates).  
+* **N-Lot Scalable Custom Ratio Splitter:** Features dynamic bottle counters for customizing exact lot ratios between harvests across any pack size. Supported by an N-lot scalable architecture with automatic allocation rebalancing and a multi-color live ratio bar visualization. Includes a 2-bottle Curated Discovery Flight preset with 1:1 auto-split logic.  
 * Interactive Lot Selector: Single-estate visual cards with tasting notes, roast levels, and acidity/body sensory meters (\#lotGrid).  
 * Pack Selection Grids:  
   * B2C: Single Bottle (₹240), Duo Pack / Discovery Sampler Flight (2x 250ml, ₹480), Weekend Pack (₹899), Mega Weekend (6x 250ml, ₹1,200).  
   * B2B: Team Pack (₹1,800), Office Batch (₹3,400), Floor Pack (₹6,000), Townhall Bulk (₹8,700).  
 * Customer & Delivery Details: Returning customer 1-click autofill banner (\#savedProfileBar), PIN Code validator (\#pinStatus), and drop & gate instruction selector (Door drop vs Security / Concierge desk).  
 * Interactive Freshness Accordion: 48-Hour storage and serving guide (.guide-accordion).  
-* Confirmation View: Order receipt, Google Calendar 1-click reminder button (.btn-calendar), and formatted WhatsApp receipt trigger (.btn-whatsapp).
+* **Self-Service Live Order Tracker & Confirmation:** Order receipt view with a 4-step status timeline (Pre-Ordered \-\> Brewing \-\> Dispatched \-\> Delivered). Includes Google Calendar 1-click reminders, native .ics iCalendar attachment generation, and formatted WhatsApp receipt triggers.
 
 #### **2\. style.css (Design System)**
 
@@ -113,8 +113,8 @@ To reset the capacity counter between weekly drops:
 #### **3\. app.js (Frontend Controller)**
 
 * **Custom Ratio Splitter & Discovery Engine:** Features dynamic bottle counters (+ / \-) for customizing exact lot ratios between harvests across any pack size. For Discovery Sampler packs, defaults automatically to a balanced 50/50 split across active single-estate harvests (scaling dynamically with pack quantity: 1 pack \= 1:1, 2 packs \= 2:2, etc.) and preserves custom proportional ratios when pack quantities change.  
-* Dynamic Cutoff Engine: Calculates closest Saturday morning delivery for B2C and Friday for B2B. Computes live ticking countdown to Thursday 6:00 PM (B2B) and Friday 10:00 PM (B2C) cutoffs.  
-* Profile & Offline Management: Features in-memory profile caching and saves customer details in browser localStorage (tabc\_customer\_profile) for instant re-ordering, supported by an automated localStorage offline order retry queue and PWA Service Worker integration.  
+* **Unified Cutoff & Schedule Synchronization:** Centralized SCHEDULE\_CONFIG object keeps banners and ticking countdown timers 100% in sync. Calculates closest delivery windows and computes live countdowns to Thursday 6:00 PM (B2B) and Friday 10:00 PM (B2C) cutoffs.  
+* Resilience & Offline Management: Features in-memory profile caching and localStorage persistence (tabc\_customer\_profile). Provides cold-start feedback via visual status pills with retry mechanisms, supported by an automated offline order retry queue and PWA Service Worker integration.  
 * Validation Subsystem: Debounced input validation for Delhi NCR PIN codes, 10-digit Indian phone numbers, and 15-character GSTINs.  
 * Checkout & Dispatch: Opens Razorpay checkout modal or generates corporate invoice IDs (INV-REQ-xxxxxx), then dispatches payload to Apps Script.  
 * Google Calendar Link Generator & WhatsApp Sync: Generates formatted calendar URLs and structured WhatsApp pre-filled text receipts.
@@ -125,7 +125,7 @@ To reset the capacity counter between weekly drops:
 * Concurrency & LockService: Uses LockService.getScriptLock() with a 15-second timeout (lock.tryLock(15000)) in doPost to eliminate race conditions and prevent oversubscribing coffee lots or cluster slots during peak drop cutoffs.  
 * Database Routing: B2C orders append to Sheet1 (17 columns, instruction in Column G), while B2B orders append to B2B Orders (22 columns, instruction in Column K).  
 * Email Generator: Dispatches inline-styled HTML confirmation emails via GmailApp.sendEmail with order details, 48-hour shelf-life guidelines, and Google Calendar event links.  
-* Dynamic Aggregations (doGet): Calculates active lot reservations, remaining lot inventory, and cluster slot fullness in real-time.
+* **Inventory & Aggregation Engine (doGet):** Query endpoint that calculates lot-level inventory management with per-harvest caps. Dynamically deducts bottles across single and custom split orders in real-time, triggering sold-out visual indicators when limits are reached.
 
 ---
 
