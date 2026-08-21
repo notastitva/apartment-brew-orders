@@ -1,10 +1,6 @@
-// ====================================================================
-// THE APARTMENT BREW CO. — FRONTEND CONTROLLER (app.js)
-// ====================================================================
-
 const CONFIG = {
-  razorpayKeyId: "rzp_test_TRVab1bUUwOVN5",
-  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbx7nE2uQV08Ev4UYt8FFkmVZMGMpksvhIjljALGSbXYmc1FEv_1nh34BoR99mdTHic/exec",
+  razorpayKeyId: "YOUR_RAZORPAY_KEY_ID_HERE",
+  googleSheetEndpoint: "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE",
   authToken: "TABC_SECURE_TOKEN_2026"
 };
 
@@ -22,8 +18,8 @@ let isCustomSplit = false;
 let currentOrderDetails = null;
 
 let availableLots = [
-  { id: "LOT-01", name: "Ratnagiri Estate", process: "Anaerobic Naturals", notes: "Wild Raspberry, Stone Fruit & Dark Cacao", pills: ["Fruity", "High Acidity", "Medium Roast"], acidity: 85, body: 70, remainingBottles: 120, isSoldOut: false },
-  { id: "LOT-02", name: "Blueberry Estate", process: "Washed Lot", notes: "Orange Blossom, Jasmine & Crisp Green Apple", pills: ["Floral", "Clean Crisp", "Light-Med Roast"], acidity: 75, body: 60, remainingBottles: 80, isSoldOut: false }
+  { id: "LOT-01", name: "Ratnagiri Estate", process: "Anaerobic Naturals", notes: "Wild Raspberry, Stone Fruit &amp; Dark Cacao", pills: ["Fruity", "High Acidity", "Medium Roast"], acidity: 85, body: 70, remainingBottles: 120, isSoldOut: false },
+  { id: "LOT-02", name: "Blueberry Estate", process: "Washed Lot", notes: "Orange Blossom, Jasmine &amp; Crisp Green Apple", pills: ["Floral", "Clean Crisp", "Light-Med Roast"], acidity: 75, body: 60, remainingBottles: 80, isSoldOut: false }
 ];
 
 let availableB2cPacks = [
@@ -52,9 +48,6 @@ let customSplit = { lot1: 2, lot2: 2 };
 let selectedB2cPack = { name: "Weekend Pack", bottles: 4, unitPrice: 899 };
 let selectedB2bPack = { name: "Team Pack", bottles: 10, unitPrice: 1800 };
 
-// ----------------------------------------------------
-// 1. Schedule & Cutoff Engine
-// ----------------------------------------------------
 function getActiveSchedule(mode) {
   const cfg = SCHEDULE_CONFIG[mode] || SCHEDULE_CONFIG.B2C;
   const now = new Date();
@@ -109,16 +102,13 @@ function startCutoffCountdown() {
     const secs = Math.floor((diff % (1000 * 60)) / 1000);
     const label = currentMode === "B2C" ? "Saturday Drop Cutoff" : "Thursday 6 PM Cutoff";
 
-    timerEl.textContent = label + " closes in " + hours + "h " + mins + "m " + secs + "s";
+    timerEl.textContent = "⏱️ " + label + " closes in " + hours + "h " + mins + "m " + secs + "s";
   }
 
   updateTimer();
   setInterval(updateTimer, 1000);
 }
 
-// ----------------------------------------------------
-// 2. View Switching & Mode Tabs
-// ----------------------------------------------------
 function showView(viewId) {
   const orderView = document.getElementById("orderFormView");
   const trackerView = document.getElementById("orderTrackerView");
@@ -160,8 +150,8 @@ function switchMode(mode) {
 
   if (dropBanner) {
     dropBanner.innerHTML = isB2c
-      ? "Next Fresh Drop: " + getUpcomingSaturdayFormatted() + " (Morning)"
-      : "Next Office Drop: " + getUpcomingFridayFormatted() + " (Friday Delivery)";
+      ? "⚡ Next Fresh Drop: " + getUpcomingSaturdayFormatted() + " (Morning)"
+      : "⚡ Next Office Drop: " + getUpcomingFridayFormatted() + " (Friday Delivery)";
   }
 
   if (packSubtext) packSubtext.textContent = isB2c ? "Saturday Drop" : "Friday Office Drop (Cutoff: Thu 6 PM)";
@@ -171,7 +161,7 @@ function switchMode(mode) {
   if (b2cCityGroup) b2cCityGroup.style.display = isB2c ? "flex" : "none";
   if (b2bPaymentChoiceGroup) b2bPaymentChoiceGroup.style.display = isB2c ? "none" : "block";
 
-  if (labelName) labelName.textContent = isB2c ? "Your Name *" : "Contact Person Name & Role *";
+  if (labelName) labelName.textContent = isB2c ? "Your Name *" : "Contact Person Name &amp; Role *";
   if (labelEmail) labelEmail.textContent = isB2c ? "Email Address *" : "Work Email *";
   if (labelAddress) labelAddress.textContent = isB2c ? "Delivery Address (Building, Flat, Society) *" : "Building / Tower / Floor Details *";
 
@@ -181,7 +171,10 @@ function switchMode(mode) {
   const couponInput = document.getElementById("couponCodeInput");
   const couponStatus = document.getElementById("couponStatus");
   if (couponInput) couponInput.value = "";
-  if (couponStatus) couponStatus.textContent = "";
+  if (couponStatus) {
+    couponStatus.textContent = "";
+    couponStatus.style.display = "none";
+  }
 
   updateTotal();
   if (isCustomSplit) rebalanceSplitter();
@@ -196,9 +189,6 @@ function setB2bPayOption(option) {
   updateTotal();
 }
 
-// ----------------------------------------------------
-// 3. Dynamic Rendering: Lots, Packs & Splitter
-// ----------------------------------------------------
 function renderLots(lots) {
   if (!Array.isArray(lots) || lots.length === 0) return;
   availableLots = lots;
@@ -209,28 +199,33 @@ function renderLots(lots) {
   lots.forEach((lot, idx) => {
     const isSoldOut = lot.isSoldOut || (lot.remainingBottles <= 0);
     const isFirstActive = idx === 0 && !isCustomSplit && !isSoldOut;
-    const cardClass = "lot-card " + (isSoldOut ? "sold-out" : "") + (isFirstActive ? " active" : "");
-    const pillsHtml = (lot.pills || []).map(p => '<span class="flavor-pill">' + p + '</span>').join("");
-    const stockNote = isSoldOut ? '<span class="sold-out-badge">SOLD OUT</span>' : '<span class="stock-badge">' + (lot.remainingBottles || 120) + ' bottles available</span>';
+    const cardClass = "lot-card" + (isSoldOut ? " sold-out" : "") + (isFirstActive ? " active" : "");
+    const pillsHtml = (lot.pills || []).map(p => "<span class=\"flavor-pill\">" + p + "</span>").join("");
+    const stockNote = isSoldOut 
+      ? "<span class=\"sold-out-badge\">SOLD OUT</span>" 
+      : "<span class=\"stock-badge\">" + (lot.remainingBottles || 120) + " bottles available</span>";
 
-    html += '<div class="' + cardClass + '" onclick="' + (isSoldOut ? '' : "selectLot('" + lot.name + " (" + lot.process + ")', this)") + '">';
-    html += '<div class="lot-header"><span class="lot-name">' + lot.name + '</span><span class="lot-tag">' + lot.process + '</span></div>';
-    html += '<div class="lot-notes">' + lot.notes + '</div>';
-    html += '<div class="flavor-pills">' + pillsHtml + '</div>';
-    html += '<div class="sensory-meters">';
-    html += '<div class="meter-row"><span>Acidity</span><div class="meter-bar"><div class="meter-fill" style="width: ' + (lot.acidity || 75) + '%;"></div></div></div>';
-    html += '<div class="meter-row"><span>Body</span><div class="meter-bar"><div class="meter-fill" style="width: ' + (lot.body || 65) + '%;"></div></div></div>';
-    html += '</div>';
-    html += '<div style="margin-top: 6px; text-align: right;">' + stockNote + '</div>';
-    html += '</div>';
+    const clickHandler = isSoldOut ? "" : "selectLot(&quot;" + lot.name + " (" + lot.process + ")&quot;, this)";
+
+    html += "<div class=\"" + cardClass + "\" onclick=\"" + clickHandler + "\">";
+    html += "<div class=\"lot-header\"><span class=\"lot-name\">" + lot.name + "</span><span class=\"lot-tag\">" + lot.process + "</span></div>";
+    html += "<div class=\"lot-notes\">" + lot.notes + "</div>";
+    html += "<div class=\"flavor-pills\">" + pillsHtml + "</div>";
+    html += "<div class=\"sensory-meters\">";
+    html += "<div class=\"meter-row\"><span>Acidity</span><div class=\"meter-bar\"><div class=\"meter-fill\" style=\"width: " + (lot.acidity || 75) + "%;\"></div></div></div>";
+    html += "<div class=\"meter-row\"><span>Body</span><div class=\"meter-bar\"><div class=\"meter-fill\" style=\"width: " + (lot.body || 65) + "%;\"></div></div></div>";
+    html += "</div>";
+    html += "<div style=\"margin-top: 6px; text-align: right;\">" + stockNote + "</div>";
+    html += "</div>";
   });
 
   if (lots.length >= 2) {
-    html += '<div class="lot-card " + (isCustomSplit ? "active" : "") + '" onclick="selectLot(\'Discovery Flight / Custom Split (Build Your Own Batch)\', this)">';
-    html += '<div class="lot-header"><span class="lot-name">Discovery Flight / Custom Split</span><span class="lot-tag">Sampler Split</span></div>';
-    html += '<div class="lot-notes">Sample multiple harvests across your pack size or customize your split</div>';
-    html += '<div class="flavor-pills"><span class="flavor-pill">Tasting Flight</span><span class="flavor-pill">Custom Split</span></div>';
-    html += '</div>';
+    const splitClass = "lot-card" + (isCustomSplit ? " active" : "");
+    html += "<div class=\"" + splitClass + "\" onclick=\"selectLot(&quot;Discovery Flight / Custom Split (Build Your Own Batch)&quot;, this)\">";
+    html += "<div class=\"lot-header\"><span class=\"lot-name\">Discovery Flight / Custom Split</span><span class=\"lot-tag\">Sampler Split</span></div>";
+    html += "<div class=\"lot-notes\">Sample multiple harvests across your pack size or customize your split</div>";
+    html += "<div class=\"flavor-pills\"><span class=\"flavor-pill\">Tasting Flight</span><span class=\"flavor-pill\">Custom Split</span></div>";
+    html += "</div>";
   }
 
   lotGrid.innerHTML = html;
@@ -339,15 +334,15 @@ function renderDynamicSplitterUI() {
 
   if (controls) {
     let controlsHtml = "";
-    activeLots.forEach((lot, idx) => {
+    activeLots.forEach((lot) => {
       const count = dynamicLotSplits[lot.id] || 0;
-      controlsHtml += '<div class="splitter-row" style="margin-top:6px;">';
-      controlsHtml += '<div class="splitter-lot-info"><span class="splitter-lot-name">' + lot.name + '</span><span class="splitter-lot-sub">' + lot.process + '</span></div>';
-      controlsHtml += '<div class="qty-stepper">';
-      controlsHtml += '<button type="button" class="stepper-btn" onclick="adjustDynamicSplit(\'' + lot.id + '\', -1)">&ndash;</button>';
-      controlsHtml += '<span class="stepper-val">' + count + '</span>';
-      controlsHtml += '<button type="button" class="stepper-btn" onclick="adjustDynamicSplit(\'' + lot.id + '\', 1)">+</button>';
-      controlsHtml += '</div></div>';
+      controlsHtml += "<div class=\"splitter-row\" style=\"margin-top:6px;\">";
+      controlsHtml += "<div class=\"splitter-lot-info\"><span class=\"splitter-lot-name\">" + lot.name + "</span><span class=\"splitter-lot-sub\">" + lot.process + "</span></div>";
+      controlsHtml += "<div class=\"qty-stepper\">";
+      controlsHtml += "<button type=\"button\" class=\"stepper-btn\" onclick=\"adjustDynamicSplit(&quot;" + lot.id + "&quot;, -1)\">&ndash;</button>";
+      controlsHtml += "<span class=\"stepper-val\">" + count + "</span>";
+      controlsHtml += "<button type=\"button\" class=\"stepper-btn\" onclick=\"adjustDynamicSplit(&quot;" + lot.id + "&quot;, 1)\">+</button>";
+      controlsHtml += "</div></div>";
     });
     controls.innerHTML = controlsHtml;
   }
@@ -358,7 +353,7 @@ function renderDynamicSplitterUI() {
       const count = dynamicLotSplits[lot.id] || 0;
       const pct = total > 0 ? (count / total) * 100 : 0;
       const color = LOT_COLORS[idx % LOT_COLORS.length];
-      barHtml += '<div class="ratio-segment" style="width:' + pct + '%; background-color:' + color + ';"></div>';
+      barHtml += "<div class=\"ratio-segment\" style=\"width:" + pct + "%; background-color:" + color + ";\"></div>";
     });
     ratioBar.innerHTML = barHtml;
   }
@@ -377,13 +372,13 @@ function renderPacks(b2cPacks, b2bPacks) {
       let b2cHtml = "";
       b2cPacks.forEach((p, idx) => {
         const isDefault = p.name === selectedB2cPack.name || (idx === 2 && !selectedB2cPack.name);
-        const badgeHtml = p.badge ? '<div class="pack-badge">' + p.badge + '</div>' : "";
-        const perBottle = p.bottles > 1 ? " (@ Rs." + Math.round(p.price / p.bottles) + ")" : "";
+        const badgeHtml = p.badge ? "<div class=\"pack-badge\">" + p.badge + "</div>" : "";
+        const perBottle = p.bottles > 1 ? " (@ ₹" + Math.round(p.price / p.bottles) + ")" : "";
 
-        b2cHtml += '<div class="pack-option " + (isDefault ? "active" : "") + '" onclick="selectB2cPack(\'' + p.name + '\', ' + p.bottles + ', ' + p.price + ', this)">';
-        b2cHtml += badgeHtml + '<div class="pack-name">' + p.name + '</div>';
-        b2cHtml += '<div class="pack-price">Rs.' + p.price.toLocaleString("en-IN") + '</div>';
-        b2cHtml += '<div class="pack-desc">' + p.bottles + 'x 250ml' + perBottle + '</div></div>';
+        b2cHtml += "<div class=\"pack-option" + (isDefault ? " active" : "") + "\" onclick=\"selectB2cPack(&quot;" + p.name + "&quot;, " + p.bottles + ", " + p.price + ", this)\">";
+        b2cHtml += badgeHtml + "<div class=\"pack-name\">" + p.name + "</div>";
+        b2cHtml += "<div class=\"pack-price\">₹" + p.price.toLocaleString("en-IN") + "</div>";
+        b2cHtml += "<div class=\"pack-desc\">" + p.bottles + "x 250ml" + perBottle + "</div></div>";
 
         if (isDefault) selectedB2cPack = { name: p.name, bottles: p.bottles, unitPrice: p.price };
       });
@@ -398,12 +393,12 @@ function renderPacks(b2cPacks, b2bPacks) {
       let b2bHtml = "";
       b2bPacks.forEach((p, idx) => {
         const isDefault = p.name === selectedB2bPack.name || (idx === 0 && !selectedB2bPack.name);
-        const perBottle = " (Rs." + Math.round(p.price / p.bottles) + "/ea)";
+        const perBottle = " (₹" + Math.round(p.price / p.bottles) + "/ea)";
 
-        b2bHtml += '<div class="pack-option " + (isDefault ? "active" : "") + '" onclick="selectB2bPack(\'' + p.name + '\', ' + p.bottles + ', ' + p.price + ', this)">';
-        b2bHtml += '<div class="pack-name">' + p.name + '</div>';
-        b2bHtml += '<div class="pack-price">Rs.' + p.price.toLocaleString("en-IN") + '</div>';
-        b2bHtml += '<div class="pack-desc">' + p.bottles + 'x 250ml' + perBottle + '</div></div>';
+        b2bHtml += "<div class=\"pack-option" + (isDefault ? " active" : "") + "\" onclick=\"selectB2bPack(&quot;" + p.name + "&quot;, " + p.bottles + ", " + p.price + ", this)\">";
+        b2bHtml += "<div class=\"pack-name\">" + p.name + "</div>";
+        b2bHtml += "<div class=\"pack-price\">₹" + p.price.toLocaleString("en-IN") + "</div>";
+        b2bHtml += "<div class=\"pack-desc\">" + p.bottles + "x 250ml" + perBottle + "</div></div>";
 
         if (isDefault) selectedB2bPack = { name: p.name, bottles: p.bottles, unitPrice: p.price };
       });
@@ -428,9 +423,6 @@ function selectB2bPack(name, bottles, price, el) {
   if (isCustomSplit) rebalanceSplitter();
 }
 
-// ----------------------------------------------------
-// 4. Pricing, Subtotals & Coupon System
-// ----------------------------------------------------
 function calculateSubtotal() {
   const qtyInput = document.getElementById("packQty");
   let qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
@@ -453,6 +445,7 @@ function applyCoupon() {
   if (!code) {
     if (statusEl) {
       statusEl.textContent = "Please enter a coupon code.";
+      statusEl.style.display = "block";
       statusEl.style.color = "var(--error-light)";
     }
     return;
@@ -464,6 +457,7 @@ function applyCoupon() {
   if (!matched) {
     if (statusEl) {
       statusEl.textContent = "Invalid coupon code.";
+      statusEl.style.display = "block";
       statusEl.style.color = "var(--error-light)";
     }
     appliedCoupon = null;
@@ -474,6 +468,7 @@ function applyCoupon() {
   if (matched.mode !== "ALL" && matched.mode !== currentMode) {
     if (statusEl) {
       statusEl.textContent = "Valid only for " + matched.mode + " orders.";
+      statusEl.style.display = "block";
       statusEl.style.color = "var(--error-light)";
     }
     appliedCoupon = null;
@@ -483,7 +478,8 @@ function applyCoupon() {
 
   if (subtotal < matched.minOrder) {
     if (statusEl) {
-      statusEl.textContent = "Minimum order of Rs." + matched.minOrder + " required for " + code;
+      statusEl.textContent = "Minimum order of ₹" + matched.minOrder + " required for " + code;
+      statusEl.style.display = "block";
       statusEl.style.color = "var(--error-light)";
     }
     appliedCoupon = null;
@@ -507,7 +503,8 @@ function applyCoupon() {
   };
 
   if (statusEl) {
-    statusEl.textContent = "Coupon applied! Saved Rs." + discount;
+    statusEl.textContent = "✓ Coupon applied! Saved ₹" + discount;
+    statusEl.style.display = "block";
     statusEl.style.color = "var(--success-light)";
   }
   updateTotal();
@@ -523,33 +520,30 @@ function updateTotal() {
   const btnAmount = document.getElementById("btnAmount");
   const btnText = document.getElementById("btnText");
 
-  if (subtotalEl) subtotalEl.textContent = "Rs." + subtotal.toLocaleString("en-IN");
+  if (subtotalEl) subtotalEl.textContent = "₹" + subtotal.toLocaleString("en-IN");
 
   if (appliedCoupon && appliedCoupon.discountAmount > 0) {
     if (discountLine) discountLine.style.display = "flex";
-    if (discountAmountEl) discountAmountEl.textContent = "-Rs." + appliedCoupon.discountAmount.toLocaleString("en-IN");
+    if (discountAmountEl) discountAmountEl.textContent = "-₹" + appliedCoupon.discountAmount.toLocaleString("en-IN");
   } else {
     if (discountLine) discountLine.style.display = "none";
   }
 
-  const formattedTotal = "Rs." + total.toLocaleString("en-IN");
+  const formattedTotal = "₹" + total.toLocaleString("en-IN");
   if (totalDisplay) totalDisplay.textContent = formattedTotal;
   if (btnAmount) btnAmount.textContent = formattedTotal;
 
   if (btnText && currentStoreStatus === "OPEN") {
     if (currentMode === "B2B" && currentB2bPayOption === "INVOICE") {
-      btnText.innerHTML = "Request Corporate Invoice (" + formattedTotal + ")";
+      btnText.innerHTML = "📄 Request Corporate Invoice (<span id=\"btnAmount\">" + formattedTotal + "</span>)";
     } else {
-      btnText.innerHTML = "Pay & Confirm Pre-Order (" + formattedTotal + ")";
+      btnText.innerHTML = "💳 Pay &amp; Confirm Pre-Order (<span id=\"btnAmount\">" + formattedTotal + "</span>)";
     }
   }
 
   if (isCustomSplit) renderDynamicSplitterUI();
 }
 
-// ----------------------------------------------------
-// 5. Customer Profile & Validation
-// ----------------------------------------------------
 function checkSavedProfile() {
   const savedBar = document.getElementById("savedProfileBar");
   const savedText = document.getElementById("savedProfileText");
@@ -560,7 +554,7 @@ function checkSavedProfile() {
       cachedProfile = JSON.parse(raw);
       if (cachedProfile && cachedProfile.name) {
         if (savedBar) savedBar.style.display = "flex";
-        if (savedText) savedText.textContent = "Welcome back, " + cachedProfile.name + "! Autofill your details?";
+        if (savedText) savedText.textContent = "👋 Welcome back, " + cachedProfile.name + "! Autofill your details?";
       }
     }
   } catch (e) {}
@@ -568,7 +562,7 @@ function checkSavedProfile() {
 
 function applySavedProfile() {
   try {
-    const profile = cachedProfile || JSON.parse(localStorage.getItem("tabc_customer_profile" || "{}"));
+    const profile = cachedProfile || JSON.parse(localStorage.getItem("tabc_customer_profile") || "{}");
     if (profile && profile.name) {
       const nameInput = document.getElementById("custName");
       const emailInput = document.getElementById("custEmail");
@@ -673,16 +667,16 @@ function validatePincodeField() {
     return setFieldState(el, errEl, false);
   }
 
-  const isNcr = /^(11[0-9]{4}|122[0-9]{3}|121[0-9]{3}|201[0-9]{3})$/.test(val);
+  const isNcr = /^(11\d{4}|122\d{3}|121\d{3}|201\d{3})$/.test(val);
   if (isNcr) {
     if (statusEl) {
-      statusEl.textContent = "Serviceable across Delhi NCR";
+      statusEl.textContent = "✓ Serviceable across Delhi NCR";
       statusEl.className = "pin-status pin-valid";
     }
     return setFieldState(el, errEl, true);
   } else {
     if (statusEl) {
-      statusEl.textContent = "Serviceable only in Delhi NCR (11xxxx, 122xxx, 121xxx, 201xxx)";
+      statusEl.textContent = "✕ Serviceable only in Delhi NCR (11xxxx, 122xxx, 121xxx, 201xxx)";
       statusEl.className = "pin-status pin-invalid";
     }
     return setFieldState(el, errEl, false);
@@ -724,9 +718,6 @@ function validateAllInputs() {
   return isNameValid && isEmailValid && isPhoneValid && isAddressValid && isPinValid && isCompanyValid && isGstinValid && isQtyValid;
 }
 
-// ----------------------------------------------------
-// 6. Payment & Order Submission
-// ----------------------------------------------------
 function handlePayClick() {
   if (currentStoreStatus === "PAUSED" || currentStoreStatus === "SOLD_OUT") {
     alert("Pre-orders are currently closed for this drop.");
@@ -787,7 +778,7 @@ async function handleOrderSuccess(paymentId, statusText) {
   const orderId = isB2c ? "TABC-" + Math.floor(100000 + Math.random() * 900000) : "TABC-B2B-" + Math.floor(100000 + Math.random() * 900000);
   const dropDate = isB2c ? getUpcomingSaturdayFormatted() : getUpcomingFridayFormatted();
   const location = isB2c ? (document.getElementById("custCity")?.value || "") : (document.getElementById("b2bTechPark")?.value || "");
-  const deliveryWindow = isB2c ? "Saturday Morning (8:00 AM - 11:00 AM)" : (document.getElementById("b2bDeliveryWindow")?.value || "");
+  const deliveryWindow = isB2c ? "Saturday Morning (8:00 AM – 11:00 AM)" : (document.getElementById("b2bDeliveryWindow")?.value || "");
   const company = isB2c ? "N/A" : ((document.getElementById("custCompany")?.value || "").trim() || "N/A");
   const gstin = isB2c ? "N/A" : ((document.getElementById("custGstin")?.value || "").trim() || "N/A");
   const buildingFloor = (document.getElementById("custAddress")?.value || "").trim();
@@ -864,23 +855,20 @@ async function handleOrderSuccess(paymentId, statusText) {
   if (rEmail) rEmail.textContent = email;
   if (rBean) rBean.textContent = coffeeLotDisplay;
   if (rPack) rPack.textContent = activePack.name + " x " + qty + " (" + (activePack.bottles * qty) + " bottles)";
-  if (rTotal) rTotal.textContent = "Rs." + total.toLocaleString("en-IN");
+  if (rTotal) rTotal.textContent = "₹" + total.toLocaleString("en-IN");
 
   const orderFormView = document.getElementById("orderFormView");
   const confirmationView = document.getElementById("confirmationView");
-  if (orderFormView) orderFormView.style.display = "none";
+  if (orderFormView) orderView.style.display = "none";
   if (confirmationView) confirmationView.style.display = "block";
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// ----------------------------------------------------
-// 7. Post-Order Handlers & Self-Service Tracker
-// ----------------------------------------------------
 function addToGoogleCalendar() {
   if (!currentOrderDetails) return;
   const d = currentOrderDetails;
   const title = encodeURIComponent("The Apartment Brew Co. Drop: " + d.orderId);
-  const details = encodeURIComponent("Fresh Flash-Brew Specialty Coffee Drop\\nOrder ID: " + d.orderId + "\\nLot: " + d.bean + "\\nSelection: " + d.pack + "\\nInstruction: " + d.dropInstructions + "\\nTotal: Rs." + d.totalAmount);
+  const details = encodeURIComponent("Fresh Flash-Brew Specialty Coffee Drop\\nOrder ID: " + d.orderId + "\\nLot: " + d.bean + "\\nSelection: " + d.pack + "\\nInstruction: " + d.dropInstructions + "\\nTotal: ₹" + d.totalAmount);
   const location = encodeURIComponent(d.buildingFloor + ", " + d.techPark + " (PIN: " + d.pinCode + ")");
   const gcalUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + title + "&details=" + details + "&location=" + location;
   window.open(gcalUrl, "_blank");
@@ -889,13 +877,13 @@ function addToGoogleCalendar() {
 function sendWhatsAppReceipt() {
   if (!currentOrderDetails) return;
   const d = currentOrderDetails;
-  const message = "*ORDER & DELIVERY CONFIRMATION - THE APARTMENT BREW CO.*\\n" +
+  const message = "*ORDER &amp; DELIVERY CONFIRMATION - THE APARTMENT BREW CO.*\\n" +
                   "Order ID: " + d.orderId + "\\n" +
                   "Delivery Date: " + d.dropDate + " (" + d.deliveryWindow + ")\\n" +
                   "Customer: " + d.name + " (" + d.phone + ")\\n" +
                   "Coffee Lot: " + d.bean + "\\n" +
                   "Selection: " + d.pack + " (" + d.bottles + " bottles)\\n" +
-                  "Total Paid: Rs." + d.totalAmount + "\\n" +
+                  "Total Paid: ₹" + d.totalAmount + "\\n" +
                   "Freshness Note: Please refrigerate upon arrival and consume within 48 hours!";
 
   let cleanPhone = d.phone.replace(/[^0-9]/g, "");
@@ -920,7 +908,7 @@ function resetForm() {
   if (pinStatus) pinStatus.textContent = "";
 
   document.querySelectorAll("input, textarea").forEach(el => el.classList.remove("input-valid", "input-invalid"));
-  document.querySelectorAll(".field-error").forEach(el => el.style.display = "none");
+  document.querySelectorAll(".field-error").forEach(el => el.style.display = "none";);
   checkSavedProfile();
 }
 
@@ -950,13 +938,13 @@ async function trackOrder() {
       resultsContainer.innerHTML = '<div style="background:var(--card-inner); border:1px solid var(--card-border); border-radius:8px; padding:14px; margin-top:10px;">' +
         '<div style="font-weight:700; color:var(--accent);">' + query.toUpperCase() + '</div>' +
         '<div style="font-size:0.8rem; margin:6px 0; color:var(--text-muted);">Status: <span style="color:var(--success-light); font-weight:700;">Pre-Ordered</span></div>' +
-        '<div style="font-size:0.75rem; color:var(--text-muted);">Batch scheduled for fresh roast & chilled delivery.</div></div>';
+        '<div style="font-size:0.75rem; color:var(--text-muted);">Batch scheduled for fresh roast &amp; chilled delivery.</div></div>';
     }
     return;
   }
 
   try {
-    const res = await fetch(CONFIG.googleSheetEndpoint + "?action=trackOrder&query=" + encodeURIComponent(query));
+    const res = await fetch(CONFIG.googleSheetEndpoint + "?action=trackOrder&amp;query=" + encodeURIComponent(query));
     const data = await res.json();
 
     if (data && data.status === "success" && Array.isArray(data.orders) && data.orders.length > 0) {
@@ -979,7 +967,7 @@ async function trackOrder() {
         html += '<div style="font-size:0.78rem; color:var(--text-muted); line-height:1.4;">';
         html += '<div><strong>Delivery Date:</strong> ' + order.deliveryDate + '</div>';
         html += '<div><strong>Selection:</strong> ' + order.selection + ' (' + order.bottles + ' bottles)</div>';
-        html += '<div><strong>Total:</strong> Rs.' + order.totalAmount + '</div>';
+        html += '<div><strong>Total:</strong> ₹' + order.totalAmount + '</div>';
         html += '</div></div>';
       });
       resultsContainer.innerHTML = html;
@@ -991,9 +979,6 @@ async function trackOrder() {
   }
 }
 
-// ----------------------------------------------------
-// 8. Live Sync, Cold-Start & Initialization
-// ----------------------------------------------------
 function setSyncStatus(state, message) {
   const pill = document.getElementById("syncStatusPill");
   const dot = document.getElementById("syncDot");
@@ -1123,12 +1108,26 @@ function fetchLiveConfig(isManualRetry = false) {
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+function initApp() {
   renderLots(availableLots);
   renderPacks(availableB2cPacks, availableB2bPacks);
   switchMode("B2C");
   startCutoffCountdown();
   checkSavedProfile();
+  applyConfigToUI({ batchCapacity: 200, reservedBottles: 0 });
   fetchLiveConfig();
   setInterval(() => fetchLiveConfig(), 45000);
-});
+}
+
+
+if (document.readyState !== "loading") {
+
+  initApp();
+
+} else {
+
+  document.addEventListener("DOMContentLoaded", initApp);
+
+}
+
+
