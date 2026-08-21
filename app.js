@@ -1084,9 +1084,6 @@ function fetchLiveConfig(isManualRetry = false) {
   } catch (e) {}
 
   if (!CONFIG.googleSheetEndpoint || CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
-
-    const syncPill = document.getElementById("syncStatusPill");
-    if (syncPill) syncPill.style.display = "none";
     return;
   }
 
