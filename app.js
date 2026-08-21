@@ -788,7 +788,8 @@ async function handleOrderSuccess(paymentId, statusText) {
     paymentMode: paymentMode,
     paymentStatus: `${statusText} (${paymentId})`,
     deliveryStatus: 'Pre-Ordered',
-    notes: `Payment ID: ${paymentId} | Mode: ${currentMode} | Instruction: ${dropInstructions}`
+
+    notes: isB2c ? `Payment ID: ${paymentId}` : (currentB2bPayOption === 'INVOICE' ? `Invoice Ref: ${paymentId} (Net Terms)` : `Payment ID: ${paymentId}`)
   };
 
   currentOrderDetails = orderPayload;
