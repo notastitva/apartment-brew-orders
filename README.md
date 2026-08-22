@@ -16,6 +16,15 @@ The Apartment Brew Co. operates an asset-light, pre-order only micro-batch craft
 * Delivery Coverage: Hyper-local Delhi NCR (Gurugram DLF Phases 1–5, Cyber City, Golf Course Rd, Candor TechSpace, Udyog Vihar, Noida Tech Parks, and Central/South Delhi).  
 * **Tasting Sampler Flights (Discovery Packs):** Curated 2-bottle sampler packs (1 bottle each of active single-estate harvests) built on the custom ratio splitter. Dynamically scales across multi-pack orders (e.g. 2 packs \= 2x Lot 1 \+ 2x Lot 2\) while allowing full bottle-level ratio customization, making it easy for new and returning customers to explore the full roast lineup.
 
+### **📌 1.1 Roastery Operations & Craft Philosophy**
+
+#### **Micro-Batch Protocol (Manual Extraction Limit)**
+
+The Apartment Brew Co. maintains a strict manual extraction protocol to ensure peak quality across every drop, focusing on core craft principles:
+
+* Manual Batch Extraction: Each coffee is brewed separately by hand in small batches specifically for each order to ensure artisanal precision.  
+* Craft Nuance: Because every order is crafted manually to order, slight natural cup-to-cup flavor nuances are celebrated as a deliberate hallmark of manual specialty coffee extraction, distinguishing it from industrial brewing.
+
 ---
 
 ### **🏗️ 2\. System Architecture & Data Flow**
