@@ -1,6 +1,6 @@
 const CONFIG = {
   razorpayKeyId: "rzp_test_TRVab1bUUwOVN5",
-  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbx7nE2uQV08Ev4UYt8FFkmVZMGMpksvhIjljALGSbXYmc1FEv_1nh34BoR99mdTHic/exec",
+  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbz9kw-PDrwGXaNeHzvgfuOZsQ5A52tKXk-WN2np30ohE12xekUSK7x-bAp_kN_epmig/exec",
   authToken: "TABC_SECURE_TOKEN_2026"
 };
 
@@ -18,8 +18,8 @@ let isCustomSplit = false;
 let currentOrderDetails = null;
 
 let availableLots = [
-  { id: "LOT-01", name: "Ratnagiri Estate", process: "Anaerobic Naturals", notes: "Wild Raspberry, Stone Fruit &amp; Dark Cacao", pills: ["Fruity", "High Acidity", "Medium Roast"], acidity: 85, body: 70, remainingBottles: 120, isSoldOut: false },
-  { id: "LOT-02", name: "Blueberry Estate", process: "Washed Lot", notes: "Orange Blossom, Jasmine &amp; Crisp Green Apple", pills: ["Floral", "Clean Crisp", "Light-Med Roast"], acidity: 75, body: 60, remainingBottles: 80, isSoldOut: false }
+  { id: "LOT-01", name: "Ratnagiri Estate", process: "Anaerobic Naturals", notes: "Wild Raspberry, Stone Fruit & Dark Cacao", pills: ["Fruity", "High Acidity", "Medium Roast"], acidity: 85, body: 70, remainingBottles: 120, isSoldOut: false },
+  { id: "LOT-02", name: "Blueberry Estate", process: "Washed Lot", notes: "Orange Blossom, Jasmine & Crisp Green Apple", pills: ["Floral", "Clean Crisp", "Light-Med Roast"], acidity: 75, body: 60, remainingBottles: 80, isSoldOut: false }
 ];
 
 let availableB2cPacks = [
@@ -161,7 +161,7 @@ function switchMode(mode) {
   if (b2cCityGroup) b2cCityGroup.style.display = isB2c ? "flex" : "none";
   if (b2bPaymentChoiceGroup) b2bPaymentChoiceGroup.style.display = isB2c ? "none" : "block";
 
-  if (labelName) labelName.textContent = isB2c ? "Your Name *" : "Contact Person Name &amp; Role *";
+  if (labelName) labelName.textContent = isB2c ? "Your Name *" : "Contact Person Name & Role *";
   if (labelEmail) labelEmail.textContent = isB2c ? "Email Address *" : "Work Email *";
   if (labelAddress) labelAddress.textContent = isB2c ? "Delivery Address (Building, Flat, Society) *" : "Building / Tower / Floor Details *";
 
@@ -205,7 +205,7 @@ function renderLots(lots) {
       ? "<span class=\"sold-out-badge\">SOLD OUT</span>" 
       : "<span class=\"stock-badge\">" + (lot.remainingBottles || 120) + " bottles available</span>";
 
-    const clickHandler = isSoldOut ? "" : "selectLot(&quot;" + lot.name + " (" + lot.process + ")&quot;, this)";
+    const clickHandler = isSoldOut ? "" : "selectLotByIndex(" + idx + ", this)";
 
     html += "<div class=\"" + cardClass + "\" onclick=\"" + clickHandler + "\">";
     html += "<div class=\"lot-header\"><span class=\"lot-name\">" + lot.name + "</span><span class=\"lot-tag\">" + lot.process + "</span></div>";
@@ -221,7 +221,7 @@ function renderLots(lots) {
 
   if (lots.length >= 2) {
     const splitClass = "lot-card" + (isCustomSplit ? " active" : "");
-    html += "<div class=\"" + splitClass + "\" onclick=\"selectLot(&quot;Discovery Flight / Custom Split (Build Your Own Batch)&quot;, this)\">";
+    html += "<div class=\"" + splitClass + "\" onclick=\"selectCustomSplit(this)\">";
     html += "<div class=\"lot-header\"><span class=\"lot-name\">Discovery Flight / Custom Split</span><span class=\"lot-tag\">Sampler Split</span></div>";
     html += "<div class=\"lot-notes\">Sample multiple harvests across your pack size or customize your split</div>";
     html += "<div class=\"flavor-pills\"><span class=\"flavor-pill\">Tasting Flight</span><span class=\"flavor-pill\">Custom Split</span></div>";
@@ -233,22 +233,44 @@ function renderLots(lots) {
   if (!isCustomSplit && lots[0] && !lots[0].isSoldOut) {
     selectedBean = lots[0].name + " (" + lots[0].process + ")";
   }
+
+}
+
+function selectLotByIndex(idx, element) {
+  document.querySelectorAll("#lotGrid .lot-card").forEach(el => el.classList.remove("active"));
+  if (element) element.classList.add("active");
+  const customSplitter = document.getElementById("customSplitter");
+  if (customSplitter) customSplitter.style.display = "none";
+  isCustomSplit = false;
+
+  const lot = availableLots[idx];
+  if (lot) {
+    selectedBean = lot.name + " (" + lot.process + ")";
+  }
+  updateTotal();
+}
+
+function selectCustomSplit(element) {
+  document.querySelectorAll("#lotGrid .lot-card").forEach(el => el.classList.remove("active"));
+  if (element) element.classList.add("active");
+  const customSplitter = document.getElementById("customSplitter");
+  if (customSplitter) customSplitter.style.display = "block";
+  isCustomSplit = true;
+  initializeDynamicSplitter();
+  updateTotal();
 }
 
 function selectLot(lotName, element) {
-  document.querySelectorAll("#lotGrid .lot-card").forEach(el => el.classList.remove("active"));
-  if (element) element.classList.add("active");
-
-  const customSplitter = document.getElementById("customSplitter");
-
   if (lotName && (lotName.includes("Custom Ratio Split") || lotName.includes("Discovery Flight") || lotName.includes("Build Your Own Batch"))) {
-    isCustomSplit = true;
-    if (customSplitter) customSplitter.style.display = "block";
-    initializeDynamicSplitter();
+    selectCustomSplit(element);
   } else {
+    document.querySelectorAll("#lotGrid .lot-card").forEach(el => el.classList.remove("active"));
+    if (element) element.classList.add("active");
+    const customSplitter = document.getElementById("customSplitter");
+    if (customSplitter) customSplitter.style.display = "none";
     isCustomSplit = false;
     selectedBean = lotName;
-    if (customSplitter) customSplitter.style.display = "none";
+    updateTotal();
   }
 }
 
@@ -287,13 +309,21 @@ function adjustDynamicSplit(lotId, delta) {
   const current = dynamicLotSplits[lotId] || 0;
   if (current + delta < 0) return;
 
-  const otherLotIds = Object.keys(dynamicLotSplits).filter(id => id !== lotId);
-  const donor = otherLotIds.find(id => (dynamicLotSplits[id] || 0) - delta >= 0);
-
-  if (donor) {
-    dynamicLotSplits[lotId] = (dynamicLotSplits[lotId] || 0) + delta;
-    dynamicLotSplits[donor] = (dynamicLotSplits[donor] || 0) - delta;
-    renderDynamicSplitterUI();
+  if (delta > 0) {
+    const otherLotIds = Object.keys(dynamicLotSplits).filter(id => id !== lotId);
+    const donor = otherLotIds.find(id => (dynamicLotSplits[id] || 0) > 0);
+    if (donor) {
+      dynamicLotSplits[lotId] = (dynamicLotSplits[lotId] || 0) + 1;
+      dynamicLotSplits[donor] = (dynamicLotSplits[donor] || 0) - 1;
+      renderDynamicSplitterUI();
+    }
+  } else if (delta < 0) {
+    const otherLotIds = Object.keys(dynamicLotSplits).filter(id => id !== lotId);
+    if (otherLotIds.length > 0) {
+      dynamicLotSplits[lotId] = (dynamicLotSplits[lotId] || 0) - 1;
+      dynamicLotSplits[otherLotIds[0]] = (dynamicLotSplits[otherLotIds[0]] || 0) + 1;
+      renderDynamicSplitterUI();
+    }
   }
 }
 
@@ -323,25 +353,18 @@ function renderDynamicSplitterUI() {
   if (allocEl) allocEl.textContent = allocatedSum;
   if (targetEl) targetEl.textContent = total;
 
-  const l1Count = document.getElementById("splitLot1Count");
-  const l2Count = document.getElementById("splitLot2Count");
   const activeLots = availableLots.filter(l => !l.isSoldOut);
-
-  if (activeLots.length >= 2) {
-    if (l1Count) l1Count.textContent = dynamicLotSplits[activeLots[0].id] || 0;
-    if (l2Count) l2Count.textContent = dynamicLotSplits[activeLots[1].id] || 0;
-  }
 
   if (controls) {
     let controlsHtml = "";
     activeLots.forEach((lot) => {
       const count = dynamicLotSplits[lot.id] || 0;
-      controlsHtml += "<div class=\"splitter-row\" style=\"margin-top:6px;\">";
+      controlsHtml += "<div class=\"splitter-row\">";
       controlsHtml += "<div class=\"splitter-lot-info\"><span class=\"splitter-lot-name\">" + lot.name + "</span><span class=\"splitter-lot-sub\">" + lot.process + "</span></div>";
       controlsHtml += "<div class=\"qty-stepper\">";
-      controlsHtml += "<button type=\"button\" class=\"stepper-btn\" onclick=\"adjustDynamicSplit(&quot;" + lot.id + "&quot;, -1)\">&ndash;</button>";
+      controlsHtml += "<button type=\"button\" class=\"stepper-btn\" onclick=\"adjustDynamicSplit('" + lot.id + "', -1)\"></button>";
       controlsHtml += "<span class=\"stepper-val\">" + count + "</span>";
-      controlsHtml += "<button type=\"button\" class=\"stepper-btn\" onclick=\"adjustDynamicSplit(&quot;" + lot.id + "&quot;, 1)\">+</button>";
+      controlsHtml += "<button type=\"button\" class=\"stepper-btn\" onclick=\"adjustDynamicSplit('" + lot.id + "', 1)\">+</button>";
       controlsHtml += "</div></div>";
     });
     controls.innerHTML = controlsHtml;
@@ -375,7 +398,7 @@ function renderPacks(b2cPacks, b2bPacks) {
         const badgeHtml = p.badge ? "<div class=\"pack-badge\">" + p.badge + "</div>" : "";
         const perBottle = p.bottles > 1 ? " (@ ₹" + Math.round(p.price / p.bottles) + ")" : "";
 
-        b2cHtml += "<div class=\"pack-option" + (isDefault ? " active" : "") + "\" onclick=\"selectB2cPack(&quot;" + p.name + "&quot;, " + p.bottles + ", " + p.price + ", this)\">";
+        b2cHtml += "<div class=\"pack-option" + (isDefault ? " active" : "") + "\" onclick=\"selectB2cPack("" + p.name + "", " + p.bottles + ", " + p.price + ", this)\">";
         b2cHtml += badgeHtml + "<div class=\"pack-name\">" + p.name + "</div>";
         b2cHtml += "<div class=\"pack-price\">₹" + p.price.toLocaleString("en-IN") + "</div>";
         b2cHtml += "<div class=\"pack-desc\">" + p.bottles + "x 250ml" + perBottle + "</div></div>";
@@ -395,7 +418,7 @@ function renderPacks(b2cPacks, b2bPacks) {
         const isDefault = p.name === selectedB2bPack.name || (idx === 0 && !selectedB2bPack.name);
         const perBottle = " (₹" + Math.round(p.price / p.bottles) + "/ea)";
 
-        b2bHtml += "<div class=\"pack-option" + (isDefault ? " active" : "") + "\" onclick=\"selectB2bPack(&quot;" + p.name + "&quot;, " + p.bottles + ", " + p.price + ", this)\">";
+        b2bHtml += "<div class=\"pack-option" + (isDefault ? " active" : "") + "\" onclick=\"selectB2bPack("" + p.name + "", " + p.bottles + ", " + p.price + ", this)\">";
         b2bHtml += "<div class=\"pack-name\">" + p.name + "</div>";
         b2bHtml += "<div class=\"pack-price\">₹" + p.price.toLocaleString("en-IN") + "</div>";
         b2bHtml += "<div class=\"pack-desc\">" + p.bottles + "x 250ml" + perBottle + "</div></div>";
@@ -537,7 +560,7 @@ function updateTotal() {
     if (currentMode === "B2B" && currentB2bPayOption === "INVOICE") {
       btnText.innerHTML = "📄 Request Corporate Invoice (<span id=\"btnAmount\">" + formattedTotal + "</span>)";
     } else {
-      btnText.innerHTML = "💳 Pay &amp; Confirm Pre-Order (<span id=\"btnAmount\">" + formattedTotal + "</span>)";
+      btnText.innerHTML = "💳 Pay & Confirm Pre-Order (<span id=\"btnAmount\">" + formattedTotal + "</span>)";
     }
   }
 
@@ -821,6 +844,7 @@ async function handleOrderSuccess(paymentId, statusText) {
   saveCustomerProfile(orderPayload);
 
   if (CONFIG.googleSheetEndpoint && !CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
+    if (document.getElementById("syncStatusPill")) document.getElementById("syncStatusPill").style.display = "none";
     fetch(CONFIG.googleSheetEndpoint, {
       method: "POST",
       mode: "no-cors",
@@ -859,7 +883,7 @@ async function handleOrderSuccess(paymentId, statusText) {
 
   const orderFormView = document.getElementById("orderFormView");
   const confirmationView = document.getElementById("confirmationView");
-  if (orderFormView) orderView.style.display = "none";
+  if (orderFormView) orderFormView.style.display = "none";
   if (confirmationView) confirmationView.style.display = "block";
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -868,7 +892,7 @@ function addToGoogleCalendar() {
   if (!currentOrderDetails) return;
   const d = currentOrderDetails;
   const title = encodeURIComponent("The Apartment Brew Co. Drop: " + d.orderId);
-  const details = encodeURIComponent("Fresh Flash-Brew Specialty Coffee Drop\\nOrder ID: " + d.orderId + "\\nLot: " + d.bean + "\\nSelection: " + d.pack + "\\nInstruction: " + d.dropInstructions + "\\nTotal: ₹" + d.totalAmount);
+  const details = encodeURIComponent("Fresh Flash-Brew Specialty Coffee Drop\nOrder ID: " + d.orderId + "\nLot: " + d.bean + "\nSelection: " + d.pack + "\nInstruction: " + d.dropInstructions + "\nTotal: ₹" + d.totalAmount);
   const location = encodeURIComponent(d.buildingFloor + ", " + d.techPark + " (PIN: " + d.pinCode + ")");
   const gcalUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + title + "&details=" + details + "&location=" + location;
   window.open(gcalUrl, "_blank");
@@ -877,7 +901,7 @@ function addToGoogleCalendar() {
 function sendWhatsAppReceipt() {
   if (!currentOrderDetails) return;
   const d = currentOrderDetails;
-  const message = "*ORDER &amp; DELIVERY CONFIRMATION - THE APARTMENT BREW CO.*\\n" +
+  const message = "*ORDER & DELIVERY CONFIRMATION - THE APARTMENT BREW CO.*\\n" +
                   "Order ID: " + d.orderId + "\\n" +
                   "Delivery Date: " + d.dropDate + " (" + d.deliveryWindow + ")\\n" +
                   "Customer: " + d.name + " (" + d.phone + ")\\n" +
@@ -908,7 +932,7 @@ function resetForm() {
   if (pinStatus) pinStatus.textContent = "";
 
   document.querySelectorAll("input, textarea").forEach(el => el.classList.remove("input-valid", "input-invalid"));
-  document.querySelectorAll(".field-error").forEach(el => el.style.display = "none";);
+  document.querySelectorAll(".field-error").forEach(el => el.style.display = "none");
   checkSavedProfile();
 }
 
@@ -938,13 +962,13 @@ async function trackOrder() {
       resultsContainer.innerHTML = '<div style="background:var(--card-inner); border:1px solid var(--card-border); border-radius:8px; padding:14px; margin-top:10px;">' +
         '<div style="font-weight:700; color:var(--accent);">' + query.toUpperCase() + '</div>' +
         '<div style="font-size:0.8rem; margin:6px 0; color:var(--text-muted);">Status: <span style="color:var(--success-light); font-weight:700;">Pre-Ordered</span></div>' +
-        '<div style="font-size:0.75rem; color:var(--text-muted);">Batch scheduled for fresh roast &amp; chilled delivery.</div></div>';
+        '<div style="font-size:0.75rem; color:var(--text-muted);">Batch scheduled for fresh roast & chilled delivery.</div></div>';
     }
     return;
   }
 
   try {
-    const res = await fetch(CONFIG.googleSheetEndpoint + "?action=trackOrder&amp;query=" + encodeURIComponent(query));
+    const res = await fetch(CONFIG.googleSheetEndpoint + "?action=trackOrder&query=" + encodeURIComponent(query));
     const data = await res.json();
 
     if (data && data.status === "success" && Array.isArray(data.orders) && data.orders.length > 0) {
@@ -957,7 +981,7 @@ async function trackOrder() {
         STATUS_STEPS.forEach((step, idx) => {
           const isDone = idx <= (curIdx === -1 ? 0 : curIdx);
           const color = isDone ? "var(--success-light)" : "var(--text-muted)";
-          stepsHtml += '<div style="text-align:center; font-size:0.72rem; color:' + color + ';">' + (isDone ? "✓ " : "") + step + '</div>';
+          stepsHtml += '<div style="text-align:center; font-size:0.72rem; color:" + color + "; tension:0.5;">' + (isDone ? "✓ " : "") + step + '</div>';
         });
         stepsHtml += '</div>';
 
@@ -1084,6 +1108,8 @@ function fetchLiveConfig(isManualRetry = false) {
   } catch (e) {}
 
   if (!CONFIG.googleSheetEndpoint || CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
+    const syncPill = document.getElementById("syncStatusPill");
+    if (syncPill) syncPill.style.display = "none";
     return;
   }
 
@@ -1119,14 +1145,11 @@ function initApp() {
   setInterval(() => fetchLiveConfig(), 45000);
 }
 
-
 if (document.readyState !== "loading") {
-
   initApp();
-
 } else {
 
   document.addEventListener("DOMContentLoaded", initApp);
 
-}
 
+}
