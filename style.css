@@ -1327,3 +1327,30 @@ input:focus, select:focus, textarea:focus {
   margin-top: 10px;
   line-height: 1.4;
 }
+
+/* Delivery Cluster Slot Alerts */
+.slot-status-alert {
+  font-size: 0.74rem;
+  margin-top: 5px;
+  line-height: 1.35;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.slot-status-alert.slot-available {
+  background: rgba(144, 224, 239, 0.08);
+  border: 1px solid rgba(144, 224, 239, 0.25);
+  color: var(--info-blue);
+}
+
+.slot-status-alert.slot-full {
+  background: rgba(230, 57, 70, 0.12);
+  border: 1px solid var(--error);
+  color: var(--error-light);
+}
+
+select option:disabled {
+  color: #777;
+  background-color: #1a1816;
+}

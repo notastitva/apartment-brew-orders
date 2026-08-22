@@ -171,7 +171,8 @@
 
           <div class="form-group">
             <label for="b2bTechPark">Tech Park / Commercial Hub *</label>
-            <select id="b2bTechPark">
+
+<select id="b2bTechPark" onchange="updateDeliveryWindows()">
               <option value="DLF Cyber City / Cyber Hub (Gurugram)">DLF Cyber City / Cyber Hub (Gurugram)</option>
               <option value="One Horizon Center / Golf Course Rd (Gurugram)">One Horizon Center / Golf Course Rd (Gurugram)</option>
               <option value="Candor TechSpace / Sector 48 (Gurugram)">Candor TechSpace / Sector 48 (Gurugram)</option>
@@ -185,10 +186,13 @@
 
           <div class="form-group">
             <label for="b2bDeliveryWindow">Friday Delivery Window *</label>
-            <select id="b2bDeliveryWindow">
+
+<select id="b2bDeliveryWindow" onchange="updateDeliveryWindows()">
               <option value="Morning Kickoff (9:30 AM &ndash; 11:30 AM)">Morning Kickoff (9:30 AM &ndash; 11:30 AM)</option>
               <option value="Afternoon Recharge (2:00 PM &ndash; 4:00 PM)">Afternoon Recharge (2:00 PM &ndash; 4:00 PM)</option>
             </select>
+
+            <div id="slotStatusAlert" class="slot-status-alert" style="display: none;"></div>
           </div>
 
           <div class="form-group">

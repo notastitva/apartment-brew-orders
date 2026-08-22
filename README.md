@@ -72,7 +72,7 @@ The website is 100% data-driven by the Menu & Config tab in the Google Spreadshe
 5. Coupon Discount Engine:  
    1. Define flat (₹) or percentage (%) discount coupon codes with minimum order thresholds and mode applicability (B2C, B2B, ALL).  
 6. Delivery Clusters & Slot Throttling:  
-   1. Configure maximum order capacities per tech park/commercial complex and delivery window (e.g. DLF Cyber City Morning Kickoff max 15 orders) to balance logistics and courier load.
+   1. Configure maximum order capacities per tech park/commercial complex and delivery window (e.g. DLF Cyber City Morning Kickoff max 15 orders) to balance logistics and courier load. The *doGet* function sums active orders from *B2B Orders* per cluster key (*techPark|window*), calculates remaining capacity, and flags *isFull* when met. The frontend (*app.js*) dynamically renders available windows, disables full slots, and displays real-time availability badges, while *doPost* enforces backend capacity validation to prevent oversubscribing corporate slots during peak cutoffs.
 
 ---
 
@@ -93,7 +93,7 @@ To reset the capacity counter between weekly drops:
 
 #### **1\. index.html (Frontend Structure)**
 
-* Branding Header: Brand titles, active drop announcement banner (\#dropBanner), live cutoff countdown (\#countdownTimer), and limited batch scarcity progress bar (\#scarcityText, \#scarcityFill).  
+* Branding Header & Cluster UI: Brand titles, active drop announcement banner (\#dropBanner), live cutoff countdown (\#countdownTimer), limited batch scarcity progress bar (\#scarcityText, \#scarcityFill), and real-time delivery cluster slot availability badges.  
 * Coupon Code Engine & Pricing Breakdown: Features a promo coupon input group (\#promoInput), dynamic validation status badge (\#couponBadge), and structured price breakdown UI displaying subtotal, coupon savings line, and final order total.  
 * Segmented Mode Switch: Smooth toggle between B2C (\#tabB2c) and B2B (\#tabB2b).  
 * Build Your Own Batch (Custom Ratio Splitter): Features dynamic bottle counters (+ / \-) for customizing exact lot ratios between harvests across any pack size, supported by automatic allocation rebalancing and a live dual-tone ratio bar visualization. Includes a 2-bottle Curated Discovery Flight preset (1:1 auto-split across active estates).  
@@ -107,7 +107,7 @@ To reset the capacity counter between weekly drops:
 
 #### **2\. style.css (Design System)**
 
-* Color Palette: Dark roast aesthetic (--bg: \#141312, \--card-bg: \#1f1d1a, \--card-inner: \#151413) with coffee gold accents (--accent: \#d4a373) and status indicators (--whatsapp: \#25d366, \--success: \#2d6a4f, \--info-blue: \#90e0ef).  
+* Color Palette: Dark roast aesthetic (--bg: \#141312, \--card-bg: \#1f1d1a, \--card-inner: \#151413) with coffee gold accents (--accent: \#d4a373) and status indicators (--whatsapp: \#25d366, \--success: \#2d6a4f, \--info-blue: \#90e0ef, \--slot-full: \#6c757d).  
 * Responsive Layout: Mobile-first flex container capped at 520px width.  
 * Component Styling: Styled lot cards with CSS containment (contain: content), sensory meter fill bars using GPU acceleration, scarcity tracks, and hardware-accelerated micro-interactions.
 
@@ -115,7 +115,7 @@ To reset the capacity counter between weekly drops:
 
 * **Custom Ratio Splitter & Discovery Engine:** Features dynamic bottle counters (+ / \-) for customizing exact lot ratios between harvests across any pack size. For Discovery Sampler packs, defaults automatically to a balanced 50/50 split across active single-estate harvests (scaling dynamically with pack quantity: 1 pack \= 1:1, 2 packs \= 2:2, etc.) and preserves custom proportional ratios when pack quantities change.  
 * Coupon Code Engine Logic: Supports flat (₹) and percentage (%) discounts with minimum order threshold verification and mode enforcement (B2C, B2B, or ALL). Includes dynamic discount rebalancing on quantity or pack changes, Razorpay discounted payload dispatch, and structured confirmation receipt breakdowns.  
-* Dynamic Cutoff Engine: Calculates closest Saturday morning delivery for B2C and Friday for B2B. Computes live ticking countdown to Thursday 6:00 PM (B2B) and Friday 10:00 PM (B2C) cutoffs.  
+* Dynamic Cutoff & Slot Engine: Calculates closest Saturday morning delivery for B2C and Friday for B2B. Computes live ticking countdown to Thursday 6:00 PM (B2B) and Friday 10:00 PM (B2C) cutoffs. Dynamically renders available delivery windows and disables full slots based on real-time cluster capacity data.  
 * Profile & Offline Management: Features in-memory profile caching and saves customer details in browser localStorage (tabc\_customer\_profile) for instant re-ordering, supported by an automated localStorage offline order retry queue and PWA Service Worker integration.  
 * Validation Subsystem: Debounced input validation for Delhi NCR PIN codes, 10-digit Indian phone numbers, and 15-character GSTINs.  
 * Checkout & Dispatch: Opens Razorpay checkout modal or generates corporate invoice IDs (INV-REQ-xxxxxx), then dispatches payload to Apps Script.  
@@ -124,7 +124,7 @@ To reset the capacity counter between weekly drops:
 #### **4\. Code.gs (Backend Microservice)**
 
 * Security Checks: Verifies authToken \=== 'TABC\_SECURE\_TOKEN\_2026' and rejects bots using honeypot detection (botTrap).  
-* Concurrency & LockService: Uses LockService.getScriptLock() with a 15-second timeout (lock.tryLock(15000)) in doPost to eliminate race conditions and prevent oversubscribing coffee lots or cluster slots during peak drop cutoffs.  
+* Concurrency & Capacity Validation: Uses LockService.getScriptLock() with a 15-second timeout (lock.tryLock(15000)) in doPost to eliminate race conditions and prevent oversubscribing coffee lots or cluster slots during peak drop cutoffs. Validates requested delivery slots against remaining cluster capacity before appending orders.  
 * Database Routing: B2C orders append to Sheet1 (17 columns, instruction in Column G), while B2B orders append to B2B Orders (22 columns, instruction in Column K).  
 * Email Generator: Dispatches inline-styled HTML confirmation emails via GmailApp.sendEmail with order details, 48-hour shelf-life guidelines, and Google Calendar event links.  
 * Dynamic Aggregations (doGet): Calculates active lot reservations, remaining lot inventory, and cluster slot fullness in real-time.

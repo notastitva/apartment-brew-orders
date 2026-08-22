@@ -17,14 +17,16 @@ let currentStoreStatus = "OPEN";
 // Default Dynamic State (Overridden by live Google Sheets Menu & Config)
 let availableLots = [
   { id: "LOT-01", name: "Ratnagiri Estate", process: "Anaerobic Naturals", notes: "Wild Raspberry, Stone Fruit & Dark Cacao", pills: ["Fruity", "High Acidity", "Medium Roast"], acidity: 85, body: 70 },
-  { id: "LOT-02", name: "Blueberry Estate", process: "Washed Lot", notes: "Orange Blossom, Jasmine & Crisp Green Apple", pills: ["Floral", "Clean Crisp", "Light-Med Roast"], acidity: 75, body: 60 }
+
+  { id: "LOT-02", name: "Blueberry Banger", process: "Washed Lot", notes: "Orange Blossom, Jasmine & Crisp Green Apple", pills: ["Floral", "Clean Crisp", "Light-Med Roast"], acidity: 75, body: 60 }
 ];
 
 let availableB2cPacks = [
   { id: "B2C-01", name: "Single Bottle", bottles: 1, price: 240, badge: "" },
   { id: "B2C-02", name: "Duo Pack / Discovery Sampler", bottles: 2, price: 480, badge: "Discovery Flight" },
   { id: "B2C-03", name: "Weekend Pack", bottles: 4, price: 899, badge: "Popular" },
-  { id: "B2C-04", name: "Mega Week", bottles: 6, price: 1200, badge: "Value" }
+
+  { id: "B2C-04", name: "Mega Weekender", bottles: 6, price: 1200, badge: "Value" }
 ];
 
 let availableB2bPacks = [
@@ -34,6 +36,14 @@ let availableB2bPacks = [
   { id: "B2B-04", name: "Townhall Bulk", bottles: 60, price: 8700 }
 ];
 
+
+let availableClusters = [
+  { techPark: "DLF Cyber City / Cyber Hub (Gurugram)", window: "Morning Kickoff (9:30 AM – 11:30 AM)", maxOrders: 15, currentOrders: 0, remainingOrders: 15, isFull: false },
+  { techPark: "DLF Cyber City / Cyber Hub (Gurugram)", window: "Afternoon Recharge (2:00 PM – 4:00 PM)", maxOrders: 20, currentOrders: 0, remainingOrders: 20, isFull: false },
+  { techPark: "One Horizon Center / Golf Course Rd (Gurugram)", window: "Morning Kickoff (9:30 AM – 11:30 AM)", maxOrders: 12, currentOrders: 0, remainingOrders: 12, isFull: false },
+  { techPark: "Candor TechSpace / Sector 48 (Gurugram)", window: "Morning Kickoff (9:30 AM – 11:30 AM)", maxOrders: 10, currentOrders: 0, remainingOrders: 10, isFull: false },
+  { techPark: "Candor TechSpace / Sector 48 (Gurugram)", window: "Afternoon Recharge (2:00 PM – 4:00 PM)", maxOrders: 15, currentOrders: 0, remainingOrders: 15, isFull: false }
+];
 let availableCoupons = [
   { code: "FRESHDROP", type: "FLAT", value: 100, minOrder: 480, mode: "B2C" },
   { code: "OFFICE10", type: "PERCENT", value: 10, minOrder: 1800, mode: "B2B" },
@@ -63,6 +73,97 @@ function getUpcomingSaturdayFormatted() {
   if (days === 0 && d.getHours() >= 10) days = 7;
   d.setDate(d.getDate() + days);
   return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function renderClusterOptions() {
+  const parkSelect = document.getElementById('b2bTechPark');
+  if (!parkSelect) return;
+
+  const currentSelection = parkSelect.value;
+  const uniqueParks = [...new Set(availableClusters.map(c => c.techPark))];
+
+  // Append other options if not present
+  const defaultExtras = [
+    "Cyber Park / Sector 67 (Gurugram)",
+    "Udyog Vihar Phases 1-5 (Gurugram)",
+    "Noida Sector 62 / 126 / 135 Tech Parks",
+    "South / Central Delhi Office Area",
+    "Other Commercial Complex"
+  ];
+  defaultExtras.forEach(p => {
+    if (!uniqueParks.includes(p)) uniqueParks.push(p);
+  });
+
+  let html = '';
+  uniqueParks.forEach(p => {
+    const isSelected = p === currentSelection;
+    html += `<option value="${p}" ${isSelected ? 'selected' : ''}>${p}</option>`;
+  });
+  parkSelect.innerHTML = html;
+
+  updateDeliveryWindows();
+}
+
+function updateDeliveryWindows() {
+  const parkSelect = document.getElementById('b2bTechPark');
+  const windowSelect = document.getElementById('b2bDeliveryWindow');
+  const alertEl = document.getElementById('slotStatusAlert');
+  if (!parkSelect || !windowSelect) return;
+
+  const selectedPark = parkSelect.value;
+  const matchingClusters = availableClusters.filter(c => c.techPark === selectedPark);
+
+  let windowsToRender = matchingClusters;
+  if (matchingClusters.length === 0) {
+    // Default fallback windows for generic complexes
+    windowsToRender = [
+      { window: "Morning Kickoff (9:30 AM – 11:30 AM)", maxOrders: 15, remainingOrders: 15, isFull: false },
+      { window: "Afternoon Recharge (2:00 PM – 4:00 PM)", maxOrders: 15, remainingOrders: 15, isFull: false }
+    ];
+  }
+
+  const currentWindowVal = windowSelect.value;
+  let html = '';
+  let hasAvailableSlot = false;
+
+  windowsToRender.forEach(w => {
+    const isFull = w.isFull === true || (typeof w.remainingOrders === 'number' && w.remainingOrders <= 0);
+    const isSelected = w.window === currentWindowVal && !isFull;
+    if (!isFull) hasAvailableSlot = true;
+
+    if (isFull) {
+      html += `<option value="${w.window}" disabled>${w.window} — Slot Full (Sold Out)</option>`;
+    } else {
+      const remainingLabel = typeof w.remainingOrders === 'number' ? ` (${w.remainingOrders} slot${w.remainingOrders === 1 ? '' : 's'} left)` : '';
+      html += `<option value="${w.window}" ${isSelected ? 'selected' : ''}>${w.window}${remainingLabel}</option>`;
+    }
+  });
+
+  windowSelect.innerHTML = html;
+
+  // Find active selected window
+  const activeSelectedWindow = windowSelect.value;
+  const activeCluster = matchingClusters.find(c => c.window === activeSelectedWindow);
+
+  if (alertEl) {
+    if (!hasAvailableSlot) {
+      alertEl.textContent = `⚠️ All delivery slots for ${selectedPark} are fully booked for this Friday drop. Please select another tech park.`;
+      alertEl.className = 'slot-status-alert slot-full';
+      alertEl.style.display = 'block';
+    } else if (activeCluster) {
+      if (activeCluster.isFull) {
+        alertEl.textContent = `⚠️ The selected delivery slot is full. Please choose another delivery window.`;
+        alertEl.className = 'slot-status-alert slot-full';
+        alertEl.style.display = 'block';
+      } else {
+        alertEl.textContent = `⚡ ${activeCluster.remainingOrders} of ${activeCluster.maxOrders} slots remaining for Friday drop.`;
+        alertEl.className = 'slot-status-alert slot-available';
+        alertEl.style.display = 'block';
+      }
+    } else {
+      alertEl.style.display = 'none';
+    }
+  }
 }
 
 // --------------------------------------------------------------------
@@ -218,7 +319,8 @@ function applyStoreStatus(status) {
 function applyConfigToUI(data) {
   if (!data) return;
 
-  const cap = data.batchCapacity || 200;
+
+  const cap = data.batchCapacity || 150;
   const resCount = data.reservedBottles || 0;
   const scarcityText = document.getElementById('scarcityText');
   const scarcityFill = document.getElementById('scarcityFill');
@@ -237,6 +339,11 @@ function applyConfigToUI(data) {
     availableCoupons = data.coupons;
   }
   if (data.storeStatus) applyStoreStatus(data.storeStatus);
+
+  if (Array.isArray(data.clusters) && data.clusters.length > 0) {
+    availableClusters = data.clusters;
+    renderClusterOptions();
+  }
 
   updateTotal();
   if (isCustomSplit) rebalanceSplitter();
@@ -354,6 +461,8 @@ function switchMode(mode) {
 
   updateTotal();
   if (isCustomSplit) rebalanceSplitter();
+
+  if (!isB2c) renderClusterOptions();
 }
 
 // Visual Lot Selection & Custom Splitter Toggle
@@ -864,13 +973,34 @@ function validateAllInputs() {
   const isCompanyValid = currentMode === 'B2B' ? validateField('custCompany') : true;
   const isGstinValid = currentMode === 'B2B' ? validateGstinField() : true;
 
+  let isSlotValid = true;
+  if (currentMode === 'B2B') {
+    const parkSelect = document.getElementById('b2bTechPark');
+    const windowSelect = document.getElementById('b2bDeliveryWindow');
+    if (parkSelect && windowSelect) {
+      const park = parkSelect.value;
+      const win = windowSelect.value;
+      const cluster = availableClusters.find(c => c.techPark === park && c.window === win);
+      if (cluster && cluster.isFull) {
+        isSlotValid = false;
+        const alertEl = document.getElementById('slotStatusAlert');
+        if (alertEl) {
+          alertEl.textContent = `⚠️ Selected delivery slot is fully booked. Please choose another window.`;
+          alertEl.className = 'slot-status-alert slot-full';
+          alertEl.style.display = 'block';
+        }
+      }
+    }
+  }
+
   const qtyInput = document.getElementById('packQty');
   const qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
   const isQtyValid = !isNaN(qty) && qty >= 1;
   const errQty = document.getElementById('errQty');
   setFieldState(qtyInput, errQty, isQtyValid);
 
-  return isNameValid && isEmailValid && isPhoneValid && isAddressValid && isPinValid && isCompanyValid && isGstinValid && isQtyValid;
+
+  return isNameValid && isEmailValid && isPhoneValid && isAddressValid && isPinValid && isCompanyValid && isGstinValid && isQtyValid && isSlotValid;
 }
 
 // Payment & Submission Handling
@@ -880,6 +1010,16 @@ function handlePayClick() {
     return;
   }
 
+
+  if (currentMode === 'B2B') {
+    const park = document.getElementById('b2bTechPark')?.value;
+    const win = document.getElementById('b2bDeliveryWindow')?.value;
+    const cluster = availableClusters.find(c => c.techPark === park && c.window === win);
+    if (cluster && cluster.isFull) {
+      alert('The selected delivery slot is full. Please choose another delivery window.');
+      return;
+    }
+  }
   if (!validateAllInputs()) {
     alert('Please correct the highlighted fields before placing your order.');
     return;
@@ -1137,6 +1277,8 @@ document.addEventListener('DOMContentLoaded', () => {
   renderPacks(availableB2cPacks, availableB2bPacks);
   switchMode('B2C');
   startCutoffCountdown();
+
+  renderClusterOptions();
   checkSavedProfile();
   fetchLiveConfig();
   setInterval(fetchLiveConfig, 30000);
