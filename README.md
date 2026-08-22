@@ -94,6 +94,7 @@ To reset the capacity counter between weekly drops:
 #### **1\. index.html (Frontend Structure)**
 
 * Branding Header: Brand titles, active drop announcement banner (\#dropBanner), live cutoff countdown (\#countdownTimer), and limited batch scarcity progress bar (\#scarcityText, \#scarcityFill).  
+* Coupon Code Engine & Pricing Breakdown: Features a promo coupon input group (\#promoInput), dynamic validation status badge (\#couponBadge), and structured price breakdown UI displaying subtotal, coupon savings line, and final order total.  
 * Segmented Mode Switch: Smooth toggle between B2C (\#tabB2c) and B2B (\#tabB2b).  
 * Build Your Own Batch (Custom Ratio Splitter): Features dynamic bottle counters (+ / \-) for customizing exact lot ratios between harvests across any pack size, supported by automatic allocation rebalancing and a live dual-tone ratio bar visualization. Includes a 2-bottle Curated Discovery Flight preset (1:1 auto-split across active estates).  
 * Interactive Lot Selector: Single-estate visual cards with tasting notes, roast levels, and acidity/body sensory meters (\#lotGrid).  
@@ -113,6 +114,7 @@ To reset the capacity counter between weekly drops:
 #### **3\. app.js (Frontend Controller)**
 
 * **Custom Ratio Splitter & Discovery Engine:** Features dynamic bottle counters (+ / \-) for customizing exact lot ratios between harvests across any pack size. For Discovery Sampler packs, defaults automatically to a balanced 50/50 split across active single-estate harvests (scaling dynamically with pack quantity: 1 pack \= 1:1, 2 packs \= 2:2, etc.) and preserves custom proportional ratios when pack quantities change.  
+* Coupon Code Engine Logic: Supports flat (₹) and percentage (%) discounts with minimum order threshold verification and mode enforcement (B2C, B2B, or ALL). Includes dynamic discount rebalancing on quantity or pack changes, Razorpay discounted payload dispatch, and structured confirmation receipt breakdowns.  
 * Dynamic Cutoff Engine: Calculates closest Saturday morning delivery for B2C and Friday for B2B. Computes live ticking countdown to Thursday 6:00 PM (B2B) and Friday 10:00 PM (B2C) cutoffs.  
 * Profile & Offline Management: Features in-memory profile caching and saves customer details in browser localStorage (tabc\_customer\_profile) for instant re-ordering, supported by an automated localStorage offline order retry queue and PWA Service Worker integration.  
 * Validation Subsystem: Debounced input validation for Delhi NCR PIN codes, 10-digit Indian phone numbers, and 15-character GSTINs.  

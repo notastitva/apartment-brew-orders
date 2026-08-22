@@ -628,23 +628,42 @@ body {
 /* Summary & Pricing Display */
 
 .summary-box {
-
   background: var(--card-inner);
-
   border: 1px dashed var(--card-border);
-
   border-radius: 10px;
-
   padding: 14px;
-
   margin-top: 10px;
-
   display: flex;
+  flex-direction: column;
+}
 
+.summary-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-bottom: 1px dashed #262320;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+
+.summary-line {
+  display: flex;
   justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
 
+.summary-discount {
+  color: var(--success-light);
+  font-weight: 700;
+}
+
+.summary-total-line {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-
+  width: 100%;
+}
 }
 
 .summary-total {
@@ -657,6 +676,71 @@ body {
 
 }
 
+/* Coupon Input & Validation */
+.coupon-input-group {
+  display: flex;
+  gap: 8px;
+}
+
+.coupon-input-group input {
+  flex: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.btn-coupon {
+  background: var(--accent);
+  color: #141312;
+  border: none;
+  border-radius: 8px;
+  padding: 0 16px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+
+.btn-coupon:hover {
+  opacity: 0.9;
+}
+
+.btn-coupon:active {
+  transform: scale(0.98);
+}
+
+.btn-coupon-remove {
+  background: rgba(230, 57, 70, 0.15);
+  color: var(--error-light);
+  border: 1px solid var(--error);
+  border-radius: 8px;
+  padding: 0 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-coupon-remove:hover {
+  background: rgba(230, 57, 70, 0.25);
+}
+
+.coupon-status {
+  font-size: 0.75rem;
+  margin-top: 6px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.coupon-status.coupon-valid {
+  color: var(--success-light);
+}
+
+.coupon-status.coupon-invalid {
+  color: var(--error-light);
+}
 /* Forms & Inputs */
 
 .form-group {
@@ -1205,7 +1289,6 @@ input:focus, select:focus, textarea:focus {
 .ratio-thogarihunkal {
   background: #2a9d8f; /* Fresh floral teal */
 }
-
 
 /* Store Status Banner */
 .store-status-banner {

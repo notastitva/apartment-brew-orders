@@ -120,10 +120,33 @@
           <div class="field-error" id="errQty">Please enter a valid pack quantity (minimum 1).</div>
         </div>
 
-        <div class="summary-box">
-          <span style="font-size:0.85rem; color:var(--text-muted);">Total (Free Delhi NCR Drop):</span>
+        <!-- Coupon Code Input -->
+        <div class="form-group" style="margin-top: 14px;">
+          <label for="couponInput">Promo / Coupon Code</label>
+          <div class="coupon-input-group">
+            <input type="text" id="couponInput" placeholder="e.g. FRESHDROP / NCRFIRST" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();applyCoupon();}" />
+            <button type="button" id="btnApplyCoupon" class="btn-coupon" onclick="applyCoupon()">Apply</button>
+            <button type="button" id="btnRemoveCoupon" class="btn-coupon-remove" onclick="removeCoupon()" style="display: none;">Remove</button>
+          </div>
+          <div id="couponStatus" class="coupon-status" style="display: none;"></div>
+        </div>
 
-<span class="summary-total" id="totalAmountDisplay">₹899</span>
+
+        <div class="summary-box">
+          <div class="summary-breakdown" id="summaryBreakdown" style="display: none;">
+            <div class="summary-line">
+              <span>Subtotal:</span>
+              <span id="subtotalDisplay">₹899</span>
+            </div>
+            <div class="summary-line summary-discount" id="discountLine">
+              <span id="discountLabel">Promo Discount:</span>
+              <span id="discountDisplay">-₹0</span>
+            </div>
+          </div>
+          <div class="summary-total-line">
+            <span style="font-size:0.85rem; color:var(--text-muted);">Total (Free Delhi NCR Drop):</span>
+            <span class="summary-total" id="totalAmountDisplay">₹899</span>
+          </div>
         </div>
       </div>
 
@@ -312,6 +335,15 @@
           <div class="receipt-row">
             <span class="receipt-label">Selection</span>
             <span class="receipt-val" id="rPack">-</span>
+          </div>
+
+          <div class="receipt-row" id="rSubtotalRow">
+            <span class="receipt-label">Subtotal</span>
+            <span class="receipt-val" id="rSubtotal">-</span>
+          </div>
+          <div class="receipt-row" id="rDiscountRow" style="display:none;">
+            <span class="receipt-label">Coupon Discount</span>
+            <span class="receipt-val" id="rDiscount" style="color: #d93025;">-</span>
           </div>
           <div class="receipt-row">
             <span class="receipt-label">Total Amount</span>

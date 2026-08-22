@@ -12,6 +12,13 @@ let cachedProfile = null;
 
 let currentMode = "B2C";
 let currentB2bPayOption = "GATEWAY";
+
+let availableCoupons = [
+  { code: "FRESHDROP", type: "FLAT", value: 100, minOrder: 480, mode: "B2C" },
+  { code: "OFFICE10", type: "PERCENT", value: 10, minOrder: 1800, mode: "B2B" },
+  { code: "NCRFIRST", type: "PERCENT", value: 10, minOrder: 240, mode: "ALL" }
+];
+let appliedCoupon = null; // { code, type, value, discount }
 let currentStoreStatus = "OPEN";
 
 // Default Dynamic State (Overridden by live Google Sheets Menu & Config)
@@ -179,6 +186,109 @@ function renderPacks(b2cPacks, b2bPacks) {
       b2bGrid.innerHTML = b2bHtml;
     }
   }
+
+function recalculateCouponDiscount(subtotal) {
+  if (!appliedCoupon) return 0;
+  if (appliedCoupon.type === &apos;PERCENT&apos;) {
+    return Math.round((subtotal * appliedCoupon.value) / 100);
+  } else {
+    return Math.min(appliedCoupon.value, subtotal);
+  }
+}
+
+function applyCoupon() {
+  const inputEl = document.getElementById(&apos;couponInput&apos;);
+  const statusEl = document.getElementById(&apos;couponStatus&apos;);
+  const btnRemove = document.getElementById(&apos;btnRemoveCoupon&apos;);
+  const btnApply = document.getElementById(&apos;btnApplyCoupon&apos;);
+  if (!inputEl) return;
+
+  const rawCode = inputEl.value.trim().toUpperCase();
+  inputEl.value = rawCode;
+
+  if (!rawCode) {
+    if (statusEl) {
+      statusEl.textContent = &apos;Please enter a coupon code.&apos;;
+      statusEl.className = &apos;coupon-status coupon-invalid&apos;;
+      statusEl.style.display = &apos;block&apos;;
+    }
+    return;
+  }
+
+  const subtotal = calculateSubtotal();
+  const coupon = availableCoupons.find(c =&gt; c.code.toUpperCase() === rawCode);
+
+  if (!coupon) {
+    if (statusEl) {
+      statusEl.textContent = `✕ Coupon &quot;${rawCode}&quot; is not valid.`;
+      statusEl.className = &apos;coupon-status coupon-invalid&apos;;
+      statusEl.style.display = &apos;block&apos;;
+    }
+    appliedCoupon = null;
+    if (btnRemove) btnRemove.style.display = &apos;none&apos;;
+    if (btnApply) btnApply.style.display = &apos;inline-block&apos;;
+    updateTotal();
+    return;
+  }
+
+  const couponMode = (coupon.mode || &apos;ALL&apos;).toUpperCase();
+  if (couponMode !== &apos;ALL&apos; &amp;&amp; couponMode !== currentMode) {
+    const targetMode = couponMode === &apos;B2C&apos; ? &apos;individual pre-orders (B2C)&apos; : &apos;corporate office drops (B2B)&apos;;
+    if (statusEl) {
+      statusEl.textContent = `✕ Coupon &quot;${coupon.code}&quot; is valid only for ${targetMode}.`;
+      statusEl.className = &apos;coupon-status coupon-invalid&apos;;
+      statusEl.style.display = &apos;block&apos;;
+    }
+    appliedCoupon = null;
+    if (btnRemove) btnRemove.style.display = &apos;none&apos;;
+    if (btnApply) btnApply.style.display = &apos;inline-block&apos;;
+    updateTotal();
+    return;
+  }
+
+  const minOrder = parseFloat(coupon.minOrder) || 0;
+  if (subtotal &lt; minOrder) {
+    if (statusEl) {
+      statusEl.textContent = `✕ Minimum order of ₹${minOrder.toLocaleString(&apos;en-IN&apos;)} required for coupon &quot;${coupon.code}&quot;. (Current subtotal: ₹${subtotal.toLocaleString(&apos;en-IN&apos;)})`;
+      statusEl.className = &apos;coupon-status coupon-invalid&apos;;
+      statusEl.style.display = &apos;block&apos;;
+    }
+    appliedCoupon = null;
+    if (btnRemove) btnRemove.style.display = &apos;none&apos;;
+    if (btnApply) btnApply.style.display = &apos;inline-block&apos;;
+    updateTotal();
+    return;
+  }
+
+  const discountVal = coupon.type === &apos;PERCENT&apos; ? Math.round((subtotal * coupon.value) / 100) : Math.min(coupon.value, subtotal);
+
+  appliedCoupon = { code: coupon.code, type: coupon.type, value: coupon.value, discount: discountVal };
+
+  if (statusEl) {
+    const desc = coupon.type === &apos;PERCENT&apos; ? `${coupon.value}% off` : `₹${coupon.value} off`;
+    statusEl.textContent = `✓ Coupon &quot;${coupon.code}&quot; applied! (${desc}, saving ₹${discountVal.toLocaleString(&apos;en-IN&apos;)})`;
+    statusEl.className = &apos;coupon-status coupon-valid&apos;;
+    statusEl.style.display = &apos;block&apos;;
+  }
+
+  if (btnApply) btnApply.style.display = &apos;none&apos;;
+  if (btnRemove) btnRemove.style.display = &apos;inline-block&apos;;
+
+  updateTotal();
+}
+
+function removeCoupon() {
+  appliedCoupon = null;
+  const inputEl = document.getElementById(&apos;couponInput&apos;);
+  const statusEl = document.getElementById(&apos;couponStatus&apos;);
+  const btnRemove = document.getElementById(&apos;btnRemoveCoupon&apos;);
+  const btnApply = document.getElementById(&apos;btnApplyCoupon&apos;);
+  if (inputEl) inputEl.value = &apos;&apos;;
+  if (statusEl) { statusEl.textContent = &apos;&apos;; statusEl.style.display = &apos;none&apos;; }
+  if (btnRemove) btnRemove.style.display = &apos;none&apos;;
+  if (btnApply) btnApply.style.display = &apos;inline-block&apos;;
+  updateTotal();
+}
 }
 
 function applyStoreStatus(status) {
@@ -226,6 +336,10 @@ function applyConfigToUI(data) {
   
   if (data.lots) renderLots(data.lots);
   if (data.b2cPacks || data.b2bPacks) renderPacks(data.b2cPacks, data.b2bPacks);
+
+  if (Array.isArray(data.coupons) &amp;&amp; data.coupons.length &gt; 0) {
+    availableCoupons = data.coupons;
+  }
   if (data.storeStatus) applyStoreStatus(data.storeStatus);
   
   updateTotal();
@@ -335,6 +449,14 @@ function switchMode(mode) {
   
   updateTotal();
   if (isCustomSplit) rebalanceSplitter();
+
+  if (appliedCoupon) {
+    const coupon = availableCoupons.find(c =&gt; c.code.toUpperCase() === appliedCoupon.code);
+    const couponMode = coupon ? (coupon.mode || &apos;ALL&apos;).toUpperCase() : &apos;ALL&apos;;
+    if (couponMode !== &apos;ALL&apos; &amp;&amp; couponMode !== mode) {
+      removeCoupon();
+    }
+  }
 }
 
 // Visual Lot Selection & Custom Splitter Toggle
@@ -463,7 +585,24 @@ function setB2bPayOption(option) {
   updateTotal();
 }
 
+
+function calculateSubtotal() {
+  const qtyInput = document.getElementById(&apos;packQty&apos;);
+  let qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
+  if (isNaN(qty) || qty &lt; 1) qty = 1;
+  const active = currentMode === &apos;B2C&apos; ? selectedB2cPack : selectedB2bPack;
+  return (active &amp;&amp; active.unitPrice ? active.unitPrice : 0) * qty;
+}
+
 function calculateTotal() {
+  const subtotal = calculateSubtotal();
+  if (appliedCoupon) {
+    const discount = recalculateCouponDiscount(subtotal);
+    appliedCoupon.discount = discount;
+    return Math.max(0, subtotal - discount);
+  }
+  return subtotal;
+}
   const qtyInput = document.getElementById('packQty');
   let qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
   if (isNaN(qty) || qty < 1) qty = 1;
@@ -471,7 +610,63 @@ function calculateTotal() {
   return (active && active.unitPrice ? active.unitPrice : 0) * qty;
 }
 
+
 function updateTotal() {
+  const subtotal = calculateSubtotal();
+  const total = calculateTotal();
+  const formattedTotal = `₹${total.toLocaleString(&apos;en-IN&apos;)}`;
+  const formattedSubtotal = `₹${subtotal.toLocaleString(&apos;en-IN&apos;)}`;
+
+  const totalDisplay = document.getElementById(&apos;totalAmountDisplay&apos;);
+  const subtotalDisplay = document.getElementById(&apos;subtotalDisplay&apos;);
+  const discountDisplay = document.getElementById(&apos;discountDisplay&apos;);
+  const discountLabel = document.getElementById(&apos;discountLabel&apos;);
+  const summaryBreakdown = document.getElementById(&apos;summaryBreakdown&apos;);
+  const btnAmount = document.getElementById(&apos;btnAmount&apos;);
+  const btnText = document.getElementById(&apos;btnText&apos;);
+  const statusEl = document.getElementById(&apos;couponStatus&apos;);
+
+  if (appliedCoupon) {
+    const coupon = availableCoupons.find(c =&gt; c.code.toUpperCase() === appliedCoupon.code);
+    const minOrder = coupon ? (parseFloat(coupon.minOrder) || 0) : 0;
+    if (subtotal &lt; minOrder) {
+      if (statusEl) {
+        statusEl.textContent = `⚠️ Subtotal dropped below ₹${minOrder} minimum. Coupon removed.`;
+        statusEl.className = &apos;coupon-status coupon-invalid&apos;;
+        statusEl.style.display = &apos;block&apos;;
+      }
+      appliedCoupon = null;
+      const btnRemove = document.getElementById(&apos;btnRemoveCoupon&apos;);
+      const btnApply = document.getElementById(&apos;btnApplyCoupon&apos;);
+      if (btnRemove) btnRemove.style.display = &apos;none&apos;;
+      if (btnApply) btnApply.style.display = &apos;inline-block&apos;;
+    }
+  }
+
+  if (summaryBreakdown) {
+    if (appliedCoupon &amp;&amp; appliedCoupon.discount &gt; 0) {
+      summaryBreakdown.style.display = &apos;flex&apos;;
+      if (subtotalDisplay) subtotalDisplay.textContent = formattedSubtotal;
+      if (discountDisplay) discountDisplay.textContent = `-₹${appliedCoupon.discount.toLocaleString(&apos;en-IN&apos;)}`;
+      if (discountLabel) discountLabel.textContent = `Promo Discount (${appliedCoupon.code}):`;
+    } else {
+      summaryBreakdown.style.display = &apos;none&apos;;
+    }
+  }
+
+  if (totalDisplay) totalDisplay.textContent = formattedTotal;
+  if (btnAmount) btnAmount.textContent = formattedTotal;
+
+  if (btnText &amp;&amp; currentStoreStatus === &apos;OPEN&apos;) {
+    if (currentMode === &apos;B2B&apos; &amp;&amp; currentB2bPayOption === &apos;INVOICE&apos;) {
+      btnText.innerHTML = `📄 Request Corporate Invoice (&lt;span id=&quot;btnAmount&quot;&gt;${formattedTotal}&lt;/span&gt;)`;
+    } else {
+      btnText.innerHTML = `💳 Pay &amp; Confirm Pre-Order (&lt;span id=&quot;btnAmount&quot;&gt;${formattedTotal}&lt;/span&gt;)`;
+    }
+  }
+
+  if (isCustomSplit) rebalanceSplitter();
+}
   const total = calculateTotal();
   const formatted = `₹${total.toLocaleString('en-IN')}`;
   
@@ -736,7 +931,128 @@ function handlePayClick() {
   }
 }
 
+
 async function handleOrderSuccess(paymentId, statusText) {
+  const name = (document.getElementById(&apos;custName&apos;)?..value || &apos;&apos;).trim();
+  const email = (document.getElementById(&apos;custEmail&apos;)?..value || &apos;&apos;).trim();
+  const phone = (document.getElementById(&apos;custPhone&apos;)?..value || &apos;&apos;).trim();
+  const pin = (document.getElementById(&apos;custPincode&apos;)?..value || &apos;&apos;).trim();
+  const qty = parseInt(document.getElementById(&apos;packQty&apos;)?..value, 10) || 1;
+  const subtotal = calculateSubtotal();
+  const discount = appliedCoupon ? appliedCoupon.discount : 0;
+  const couponCode = appliedCoupon ? appliedCoupon.code : &apos;NONE&apos;;
+  const total = calculateTotal();
+  const activePack = currentMode === &apos;B2C&apos; ? selectedB2cPack : selectedB2bPack;
+  const dropInstructions = document.getElementById(&apos;dropInstructions&apos;)?..value || &apos;Deliver directly to door / desk&apos;;
+
+  const isB2c = currentMode === &apos;B2C&apos;;
+  const orderId = isB2c ? &quot;TABC-&quot; + Math.floor(100000 + Math.random() * 900000) : &quot;TABC-B2B-&quot; + Math.floor(100000 + Math.random() * 900000);
+  const dropDate = isB2c ? getUpcomingSaturdayFormatted() : getUpcomingFridayFormatted();
+  const location = isB2c ? (document.getElementById(&apos;custCity&apos;)?..value || &apos;&apos;) : (document.getElementById(&apos;b2bTechPark&apos;)?..value || &apos;&apos;);
+  const deliveryWindow = isB2c ? &quot;Saturday Morning (8:00 AM – 11:00 AM)&quot; : (document.getElementById(&apos;b2bDeliveryWindow&apos;)?..value || &apos;&apos;);
+  const company = isB2c ? &quot;N/A&quot; : ((document.getElementById(&apos;custCompany&apos;)?..value || &apos;&apos;).trim() || &quot;N/A&quot;);
+  const gstin = isB2c ? &quot;N/A&quot; : ((document.getElementById(&apos;custGstin&apos;)?..value || &apos;&apos;).trim() || &quot;N/A&quot;);
+  const buildingFloor = (document.getElementById(&apos;custAddress&apos;)?..value || &apos;&apos;).trim();
+  const paymentMode = isB2c ? &quot;Razorpay Gateway&quot; : (currentB2bPayOption === &apos;INVOICE&apos; ? &quot;Corporate Invoice (Net Terms)&quot; : &quot;Razorpay Gateway&quot;);
+
+  const lot1Name = availableLots[0] ? availableLots[0].name : &quot;Lot 1&quot;;
+  const lot2Name = availableLots[1] ? availableLots[1].name : &quot;Lot 2&quot;;
+
+  const coffeeLotDisplay = isCustomSplit ? `Discovery Flight / Custom Split (${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name})` : selectedBean;
+
+  const orderPayload = {
+    authToken: CONFIG.authToken,
+    botTrap: &quot;&quot;,
+    orderType: currentMode,
+    targetSheet: isB2c ? &apos;Sheet1&apos; : &apos;B2B Orders&apos;,
+    orderId: orderId,
+    company: company,
+    name: name,
+    email: email,
+    phone: phone,
+    gstin: gstin,
+    techPark: location,
+    buildingFloor: buildingFloor,
+    dropInstructions: dropInstructions,
+    pinCode: pin,
+    deliveryWindow: deliveryWindow,
+    dropDate: dropDate,
+    bean: coffeeLotDisplay,
+    pack: activePack.name,
+    quantity: qty,
+    bottles: activePack.bottles * qty,
+    subtotalAmount: subtotal,
+    couponCode: couponCode,
+    discountAmount: discount,
+    totalAmount: total,
+    paymentMode: paymentMode,
+    paymentStatus: `${statusText} (${paymentId})`,
+    deliveryStatus: &apos;Pre-Ordered&apos;,
+    notes: (isB2c ? `Payment ID: ${paymentId}` : (currentB2bPayOption === &apos;INVOICE&apos; ? `Invoice Ref: ${paymentId} (Net Terms)` : `Payment ID: ${paymentId}`)) + (discount &gt; 0 ? ` | Coupon: ${couponCode} (-₹${discount})` : &apos;&apos;)
+  };
+
+  currentOrderDetails = orderPayload;
+  saveCustomerProfile(orderPayload);
+
+  if (CONFIG.googleSheetEndpoint &amp;&amp; !CONFIG.googleSheetEndpoint.includes(&quot;YOUR_GOOGLE_APPS&quot;)) {
+    fetch(CONFIG.googleSheetEndpoint, { method: &quot;POST&quot;, mode: &quot;no-cors&quot;, headers: { &quot;Content-Type&quot;: &quot;text/plain;charset=utf-8&quot; }, body: JSON.stringify(orderPayload) }).catch(() =&gt; {
+      try {
+        const pending = JSON.parse(localStorage.getItem(&apos;tabc_pending_orders&apos;) || &quot;[]&quot;);
+        pending.push(orderPayload);
+        localStorage.setItem(&apos;tabc_pending_orders&apos;, JSON.stringify(pending));
+      } catch (e) {}
+    });
+  }
+
+  const rOrderId = document.getElementById(&apos;rOrderId&apos;);
+  const rOrderType = document.getElementById(&apos;rOrderType&apos;);
+  const rCompanyRow = document.getElementById(&apos;rCompanyRow&apos;);
+  const rCompany = document.getElementById(&apos;rCompany&apos;);
+  const rWindowRow = document.getElementById(&apos;rWindowRow&apos;);
+  const rWindow = document.getElementById(&apos;rWindow&apos;);
+  const rPayId = document.getElementById(&apos;rPayId&apos;);
+  const rDropDate = document.getElementById(&apos;rDropDate&apos;);
+  const rName = document.getElementById(&apos;rName&apos;);
+  const rEmail = document.getElementById(&apos;rEmail&apos;);
+  const rBean = document.getElementById(&apos;rBean&apos;);
+  const rPack = document.getElementById(&apos;rPack&apos;);
+  const rTotal = document.getElementById(&apos;rTotal&apos;);
+  const rSubtotalRow = document.getElementById(&apos;rSubtotalRow&apos;);
+  const rSubtotal = document.getElementById(&apos;rSubtotal&apos;);
+  const rDiscountRow = document.getElementById(&apos;rDiscountRow&apos;);
+  const rDiscount = document.getElementById(&apos;rDiscount&apos;);
+
+  if (rOrderId) rOrderId.textContent = orderId;
+  if (rOrderType) rOrderType.textContent = isB2c ? &apos;Individual Pre-Order (Sat Drop)&apos; : &apos;Corporate Office Drop (Fri Drop)&apos;;
+  if (rCompanyRow) rCompanyRow.style.display = isB2c ? &apos;none&apos; : &apos;flex&apos;;
+  if (!isB2c &amp;&amp; rCompany) rCompany.textContent = company;
+  if (rWindowRow) rWindowRow.style.display = &apos;flex&apos;;
+  if (rWindow) rWindow.textContent = deliveryWindow;
+
+  if (rPayId) rPayId.textContent = paymentId;
+  if (rDropDate) rDropDate.textContent = dropDate;
+  if (rName) rName.textContent = name;
+  if (rEmail) rEmail.textContent = email;
+  if (rBean) rBean.textContent = coffeeLotDisplay;
+  if (rPack) rPack.textContent = `${activePack.name} x ${qty} (${activePack.bottles * qty} bottles)`;
+  if (rTotal) rTotal.textContent = `₹${total.toLocaleString(&apos;en-IN&apos;)}`;
+
+  if (discount &gt; 0) {
+    if (rSubtotalRow) rSubtotalRow.style.display = &apos;flex&apos;;
+    if (rSubtotal) rSubtotal.textContent = `₹${subtotal.toLocaleString(&apos;en-IN&apos;)}`;
+    if (rDiscountRow) rDiscountRow.style.display = &apos;flex&apos;;
+    if (rDiscount) rDiscount.textContent = `-₹${discount.toLocaleString(&apos;en-IN&apos;)} (${couponCode})`;
+  } else {
+    if (rSubtotalRow) rSubtotalRow.style.display = &apos;none&apos;;
+    if (rDiscountRow) rDiscountRow.style.display = &apos;none&apos;;
+  }
+
+  const orderFormView = document.getElementById(&apos;orderFormView&apos;);
+  const confirmationView = document.getElementById(&apos;confirmationView&apos;);
+  if (orderFormView) orderFormView.style.display = &apos;none&apos;;
+  if (confirmationView) confirmationView.style.display = &apos;block&apos;;
+  window.scrollTo({ top: 0, behavior: &apos;smooth&apos; });
+}
   const name = (document.getElementById('custName')?.value || '').trim();
   const email = (document.getElementById('custEmail')?.value || '').trim();
   const phone = (document.getElementById('custPhone')?.value || '').trim();
@@ -922,6 +1238,8 @@ function resetForm() {
   document.querySelectorAll('input, textarea').forEach(el => el.classList.remove('input-valid', 'input-invalid'));
   document.querySelectorAll('.field-error').forEach(el => el.style.display = 'none');
   checkSavedProfile();
+
+  removeCoupon();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
