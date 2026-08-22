@@ -182,7 +182,16 @@ function renderLots(lots) {
     const isFirstActive = idx === 0 && !isCustomSplit;
     const pillsHtml = (lot.pills || []).map(p => `<span class="flavor-pill">${p}</span>`).join('');
 
+
+    const isSoldOut = lot.isSoldOut === true || lot.remainingBottles === 0;
+    const soldOutTag = isSoldOut ? `<span class="sold-out-tag">SOLD OUT</span>` : '';
+    const clickHandler = isSoldOut ? '' : `onclick="selectLot('${fullName}', this)"`;
+    
     html += `
+      <div class="lot-card ${isFirstActive ? 'active' : ''} ${isSoldOut ? 'lot-sold-out' : ''}" ${clickHandler}>
+        <div class="lot-header">
+          <span class="lot-name">${lot.name} ${soldOutTag}</span>
+          <span class="lot-tag">${lot.process}</span>
       <div class="lot-card ${isFirstActive ? 'active' : ''}" onclick="selectLot('${fullName}', this)">
         <div class="lot-header">
           <span class="lot-name">${lot.name}</span>
@@ -316,6 +325,29 @@ function applyStoreStatus(status) {
   }
 }
 
+
+function applyConfigToUI(data) {
+  if (!data) return;
+
+
+  const cap = data.batchCapacity || 150;
+  const resCount = data.reservedBottles || 0;
+  const scarcityText = document.getElementById('scarcityText');
+  const scarcityFill = document.getElementById('scarcityFill');
+
+  if (scarcityText) {
+    scarcityText.textContent = `${resCount} / ${cap} Bottles Reserved`;
+  }
+  if (scarcityFill) {
+    const pct = Math.min(Math.round((resCount / cap) * 100), 100);
+    scarcityFill.style.transform = `scaleX(${pct / 100})`;
+  }
+
+  if (resCount >= cap || data.isBatchFull === true) {
+    applyStoreStatus('SOLD_OUT');
+  }
+  
+  if (data.lots) renderLots(data.lots);
 function applyConfigToUI(data) {
   if (!data) return;
 
@@ -1005,7 +1037,12 @@ function validateAllInputs() {
 
 // Payment & Submission Handling
 function handlePayClick() {
-  if (currentStoreStatus === 'PAUSED' || currentStoreStatus === 'SOLD_OUT') {
+
+  const totalRequested = getTotalBottles();
+  const remainingCapacity = cachedProfile?.remainingRoasteryCapacity || 999;
+  
+  if (currentStoreStatus === 'PAUSED' || currentStoreStatus === 'SOLD_OUT' || totalRequested > remainingCapacity) {
+    alert('Pre-orders are currently closed for this drop or requested quantity exceeds remaining capacity.');
     alert('Pre-orders are currently closed for this drop.');
     return;
   }
