@@ -44,20 +44,6 @@
       <div class="geo-badge">
         &#128205; Delivering Exclusively Across Gurugram &amp; Delhi NCR Tech Parks &amp; Residences
       </div>
-
-    </div>
-    
-    <!-- Top Navigation Bar -->
-    <div class="top-nav-bar">
-      <button class="nav-tab active" id="navPreOrder" onclick="showView('orderFormView')">Pre-Order</button>
-      <button class="nav-tab" id="navTracker" onclick="showView('orderTrackerView')">Live Order Tracker</button>
-    </div>
-    
-    <!-- Sync Status Indicator -->
-    <div class="sync-status-pill" id="syncStatusPill" style="display: none;">
-      <div class="sync-dot" id="syncDot"></div>
-      <span id="syncStatusText">Syncing...</span>
-      <button class="sync-retry-btn" id="syncRetryBtn" onclick="retrySync()">Retry</button>
     </div>
 
     <!-- Mode Selector: B2C vs B2B -->
@@ -84,10 +70,37 @@
           <div class="splitter-header">
             <span class="splitter-title">&#127915; Build Your Own Batch Ratio</span>
             <span class="splitter-tally" id="splitterTally">Allocated: <strong><span id="allocCount">4</span> / <span id="targetCount">4</span></strong> bottles</span>
-            <div id="tallyStatus" class="splitter-tally-note" style="font-size: 0.76rem; color: var(--accent); margin-top: 6px; text-align: center;"></div>
+
+<div id="tallyStatus" class="splitter-tally-note" style="font-size: 0.76rem; color: var(--accent); margin-top: 6px; text-align: center;"></div>
           </div>
-          <div id="dynamicSplitterControls" class="splitter-controls"></div>
-          <div class="dynamic-multi-segment-bar" id="dynamicRatioBar"></div>
+          <div class="splitter-controls">
+            <div class="splitter-row">
+              <div class="splitter-lot-info">
+                <span class="splitter-lot-name" id="splitLot1Name">Lot 1</span>
+                <span class="splitter-lot-sub" id="splitLot1Sub">Anaerobic Naturals</span>
+              </div>
+              <div class="qty-stepper">
+                <button type="button" class="stepper-btn" onclick="adjustSplit('lot1', -1)">&ndash;</button>
+                <span class="stepper-val" id="splitLot1Count">2</span>
+                <button type="button" class="stepper-btn" onclick="adjustSplit('lot1', 1)">+</button>
+              </div>
+            </div>
+            <div class="splitter-row">
+              <div class="splitter-lot-info">
+                <span class="splitter-lot-name" id="splitLot2Name">Lot 2</span>
+                <span class="splitter-lot-sub" id="splitLot2Sub">Washed Lot</span>
+              </div>
+              <div class="qty-stepper">
+                <button type="button" class="stepper-btn" onclick="adjustSplit('lot2', -1)">&ndash;</button>
+                <span class="stepper-val" id="splitLot2Count">2</span>
+                <button type="button" class="stepper-btn" onclick="adjustSplit('lot2', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="splitter-ratio-bar">
+            <div class="ratio-segment ratio-ratnagiri" id="ratioBarLot1" style="width: 50%;"></div>
+            <div class="ratio-segment ratio-thogarihunkal" id="ratioBarLot2" style="width: 50%;"></div>
+          </div>
         </div>
 
         <div class="section-title" style="margin-top: 16px;">
@@ -107,26 +120,10 @@
           <div class="field-error" id="errQty">Please enter a valid pack quantity (minimum 1).</div>
         </div>
 
-        <!-- Promo / Coupon Code Module -->
-        <div class="coupon-module">
-          <input type="text" id="couponCodeInput" placeholder="Promo Code" />
-          <button id="applyCouponBtn" onclick="applyCoupon()">Apply</button>
-        </div>
-        <div id="couponStatus" class="coupon-status"></div>
-        
         <div class="summary-box">
-          <div class="summary-line">
-            <span>Subtotal:</span>
-            <span id="subtotalDisplay">&#8377;0</span>
-          </div>
-          <div class="summary-line" id="discountLine" style="display: none;">
-            <span>Discount:</span>
-            <span id="discountAmountDisplay">-&#8377;0</span>
-          </div>
-          <div class="summary-line total">
-            <span>Final Total:</span>
-            <span class="summary-total" id="totalAmountDisplay">&#8377;899</span>
-          </div>
+          <span style="font-size:0.85rem; color:var(--text-muted);">Total (Free Delhi NCR Drop):</span>
+
+<span class="summary-total" id="totalAmountDisplay">₹899</span>
         </div>
       </div>
 
@@ -239,7 +236,8 @@
         </div>
 
         <button id="payNowBtn" class="btn btn-pay" onclick="handlePayClick()">
-          <span id="btnText">&#128179; Pay &amp; Confirm Pre-Order (<span id="btnAmount">&#8377;899</span>)</span>
+
+<span id="btnText">&#128179; Pay &amp; Confirm Pre-Order (<span id="btnAmount">₹899</span>)</span>
         </button>
       </div>
 
@@ -335,29 +333,16 @@
       </div>
     </div>
 
-    <!-- Live Order Tracker View -->
-    <div id="orderTrackerView" style="display: none;">
-      <div class="section-card">
-        <div class="section-title">Track Your Order</div>
-        <div class="form-group">
-          <input type="text" id="trackInput" placeholder="Enter Order ID or Phone" />
-          <button class="btn btn-pay" onclick="trackOrder()" style="margin-top: 10px;">Track</button>
-        </div>
-        <div id="trackerResults" class="tracker-results"></div>
-      </div>
-    </div>
   </div>
 
   <!-- Service Worker Registration -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error:', err));
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW error:', err));
       });
     }
   </script>
-
-  <!-- Modular Application Controller -->
   <script src="app.js"></script>
 </body>
 </html>
