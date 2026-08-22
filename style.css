@@ -678,14 +678,27 @@ body {
 /* Coupon Input & Validation */
 .coupon-input-group {
   display: flex;
+  align-items: stretch;
   gap: 8px;
 }
 
 .coupon-input-group input {
   flex: 1;
+  background: #141312;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 11px 12px;
+  color: var(--text);
+  font-size: 0.9rem;
+  outline: none;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 600;
+  transition: border-color 0.2s ease;
+}
+
+.coupon-input-group input:focus {
+  border-color: var(--accent);
 }
 
 .btn-coupon {
@@ -693,10 +706,14 @@ body {
   color: #141312;
   border: none;
   border-radius: 8px;
-  padding: 0 16px;
+  padding: 0 18px;
   font-size: 0.85rem;
   font-weight: 700;
+  font-family: inherit;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: opacity 0.2s ease, transform 0.1s ease;
   white-space: nowrap;
 }
@@ -714,12 +731,20 @@ body {
   color: var(--error-light);
   border: 1px solid var(--error);
   border-radius: 8px;
-  padding: 0 12px;
+  padding: 0 14px;
   font-size: 0.8rem;
   font-weight: 700;
+  font-family: inherit;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.2s ease;
   white-space: nowrap;
+}
+
+.btn-coupon-remove:active {
+  transform: scale(0.98);
 }
 
 .btn-coupon-remove:hover {
