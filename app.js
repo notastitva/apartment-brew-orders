@@ -365,7 +365,7 @@ function fetchLiveConfig() {
   fetch(CONFIG.googleSheetEndpoint)
     .then(res => res.json())
     .then(data => {
-      if (data && data.status === 'success') {
+      if (data && data.status === 'success' && !data.action) {
         localStorage.setItem('tabc_live_config', JSON.stringify(data));
         applyConfigToUI(data);
       }
@@ -413,13 +413,20 @@ function startCutoffCountdown() {
   setInterval(updateTimer, 1000);
 }
 
-// Switch between B2C & B2B Modes
+// Switch between B2C, B2B & TRACK Modes
 function switchMode(mode) {
   currentMode = mode;
   const isB2c = mode === 'B2C';
+  const isB2b = mode === 'B2B';
+  const isTrack = mode === 'TRACK';
   
   const tabB2c = document.getElementById('tabB2c');
   const tabB2b = document.getElementById('tabB2b');
+  const tabTrack = document.getElementById('tabTrack');
+  const orderFormView = document.getElementById('orderFormView');
+  const trackerSection = document.getElementById('trackerSection');
+  const confirmationView = document.getElementById('confirmationView');
+  
   const dropBanner = document.getElementById('dropBanner');
   const packSubtext = document.getElementById('packSubtext');
   const b2cPacks = document.getElementById('b2cPacks');
@@ -432,7 +439,21 @@ function switchMode(mode) {
   const labelAddress = document.getElementById('labelAddress');
   
   if (tabB2c) tabB2c.classList.toggle('active', isB2c);
-  if (tabB2b) tabB2b.classList.toggle('active', !isB2c);
+  if (tabB2b) tabB2b.classList.toggle('active', isB2b);
+  if (tabTrack) tabTrack.classList.toggle('active', isTrack);
+  
+  if (isTrack) {
+    if (orderFormView) orderFormView.style.display = 'none';
+    if (confirmationView) confirmationView.style.display = 'none';
+    if (trackerSection) trackerSection.style.display = 'block';
+    if (dropBanner) dropBanner.innerHTML = `<span>🔍</span> Live Fulfillment Status Tracker`;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+  
+  if (trackerSection) trackerSection.style.display = 'none';
+  if (confirmationView) confirmationView.style.display = 'none';
+  if (orderFormView) orderFormView.style.display = 'block';
   
   if (dropBanner) {
     dropBanner.innerHTML = isB2c 
@@ -463,7 +484,7 @@ function switchMode(mode) {
   
   updateTotal();
   if (isCustomSplit) rebalanceSplitter();
-  if (!isB2c) renderClusterOptions();
+  if (isB2b) renderClusterOptions();
 }
 
 function selectLot(lotName, element) {
@@ -1177,6 +1198,205 @@ async function handleOrderSuccess(paymentId, statusText) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// --------------------------------------------------------------------
+// Customer Self-Service Live Order Tracker Controller
+// --------------------------------------------------------------------
+function trackCurrentOrder() {
+  if (currentOrderDetails && currentOrderDetails.orderId) {
+    const input = document.getElementById('trackOrderIdInput');
+    if (input) input.value = currentOrderDetails.orderId;
+    switchMode('TRACK');
+    submitTrackOrder();
+  } else {
+    switchMode('TRACK');
+  }
+}
+
+function submitTrackOrder() {
+  const input = document.getElementById('trackOrderIdInput');
+  const statusMsg = document.getElementById('trackStatusMsg');
+  const resultContainer = document.getElementById('trackerResult');
+  const btnTrack = document.getElementById('btnSubmitTrack');
+  
+  if (!input) return;
+  const rawId = input.value.trim().toUpperCase();
+  input.value = rawId;
+  
+  if (!rawId) {
+    if (statusMsg) {
+      statusMsg.textContent = 'Please enter a valid Order ID (e.g. TABC-154359).';
+      statusMsg.className = 'track-status-msg msg-error';
+      statusMsg.style.display = 'block';
+    }
+    if (resultContainer) resultContainer.style.display = 'none';
+    return;
+  }
+  
+  if (statusMsg) {
+    statusMsg.textContent = '⏳ Querying roastery fulfillment log...';
+    statusMsg.className = 'track-status-msg msg-info';
+    statusMsg.style.display = 'block';
+  }
+  if (btnTrack) btnTrack.disabled = true;
+  
+  if (!CONFIG.googleSheetEndpoint || CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
+    // Demo / Local Fallback Lookup
+    setTimeout(() => {
+      if (btnTrack) btnTrack.disabled = false;
+      if (currentOrderDetails && normalizeStr(currentOrderDetails.orderId) === normalizeStr(rawId)) {
+        if (statusMsg) statusMsg.style.display = 'none';
+        renderTrackingDetails(currentOrderDetails);
+      } else {
+        // Sample mock order for preview
+        const mockOrder = {
+          orderId: rawId,
+          orderType: rawId.includes('B2B') ? 'B2B' : 'B2C',
+          customerName: "Astitva Gupta",
+          company: rawId.includes('B2B') ? "Cognizant Technology Solutions" : "N/A",
+          deliveryAddress: "Flat 402, DLF Phase 5, Gurugram (PIN: 122009)",
+          dropInstructions: "Deliver directly to door / desk",
+          deliveryWindow: rawId.includes('B2B') ? "Morning Kickoff (9:30 AM – 11:30 AM)" : "Saturday Morning (8:00 AM – 11:00 AM)",
+          dropDate: rawId.includes('B2B') ? getUpcomingFridayFormatted() : getUpcomingSaturdayFormatted(),
+          bean: "Ratnagiri Estate (Anaerobic Naturals)",
+          pack: rawId.includes('B2B') ? "Team Pack x 1 (10 bottles)" : "Weekend Pack x 1 (4 bottles)",
+          totalAmount: rawId.includes('B2B') ? 1800 : 899,
+          paymentStatus: "Paid via Gateway",
+          deliveryStatus: "Brewing"
+        };
+        if (statusMsg) statusMsg.style.display = 'none';
+        renderTrackingDetails(mockOrder);
+      }
+    }, 600);
+    return;
+  }
+  
+  const trackUrl = `${CONFIG.googleSheetEndpoint}?action=track&orderId=${encodeURIComponent(rawId)}`;
+  
+  fetch(trackUrl)
+    .then(res => res.json())
+    .then(data => {
+      if (btnTrack) btnTrack.disabled = false;
+      if (data && data.status === 'success' && data.order) {
+        if (statusMsg) statusMsg.style.display = 'none';
+        renderTrackingDetails(data.order);
+      } else {
+        if (statusMsg) {
+          statusMsg.textContent = data.message || `✕ No active order found with ID "${rawId}". Please verify your order ID.`;
+          statusMsg.className = 'track-status-msg msg-error';
+          statusMsg.style.display = 'block';
+        }
+        if (resultContainer) resultContainer.style.display = 'none';
+      }
+    })
+    .catch(err => {
+      if (btnTrack) btnTrack.disabled = false;
+      if (statusMsg) {
+        statusMsg.textContent = `⚠️ Network error checking order status. Please try again.`;
+        statusMsg.className = 'track-status-msg msg-error';
+        statusMsg.style.display = 'block';
+      }
+      if (resultContainer) resultContainer.style.display = 'none';
+    });
+}
+
+function renderTrackingDetails(order) {
+  const resultContainer = document.getElementById('trackerResult');
+  if (!resultContainer) return;
+  
+  const tBadge = document.getElementById('tBadgeStatus');
+  const tOrderId = document.getElementById('tOrderId');
+  const tCustomer = document.getElementById('tCustomer');
+  const tCompanyRow = document.getElementById('tCompanyRow');
+  const tCompany = document.getElementById('tCompany');
+  const tWindow = document.getElementById('tDeliveryWindow');
+  const tDestination = document.getElementById('tDestination');
+  const tDropNote = document.getElementById('tDropNote');
+  const tBean = document.getElementById('tBean');
+  const tPack = document.getElementById('tPack');
+  const tPayment = document.getElementById('tPayment');
+  
+  if (tOrderId) tOrderId.textContent = order.orderId;
+  if (tCustomer) tCustomer.textContent = order.customerName || 'Valued Customer';
+  if (tWindow) tWindow.textContent = `${order.dropDate} (${order.deliveryWindow || 'Drop Slot'})`;
+  if (tDestination) tDestination.textContent = order.deliveryAddress || order.techPark || 'Gurugram / Delhi NCR';
+  if (tDropNote) tDropNote.textContent = order.dropInstructions || 'Deliver directly to door / desk';
+  if (tBean) tBean.textContent = order.bean;
+  if (tPack) tPack.textContent = order.pack;
+  if (tPayment) tPayment.textContent = order.paymentStatus || 'Confirmed';
+  
+  if (tCompanyRow) {
+    if (order.company && order.company !== 'N/A') {
+      tCompanyRow.style.display = 'flex';
+      if (tCompany) tCompany.textContent = order.company;
+    } else {
+      tCompanyRow.style.display = 'none';
+    }
+  }
+  
+  const sPre = document.getElementById('stepPreOrdered');
+  const sBrew = document.getElementById('stepBrewing');
+  const sDisp = document.getElementById('stepDispatched');
+  const sDelv = document.getElementById('stepDelivered');
+  const l1 = document.getElementById('line1');
+  const l2 = document.getElementById('line2');
+  const l3 = document.getElementById('line3');
+  
+  [sPre, sBrew, sDisp, sDelv].forEach(s => {
+    if (s) s.className = 'stepper-step';
+  });
+  [l1, l2, l3].forEach(l => {
+    if (l) l.className = 'stepper-line';
+  });
+  
+  const status = normalizeStr(order.deliveryStatus || 'Pre-Ordered');
+  
+  if (status.includes('pre-order') || status.includes('preorder') || status.includes('pending') || status.includes('received')) {
+    if (sPre) sPre.classList.add('step-active');
+    if (tBadge) {
+      tBadge.textContent = 'PRE-ORDERED';
+      tBadge.className = 'tracker-badge status-preordered';
+    }
+  } else if (status.includes('brew') || status.includes('roast') || status.includes('extract')) {
+    if (sPre) sPre.classList.add('step-completed');
+    if (l1) l1.classList.add('line-completed');
+    if (sBrew) sBrew.classList.add('step-active');
+    if (tBadge) {
+      tBadge.textContent = 'BREWING & CHILLING';
+      tBadge.className = 'tracker-badge status-brewing';
+    }
+  } else if (status.includes('dispatch') || status.includes('transit') || status.includes('out for delivery') || status.includes('shipped')) {
+    if (sPre) sPre.classList.add('step-completed');
+    if (l1) l1.classList.add('line-completed');
+    if (sBrew) sBrew.classList.add('step-completed');
+    if (l2) l2.classList.add('line-completed');
+    if (sDisp) sDisp.classList.add('step-active');
+    if (tBadge) {
+      tBadge.textContent = 'OUT FOR DELIVERY';
+      tBadge.className = 'tracker-badge status-dispatched';
+    }
+  } else if (status.includes('deliver') || status.includes('completed') || status.includes('fulfilled')) {
+    if (sPre) sPre.classList.add('step-completed');
+    if (l1) l1.classList.add('line-completed');
+    if (sBrew) sBrew.classList.add('step-completed');
+    if (l2) l2.classList.add('line-completed');
+    if (sDisp) sDisp.classList.add('step-completed');
+    if (l3) l3.classList.add('line-completed');
+    if (sDelv) sDelv.classList.add('step-completed');
+    if (tBadge) {
+      tBadge.textContent = 'DELIVERED';
+      tBadge.className = 'tracker-badge status-delivered';
+    }
+  } else {
+    if (sPre) sPre.classList.add('step-active');
+    if (tBadge) {
+      tBadge.textContent = order.deliveryStatus.toUpperCase();
+      tBadge.className = 'tracker-badge status-preordered';
+    }
+  }
+  
+  resultContainer.style.display = 'block';
+}
+
 window.addEventListener('online', () => {
   try {
     const pending = JSON.parse(localStorage.getItem('tabc_pending_orders') || "[]");
@@ -1240,6 +1460,8 @@ function sendWhatsAppReceipt() {
 function resetForm() {
   const orderFormView = document.getElementById('orderFormView');
   const confirmationView = document.getElementById('confirmationView');
+  const trackerSection = document.getElementById('trackerSection');
+  if (trackerSection) trackerSection.style.display = 'none';
   if (orderFormView) orderFormView.style.display = 'block';
   if (confirmationView) confirmationView.style.display = 'none';
   

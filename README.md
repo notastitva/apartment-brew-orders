@@ -207,3 +207,21 @@ The system is engineered for high-performance rendering and resilience against n
 
 * Core Web Vitals: Enhancements to FCP and LCP via resource hints (preconnect/dns-prefetch) and deferred SDK loading. CLS is minimized through CSS containment and GPU-accelerated tracks. INP is optimized using centralized DOM query caching and debounced validation.  
 * Network Resilience: Integrated PWA Service Workers ensure the UI remains accessible during connectivity drops, while an automated localStorage retry queue preserves and re-attempts order dispatches.  
+* 
+
+### **🛰️ 9\. Customer Self-Service Live Order Status Tracker**
+
+The system features a real-time fulfillment lifecycle tracker allowing customers to monitor their micro-batch coffee from extraction to delivery:
+
+* **Pre-Ordered:** Order successfully logged and queued for the upcoming drop.  
+* **Brewing:** Coffee is being hand-extracted and flash-chilled to capture peak aromatics.  
+* **Dispatched:** Order has left the roastery and is in cold-chain transit to the delivery cluster.  
+* **Delivered:** Coffee successfully delivered to the customer’s door or security/concierge desk.
+
+#### **Backend Lookup Handler (doGet)**
+
+The tracker is powered by a dedicated *doGet* lookup handler in the backend microservice. It supports the query parameter *?action=track\&orderId=TABC-XXXXXX*, which performs a cross-tab search across both *Sheet1* (B2C) and *B2B Orders* to retrieve live status data.
+
+#### **Client-Side Tracking UI**
+
+The frontend (*app.js*) renders a specialized tracking view featuring an animated 4-step stepper with glowing active states to indicate the current fulfillment stage, complemented by an order details card displaying the specific batch and delivery parameters.

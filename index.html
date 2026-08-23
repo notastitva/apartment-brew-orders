@@ -23,14 +23,14 @@
       <div class="brand-subtitle">Micro-Batch Flash-Chilled Specialty Coffee &bull; Gurugram</div>
       
       <div class="drop-banner" id="dropBanner">
-        <span>&#9889;</span> Next Fresh Drop: Saturday Morning
+        <span>⚡</span> Next Fresh Drop: Saturday Morning
       </div>
       <div class="countdown-timer" id="countdownTimer">Cutoff closes in: Loading...</div>
 
       <!-- Scarcity Bar -->
       <div class="scarcity-bar-container">
         <div class="scarcity-label">
-          <span>&#128293; Limited Batch Capacity</span>
+          <span>🔥 Limited Batch Capacity</span>
           <span id="scarcityText">Loading batch availability...</span>
         </div>
         <div class="scarcity-progress-track">
@@ -42,17 +42,19 @@
       <div class="store-status-banner" id="storeStatusBanner" style="display: none;"></div>
 
       <div class="geo-badge">
-        &#128205; Delivering Exclusively Across Gurugram &amp; Delhi NCR Tech Parks &amp; Residences
+        📍 Delivering Exclusively Across Gurugram &amp; Delhi NCR Tech Parks &amp; Residences
       </div>
-
-
-<div class="craft-badge">☕ Each Bottle Brewed Seperately </div>
+      
+      <div class="craft-badge">
+        ☕ Hand-Brewed Separately in Small Batches &bull; Crafted Fresh to Order
+      </div>
     </div>
 
-    <!-- Mode Selector: B2C vs B2B -->
+    <!-- Mode Selector: B2C vs B2B vs Track Order -->
     <div class="mode-switch">
-      <button class="mode-tab active" id="tabB2c" onclick="switchMode('B2C')">&#9749; Individual Pre-Order (Sat)</button>
-      <button class="mode-tab" id="tabB2b" onclick="switchMode('B2B')">&#127970; Office &amp; Team Drop (Fri)</button>
+      <button class="mode-tab active" id="tabB2c" onclick="switchMode('B2C')">☕ Individual (Sat)</button>
+      <button class="mode-tab" id="tabB2b" onclick="switchMode('B2B')">🏢 Office Drop (Fri)</button>
+      <button class="mode-tab" id="tabTrack" onclick="switchMode('TRACK')">🔍 Track Order</button>
     </div>
 
     <!-- Order Form View -->
@@ -71,10 +73,9 @@
         <!-- Custom Ratio Splitter Module -->
         <div class="custom-splitter-card" id="customSplitter" style="display: none;">
           <div class="splitter-header">
-            <span class="splitter-title">&#127915; Build Your Own Batch Ratio</span>
+            <span class="splitter-title">🎯 Build Your Own Batch Ratio</span>
             <span class="splitter-tally" id="splitterTally">Allocated: <strong><span id="allocCount">4</span> / <span id="targetCount">4</span></strong> bottles</span>
-
-<div id="tallyStatus" class="splitter-tally-note" style="font-size: 0.76rem; color: var(--accent); margin-top: 6px; text-align: center;"></div>
+            <div id="tallyStatus" class="splitter-tally-note" style="font-size: 0.76rem; color: var(--accent); margin-top: 6px; text-align: center;"></div>
           </div>
           <div class="splitter-controls">
             <div class="splitter-row">
@@ -134,7 +135,6 @@
           <div id="couponStatus" class="coupon-status" style="display: none;"></div>
         </div>
 
-
         <div class="summary-box">
           <div class="summary-breakdown" id="summaryBreakdown" style="display: none;">
             <div class="summary-line">
@@ -160,7 +160,7 @@
         </div>
 
         <div class="saved-profile-bar" id="savedProfileBar">
-          <span id="savedProfileText">&#128075; Welcome back! Autofill previous order info?</span>
+          <span id="savedProfileText">👋 Welcome back! Autofill previous order info?</span>
           <button class="saved-profile-btn" onclick="applySavedProfile()">Autofill</button>
         </div>
 
@@ -174,8 +174,7 @@
 
           <div class="form-group">
             <label for="b2bTechPark">Tech Park / Commercial Hub *</label>
-
-<select id="b2bTechPark" onchange="updateDeliveryWindows()">
+            <select id="b2bTechPark" onchange="updateDeliveryWindows()">
               <option value="DLF Cyber City / Cyber Hub (Gurugram)">DLF Cyber City / Cyber Hub (Gurugram)</option>
               <option value="One Horizon Center / Golf Course Rd (Gurugram)">One Horizon Center / Golf Course Rd (Gurugram)</option>
               <option value="Candor TechSpace / Sector 48 (Gurugram)">Candor TechSpace / Sector 48 (Gurugram)</option>
@@ -189,12 +188,10 @@
 
           <div class="form-group">
             <label for="b2bDeliveryWindow">Friday Delivery Window *</label>
-
-<select id="b2bDeliveryWindow" onchange="updateDeliveryWindows()">
-              <option value="Morning Kickoff (9:30 AM &ndash; 11:30 AM)">Morning Kickoff (9:30 AM &ndash; 11:30 AM)</option>
-              <option value="Afternoon Recharge (2:00 PM &ndash; 4:00 PM)">Afternoon Recharge (2:00 PM &ndash; 4:00 PM)</option>
+            <select id="b2bDeliveryWindow" onchange="updateDeliveryWindows()">
+              <option value="Morning Kickoff (9:30 AM – 11:30 AM)">Morning Kickoff (9:30 AM &ndash; 11:30 AM)</option>
+              <option value="Afternoon Recharge (2:00 PM – 4:00 PM)">Afternoon Recharge (2:00 PM &ndash; 4:00 PM)</option>
             </select>
-
             <div id="slotStatusAlert" class="slot-status-alert" style="display: none;"></div>
           </div>
 
@@ -266,8 +263,7 @@
         </div>
 
         <button id="payNowBtn" class="btn btn-pay" onclick="handlePayClick()">
-
-<span id="btnText">&#128179; Pay &amp; Confirm Pre-Order (<span id="btnAmount">₹899</span>)</span>
+          <span id="btnText">&#128179; Pay &amp; Confirm Pre-Order (<span id="btnAmount">₹899</span>)</span>
         </button>
       </div>
 
@@ -287,9 +283,119 @@
           <div class="guide-step">
             <strong>3. Peak Window:</strong> Refrigerate upon delivery. Enjoy poured over clean ice within <strong>48 hours</strong> of drop!
           </div>
+          <div class="guide-step">
+            <strong>4. Handcrafted &amp; Brewed Separately:</strong> Every single coffee is brewed separately by hand in small micro-batches just for your order. Because each batch is crafted manually rather than by automated machines, you might notice subtle, natural flavor nuances across individual bottles.
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <!-- Order Tracker View -->
+    <div id="trackerSection" style="display: none;">
+      <div class="section-card">
+        <div class="section-title">
+          <span>Live Order Status Tracker</span>
+          <span class="section-subtitle">Real-Time Roastery Fulfillment</span>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4;">
+          Enter your Order ID (e.g. <code>TABC-154359</code> or <code>TABC-B2B-582709</code>) to see live extraction, dispatch, and delivery updates.
+        </p>
+        
+        <div class="tracker-input-group">
+          <input type="text" id="trackOrderIdInput" placeholder="Enter Order ID (e.g. TABC-154359)" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();submitTrackOrder();}" />
+          <button type="button" id="btnSubmitTrack" class="btn-track" onclick="submitTrackOrder()">Track</button>
+        </div>
+        <div id="trackStatusMsg" class="track-status-msg" style="display: none;"></div>
 
-<div class="guide-step"><strong>4. Handcrafted &amp; Brewed Separately:</strong> Every single coffee is brewed separately by hand in small micro-batches just for your order. Because each batch is crafted manually rather than by automated machines, you might notice subtle, natural flavor nuances across individual bottles.</div>
+        <!-- Tracker Results Container -->
+        <div id="trackerResult" style="display: none; margin-top: 18px;">
+          <!-- Visual Fulfillment Stepper -->
+          <div class="timeline-stepper" id="timelineStepper">
+            <div class="stepper-step" id="stepPreOrdered">
+              <div class="step-icon-wrap">
+                <div class="step-icon">1</div>
+              </div>
+              <div class="step-info">
+                <div class="step-title">Pre-Ordered</div>
+                <div class="step-desc">Order confirmed &amp; queued</div>
+              </div>
+            </div>
+            <div class="stepper-line" id="line1"></div>
+            <div class="stepper-step" id="stepBrewing">
+              <div class="step-icon-wrap">
+                <div class="step-icon">2</div>
+              </div>
+              <div class="step-info">
+                <div class="step-title">Brewing</div>
+                <div class="step-desc">Hand-extracted &amp; flash-chilled</div>
+              </div>
+            </div>
+            <div class="stepper-line" id="line2"></div>
+            <div class="stepper-step" id="stepDispatched">
+              <div class="step-icon-wrap">
+                <div class="step-icon">3</div>
+              </div>
+              <div class="step-info">
+                <div class="step-title">Dispatched</div>
+                <div class="step-desc">Out for cold-chain delivery</div>
+              </div>
+            </div>
+            <div class="stepper-line" id="line3"></div>
+            <div class="stepper-step" id="stepDelivered">
+              <div class="step-icon-wrap">
+                <div class="step-icon">4</div>
+              </div>
+              <div class="step-info">
+                <div class="step-title">Delivered</div>
+                <div class="step-desc">Enjoy fresh within 48 hours</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order Summary Card -->
+          <div class="tracker-summary-card" id="trackerSummaryCard">
+            <div class="tracker-summary-header">
+              <span class="tracker-badge" id="tBadgeStatus">PRE-ORDERED</span>
+              <span class="tracker-order-id" id="tOrderId">TABC-154359</span>
+            </div>
+            <div class="tracker-details-list">
+              <div class="tracker-detail-row">
+                <span>Customer:</span>
+                <strong id="tCustomer">-</strong>
+              </div>
+              <div class="tracker-detail-row" id="tCompanyRow" style="display: none;">
+                <span>Company:</span>
+                <strong id="tCompany">-</strong>
+              </div>
+              <div class="tracker-detail-row">
+                <span>Delivery Window:</span>
+                <strong id="tDeliveryWindow" style="color: var(--accent);">-</strong>
+              </div>
+              <div class="tracker-detail-row">
+                <span>Destination:</span>
+                <strong id="tDestination">-</strong>
+              </div>
+              <div class="tracker-detail-row">
+                <span>Gate / Drop Note:</span>
+                <strong id="tDropNote">-</strong>
+              </div>
+              <div class="tracker-detail-row">
+                <span>Coffee Selection:</span>
+                <strong id="tBean">-</strong>
+              </div>
+              <div class="tracker-detail-row">
+                <span>Pack Tier:</span>
+                <strong id="tPack">-</strong>
+              </div>
+              <div class="tracker-detail-row">
+                <span>Payment:</span>
+                <strong id="tPayment">-</strong>
+              </div>
+            </div>
+            <div class="freshness-alert" style="margin-top: 12px; margin-bottom: 0;">
+              &#10052; <strong>48-Hour Freshness Window:</strong> Keep refrigerated upon delivery and consume within 48 hours for peak tasting notes!
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -302,9 +408,7 @@
         <p style="font-size: 0.82rem; color: var(--text-muted);">Your micro-batch is scheduled for fresh roast &amp; chilled delivery.</p>
 
         <div class="freshness-alert">
-
-
-&#10052; <strong>Hand-Brewed Fresh to Order:</strong> Each coffee is brewed separately by hand with zero preservatives. Because every batch is handcrafted, enjoy subtle artisanal nuances in every bottle. Keep refrigerated upon arrival and consume within 48 hours for peak flavor!
+          &#10052; <strong>Hand-Brewed Fresh to Order:</strong> Each coffee is brewed separately by hand with zero preservatives. Because every batch is handcrafted, enjoy subtle artisanal nuances in every bottle. Keep refrigerated upon arrival and consume within 48 hours for peak flavor!
         </div>
 
         <div class="receipt-details">
@@ -369,6 +473,10 @@
 
         <button class="btn btn-whatsapp" onclick="sendWhatsAppReceipt()">
           <span>&#128241; Send Receipt / Updates to My WhatsApp</span>
+        </button>
+
+        <button type="button" class="btn" style="background: rgba(212, 163, 115, 0.15); color: var(--accent); border: 1px solid var(--accent); margin-top: 10px;" onclick="trackCurrentOrder()">
+          <span>&#128269; View Live Order Status</span>
         </button>
 
         <button class="btn btn-secondary" onclick="resetForm()">
