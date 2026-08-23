@@ -2,7 +2,7 @@
 
 ## **Micro-Batch Flash-Chilled Specialty Coffee • Gurugram & Delhi NCR**
 
-A lightweight, high-performance, serverless e-commerce and order intake portal designed for scheduled micro-batch craft coffee drops, dynamic Google Sheets headless CMS configuration, direct payment gateway integration, live order tracking, and automated customer notifications.  
+A lightweight, high-performance, serverless e-commerce and order intake portal designed for scheduled micro-batch craft coffee drops, dynamic Google Sheets headless CMS configuration, direct payment gateway integration, live order tracking, and automated customer notifications. All coffee is standardized into 200ml glass bottles across all distribution tiers.  
 ---
 
 ### **📌 1\. Overview & Business Model**
@@ -11,10 +11,10 @@ The Apartment Brew Co. operates an asset-light, pre-order only micro-batch craft
 
 * **Extraction & Peak Freshness:** Coffee is extracted hot to capture delicate floral and fruity aromatics and flash-chilled immediately over ice. 100% preservative-free with a strict 48-hour peak freshness window.  
 * Dual Delivery Pathways:  
-  * B2C (Individual Saturday Morning Drops): Pre-orders close Friday 10:00 PM; delivered Saturday 8:00 AM – 11:00 AM.  
+  * B2C (Individual Drops): Pre-orders close Friday 10:00 PM for Saturday 8:00 AM \&ndash; 11:00 AM delivery, or Saturday 10:00 PM for Sunday 8:00 AM \&ndash; 11:00 AM delivery.  
   * B2B (Corporate Friday Office Drops): Orders close Thursday 6:00 PM; delivered Friday (Morning Kickoff 9:30–11:30 AM or Afternoon Recharge 2:00–4:00 PM).  
 * Delivery Coverage: Hyper-local Delhi NCR (Gurugram DLF Phases 1–5, Cyber City, Golf Course Rd, Candor TechSpace, Udyog Vihar, Noida Tech Parks, and Central/South Delhi).  
-* **Tasting Sampler Flights (Discovery Packs):** Curated 2-bottle sampler packs (1 bottle each of active single-estate harvests) built on the custom ratio splitter. Dynamically scales across multi-pack orders (e.g. 2 packs \= 2x Lot 1 \+ 2x Lot 2\) while allowing full bottle-level ratio customization, making it easy for new and returning customers to explore the full roast lineup.
+* **Tasting Sampler Flights (Discovery Packs):** Curated 2-bottle sampler packs (2x 200ml bottles, 1 bottle each of active single-estate harvests) built on the custom ratio splitter. Dynamically scales across multi-pack orders (e.g. 2 packs \= 2x Lot 1 \+ 2x Lot 2\) while allowing full bottle-level ratio customization, making it easy for new and returning customers to explore the full roast lineup.
 
 ### **📌 1.1 Roastery Operations & Craft Philosophy**
 
@@ -54,7 +54,7 @@ The Apartment Brew Co. maintains a strict manual extraction protocol to ensure p
               +----------------------------------------------+      +-------------------------------+
               |            Google Sheets Database            |      |   Gmail Notification Engine   |
               |  - Tab 1: Menu & Config (Headless CMS)       |      |  - B2C Saturday Drop Receipt  |
-              |  - Tab 2: Sheet1 (B2C Orders, 17 Columns)    |      |  - B2B Friday Corporate Drop  |
+              |  - Tab 2: B2C Orders (B2C Orders, 18 Columns)        |
               |  - Tab 3: B2B Orders (Corporate, 22 Columns) |      |  - 1-Click Calendar Links     |
               |  - Tab 4: Custom Inquiries (13 Columns)      |      +-------------------------------+
 ```
@@ -70,15 +70,15 @@ The website is 100% data-driven by the Menu & Config tab in the Google Spreadshe
    2. PAUSED: Displays roastery preparation banner; temporarily disables checkout buttons.  
    3. SOLD\_OUT: Displays sold-out notice; alerts customers for the next batch release.  
 2. Batch Capacity & Scarcity Progress Bar:  
-   1. Batch Capacity: Sets the total roasted batch bottle limit (e.g. 200 bottles).  
-   2. Live Reservation Tally: doGet automatically sums active bottles from Sheet1 (B2C) and B2B Orders to display live reservation progress on the frontend.  
+   1. Independent Batch Capacities: B2C Batch Capacity is set at 150 bottles (supporting Saturday \&amp; Sunday drops); B2B Batch Capacity is set at 200 bottles (supporting Friday drops).  
+   2. Live Reservation Tally: doGet automatically sums active bottles from B2C Orders and B2B Orders to display live reservation progress on the frontend.  
 3. Coffee Harvest Lots & Lot-Level Caps:  
    1. Configure lot estate names, processing methods (e.g. Anaerobic Naturals, Washed Lot), tasting notes, flavor pills, acidity %, and body %.  
    2. Max Bottles column: Defines the maximum bottle ceiling for each lot to enforce lot-level inventory caps and prevent overselling scarce beans.  
    3. Setting Active to FALSE immediately removes the lot from the frontend.  
    4. The interactive Custom Ratio Splitter automatically updates its lot labels and split controls based on active harvests, allowing 2-bottle Duo Packs to be configured as Discovery Sampler Flights with custom 1:1 split ratios.  
 4. B2C & B2B Pack Tiers Management:  
-   1. Edit pack names, bottle quantities, unit prices (₹), and marketing badges (e.g. Popular, Value, MOQ). Note that 2-bottle Duo Packs can be configured as Discovery Sampler Flights with custom 1:1 split ratios between active single-estate harvests.  
+   1. Edit pack names, quantities (B2C Single: 1x 200ml, Duo: 2x 200ml, Weekend: 4x 200ml, Mega Weekender: 6x 200ml; B2B Team: 10x 200ml, Office Batch: 20x 200ml, Floor Pack: 40x 200ml, Townhall Bulk: 60x 200ml), unit prices (&\#8377;), and marketing badges.  
    2. **Dynamic Pack Disabling:** Pack tiers whose bottle size exceeds live remaining roastery capacity (batchCapacity \- reservedBottles) are automatically grayed out and disabled on the frontend.  
    3. **Multi-Pack Quantity Throttling:** If increasing the quantity causes total bottles to exceed remaining capacity, a real-time warning (\#errCapacityLimit) triggers and blocks checkout navigation to ensure inventory integrity.  
 5. Coupon Discount Engine:  
@@ -93,11 +93,11 @@ The website is 100% data-driven by the Menu & Config tab in the Google Spreadshe
 To reset the capacity counter between weekly drops:
 
 * **Mark Orders as Delivered / Cancelled (Recommended):**  
-  * In Sheet1 (B2C): Set Column P (Delivery Status) to Delivered or Cancelled.  
+  * In B2C Orders: Set Column Q (Delivery Status) to Delivered or Cancelled.  
   * In B2B Orders: Set Column U (Delivery Status) to Delivered or Cancelled.  
   * The backend automatically excludes fulfilled orders and resets the reserved bottle counter back to 0 for the upcoming drop while preserving historical order logs.  
-* **Clear / Delete Test Rows:** Select test order rows (row 2 downwards) in *Sheet1* or *B2B Orders* and delete them.  
-* Change Total Batch Limit: In the Menu & Config tab, change Cell B3 (Batch Capacity) to the new batch target.
+* **Clear / Delete Test Rows:** Select test order rows (row 2 downwards) in *B2C Orders* or *B2B Orders* and delete them.  
+* Change Total Batch Limit: In the Menu & Config tab, update B2C Batch Capacity (150) or B2B Batch Capacity (200) to the new batch targets.
 
 ---
 
@@ -106,7 +106,7 @@ To reset the capacity counter between weekly drops:
 #### **1\. Multi-Page Architecture & Information Structure**
 
 * index.html: Dedicated Brand Manifesto, Roastery Philosophy, Core Craft Pillars & Side-by-Side Comparison Matrix (Flash-Chilled vs Cold Brew vs Instant)  
-* order.html: Dedicated Individual Saturday Morning Drop Pre-Order (4-Step Wizard)  
+* order.html: Dedicated Individual Weekend Drop Pre-Order (Saturday or Sunday Morning choices).  
 * office.html: Dedicated Corporate Friday Office Batch Drops (4-Step Wizard)  
 * menu.html: Single-Estate Harvest Showcase & Sensory Profiles  
 * about.html: Roastery Origin Story & Farm Direct Sourcing  
@@ -144,7 +144,7 @@ To reset the capacity counter between weekly drops:
 * Page Dispatcher Logic: Centralized management for multi-page routing and rendering based on the active HTML context, ensuring seamless data flow between the GitHub Pages architecture and the Apps Script backend.  
 * **Custom Ratio Splitter & Discovery Engine:** Features dynamic bottle counters (+ / \-) for customizing exact lot ratios between harvests across any pack size. For Discovery Sampler packs, defaults automatically to a balanced 50/50 split across active single-estate harvests (scaling dynamically with pack quantity: 1 pack \= 1:1, 2 packs \= 2:2, etc.) and preserves custom proportional ratios when pack quantities change.  
 * Coupon Code Engine Logic: Supports flat (₹) and percentage (%) discounts with minimum order threshold verification and mode enforcement (B2C, B2B, or ALL). Includes dynamic discount rebalancing on quantity or pack changes, Razorpay discounted payload dispatch, and structured confirmation receipt breakdowns.  
-* Dynamic Cutoff & Slot Engine: Calculates closest Saturday morning delivery for B2C and Friday for B2B. Computes live ticking countdown to Thursday 6:00 PM (B2B) and Friday 10:00 PM (B2C) cutoffs. Dynamically renders available delivery windows and disables full slots based on real-time cluster capacity data.  
+* Dynamic Cutoff \&amp; Slot Engine: Calculates Saturday or Sunday morning delivery for B2C and Friday for B2B. Computes live ticking countdown to Friday 10:00 PM (B2C Saturday drop), Saturday 10:00 PM (B2C Sunday drop), and Thursday 6:00 PM (B2B) cutoffs.  
 * Profile & Offline Management: Features in-memory profile caching and saves customer details in browser localStorage (tabc\_customer\_profile) for instant re-ordering, supported by an automated localStorage offline order retry queue and PWA Service Worker integration.  
 * Validation Subsystem: Debounced input validation for Delhi NCR PIN codes, 10-digit Indian phone numbers, and 15-character GSTINs.  
 * Checkout & Dispatch: Opens Razorpay checkout modal or generates corporate invoice IDs (INV-REQ-xxxxxx), then dispatches payload to Apps Script.  
@@ -152,9 +152,9 @@ To reset the capacity counter between weekly drops:
 
 #### **4\. Code.gs (Backend Microservice)**
 
-* Security Checks: Verifies authToken \=== 'TABC\_SECURE\_TOKEN\_2026' and rejects bots using honeypot detection (botTrap).  
-* Concurrency & Capacity Validation: Uses LockService.getScriptLock() with a 15-second timeout (lock.tryLock(15000)) in doPost to eliminate race conditions and prevent oversubscribing coffee lots or cluster slots during peak drop cutoffs. Validates requested delivery slots against remaining cluster capacity before appending orders.  
-* Database Routing: B2C orders append to Sheet1 (17 columns, instruction in Column G), while B2B orders append to B2B Orders (22 columns, instruction in Column K).  
+* Security Checks: Verifies authToken \=== \&apos;TABC\_SECURE\_TOKEN\_2026\&apos; and rejects bots using honeypot detection (botTrap).  
+* Concurrency \&amp; Capacity Validation: Uses LockService.getScriptLock() with a 15-second timeout in doPost to eliminate race conditions and prevent oversubscribing coffee lots or cluster slots. Enforces separate caps (B2C: 150 bottles, B2B: 200 bottles) during peak drop cutoffs.  
+* Database Routing: B2C orders append to B2C Orders (18 columns), while B2B orders append to B2B Orders (22 columns, instruction in Column K).  
 * Email Generator: Dispatches inline-styled HTML confirmation emails via GmailApp.sendEmail with order details, 48-hour shelf-life guidelines, and Google Calendar event links.  
 * Dynamic Aggregations (doGet): Calculates active lot reservations, remaining lot inventory, and cluster slot fullness in real-time.
 
@@ -162,7 +162,9 @@ To reset the capacity counter between weekly drops:
 
 ### **📊 6\. Google Sheets Database Schema**
 
-#### **Sheet1 (B2C Orders — 17 Columns)**
+#### **B2C Orders (B2C Orders \&mdash; 18 Columns)**
+
+#### 
 
 | Col | Field Name | Description |
 | :---: | :---- | :---- |
@@ -174,15 +176,15 @@ To reset the capacity counter between weekly drops:
 | F | Delivery Address / Area | Full address with building, tower, floor, and PIN |
 | G | Delivery / Gate Instruction | Door drop vs Security / Concierge desk |
 | H | Delivery Date | Scheduled Saturday drop date |
-| I | Coffee Bean Lot | Selected coffee lot or custom split ratio |
-| J | Pack Selected | Pack tier name |
-| K | Quantity | Quantity of packs ordered |
-| L | Total Bottles | Total 250ml bottles |
-| M | Total Amount (₹) | Final order total |
-| N | Payment Preference | Razorpay Gateway |
-| O | Payment Status | Paid via Gateway (payment ID) |
-| P | Delivery Status | Pre-Ordered / Brewing / Dispatched / Delivered / Cancelled |
-| Q | Notes / UTR | Gateway reference or special notes |
+| I | Coffee Bean Lot | Selected coffee lot or custom split ratio Delivery Window |
+| J K | Delivery Window Pack Selected | Selected Saturday or Sunday morning slot Pack tier name |
+| L | Quantity | Quantity of packs ordered |
+| M | Total Bottles | Total 200ml glass bottles |
+| N | Total Amount (&\#8377;) | Final order total |
+| O | Payment Preference | Razorpay Gateway |
+| P | Payment Status | Paid via Gateway (payment ID) |
+| Q | Delivery Status | Pre-Ordered / Brewing / Dispatched / Delivered / Cancelled |
+| R | Notes / UTR | Gateway reference or special notes |
 
 #### **B2B Orders (Corporate Drops — 22 Columns)**
 
@@ -204,7 +206,7 @@ To reset the capacity counter between weekly drops:
 | N | Coffee Lot Selection | Coffee lot or custom split |
 | O | Pack Tier | Corporate pack tier |
 | P | Quantity | Number of packs |
-| Q | Total Bottles | Total 250ml bottles |
+| Q | Total Bottles | Total 200ml glass bottles |
 | R | Total Amount (₹) | Final order amount |
 | S | Payment Method | Razorpay Gateway / Corporate Invoice |
 | T | Payment Status | Paid / Invoice Requested (Net Terms) |
@@ -217,7 +219,7 @@ To reset the capacity counter between weekly drops:
 
 This section provides a dictionary of exact keywords, spreadsheet mappings, and resulting frontend timeline stages for the live tracking system.
 
-### **1\. Individual Pre-Orders (Sheet1 \-\> Column P Delivery Status)**
+### **1\. Individual Pre-Orders (B2C Orders \-\&gt; Column Q Delivery Status)**
 
 * **Stage 1: Pre-Ordered** (Keywords: Pre-Ordered, Pending, Received) \-\> Highlights Step 1: Pre-Ordered  
 * **Stage 2: Brewing** (Keywords: Brewing, Roasting, Extracting, Chilling, Prep) \-\> Highlights Step 2: Brewing & Chilling  
@@ -251,7 +253,7 @@ This section provides a dictionary of exact keywords, spreadsheet mappings, and 
 
 ### **5\. Operational SOP for Roastery Updates**
 
-* **Google Sheets Updates:** Roastery operators must manually update the status columns (Column P in Sheet1, Column U in B2B Orders, or Column L in Inquiries) using the keywords above to trigger frontend timeline changes.  
+* **Google Sheets Updates:** Roastery operators must manually update the status columns (Column Q in B2C Orders, Column U in B2B Orders, or Column L in Inquiries) using the keywords above to trigger frontend timeline changes.  
 * **Apps Script Versioning:** When Code.gs is updated, ensure you use **Deploy \> Manage deployments \> Edit \> Version: New version \> Deploy** to ensure the live tracker runs the latest logic.
 
 ### **⚙️ 7\. Deployment & Configuration Guide**
@@ -286,7 +288,7 @@ The system features a real-time fulfillment lifecycle tracker allowing customers
 
 #### **Backend Lookup Handler (doGet)**
 
-The tracker is powered by a dedicated *doGet* lookup handler in the backend microservice. It supports the query parameter *?action=track\&orderId=TABC-XXXXXX*, which performs a cross-tab search across both *Sheet1* (B2C) and *B2B Orders* to retrieve live status data.
+The tracker is powered by a dedicated *doGet* lookup handler in the backend microservice. It supports the query parameter *?action=track\&amp;orderId=TABC-XXXXXX*, which performs a cross-tab search across both *B2C Orders* and *B2B Orders* to retrieve live status data.
 
 #### **Client-Side Tracking UI**
 

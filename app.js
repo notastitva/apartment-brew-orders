@@ -74,7 +74,7 @@ let currentMode = (PAGE === 'OFFICE') ? "B2B" : "B2C";
 let currentWizardStep = 1;
 let currentB2bPayOption = "GATEWAY";
 let currentStoreStatus = "OPEN";
-let liveRemainingBatchBottles = 250;
+let liveRemainingBatchBottles = 150;
 
 // Default Dynamic State (Overridden by live Google Sheets Menu & Config)
 let availableLots = [
@@ -199,9 +199,9 @@ function renderSplitterUI() {
   
   if (tallyEl) {
     if (customSplit.lot1 === customSplit.lot2) {
-      tallyEl.textContent = `✨ Balanced Mix & Match Split: ${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name} (${qty}x ${activePack.name})`;
+      tallyEl.textContent = `✨ Balanced Mix & Match Split: ${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name} (${qty}x ${activePack.name} @ 200ml)`;
     } else {
-      tallyEl.textContent = `🎯 Custom Split: ${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name} (Total ${total} bottles in batch)`;
+      tallyEl.textContent = `🎯 Custom Split: ${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name} (Total ${total}x 200ml bottles in batch)`;
     }
   }
   
@@ -231,7 +231,7 @@ function validateWizardStep(stepNum) {
     const errCap = document.getElementById('errCapacityLimit');
     if (errCap) {
       if (!isUnderCapacity) {
-        errCap.textContent = `⚠️ Selected order (${totalBottles} bottles) exceeds remaining batch capacity (${liveRemainingBatchBottles} bottles left). Please reduce quantity or select a smaller pack.`;
+        errCap.textContent = `⚠️ Selected order (${totalBottles}x 200ml bottles) exceeds remaining batch capacity (${liveRemainingBatchBottles} bottles left). Please reduce quantity or select a smaller pack.`;
         errCap.style.display = 'block';
       } else {
         errCap.style.display = 'none';
@@ -347,8 +347,11 @@ function populateOrderReview() {
   const address = (document.getElementById('custAddress')?.value || '').trim();
   const pin = (document.getElementById('custPincode')?.value || '').trim();
   const location = isB2b ? (document.getElementById('b2bTechPark')?.value || '') : (document.getElementById('custCity')?.value || '');
-  const deliveryWindow = isB2b ? (document.getElementById('b2bDeliveryWindow')?.value || '') : "Saturday Morning (8:00 AM – 11:00 AM)";
-  const dropDate = isB2b ? getUpcomingFridayFormatted() : getUpcomingSaturdayFormatted();
+  
+  const b2cDaySelect = document.getElementById('b2cDeliveryDay');
+  const b2cDayVal = b2cDaySelect ? b2cDaySelect.value : "Saturday Morning (8:00 AM – 11:00 AM)";
+  const deliveryWindow = isB2b ? (document.getElementById('b2bDeliveryWindow')?.value || '') : b2cDayVal;
+  const dropDate = isB2b ? getUpcomingFridayFormatted() : getUpcomingB2cDropDate(b2cDayVal);
   const company = (document.getElementById('custCompany')?.value || '').trim();
   
   const revBean = document.getElementById('revBean');
@@ -363,8 +366,8 @@ function populateOrderReview() {
   const revTotal = document.getElementById('revTotal');
   
   if (revBean) revBean.textContent = coffeeLotDisplay;
-  if (revPack) revPack.textContent = `${activePack.name} x ${qty} (${activePack.bottles * qty} bottles)`;
-  if (revDate) revDate.textContent = dropDate;
+  if (revPack) revPack.textContent = `${activePack.name} x ${qty} (${activePack.bottles * qty}x 200ml bottles)`;
+  if (revDate) revDate.textContent = `${dropDate} (${deliveryWindow})`;
   if (revWindow) revWindow.textContent = deliveryWindow;
   if (revAddress) revAddress.textContent = `${address}, ${location} (PIN: ${pin})`;
   if (revCustomer) revCustomer.textContent = name;
@@ -389,12 +392,19 @@ function getUpcomingFridayFormatted() {
   return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-function getUpcomingSaturdayFormatted() {
+function getUpcomingB2cDropDate(slotStr) {
   const d = new Date();
-  let days = (6 - d.getDay() + 7) % 7;
+  const isSunday = slotStr && (slotStr.includes('Sun') || slotStr.includes('Sunday'));
+  const targetDay = isSunday ? 0 : 6; // 0 = Sunday, 6 = Saturday
+  
+  let days = (targetDay - d.getDay() + 7) % 7;
   if (days === 0 && d.getHours() >= 10) days = 7;
   d.setDate(d.getDate() + days);
   return d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function getUpcomingSaturdayFormatted() {
+  return getUpcomingB2cDropDate('Saturday');
 }
 
 function renderClusterOptions() {
@@ -525,7 +535,7 @@ function renderLots(lots) {
       </div>`;
   });
   
-  // 3rd Option: Mix & Match (Always rendered across ORDER, OFFICE, INDEX, HOME)
+  // 3rd Option: Mix & Match
   if (PAGE !== 'MENU') {
     const l1 = lots[0] || { name: "Ratnagiri Estate", process: "Anaerobic Naturals" };
     const l2 = lots[1] || { name: "Banana Banger", process: "Fermented Lot" };
@@ -543,12 +553,12 @@ function renderLots(lots) {
           <span class="flavor-pill">Your Choice</span>
         </div>
       </div>`;
-
+  
     const l1Name = document.getElementById('splitLot1Name');
     const l1Sub = document.getElementById('splitLot1Sub');
     const l2Name = document.getElementById('splitLot2Name');
     const l2Sub = document.getElementById('splitLot2Sub');
-
+  
     if (l1Name) l1Name.textContent = l1.name;
     if (l1Sub) l1Sub.textContent = l1.process;
     if (l2Name) l2Name.textContent = l2.name;
@@ -570,29 +580,29 @@ function renderPacks(b2cPacks, b2bPacks) {
       let b2cHtml = '';
       let hasDefault = false;
       let fallback = null;
-
+  
       b2cPacks.forEach((p) => {
         const isOverCap = p.bottles > liveRemainingBatchBottles;
         if (!isOverCap && !fallback) fallback = p;
         const isSelected = p.name === selectedB2cPack.name && !isOverCap;
         if (isSelected) hasDefault = true;
-
+  
         const badgeHtml = p.badge ? `<div class="pack-badge">${p.badge}</div>` : '';
         const disabledBadge = isOverCap ? `<div class="pack-disabled-badge">Cap Exceeded</div>` : '';
         const perBottle = p.bottles > 1 ? ` (@ ₹${Math.round(p.price / p.bottles)})` : '';
         const clickHandler = isOverCap ? '' : `onclick="selectB2cPack('${p.name}', ${p.bottles}, ${p.price}, this)"`;
-
+  
         b2cHtml += `
           <div class="pack-option ${isSelected ? 'active' : ''} ${isOverCap ? 'pack-disabled' : ''}" ${clickHandler}>
             ${disabledBadge}
             ${badgeHtml}
             <div class="pack-name">${p.name}</div>
             <div class="pack-price">₹${p.price.toLocaleString('en-IN')}</div>
-            <div class="pack-desc">${p.bottles}x 250ml${perBottle}</div>
+            <div class="pack-desc">${p.bottles}x 200ml${perBottle}</div>
           </div>`;
       });
       b2cGrid.innerHTML = b2cHtml;
-
+  
       if (!hasDefault && fallback) {
         selectedB2cPack = { name: fallback.name, bottles: fallback.bottles, unitPrice: fallback.price };
       }
@@ -606,27 +616,27 @@ function renderPacks(b2cPacks, b2bPacks) {
       let b2bHtml = '';
       let hasDefault = false;
       let fallback = null;
-
+  
       b2bPacks.forEach((p) => {
         const isOverCap = p.bottles > liveRemainingBatchBottles;
         if (!isOverCap && !fallback) fallback = p;
         const isSelected = p.name === selectedB2bPack.name && !isOverCap;
         if (isSelected) hasDefault = true;
-
+  
         const disabledBadge = isOverCap ? `<div class="pack-disabled-badge">Cap Exceeded</div>` : '';
         const perBottle = ` (₹${Math.round(p.price / p.bottles)}/ea)`;
         const clickHandler = isOverCap ? '' : `onclick="selectB2bPack('${p.name}', ${p.bottles}, ${p.price}, this)"`;
-
+  
         b2bHtml += `
           <div class="pack-option ${isSelected ? 'active' : ''} ${isOverCap ? 'pack-disabled' : ''}" ${clickHandler}>
             ${disabledBadge}
             <div class="pack-name">${p.name}</div>
             <div class="pack-price">₹${p.price.toLocaleString('en-IN')}</div>
-            <div class="pack-desc">${p.bottles}x 250ml${perBottle}</div>
+            <div class="pack-desc">${p.bottles}x 200ml${perBottle}</div>
           </div>`;
       });
       b2bGrid.innerHTML = b2bHtml;
-
+  
       if (!hasDefault && fallback) {
         selectedB2bPack = { name: fallback.name, bottles: fallback.bottles, unitPrice: fallback.price };
       }
@@ -694,14 +704,18 @@ function applyStoreStatus(status) {
 function applyConfigToUI(data) {
   if (!data || data.action === 'track') return;
   
-  const cap = data.batchCapacity || 150;
-  const resCount = data.reservedBottles || 0;
+  const isB2b = (PAGE === 'OFFICE' || currentMode === 'B2B');
+  const cap = isB2b ? (data.b2bBatchCapacity || 200) : (data.b2cBatchCapacity || 150);
+  const resCount = isB2b ? (data.b2bReservedBottles || 0) : (data.b2cReservedBottles || 0);
+  const remBottles = isB2b ? data.b2bRemainingBatchBottles : data.b2cRemainingBatchBottles;
+  
+  liveRemainingBatchBottles = typeof remBottles === 'number' ? remBottles : Math.max(0, cap - resCount);
+  
   const scarcityText = document.getElementById('scarcityText');
   const scarcityFill = document.getElementById('scarcityFill');
-  liveRemainingBatchBottles = typeof data.remainingBatchBottles === 'number' ? data.remainingBatchBottles : Math.max(0, cap - resCount);
   
   if (scarcityText) {
-    scarcityText.textContent = `${resCount} / ${cap} Bottles Reserved`;
+    scarcityText.textContent = `${resCount} / ${cap} Bottles (200ml) Reserved`;
   }
   if (scarcityFill) {
     const pct = Math.min(Math.round((resCount / cap) * 100), 100);
@@ -718,7 +732,8 @@ function applyConfigToUI(data) {
     renderClusterOptions();
   }
   
-  if (resCount >= cap || data.isBatchFull === true) {
+  const isFull = isB2b ? (data.isB2bBatchFull === true || resCount >= cap) : (data.isB2cBatchFull === true || resCount >= cap);
+  if (isFull) {
     applyStoreStatus('SOLD_OUT');
   } else if (data.storeStatus) {
     applyStoreStatus(data.storeStatus);
@@ -781,7 +796,7 @@ function startCutoffCountdown() {
     const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const secs = Math.floor((diff % (1000 * 60)) / 1000);
   
-    const cutoffLabel = (PAGE === 'INDEX') ? "Next Saturday Drop Cutoff" : (isB2c ? "Saturday Drop Cutoff" : "Friday Drop Cutoff");
+    const cutoffLabel = (PAGE === 'INDEX') ? "Weekend Drops Cutoff" : (isB2c ? "Saturday/Sunday Drop Cutoff" : "Friday Drop Cutoff");
     timerEl.textContent = `⏱️ ${cutoffLabel} closes in ${hours}h ${mins}m ${secs}s`;
   }
   
@@ -942,7 +957,7 @@ function updateTotal() {
   
   if (totalBottles > liveRemainingBatchBottles) {
     if (errCap) {
-      errCap.textContent = `⚠️ Selected order (${totalBottles} bottles) exceeds remaining batch capacity (${liveRemainingBatchBottles} bottles left). Please reduce quantity or select a smaller pack.`;
+      errCap.textContent = `⚠️ Selected order (${totalBottles}x 200ml bottles) exceeds remaining batch capacity (${liveRemainingBatchBottles} bottles left). Please reduce quantity or select a smaller pack.`;
       errCap.style.display = 'block';
     }
     if (btnStep2Next) btnStep2Next.disabled = true;
@@ -952,7 +967,7 @@ function updateTotal() {
     if (btnStep2Next) btnStep2Next.disabled = false;
     if (payBtn && currentStoreStatus === 'OPEN') payBtn.disabled = false;
   }
-
+  
   const total = calculateTotal();
   const formattedTotal = `₹${total.toLocaleString('en-IN')}`;
   const formattedSubtotal = `₹${subtotal.toLocaleString('en-IN')}`;
@@ -1114,7 +1129,7 @@ function validateEmailField() {
   const errEl = document.getElementById('errEmail');
   if (!el) return true;
   const val = el.value.trim();
-  const emailRegex = /^[a-zA-Z0-9._%+-\\]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-\\\]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return setFieldState(el, errEl, emailRegex.test(val));
 }
 
@@ -1235,10 +1250,13 @@ async function handleOrderSuccess(paymentId, statusText) {
   const activePack = isB2b ? selectedB2bPack : selectedB2cPack;
   const dropInstructions = document.getElementById('dropInstructions')?.value || 'Deliver directly to door / desk';
   
+  const b2cDaySelect = document.getElementById('b2cDeliveryDay');
+  const b2cDayVal = b2cDaySelect ? b2cDaySelect.value : "Saturday Morning (8:00 AM – 11:00 AM)";
+  const deliveryWindow = isB2b ? (document.getElementById('b2bDeliveryWindow')?.value || '') : b2cDayVal;
+  const dropDate = isB2b ? getUpcomingFridayFormatted() : getUpcomingB2cDropDate(b2cDayVal);
+  
   const orderId = isB2b ? "TABC-B2B-" + Math.floor(100000 + Math.random() * 900000) : "TABC-" + Math.floor(100000 + Math.random() * 900000);
-  const dropDate = isB2b ? getUpcomingFridayFormatted() : getUpcomingSaturdayFormatted();
   const location = isB2b ? (document.getElementById('b2bTechPark')?.value || '') : (document.getElementById('custCity')?.value || '');
-  const deliveryWindow = isB2b ? (document.getElementById('b2bDeliveryWindow')?.value || '') : "Saturday Morning (8:00 AM – 11:00 AM)";
   const company = isB2b ? ((document.getElementById('custCompany')?.value || '').trim() || "N/A") : "N/A";
   const gstin = isB2b ? ((document.getElementById('custGstin')?.value || '').trim() || "N/A") : "N/A";
   const buildingFloor = (document.getElementById('custAddress')?.value || '').trim();
@@ -1320,18 +1338,18 @@ async function handleOrderSuccess(paymentId, statusText) {
   const linkTrackOrder = document.getElementById('linkTrackOrder');
   
   if (rOrderId) rOrderId.textContent = orderId;
-  if (rOrderType) rOrderType.textContent = isB2b ? 'Corporate Office Drop (Fri Drop)' : 'Individual Pre-Order (Sat Drop)';
+  if (rOrderType) rOrderType.textContent = isB2b ? 'Corporate Office Drop (Fri Drop)' : 'Individual Pre-Order (' + deliveryWindow + ')';
   if (rCompanyRow) rCompanyRow.style.display = isB2b ? 'flex' : 'none';
   if (isB2b && rCompany) rCompany.textContent = company;
   if (rWindowRow) rWindowRow.style.display = 'flex';
   if (rWindow) rWindow.textContent = deliveryWindow;
   
   if (rPayId) rPayId.textContent = paymentId;
-  if (rDropDate) rDropDate.textContent = dropDate;
+  if (rDropDate) rDropDate.textContent = `${dropDate} (${deliveryWindow})`;
   if (rName) rName.textContent = name;
   if (rEmail) rEmail.textContent = email;
   if (rBean) rBean.textContent = coffeeLotDisplay;
-  if (rPack) rPack.textContent = `${activePack.name} x ${qty} (${activePack.bottles * qty} bottles)`;
+  if (rPack) rPack.textContent = `${activePack.name} x ${qty} (${activePack.bottles * qty}x 200ml bottles)`;
   if (rTotal) rTotal.textContent = `₹${total.toLocaleString('en-IN')}`;
   
   if (discount > 0) {
@@ -1372,65 +1390,18 @@ function validateInqEmail() {
   const errEl = document.getElementById('errInqEmail');
   if (!el) return true;
   const val = el.value.trim();
-  const emailRegex = /^[a-zA-Z0-9._%+-\\]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-\\\]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return setFieldState(el, errEl, emailRegex.test(val));
 }
 
-function validatePhoneField() {
-  const el = document.getElementById('custPhone');
-  const errEl = document.getElementById('errPhone');
+function validateInqPhone() {
+  const el = document.getElementById('inqPhone');
+  const errEl = document.getElementById('errInqPhone');
   if (!el) return true;
   let val = el.value.replace(/[^0-9]/g, '');
   el.value = val;
   const phoneRegex = /^[6-9]\d{9}$/;
   return setFieldState(el, errEl, phoneRegex.test(val));
-}
-
-function validatePincodeField() {
-  const el = document.getElementById('custPincode');
-  const errEl = document.getElementById('errPincode');
-  const statusEl = document.getElementById('pinStatus');
-  if (!el) return true;
-  
-  let val = el.value.replace(/[^0-9]/g, '');
-  el.value = val;
-  
-  if (val.length < 6) {
-    if (statusEl) statusEl.textContent = '';
-    return setFieldState(el, errEl, false);
-  }
-  
-  const isNcr = /^(11[0-9]{4}|122[0-9]{3}|121[0-9]{3}|201[0-9]{3})$/.test(val);
-  if (isNcr) {
-    if (statusEl) {
-      statusEl.textContent = '✓ Serviceable across Delhi NCR';
-      statusEl.className = 'pin-status pin-valid';
-    }
-    return setFieldState(el, errEl, true);
-  } else {
-    if (statusEl) {
-      statusEl.textContent = '✕ Serviceable only in Delhi NCR (11xxxx, 122xxx, 121xxx, 201xxx)';
-      statusEl.className = 'pin-status pin-invalid';
-    }
-    return setFieldState(el, errEl, false);
-  }
-}
-
-function validateGstinField() {
-  const el = document.getElementById('custGstin');
-  const errEl = document.getElementById('errGstin');
-  if (!el) return true;
-  const val = el.value.trim().toUpperCase();
-  el.value = val;
-  
-  if (!val) {
-    el.classList.remove('input-invalid');
-    if (errEl) errEl.style.display = 'none';
-    return true;
-  }
-  
-  const gstinRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
-  return setFieldState(el, errEl, gstinRegex.test(val));
 }
 
 function handleCustomInquirySubmit() {
@@ -1493,6 +1464,7 @@ function handleCustomInquirySubmit() {
                       `*Scale:* ${headcount}\n` +
                       `*Target Date:* ${date}\n` +
                       `*Location:* ${loc}\n` +
+                      `*Bottle Size:* 200ml Glass Bottles\n` +
                       `*Notes:* ${notes || 'None'}\n` +
                       `------------------------------------\n` +
                       `_Submitted via The Apartment Brew Co. Website_`;
@@ -1526,7 +1498,7 @@ function renderInquirySuccess(inqId, name, comp, reqType, waUrl) {
     statusMsg.innerHTML = `
       <div style="font-size: 0.95rem; font-weight: 800; color: #95d5b2; margin-bottom: 6px;">✓ Requirement Received! (ID: ${inqId})</div>
       <p style="font-size: 0.8rem; color: #fefae0; margin: 0 0 10px; line-height: 1.4;">
-        Thank you, <strong>${name}</strong>! We've logged your request for <strong>${comp}</strong> (${reqType}). Our curation team will review batch sizes and reach out within 24 hours.
+        Thank you, <strong>${name}</strong>! We've logged your request for <strong>${comp}</strong> (${reqType}, 200ml bottles). Our curation team will review batch sizes and reach out within 24 hours.
       </p>
       <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
         <a href="${waUrl}" target="_blank" style="display: inline-block; background: #25d366; color: #141312; font-size: 0.78rem; font-weight: 800; padding: 8px 14px; border-radius: 6px; text-decoration: none;">
@@ -1590,12 +1562,12 @@ function submitTrackOrder() {
             customerName: "Astitva Gupta",
             company: "Zomato HQ (Tech Meetup)",
             requirementType: "Hackathon / Townhall Bulk Drop",
-            headcount: "100–250 people (150 bottles)",
+            headcount: "100–250 people (150 bottles @ 200ml)",
             dropDate: "Fri, 4 Sep, 2026",
             deliveryAddress: "One Horizon Center, Golf Course Rd, Gurugram",
             deliveryWindow: "Target Date: Fri, 4 Sep, 2026",
             bean: "Hackathon / Townhall Bulk Drop",
-            pack: "100–250 people (150 bottles)",
+            pack: "100–250 people (150 bottles @ 200ml)",
             totalAmount: 0,
             paymentStatus: "Custom Quote / In Discussion",
             deliveryStatus: "In Discussion",
@@ -1612,7 +1584,7 @@ function submitTrackOrder() {
             deliveryWindow: "Morning Kickoff (9:30 AM – 11:30 AM)",
             dropDate: "Fri, 28 Aug, 2026",
             bean: "Ratnagiri Estate (Anaerobic Naturals)",
-            pack: "Office Batch x 1 (20 bottles)",
+            pack: "Office Batch x 1 (20x 200ml bottles)",
             totalAmount: 3060,
             paymentStatus: "Corporate Invoice Requested (Net Terms)",
             deliveryStatus: "Pre-Ordered"
@@ -1628,7 +1600,7 @@ function submitTrackOrder() {
             deliveryWindow: "Saturday Morning (8:00 AM – 11:00 AM)",
             dropDate: getUpcomingSaturdayFormatted(),
             bean: "Ratnagiri Estate (Anaerobic Naturals)",
-            pack: "Weekend Pack x 1 (4 bottles)",
+            pack: "Weekend Pack x 1 (4x 200ml bottles)",
             totalAmount: 899,
             paymentStatus: "Paid via Gateway",
             deliveryStatus: "Brewing"
@@ -1652,7 +1624,7 @@ function submitTrackOrder() {
         renderTrackingDetails(data.order);
       } else if (data && data.status === 'success' && !data.order && data.lots) {
         if (statusMsg) {
-          statusMsg.innerHTML = `⚠️ <strong>Apps Script Update Needed:</strong> The live Web App is currently running an earlier script version. Please open Google Sheets > <strong>Extensions > Apps Script</strong>, paste the latest <a href="https://docs.google.com/document/d/1S0vG9ueF8I7IFqteMsHO7QbTN9mdXmzcI20D-ZA-aG4/edit" target="_blank" style="color:var(--accent);">Code.gs</a>, and deploy as a <strong>New Version</strong>.`;
+          statusMsg.innerHTML = `⚠️ <strong>Apps Script Update Needed:</strong> The live Web App is currently running an earlier script version. Please open Google Sheets > <strong>Extensions > Apps Script</strong>, paste the latest <a href="https://docs.google.com/document/d/1xyoq3YjMxTVK5XDSaZYNo2xBd7NT7bRk3g_iKl-hzCI/edit" target="_blank" style="color:var(--accent);">Code.gs</a>, and deploy as a <strong>New Version</strong>.`;
           statusMsg.className = 'track-status-msg msg-error';
           statusMsg.style.display = 'block';
         }
@@ -1731,7 +1703,7 @@ function renderTrackingDetails(order) {
     if (lblPack) lblPack.textContent = 'Scale / Headcount:';
     if (lblPayment) lblPayment.textContent = 'Status Stage:';
     if (lblDropNote) lblDropNote.textContent = 'Special Notes:';
-    if (tFreshnessNote) tFreshnessNote.innerHTML = '☕ <strong>Custom Event Protocol:</strong> Our coffee team will reach out directly to coordinate roast profiles, ice stations, and dispatch timing tailored to your venue.';
+    if (tFreshnessNote) tFreshnessNote.innerHTML = '☕ <strong>Custom Event Protocol:</strong> Our coffee team will reach out directly to coordinate roast profiles, 200ml bottles, and ice stations tailored to your venue.';
   } else {
     if (lblCustomer) lblCustomer.textContent = 'Customer:';
     if (lblCompany) lblCompany.textContent = 'Company:';
@@ -1758,8 +1730,8 @@ function renderTrackingDetails(order) {
   const tPayment = document.getElementById('tPayment');
   
   if (tOrderId) tOrderId.textContent = order.orderId;
-  if (tCustomer) tCustomer.textContent = order.customerName || 'Valued Organizer';
-  if (tWindow) tWindow.textContent = isEvent ? (order.dropDate || 'Date TBD') : `${order.dropDate} (${order.deliveryWindow || 'Morning Drop'})`;
+  if (tCustomer) tCustomer.textContent = order.customerName || 'Valued Customer';
+  if (tWindow) tWindow.textContent = isEvent ? (order.dropDate || 'Date TBD') : `${order.dropDate}`;
   if (tDestination) tDestination.textContent = order.deliveryAddress || order.location || 'Gurugram / Delhi NCR';
   
   if (order.notes) {
@@ -1804,31 +1776,7 @@ function renderTrackingDetails(order) {
   const status = normalizeStr(order.deliveryStatus || 'Pre-Ordered');
   
   if (isEvent) {
-    if (status.includes('lead') || status.includes('received') || status.includes('inquiry') || status.includes('new')) {
-      if (sPre) sPre.classList.add('step-active');
-      if (tBadge) {
-        tBadge.textContent = 'INQUIRY RECEIVED';
-        tBadge.className = 'tracker-badge status-preordered';
-      }
-    } else if (status.includes('discussion') || status.includes('quote') || status.includes('proposal') || status.includes('curat')) {
-      if (sPre) sPre.classList.add('step-completed');
-      if (l1) l1.classList.add('line-completed');
-      if (sBrew) sBrew.classList.add('step-active');
-      if (tBadge) {
-        tBadge.textContent = 'PROPOSAL & CURATION';
-        tBadge.className = 'tracker-badge status-brewing';
-      }
-    } else if (status.includes('confirm') || status.includes('booked') || status.includes('scheduled')) {
-      if (sPre) sPre.classList.add('step-completed');
-      if (l1) l1.classList.add('line-completed');
-      if (sBrew) sBrew.classList.add('step-completed');
-      if (l2) l2.classList.add('line-completed');
-      if (sDisp) sDisp.classList.add('step-active');
-      if (tBadge) {
-        tBadge.textContent = 'EVENT CONFIRMED';
-        tBadge.className = 'tracker-badge status-dispatched';
-      }
-    } else if (status.includes('complete') || status.includes('deliver') || status.includes('fulfilled')) {
+    if (status.includes('complete') || status === 'delivered' || status.includes('fulfilled') || status.includes('done')) {
       if (sPre) sPre.classList.add('step-completed');
       if (l1) l1.classList.add('line-completed');
       if (sBrew) sBrew.classList.add('step-completed');
@@ -1840,29 +1788,33 @@ function renderTrackingDetails(order) {
         tBadge.textContent = 'EVENT COMPLETED';
         tBadge.className = 'tracker-badge status-delivered';
       }
-    } else {
-      if (sPre) sPre.classList.add('step-active');
+    } else if (status.includes('confirm') || status.includes('booked') || status.includes('scheduled') || status.includes('locked')) {
+      if (sPre) sPre.classList.add('step-completed');
+      if (l1) l1.classList.add('line-completed');
+      if (sBrew) sBrew.classList.add('step-completed');
+      if (l2) l2.classList.add('line-completed');
+      if (sDisp) sDisp.classList.add('step-active');
       if (tBadge) {
-        tBadge.textContent = order.deliveryStatus.toUpperCase();
-        tBadge.className = 'tracker-badge status-preordered';
+        tBadge.textContent = 'EVENT CONFIRMED';
+        tBadge.className = 'tracker-badge status-dispatched';
       }
-    }
-  } else {
-    if (status.includes('pre-order') || status.includes('preorder') || status.includes('pending') || status.includes('received')) {
-      if (sPre) sPre.classList.add('step-active');
-      if (tBadge) {
-        tBadge.textContent = 'PRE-ORDERED';
-        tBadge.className = 'tracker-badge status-preordered';
-      }
-    } else if (status.includes('brew') || status.includes('roast') || status.includes('extract')) {
+    } else if (status.includes('discussion') || status.includes('quote') || status.includes('proposal') || status.includes('curat') || status.includes('review')) {
       if (sPre) sPre.classList.add('step-completed');
       if (l1) l1.classList.add('line-completed');
       if (sBrew) sBrew.classList.add('step-active');
       if (tBadge) {
-        tBadge.textContent = 'BREWING & CHILLING';
+        tBadge.textContent = 'PROPOSAL & CURATION';
         tBadge.className = 'tracker-badge status-brewing';
       }
-    } else if (status.includes('dispatch') || status.includes('transit') || status.includes('out for delivery') || status.includes('shipped')) {
+    } else {
+      if (sPre) sPre.classList.add('step-active');
+      if (tBadge) {
+        tBadge.textContent = 'INQUIRY RECEIVED';
+        tBadge.className = 'tracker-badge status-preordered';
+      }
+    }
+  } else {
+    if (status.includes('out for delivery') || status.includes('transit') || status.includes('dispatch') || status.includes('shipped') || status.includes('on the way')) {
       if (sPre) sPre.classList.add('step-completed');
       if (l1) l1.classList.add('line-completed');
       if (sBrew) sBrew.classList.add('step-completed');
@@ -1872,7 +1824,7 @@ function renderTrackingDetails(order) {
         tBadge.textContent = 'OUT FOR DELIVERY';
         tBadge.className = 'tracker-badge status-dispatched';
       }
-    } else if (status.includes('deliver') || status.includes('completed') || status.includes('fulfilled')) {
+    } else if (status === 'delivered' || status.includes('complete') || status.includes('fulfilled') || status.includes('received by customer')) {
       if (sPre) sPre.classList.add('step-completed');
       if (l1) l1.classList.add('line-completed');
       if (sBrew) sBrew.classList.add('step-completed');
@@ -1884,10 +1836,18 @@ function renderTrackingDetails(order) {
         tBadge.textContent = 'DELIVERED';
         tBadge.className = 'tracker-badge status-delivered';
       }
+    } else if (status.includes('brew') || status.includes('roast') || status.includes('extract') || status.includes('prep') || status.includes('chill')) {
+      if (sPre) sPre.classList.add('step-completed');
+      if (l1) l1.classList.add('line-completed');
+      if (sBrew) sBrew.classList.add('step-active');
+      if (tBadge) {
+        tBadge.textContent = 'BREWING & CHILLING';
+        tBadge.className = 'tracker-badge status-brewing';
+      }
     } else {
       if (sPre) sPre.classList.add('step-active');
       if (tBadge) {
-        tBadge.textContent = order.deliveryStatus.toUpperCase();
+        tBadge.textContent = 'PRE-ORDERED';
         tBadge.className = 'tracker-badge status-preordered';
       }
     }
@@ -1919,8 +1879,8 @@ function addToGoogleCalendar() {
   if (!currentOrderDetails) return;
   const d = currentOrderDetails;
   const isB2b = (d.orderType === 'B2B');
-  const title = encodeURIComponent(isB2b ? `The Apartment Brew Co. Office Drop: ${d.company}` : `The Apartment Brew Co. Drop: ${d.orderId}`);
-  const details = encodeURIComponent(`Fresh Flash-Brew Specialty Coffee Drop\nOrder ID: ${d.orderId}\nLot: ${d.bean}\nSelection: ${d.pack}\nInstruction: ${d.dropInstructions}\nTotal: ₹${d.totalAmount}\n\nNote: Please refrigerate upon delivery and enjoy within 48 hours for peak flavor!`);
+  const title = encodeURIComponent(isB2b ? `The Apartment Brew Co. Office Drop: ${d.company}` : `The Apartment Brew Co. Drop (${d.orderId})`);
+  const details = encodeURIComponent(`Fresh Flash-Brew Specialty Coffee Drop\nOrder ID: ${d.orderId}\nLot: ${d.bean}\nSelection: ${d.pack}\nInstruction: ${d.dropInstructions}\nTotal: ₹${d.totalAmount}\n\nNote: Please refrigerate 200ml bottles upon delivery and enjoy within 48 hours for peak flavor!`);
   const location = encodeURIComponent(`${d.buildingFloor}, ${d.techPark} (PIN: ${d.pinCode})`);
   const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}`;
   window.open(gcalUrl, '_blank');
@@ -1931,24 +1891,24 @@ function sendWhatsAppReceipt() {
   const d = currentOrderDetails;
   
   const discountText = d.discountAmount && d.discountAmount > 0 
-    ? `*Discount:* -₹${d.discountAmount} (${d.couponCode})\n` 
+    ? `\*Discount:\* -₹${d.discountAmount} (${d.couponCode})\n` 
     : '';
   
-  const message = `*☕ ORDER & DELIVERY CONFIRMATION — THE APARTMENT BREW CO.*\n` +
+  const message = `\*☕ ORDER & DELIVERY CONFIRMATION — THE APARTMENT BREW CO.\*\n` +
                   `------------------------------------\n` +
-                  `*Order ID:* ${d.orderId}\n` +
-                  `*Delivery Date:* ${d.dropDate} (${d.deliveryWindow})\n` +
-                  `*Customer:* ${d.name} (${d.phone})\n` +
-                  `*Delivery Address:* ${d.buildingFloor}, ${d.techPark}\n` +
-                  `*Drop Note:* ${d.dropInstructions}\n` +
+                  `\*Order ID:\* ${d.orderId}\n` +
+                  `\*Delivery Date:\* ${d.dropDate} (${d.deliveryWindow})\n` +
+                  `\*Customer:\* ${d.name} (${d.phone})\n` +
+                  `\*Delivery Address:\* ${d.buildingFloor}, ${d.techPark}\n` +
+                  `\*Drop Note:\* ${d.dropInstructions}\n` +
                   `------------------------------------\n` +
-                  `*Coffee Lot:* ${d.bean}\n` +
-                  `*Selection:* ${d.pack}\n` +
+                  `\*Coffee Lot:\* ${d.bean}\n` +
+                  `\*Selection:\* ${d.pack}\n` +
                   discountText +
-                  `*Total Bottles:* ${d.bottles}x 250ml\n` +
-                  `*Total Paid:* ₹${d.totalAmount} (${d.paymentStatus})\n` +
+                  `\*Total Bottles:\* ${d.bottles}x 200ml\n` +
+                  `\*Total Paid:\* ₹${d.totalAmount} (${d.paymentStatus})\n` +
                   `------------------------------------\n` +
-                  `_Freshness Reminder: Extracted hot and flash-chilled with zero preservatives. Please refrigerate and consume within 48 hours!_`;
+                  `\_Freshness Reminder: Extracted hot and flash-chilled in 200ml bottles with zero preservatives. Please refrigerate and consume within 48 hours!\_`;
   
   let cleanPhone = d.phone.replace(/[^0-9]/g, '');
   if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
@@ -1984,7 +1944,7 @@ function resetForm() {
 // --------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
   highlightActiveDrawerLink();
-
+  
   if (PAGE === 'ORDER' || PAGE === 'HOME') {
     renderLots(availableLots);
     renderPacks(availableB2cPacks, []);

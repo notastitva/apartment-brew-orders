@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>Saturday Morning Pre-Order | The Apartment Brew Co.</title>
+  <title>Weekend Pre-Order (Sat &amp; Sun Drops) | The Apartment Brew Co.</title>
   <link rel="stylesheet" href="style.css" />
   
   <!-- Resource Hints for Payment SDK -->
@@ -57,14 +57,14 @@
     <!-- Live Drop & Batch Capacity Card -->
     <header class="header-card">
       <div class="drop-banner" id="dropBanner">
-        <span>⚡</span> Next Fresh Drop: Saturday Morning
+        <span>⚡</span> Fresh Weekend Drops: Saturday &amp; Sunday Morning
       </div>
-      <div class="countdown-timer" id="countdownTimer">Saturday Cutoff closes in: Loading...</div>
+      <div class="countdown-timer" id="countdownTimer">Weekend Drop Cutoff closes in: Loading...</div>
   
       <!-- Scarcity Bar -->
       <div class="scarcity-bar-container">
         <div class="scarcity-label">
-          <span>🔥 Limited Batch Capacity</span>
+          <span>🔥 Limited Weekend Batch Capacity</span>
           <span id="scarcityText">Loading batch availability...</span>
         </div>
         <div class="scarcity-progress-track">
@@ -76,7 +76,7 @@
       <div class="store-status-banner" id="storeStatusBanner" style="display: none;"></div>
   
       <div class="geo-badge">
-        📍 Delivering Exclusively Across Gurugram &amp; Delhi NCR Residences &amp; Societies
+        📍 Delivering Exclusively Across Gurugram &amp; Delhi NCR Residences &amp; Societies (200ml Bottles)
       </div>
       
       <div class="craft-badge">
@@ -132,7 +132,7 @@
       <section class="section-card wizard-step-panel" id="stepPanel2" style="display: none;">
         <div class="section-title">
           <span>Step 2: Choose Batch Size &amp; Quantity</span>
-          <span class="section-subtitle">Saturday Morning Drop</span>
+          <span class="section-subtitle">200ml Bottles &bull; Saturday &amp; Sunday Drops</span>
         </div>
   
         <!-- Dynamic B2C Packs Grid -->
@@ -223,12 +223,21 @@
       <!-- STEP 3: Delivery & Contact Details -->
       <section class="section-card wizard-step-panel" id="stepPanel3" style="display: none;">
         <div class="section-title">
-          <span>Step 3: Delivery &amp; Contact Details</span>
+          <span>Step 3: Delivery Schedule &amp; Contact Details</span>
         </div>
   
         <div class="saved-profile-bar" id="savedProfileBar">
           <span id="savedProfileText">👋 Welcome back! Autofill previous order info?</span>
           <button class="saved-profile-btn" onclick="applySavedProfile()">Autofill</button>
+        </div>
+  
+        <!-- Delivery Day Selection (Saturday vs Sunday) -->
+        <div class="form-group" id="b2cDeliveryDayGroup">
+          <label for="b2cDeliveryDay">Select Preferred Weekend Drop Day *</label>
+          <select id="b2cDeliveryDay">
+            <option value="Saturday Morning (8:00 AM – 11:00 AM)">Saturday Morning (8:00 AM – 11:00 AM) — Cutoff: Fri 10 PM</option>
+            <option value="Sunday Morning (8:00 AM – 11:00 AM)">Sunday Morning (8:00 AM – 11:00 AM) — Cutoff: Sat 10 PM</option>
+          </select>
         </div>
   
         <div class="form-group" id="b2cCityGroup">
@@ -306,7 +315,7 @@
             <strong id="revPack">-</strong>
           </div>
           <div class="review-row">
-            <span>Delivery Date:</span>
+            <span>Delivery Window:</span>
             <strong id="revDate" style="color: var(--accent);">-</strong>
           </div>
           <div class="review-row">
@@ -328,7 +337,7 @@
         </div>
   
         <div class="freshness-alert" style="margin-top: 12px; margin-bottom: 0;">
-          ❄️ <strong>48-Hour Peak Freshness:</strong> Micro-batched overnight for Saturday morning delivery. Please refrigerate upon arrival!
+          ❄️ <strong>48-Hour Peak Freshness:</strong> Micro-batched overnight in 200ml bottles for morning delivery. Please refrigerate upon arrival!
         </div>
   
         <div class="wizard-nav-btns">
@@ -345,7 +354,7 @@
       <div class="section-card" style="text-align: center;">
         <div class="success-badge">&#10003; Order Confirmed</div>
         <h2 style="font-size: 1.3rem; margin-bottom: 4px;">Thank You for Your Order!</h2>
-        <p style="font-size: 0.82rem; color: var(--text-muted);">Your micro-batch is scheduled for fresh roast &amp; chilled delivery.</p>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">Your micro-batch (200ml bottles) is scheduled for fresh roast &amp; chilled delivery.</p>
   
         <div class="freshness-alert">
           ❄️ <strong>Hand-Brewed Fresh to Order:</strong> Each coffee is brewed separately by hand with zero preservatives. Because every batch is handcrafted, enjoy subtle artisanal nuances in every bottle. Keep refrigerated upon arrival and consume within 48 hours for peak flavor!
@@ -358,14 +367,14 @@
           </div>
           <div class="receipt-row">
             <span class="receipt-label">Order Type</span>
-            <span class="receipt-val" id="rOrderType">Individual Pre-Order (Sat Drop)</span>
+            <span class="receipt-val" id="rOrderType">Individual Pre-Order</span>
           </div>
           <div class="receipt-row">
             <span class="receipt-label">Payment Ref</span>
             <span class="receipt-val" id="rPayId" style="font-family: monospace; font-size: 0.78rem;">-</span>
           </div>
           <div class="receipt-row">
-            <span class="receipt-label">Delivery Date</span>
+            <span class="receipt-label">Delivery Window</span>
             <span class="receipt-val" id="rDropDate" style="color: var(--accent);">-</span>
           </div>
           <div class="receipt-row">
