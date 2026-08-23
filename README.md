@@ -117,8 +117,9 @@ To reset the capacity counter between weekly drops:
 #### **2\. Uniform 4-Step Ordering Wizard Architecture**
 
 * The ordering workflow is uniform across both individual (order.html) and office (office.html) drops:  
-  * Step 1: Harvest (Select Single-Estate Harvest): Clean 3-choice lot grid (Lot 1, Lot 2, or Discovery Flight).  
-  * Step 2: Batch Size (Choose Batch Size & Quantity): Batch size selection with dynamic Discovery Flight Bottle Splitter (steppers, automatic 50/50 scaling to any pack size, live ratio bar).  
+  * Step 1: Harvest (Select Single-Estate Harvest): Clean 3-choice lot grid (Ratnagiri Estate \- Anaerobic Naturals, Banana Banger \- Fermented Lot, or Mix & Match).  
+  * Step 2: Batch Size (Choose Batch Size & Quantity): Batch size selection with dynamic Mix & Match bottle split steppers (automatic 50/50 scaling to any pack size, live ratio bar).  
+  * Mix & Match Details: Tag: "Custom split" | Notes: "Curious about trying both single-estate harvests? Customize your exact split in Batch Size" | Pills: "Bit of both", "Customised", "Your Choice" (No sensory meters).  
   * Step 3: Delivery (Delivery & Contact / Office Details): Delivery and contact/office details.  
   * Step 4: Review (Order Review & Gateway / Corporate Invoicing): Confirmation and checkout / invoicing.
 

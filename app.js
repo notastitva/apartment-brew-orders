@@ -52,8 +52,8 @@ document.addEventListener('keydown', (e) => {
 });
 
 const CONFIG = {
-  razorpayKeyId: "rzp_test_TRVab1bUUwOVN5", // Replace with your active Key ID (rzp_live_...)
-  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbz9kw-PDrwGXaNeHzvgfuOZsQ5A52tKXk-WN2np30ohE12xekUSK7x-bAp_kN_epmig/exec", // Replace with Apps Script Web App URL ending in /exec
+  razorpayKeyId: "YOUR_RAZORPAY_KEY_ID_HERE", // Replace with your active Key ID (rzp_live_...)
+  googleSheetEndpoint: "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE", // Replace with Apps Script Web App URL ending in /exec
   authToken: "TABC_SECURE_TOKEN_2026" // Shared auth token matching Code.gs
 };
 
@@ -199,7 +199,7 @@ function renderSplitterUI() {
   
   if (tallyEl) {
     if (customSplit.lot1 === customSplit.lot2) {
-      tallyEl.textContent = `✨ Balanced Discovery Split: ${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name} (${qty}x ${activePack.name})`;
+      tallyEl.textContent = `✨ Balanced Mix & Match Split: ${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name} (${qty}x ${activePack.name})`;
     } else {
       tallyEl.textContent = `🎯 Custom Split: ${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name} (Total ${total} bottles in batch)`;
     }
@@ -217,7 +217,7 @@ function renderSplitterUI() {
 // --------------------------------------------------------------------
 function validateWizardStep(stepNum) {
   if (stepNum === 1) {
-    return true; // Lot 1, Lot 2, or Discovery Flight is always selected
+    return true; // Lot 1, Lot 2, or Mix & Match is always selected
   }
   if (stepNum === 2) {
     const qtyInput = document.getElementById('packQty');
@@ -340,7 +340,7 @@ function populateOrderReview() {
   const lot1Name = availableLots[0] ? availableLots[0].name : "Lot 1";
   const lot2Name = availableLots[1] ? availableLots[1].name : "Lot 2";
   const coffeeLotDisplay = isCustomSplit 
-    ? `Discovery Flight (${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name})` 
+    ? `Mix & Match (${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name})` 
     : selectedBean;
   
   const name = (document.getElementById('custName')?.value || '').trim();
@@ -525,32 +525,22 @@ function renderLots(lots) {
       </div>`;
   });
   
-  // 3rd Option: Discovery Flight / Custom Split (Always rendered across ORDER, OFFICE, INDEX, HOME)
+  // 3rd Option: Mix & Match (Always rendered across ORDER, OFFICE, INDEX, HOME)
   if (PAGE !== 'MENU') {
     const l1 = lots[0] || { name: "Ratnagiri Estate", process: "Anaerobic Naturals" };
     const l2 = lots[1] || { name: "Banana Banger", process: "Fermented Lot" };
     
     html += `
-      <div class="lot-card ${isCustomSplit ? 'active' : ''}" onclick="selectLot('Discovery Flight / Custom Split (Build Your Own Batch)', this)">
+      <div class="lot-card ${isCustomSplit ? 'active' : ''}" onclick="selectLot('Mix & Match', this)">
         <div class="lot-header">
-          <span class="lot-name">Discovery Flight / Custom Split</span>
-          <span class="lot-tag">Sampler Split</span>
+          <span class="lot-name">Mix & Match</span>
+          <span class="lot-tag">Custom split</span>
         </div>
-        <div class="lot-notes">&#127915; Sample both single-estate harvests (${l1.name} + ${l2.name}) or customize your exact split across your batch</div>
+        <div class="lot-notes">&#127915; Curious about trying both single-estate harvests? Customize your exact split in Batch Size</div>
         <div class="flavor-pills">
-          <span class="flavor-pill">Tasting Flight</span>
-          <span class="flavor-pill">Custom Split</span>
-          <span class="flavor-pill">50/50 Balanced</span>
-        </div>
-        <div class="sensory-meters">
-          <div class="meter-row">
-            <span>Acidity Blend</span>
-            <div class="meter-bar"><div class="meter-fill" style="width: 80%;"></div></div>
-          </div>
-          <div class="meter-row">
-            <span>Body Balance</span>
-            <div class="meter-bar"><div class="meter-fill" style="width: 70%;"></div></div>
-          </div>
+          <span class="flavor-pill">Bit of both</span>
+          <span class="flavor-pill">Customised</span>
+          <span class="flavor-pill">Your Choice</span>
         </div>
       </div>`;
 
@@ -648,7 +638,7 @@ function selectLot(lotName, element) {
   document.querySelectorAll('#lotGrid .lot-card').forEach(el => el.classList.remove('active'));
   if (element) element.classList.add('active');
   
-  if (lotName && (lotName.includes('Custom Ratio Split') || lotName.includes('Discovery Flight') || lotName.includes('Custom Split') || lotName.includes('Build Your Own Batch'))) {
+  if (lotName && (lotName.includes('Mix & Match') || lotName.includes('Custom Ratio Split') || lotName.includes('Discovery Flight') || lotName.includes('Custom Split') || lotName.includes('Build Your Own Batch'))) {
     isCustomSplit = true;
     rebalanceSplitter();
   } else {
@@ -1258,7 +1248,7 @@ async function handleOrderSuccess(paymentId, statusText) {
   const lot2Name = availableLots[1] ? availableLots[1].name : "Lot 2";
   
   const coffeeLotDisplay = isCustomSplit 
-    ? `Discovery Flight (${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name})` 
+    ? `Mix & Match (${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name})` 
     : selectedBean;
   
   const orderPayload = {
@@ -2029,4 +2019,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
-
