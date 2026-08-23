@@ -1,6 +1,8 @@
 // ====================================================================
-// Sticky Top Header & Hamburger Navigation Controller
+// THE APARTMENT BREW CO. — FRONTEND CONTROLLER (app.js)
 // ====================================================================
+
+// Sticky Top Header & Hamburger Navigation Controller
 function toggleNavDrawer() {
   const drawer = document.getElementById('navDrawer');
   const isOpen = drawer ? drawer.classList.contains('open') : false;
@@ -49,10 +51,6 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// ====================================================================
-// THE APARTMENT BREW CO. — FRONTEND CONTROLLER (app.js)
-// ====================================================================
-
 const CONFIG = {
   razorpayKeyId: "rzp_test_TRVab1bUUwOVN5", // Replace with your active Key ID (rzp_live_...)
   googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbz9kw-PDrwGXaNeHzvgfuOZsQ5A52tKXk-WN2np30ohE12xekUSK7x-bAp_kN_epmig/exec", // Replace with Apps Script Web App URL ending in /exec
@@ -99,11 +97,11 @@ let availableB2bPacks = [
 ];
 
 let availableClusters = [
-  { techPark: "DLF Cyber City / Cyber Hub (Gurugram)", window: "Morning Kickoff (9:30 AM – 11:30 AM)", maxOrders: 15, currentOrders: 0, remainingOrders: 15, isFull: false },
-  { techPark: "DLF Cyber City / Cyber Hub (Gurugram)", window: "Afternoon Recharge (2:00 PM – 4:00 PM)", maxOrders: 20, currentOrders: 0, remainingOrders: 20, isFull: false },
-  { techPark: "One Horizon Center / Golf Course Rd (Gurugram)", window: "Morning Kickoff (9:30 AM – 11:30 AM)", maxOrders: 12, currentOrders: 0, remainingOrders: 12, isFull: false },
-  { techPark: "Candor TechSpace / Sector 48 (Gurugram)", window: "Morning Kickoff (9:30 AM – 11:30 AM)", maxOrders: 10, currentOrders: 0, remainingOrders: 10, isFull: false },
-  { techPark: "Candor TechSpace / Sector 48 (Gurugram)", window: "Afternoon Recharge (2:00 PM – 4:00 PM)", maxOrders: 15, currentOrders: 0, remainingOrders: 15, isFull: false }
+  { techPark: "DLF Cyber City / Cyber Hub (Gurugram)", window: "Morning Kickoff (9:30 AM – 11:30 AM)", maxOrders: 25, currentOrders: 0, remainingOrders: 25, isFull: false },
+  { techPark: "DLF Cyber City / Cyber Hub (Gurugram)", window: "Afternoon Recharge (2:00 PM – 4:00 PM)", maxOrders: 25, currentOrders: 0, remainingOrders: 25, isFull: false },
+  { techPark: "One Horizon Center / Golf Course Rd (Gurugram)", window: "Morning Kickoff (9:30 AM – 11:30 AM)", maxOrders: 25, currentOrders: 0, remainingOrders: 25, isFull: false },
+  { techPark: "Candor TechSpace / Sector 48 (Gurugram)", window: "Morning Kickoff (9:30 AM – 11:30 AM)", maxOrders: 25, currentOrders: 0, remainingOrders: 25, isFull: false },
+  { techPark: "Candor TechSpace / Sector 48 (Gurugram)", window: "Afternoon Recharge (2:00 PM – 4:00 PM)", maxOrders: 25, currentOrders: 0, remainingOrders: 25, isFull: false }
 ];
 
 let availableCoupons = [
@@ -137,8 +135,19 @@ function validateWizardStep(stepNum) {
     const errQty = document.getElementById('errQty');
     const isValid = !isNaN(qty) && qty >= 1;
     setFieldState(qtyInput, errQty, isValid);
-    return isValid;
-    return isValid && (getTotalBottles() <= liveRemainingBatchBottles);
+    
+    const totalBottles = getTotalBottles();
+    const isUnderCapacity = totalBottles <= liveRemainingBatchBottles;
+    const errCap = document.getElementById('errCapacityLimit');
+    if (errCap) {
+      if (!isUnderCapacity) {
+        errCap.textContent = `⚠️ Selected order (${totalBottles} bottles) exceeds remaining batch capacity (${liveRemainingBatchBottles} bottles left). Please reduce quantity or select a smaller pack.`;
+        errCap.style.display = 'block';
+      } else {
+        errCap.style.display = 'none';
+      }
+    }
+    return isValid && isUnderCapacity;
   }
   if (stepNum === 3) {
     const isNameValid = validateField('custName');
@@ -333,8 +342,8 @@ function updateDeliveryWindows() {
   let windowsToRender = matchingClusters;
   if (matchingClusters.length === 0) {
     windowsToRender = [
-      { window: "Morning Kickoff (9:30 AM – 11:30 AM)", maxOrders: 15, remainingOrders: 15, isFull: false },
-      { window: "Afternoon Recharge (2:00 PM – 4:00 PM)", maxOrders: 15, remainingOrders: 15, isFull: false }
+      { window: "Morning Kickoff (9:30 AM – 11:30 AM)", maxOrders: 25, remainingOrders: 25, isFull: false },
+      { window: "Afternoon Recharge (2:00 PM – 4:00 PM)", maxOrders: 25, remainingOrders: 25, isFull: false }
     ];
   }
   
@@ -346,7 +355,7 @@ function updateDeliveryWindows() {
     const isFull = w.isFull === true || (typeof w.remainingOrders === 'number' && w.remainingOrders <= 0);
     const isSelected = normalizeStr(w.window) === normalizeStr(currentWindowVal) && !isFull;
     if (!isFull) hasAvailableSlot = true;
-
+  
     if (isFull) {
       html += `<option value="${w.window}" disabled>${w.window} — Slot Full (Sold Out)</option>`;
     } else {
@@ -434,7 +443,7 @@ function renderLots(lots) {
           <span class="flavor-pill">1:1 Discovery</span>
         </div>
       </div>`;
-
+  
     const l1Name = document.getElementById('splitLot1Name');
     const l1Sub = document.getElementById('splitLot1Sub');
     const l2Name = document.getElementById('splitLot2Name');
@@ -454,42 +463,40 @@ function renderLots(lots) {
 }
 
 function renderPacks(b2cPacks, b2bPacks) {
-  const fallbackPack = (packs, current) => {
-    if (!current.name || current.bottles > liveRemainingBatchBottles) {
-      const largest = [...packs].filter(p => p.bottles <= liveRemainingBatchBottles).sort((a, b) => b.bottles - a.bottles)[0];
-      return largest ? { name: largest.name, bottles: largest.bottles, unitPrice: largest.price } : current;
-    }
-    return current;
-  };
   if ((PAGE === 'ORDER' || PAGE === 'HOME') && Array.isArray(b2cPacks) && b2cPacks.length > 0) {
     availableB2cPacks = b2cPacks;
     const b2cGrid = document.getElementById('b2cPacks');
     if (b2cGrid) {
       let b2cHtml = '';
-      b2cPacks.forEach((p, idx) => {
-        const isDefault = p.name === selectedB2cPack.name || (idx === 2 && !selectedB2cPack.name);
-        const badgeHtml = p.badge ? `<div class="pack-badge">${p.badge}</div>` : '';
-        const perBottle = p.bottles > 1 ? ` (@ ₹${Math.round(p.price / p.bottles)})` : '';
+      let hasDefault = false;
+      let fallback = null;
+
+      b2cPacks.forEach((p) => {
         const isOverCap = p.bottles > liveRemainingBatchBottles;
+        if (!isOverCap && !fallback) fallback = p;
+        const isSelected = p.name === selectedB2cPack.name && !isOverCap;
+        if (isSelected) hasDefault = true;
+
+        const badgeHtml = p.badge ? `<div class="pack-badge">${p.badge}</div>` : '';
         const disabledBadge = isOverCap ? `<div class="pack-disabled-badge">Cap Exceeded</div>` : '';
-  
+        const perBottle = p.bottles > 1 ? ` (@ ₹${Math.round(p.price / p.bottles)})` : '';
+        const clickHandler = isOverCap ? '' : `onclick="selectB2cPack('${p.name}', ${p.bottles}, ${p.price}, this)"`;
+
         b2cHtml += `
-        b2cHtml += `
-          <div class="pack-option ${isDefault ? 'active' : ''} ${isOverCap ? 'pack-disabled' : ''}" ${isOverCap ? '' : `onclick="selectB2cPack('${p.name}', ${p.bottles}, ${p.price}, this)"`}>
+          <div class="pack-option ${isSelected ? 'active' : ''} ${isOverCap ? 'pack-disabled' : ''}" ${clickHandler}>
             ${disabledBadge}
             ${badgeHtml}
             <div class="pack-name">${p.name}</div>
             <div class="pack-price">₹${p.price.toLocaleString('en-IN')}</div>
             <div class="pack-desc">${p.bottles}x 250ml${perBottle}</div>
           </div>`;
-  
-        if (isDefault) {
-          selectedB2cPack = { name: p.name, bottles: p.bottles, unitPrice: p.price };
-        }
       });
       b2cGrid.innerHTML = b2cHtml;
+
+      if (!hasDefault && fallback) {
+        selectedB2cPack = { name: fallback.name, bottles: fallback.bottles, unitPrice: fallback.price };
+      }
     }
-    selectedB2cPack = fallbackPack(availableB2cPacks, selectedB2cPack);
   }
   
   if (PAGE === 'OFFICE' && Array.isArray(b2bPacks) && b2bPacks.length > 0) {
@@ -497,28 +504,33 @@ function renderPacks(b2cPacks, b2bPacks) {
     const b2bGrid = document.getElementById('b2bPacks');
     if (b2bGrid) {
       let b2bHtml = '';
-      b2bPacks.forEach((p, idx) => {
-        const isDefault = p.name === selectedB2bPack.name || (idx === 0 && !selectedB2bPack.name);
-        const perBottle = ` (₹${Math.round(p.price / p.bottles)}/ea)`;
+      let hasDefault = false;
+      let fallback = null;
+
+      b2bPacks.forEach((p) => {
         const isOverCap = p.bottles > liveRemainingBatchBottles;
+        if (!isOverCap && !fallback) fallback = p;
+        const isSelected = p.name === selectedB2bPack.name && !isOverCap;
+        if (isSelected) hasDefault = true;
+
         const disabledBadge = isOverCap ? `<div class="pack-disabled-badge">Cap Exceeded</div>` : '';
-  
+        const perBottle = ` (₹${Math.round(p.price / p.bottles)}/ea)`;
+        const clickHandler = isOverCap ? '' : `onclick="selectB2bPack('${p.name}', ${p.bottles}, ${p.price}, this)"`;
+
         b2bHtml += `
-        b2bHtml += `
-          <div class="pack-option ${isDefault ? 'active' : ''} ${isOverCap ? 'pack-disabled' : ''}" ${isOverCap ? '' : `onclick="selectB2bPack('${p.name}', ${p.bottles}, ${p.price}, this)"`}>
+          <div class="pack-option ${isSelected ? 'active' : ''} ${isOverCap ? 'pack-disabled' : ''}" ${clickHandler}>
             ${disabledBadge}
             <div class="pack-name">${p.name}</div>
             <div class="pack-price">₹${p.price.toLocaleString('en-IN')}</div>
             <div class="pack-desc">${p.bottles}x 250ml${perBottle}</div>
           </div>`;
-  
-        if (isDefault) {
-          selectedB2bPack = { name: p.name, bottles: p.bottles, unitPrice: p.price };
-        }
       });
       b2bGrid.innerHTML = b2bHtml;
+
+      if (!hasDefault && fallback) {
+        selectedB2bPack = { name: fallback.name, bottles: fallback.bottles, unitPrice: fallback.price };
+      }
     }
-    selectedB2bPack = fallbackPack(availableB2bPacks, selectedB2bPack);
   }
 }
 
@@ -575,7 +587,7 @@ function applyConfigToUI(data) {
     availableClusters = data.clusters;
     renderClusterOptions();
   }
-
+  
   if (resCount >= cap || data.isBatchFull === true) {
     applyStoreStatus('SOLD_OUT');
   } else if (data.storeStatus) {
@@ -614,7 +626,7 @@ function startCutoffCountdown() {
     if (!timerEl) return;
   
     const now = new Date();
-    const isB2c = (PAGE === 'ORDER' || currentMode === "B2C");
+    const isB2c = (PAGE === 'ORDER' || currentMode === "B2C" || PAGE === 'INDEX');
     const target = new Date();
   
     if (isB2c) {
@@ -639,7 +651,7 @@ function startCutoffCountdown() {
     const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const secs = Math.floor((diff % (1000 * 60)) / 1000);
   
-    const cutoffLabel = isB2c ? "Saturday Drop Cutoff" : "Friday Drop Cutoff";
+    const cutoffLabel = (PAGE === 'INDEX') ? "Next Saturday Drop Cutoff" : (isB2c ? "Saturday Drop Cutoff" : "Friday Drop Cutoff");
     timerEl.textContent = `⏱️ ${cutoffLabel} closes in ${hours}h ${mins}m ${secs}s`;
   }
   
@@ -908,18 +920,22 @@ function updateTotal() {
   const subtotal = calculateSubtotal();
   const totalBottles = getTotalBottles();
   const errCap = document.getElementById('errCapacityLimit');
-  const checkoutBtns = [document.getElementById('payNowBtn'), document.getElementById('btnNextStep2')];
-
+  const btnStep3 = document.getElementById('btnStep3');
+  const payBtn = document.getElementById('payNowBtn');
+  
   if (totalBottles > liveRemainingBatchBottles) {
     if (errCap) {
       errCap.textContent = `⚠️ Selected order (${totalBottles} bottles) exceeds remaining batch capacity (${liveRemainingBatchBottles} bottles left). Please reduce quantity or select a smaller pack.`;
       errCap.style.display = 'block';
     }
-    checkoutBtns.forEach(btn => { if (btn) btn.disabled = true; });
+    if (btnStep3) btnStep3.disabled = true;
+    if (payBtn) payBtn.disabled = true;
   } else {
     if (errCap) errCap.style.display = 'none';
-    if (currentStoreStatus === 'OPEN') checkoutBtns.forEach(btn => { if (btn) btn.disabled = false; });
+    if (btnStep3) btnStep3.disabled = false;
+    if (payBtn && currentStoreStatus === 'OPEN') payBtn.disabled = false;
   }
+
   const total = calculateTotal();
   const formattedTotal = `₹${total.toLocaleString('en-IN')}`;
   const formattedSubtotal = `₹${subtotal.toLocaleString('en-IN')}`;
@@ -1081,7 +1097,7 @@ function validateEmailField() {
   const errEl = document.getElementById('errEmail');
   if (!el) return true;
   const val = el.value.trim();
-  const emailRegex = /^[a-zA-Z0-9._%+-\\\]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-\\]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return setFieldState(el, errEl, emailRegex.test(val));
 }
 
@@ -1339,13 +1355,13 @@ function validateInqEmail() {
   const errEl = document.getElementById('errInqEmail');
   if (!el) return true;
   const val = el.value.trim();
-  const emailRegex = /^[a-zA-Z0-9._%+-\\\]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-\\]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return setFieldState(el, errEl, emailRegex.test(val));
 }
 
-function validateInqPhone() {
-  const el = document.getElementById('inqPhone');
-  const errEl = document.getElementById('errInqPhone');
+function validatePhoneField() {
+  const el = document.getElementById('custPhone');
+  const errEl = document.getElementById('errPhone');
   if (!el) return true;
   let val = el.value.replace(/[^0-9]/g, '');
   el.value = val;
@@ -1353,11 +1369,58 @@ function validateInqPhone() {
   return setFieldState(el, errEl, phoneRegex.test(val));
 }
 
+function validatePincodeField() {
+  const el = document.getElementById('custPincode');
+  const errEl = document.getElementById('errPincode');
+  const statusEl = document.getElementById('pinStatus');
+  if (!el) return true;
+  
+  let val = el.value.replace(/[^0-9]/g, '');
+  el.value = val;
+  
+  if (val.length < 6) {
+    if (statusEl) statusEl.textContent = '';
+    return setFieldState(el, errEl, false);
+  }
+  
+  const isNcr = /^(11[0-9]{4}|122[0-9]{3}|121[0-9]{3}|201[0-9]{3})$/.test(val);
+  if (isNcr) {
+    if (statusEl) {
+      statusEl.textContent = '✓ Serviceable across Delhi NCR';
+      statusEl.className = 'pin-status pin-valid';
+    }
+    return setFieldState(el, errEl, true);
+  } else {
+    if (statusEl) {
+      statusEl.textContent = '✕ Serviceable only in Delhi NCR (11xxxx, 122xxx, 121xxx, 201xxx)';
+      statusEl.className = 'pin-status pin-invalid';
+    }
+    return setFieldState(el, errEl, false);
+  }
+}
+
+function validateGstinField() {
+  const el = document.getElementById('custGstin');
+  const errEl = document.getElementById('errGstin');
+  if (!el) return true;
+  const val = el.value.trim().toUpperCase();
+  el.value = val;
+  
+  if (!val) {
+    el.classList.remove('input-invalid');
+    if (errEl) errEl.style.display = 'none';
+    return true;
+  }
+  
+  const gstinRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+  return setFieldState(el, errEl, gstinRegex.test(val));
+}
+
 function handleCustomInquirySubmit() {
   const isCompValid = validateInqField('inqCompany');
   const isNameValid = validateInqField('inqName');
   const isEmailValid = validateInqEmail();
-  const isPhoneValid = validateInqPhone();
+  const isPhoneValid = validatePhoneField();
   const isDateValid = validateInqField('inqDate');
   
   if (!isCompValid || !isNameValid || !isEmailValid || !isPhoneValid || !isDateValid) {
@@ -1904,6 +1967,7 @@ function resetForm() {
 // --------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
   highlightActiveDrawerLink();
+
   if (PAGE === 'ORDER' || PAGE === 'HOME') {
     renderLots(availableLots);
     renderPacks(availableB2cPacks, []);
@@ -1928,6 +1992,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } else if (PAGE === 'MENU') {
     renderLots(availableLots);
     fetchLiveConfig();
+    setInterval(fetchLiveConfig, 30000);
   } else if (PAGE === 'TRACK') {
     const urlParams = new URLSearchParams(window.location.search);
     const qId = urlParams.get('orderId') || urlParams.get('id');
