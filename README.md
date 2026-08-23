@@ -125,8 +125,16 @@ To reset the capacity counter between weekly drops:
 
 #### **3\. Global Navigation System & Controller Dispatcher in app.js**
 
-* Global Navigation (.site-nav): Transitioned to a sticky glassmorphism top header featuring a hamburger-to-X transition animation and a slide-in navigation drawer for clean, uncluttered access across the four operational modes (Individual, Office, Events, and Track Order).  
-* Navigation Logic & Accessibility: The slide-in drawer includes automated auto-close behaviors triggered by backdrop clicks, link selections, or the Escape key. An active page highlight mechanism ensures the current HTML context is visually indicated within the drawer navigation.  
+* Global Navigation (.site-nav): Transitioned to a sticky glassmorphism top header featuring a hamburger-to-X transition animation and a slide-in navigation drawer for clean, uncluttered access across the standardized navigation menu:  
+  * Home (index.html)  
+  * Individual Brew (order.html)  
+  * Team Brew (office.html)  
+  * Harvests & Sensory Menu (menu.html)  
+  * Freshness Guide (guide.html)  
+  * Craft & Philosophy (about.html)  
+  * Event Runs (events.html)  
+  * Enquiry/Order Tracker (track.html)  
+* Navigation Logic & Accessibility: The slide-in drawer includes automated auto-close behaviors triggered by backdrop clicks, link selections, or the Escape key. An active page highlight mechanism ensures the current HTML context is visually indicated within the drawer navigation. All HTML entity escaping has been sanitized across the drawer header and navigation items.  
 * Color Palette: Dark roast aesthetic (--bg: \#141312, \--card-bg: \#1f1d1a, \--card-inner: \#151413) with coffee gold accents (--accent: \#d4a373) and status indicators (--whatsapp: \#25d366, \--success: \#2d6a4f, \--info-blue: \#90e0ef, \--slot-full: \#6c757d).  
 * Responsive Layout: Mobile-first flex container capped at 520px width.  
 * Component Styling: Styled lot cards with CSS containment (contain: content), sensory meter fill bars using GPU acceleration, scarcity tracks, and hardware-accelerated micro-interactions.

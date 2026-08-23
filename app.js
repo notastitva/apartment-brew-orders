@@ -52,8 +52,8 @@ document.addEventListener('keydown', (e) => {
 });
 
 const CONFIG = {
-  razorpayKeyId: "YOUR_RAZORPAY_KEY_ID_HERE", // Replace with your active Key ID (rzp_live_...)
-  googleSheetEndpoint: "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE", // Replace with Apps Script Web App URL ending in /exec
+  razorpayKeyId: "rzp_test_TRVab1bUUwOVN5", // Replace with your active Key ID (rzp_live_...)
+  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbz9kw-PDrwGXaNeHzvgfuOZsQ5A52tKXk-WN2np30ohE12xekUSK7x-bAp_kN_epmig/exec", // Replace with Apps Script Web App URL ending in /exec
   authToken: "TABC_SECURE_TOKEN_2026" // Shared auth token matching Code.gs
 };
 
@@ -2019,3 +2019,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
+
