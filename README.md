@@ -12,6 +12,7 @@ The Apartment Brew Co. operates an asset-light, pre-order only micro-batch craft
 * **Extraction & Peak Freshness:** Coffee is extracted hot to capture delicate floral and fruity aromatics and flash-chilled immediately over ice. 100% preservative-free with a strict 48-hour peak freshness window.  
 * Dual Delivery Pathways:  
   * B2C (Individual Drops): Pre-orders close Friday 10:00 PM for Saturday 8:00 AM \&ndash; 11:00 AM delivery, or Saturday 10:00 PM for Sunday 8:00 AM \&ndash; 11:00 AM delivery.  
+  * B2C Dual Weekend Drop: Saturday Morning (8:00 AM \&ndash; 11:00 AM) or Sunday Morning (8:00 AM \&ndash; 11:00 AM).  
   * B2B (Corporate Friday Office Drops): Orders close Thursday 6:00 PM; delivered Friday (Morning Kickoff 9:30–11:30 AM or Afternoon Recharge 2:00–4:00 PM).  
 * Delivery Coverage: Hyper-local Delhi NCR (Gurugram DLF Phases 1–5, Cyber City, Golf Course Rd, Candor TechSpace, Udyog Vihar, Noida Tech Parks, and Central/South Delhi).  
 * **Tasting Sampler Flights (Discovery Packs):** Curated 2-bottle sampler packs (2x 200ml bottles, 1 bottle each of active single-estate harvests) built on the custom ratio splitter. Dynamically scales across multi-pack orders (e.g. 2 packs \= 2x Lot 1 \+ 2x Lot 2\) while allowing full bottle-level ratio customization, making it easy for new and returning customers to explore the full roast lineup.
@@ -119,6 +120,7 @@ To reset the capacity counter between weekly drops:
 * The ordering workflow is uniform across both individual (order.html) and office (office.html) drops:  
   * Step 1: Harvest (Select Single-Estate Harvest): Clean 3-choice lot grid (Ratnagiri Estate \- Anaerobic Naturals, Banana Banger \- Fermented Lot, or Mix & Match).  
   * Step 2: Batch Size (Choose Batch Size & Quantity): Batch size selection with dynamic Mix & Match bottle split steppers (automatic 50/50 scaling to any pack size, live ratio bar).  
+  * **Bottle Sizing Scope:** Bottle volume (200ml) is strictly scoped to the Step 2 Batch Size selection cards to ensure all page titles, global headings, and drop banners remain clean and free of redundant volume text.  
   * Mix & Match Details: Tag: "Custom split" | Notes: "Curious about trying both single-estate harvests? Customize your exact split in Batch Size" | Pills: "Bit of both", "Customised", "Your Choice" (No sensory meters).  
   * Step 3: Delivery (Delivery & Contact / Office Details): Delivery and contact/office details.  
   * Step 4: Review (Order Review & Gateway / Corporate Invoicing): Confirmation and checkout / invoicing.

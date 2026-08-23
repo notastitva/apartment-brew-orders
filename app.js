@@ -199,9 +199,9 @@ function renderSplitterUI() {
   
   if (tallyEl) {
     if (customSplit.lot1 === customSplit.lot2) {
-      tallyEl.textContent = `✨ Balanced Mix & Match Split: ${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name} (${qty}x ${activePack.name} @ 200ml)`;
+      tallyEl.textContent = `✨ Balanced Mix & Match Split: ${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name} (${qty}x ${activePack.name})`;
     } else {
-      tallyEl.textContent = `🎯 Custom Split: ${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name} (Total ${total}x 200ml bottles in batch)`;
+      tallyEl.textContent = `🎯 Custom Split: ${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name} (Total ${total} bottles in batch)`;
     }
   }
   
@@ -231,7 +231,7 @@ function validateWizardStep(stepNum) {
     const errCap = document.getElementById('errCapacityLimit');
     if (errCap) {
       if (!isUnderCapacity) {
-        errCap.textContent = `⚠️ Selected order (${totalBottles}x 200ml bottles) exceeds remaining batch capacity (${liveRemainingBatchBottles} bottles left). Please reduce quantity or select a smaller pack.`;
+        errCap.textContent = `⚠️ Selected order (${totalBottles} bottles) exceeds remaining batch capacity (${liveRemainingBatchBottles} bottles left). Please reduce quantity or select a smaller pack.`;
         errCap.style.display = 'block';
       } else {
         errCap.style.display = 'none';
@@ -366,7 +366,7 @@ function populateOrderReview() {
   const revTotal = document.getElementById('revTotal');
   
   if (revBean) revBean.textContent = coffeeLotDisplay;
-  if (revPack) revPack.textContent = `${activePack.name} x ${qty} (${activePack.bottles * qty}x 200ml bottles)`;
+  if (revPack) revPack.textContent = `${activePack.name} x ${qty} (${activePack.bottles * qty} bottles)`;
   if (revDate) revDate.textContent = `${dropDate} (${deliveryWindow})`;
   if (revWindow) revWindow.textContent = deliveryWindow;
   if (revAddress) revAddress.textContent = `${address}, ${location} (PIN: ${pin})`;
@@ -715,7 +715,7 @@ function applyConfigToUI(data) {
   const scarcityFill = document.getElementById('scarcityFill');
   
   if (scarcityText) {
-    scarcityText.textContent = `${resCount} / ${cap} Bottles (200ml) Reserved`;
+    scarcityText.textContent = `${resCount} / ${cap} Bottles Reserved`;
   }
   if (scarcityFill) {
     const pct = Math.min(Math.round((resCount / cap) * 100), 100);
@@ -957,7 +957,7 @@ function updateTotal() {
   
   if (totalBottles > liveRemainingBatchBottles) {
     if (errCap) {
-      errCap.textContent = `⚠️ Selected order (${totalBottles}x 200ml bottles) exceeds remaining batch capacity (${liveRemainingBatchBottles} bottles left). Please reduce quantity or select a smaller pack.`;
+      errCap.textContent = `⚠️ Selected order (${totalBottles} bottles) exceeds remaining batch capacity (${liveRemainingBatchBottles} bottles left). Please reduce quantity or select a smaller pack.`;
       errCap.style.display = 'block';
     }
     if (btnStep2Next) btnStep2Next.disabled = true;
@@ -1349,7 +1349,7 @@ async function handleOrderSuccess(paymentId, statusText) {
   if (rName) rName.textContent = name;
   if (rEmail) rEmail.textContent = email;
   if (rBean) rBean.textContent = coffeeLotDisplay;
-  if (rPack) rPack.textContent = `${activePack.name} x ${qty} (${activePack.bottles * qty}x 200ml bottles)`;
+  if (rPack) rPack.textContent = `${activePack.name} x ${qty} (${activePack.bottles * qty} bottles)`;
   if (rTotal) rTotal.textContent = `₹${total.toLocaleString('en-IN')}`;
   
   if (discount > 0) {
@@ -1394,9 +1394,9 @@ function validateInqEmail() {
   return setFieldState(el, errEl, emailRegex.test(val));
 }
 
-function validateInqPhone() {
-  const el = document.getElementById('inqPhone');
-  const errEl = document.getElementById('errInqPhone');
+function validatePhoneField() {
+  const el = document.getElementById('custPhone');
+  const errEl = document.getElementById('errPhone');
   if (!el) return true;
   let val = el.value.replace(/[^0-9]/g, '');
   el.value = val;
@@ -1464,7 +1464,6 @@ function handleCustomInquirySubmit() {
                       `*Scale:* ${headcount}\n` +
                       `*Target Date:* ${date}\n` +
                       `*Location:* ${loc}\n` +
-                      `*Bottle Size:* 200ml Glass Bottles\n` +
                       `*Notes:* ${notes || 'None'}\n` +
                       `------------------------------------\n` +
                       `_Submitted via The Apartment Brew Co. Website_`;
@@ -1498,7 +1497,7 @@ function renderInquirySuccess(inqId, name, comp, reqType, waUrl) {
     statusMsg.innerHTML = `
       <div style="font-size: 0.95rem; font-weight: 800; color: #95d5b2; margin-bottom: 6px;">✓ Requirement Received! (ID: ${inqId})</div>
       <p style="font-size: 0.8rem; color: #fefae0; margin: 0 0 10px; line-height: 1.4;">
-        Thank you, <strong>${name}</strong>! We've logged your request for <strong>${comp}</strong> (${reqType}, 200ml bottles). Our curation team will review batch sizes and reach out within 24 hours.
+        Thank you, <strong>${name}</strong>! We've logged your request for <strong>${comp}</strong> (${reqType}). Our curation team will review batch sizes and reach out within 24 hours.
       </p>
       <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
         <a href="${waUrl}" target="_blank" style="display: inline-block; background: #25d366; color: #141312; font-size: 0.78rem; font-weight: 800; padding: 8px 14px; border-radius: 6px; text-decoration: none;">
@@ -1562,12 +1561,12 @@ function submitTrackOrder() {
             customerName: "Astitva Gupta",
             company: "Zomato HQ (Tech Meetup)",
             requirementType: "Hackathon / Townhall Bulk Drop",
-            headcount: "100–250 people (150 bottles @ 200ml)",
+            headcount: "100–250 people (150 bottles)",
             dropDate: "Fri, 4 Sep, 2026",
             deliveryAddress: "One Horizon Center, Golf Course Rd, Gurugram",
             deliveryWindow: "Target Date: Fri, 4 Sep, 2026",
             bean: "Hackathon / Townhall Bulk Drop",
-            pack: "100–250 people (150 bottles @ 200ml)",
+            pack: "100–250 people (150 bottles)",
             totalAmount: 0,
             paymentStatus: "Custom Quote / In Discussion",
             deliveryStatus: "In Discussion",
@@ -1584,7 +1583,7 @@ function submitTrackOrder() {
             deliveryWindow: "Morning Kickoff (9:30 AM – 11:30 AM)",
             dropDate: "Fri, 28 Aug, 2026",
             bean: "Ratnagiri Estate (Anaerobic Naturals)",
-            pack: "Office Batch x 1 (20x 200ml bottles)",
+            pack: "Office Batch x 1 (20 bottles)",
             totalAmount: 3060,
             paymentStatus: "Corporate Invoice Requested (Net Terms)",
             deliveryStatus: "Pre-Ordered"
@@ -1600,7 +1599,7 @@ function submitTrackOrder() {
             deliveryWindow: "Saturday Morning (8:00 AM – 11:00 AM)",
             dropDate: getUpcomingSaturdayFormatted(),
             bean: "Ratnagiri Estate (Anaerobic Naturals)",
-            pack: "Weekend Pack x 1 (4x 200ml bottles)",
+            pack: "Weekend Pack x 1 (4 bottles)",
             totalAmount: 899,
             paymentStatus: "Paid via Gateway",
             deliveryStatus: "Brewing"
@@ -1703,7 +1702,7 @@ function renderTrackingDetails(order) {
     if (lblPack) lblPack.textContent = 'Scale / Headcount:';
     if (lblPayment) lblPayment.textContent = 'Status Stage:';
     if (lblDropNote) lblDropNote.textContent = 'Special Notes:';
-    if (tFreshnessNote) tFreshnessNote.innerHTML = '☕ <strong>Custom Event Protocol:</strong> Our coffee team will reach out directly to coordinate roast profiles, 200ml bottles, and ice stations tailored to your venue.';
+    if (tFreshnessNote) tFreshnessNote.innerHTML = '☕ <strong>Custom Event Protocol:</strong> Our coffee team will reach out directly to coordinate roast profiles and ice stations tailored to your venue.';
   } else {
     if (lblCustomer) lblCustomer.textContent = 'Customer:';
     if (lblCompany) lblCompany.textContent = 'Company:';
@@ -1880,7 +1879,7 @@ function addToGoogleCalendar() {
   const d = currentOrderDetails;
   const isB2b = (d.orderType === 'B2B');
   const title = encodeURIComponent(isB2b ? `The Apartment Brew Co. Office Drop: ${d.company}` : `The Apartment Brew Co. Drop (${d.orderId})`);
-  const details = encodeURIComponent(`Fresh Flash-Brew Specialty Coffee Drop\nOrder ID: ${d.orderId}\nLot: ${d.bean}\nSelection: ${d.pack}\nInstruction: ${d.dropInstructions}\nTotal: ₹${d.totalAmount}\n\nNote: Please refrigerate 200ml bottles upon delivery and enjoy within 48 hours for peak flavor!`);
+  const details = encodeURIComponent(`Fresh Flash-Brew Specialty Coffee Drop\nOrder ID: ${d.orderId}\nLot: ${d.bean}\nSelection: ${d.pack}\nInstruction: ${d.dropInstructions}\nTotal: ₹${d.totalAmount}\n\nNote: Please refrigerate upon delivery and enjoy within 48 hours for peak flavor!`);
   const location = encodeURIComponent(`${d.buildingFloor}, ${d.techPark} (PIN: ${d.pinCode})`);
   const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}`;
   window.open(gcalUrl, '_blank');
@@ -1905,10 +1904,10 @@ function sendWhatsAppReceipt() {
                   `\*Coffee Lot:\* ${d.bean}\n` +
                   `\*Selection:\* ${d.pack}\n` +
                   discountText +
-                  `\*Total Bottles:\* ${d.bottles}x 200ml\n` +
+                  `\*Total Bottles:\* ${d.bottles} bottles\n` +
                   `\*Total Paid:\* ₹${d.totalAmount} (${d.paymentStatus})\n` +
                   `------------------------------------\n` +
-                  `\_Freshness Reminder: Extracted hot and flash-chilled in 200ml bottles with zero preservatives. Please refrigerate and consume within 48 hours!\_`;
+                  `\_Freshness Reminder: Extracted hot and flash-chilled with zero preservatives. Please refrigerate and consume within 48 hours!\_`;
   
   let cleanPhone = d.phone.replace(/[^0-9]/g, '');
   if (cleanPhone.length === 10) cleanPhone = '91' + cleanPhone;
