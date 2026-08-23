@@ -2294,3 +2294,127 @@ select option:disabled {
   gap: 4px;
   margin-top: 4px;
 }
+
+/* Mix & Match Lot Builder & Preset Grid */
+.mix-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.mix-preset-btn {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text-muted);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.mix-preset-btn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.mix-preset-btn.active {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Mix & Match Lot Row Cards */
+.mix-lot-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.mix-lot-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: border-color 0.2s ease;
+}
+
+.mix-lot-card.active-allocation {
+  border-color: rgba(212, 163, 115, 0.5);
+  background: rgba(212, 163, 115, 0.03);
+}
+
+.mix-lot-info {
+  flex: 1;
+}
+
+.mix-lot-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.mix-lot-notes {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+/* Allocation Tally Box & Segmented Bar */
+.mix-tally-box {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+}
+
+.mix-tally-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  margin-bottom: 6px;
+}
+
+.mix-tally-count {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.mix-tally-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #2a2724;
+  margin-bottom: 6px;
+}
+
+.mix-tally-segment {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.seg-lot-1 { background: var(--accent); }
+.seg-lot-2 { background: var(--accent-light); border-left: 1px solid #141312; }
+.seg-lot-3 { background: #588157; border-left: 1px solid #141312; }
+
+.mix-tally-status {
+  font-size: 0.74rem;
+  text-align: center;
+  font-weight: 600;
+}
+.mix-tally-status.status-matched { color: var(--success-light); }
+.mix-tally-status.status-under { color: var(--accent); }
+.mix-tally-status.status-over { color: var(--error-light); }

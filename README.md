@@ -116,8 +116,8 @@ To reset the capacity counter between weekly drops:
 
 #### **2\. Multi-Step Ordering Wizard**
 
-* Step 1: Single-Estate Harvest Selection & Custom Ratio Splitter  
-* Step 2: Pack Selection, Quantity Stepper, Promo Engine & Summary Breakdown  
+* Step 1: Pack Selection, Quantity Stepper, Promo Engine & Summary Breakdown  
+* Step 2: Coffee Harvest Selection & Mix-and-Match Customizer: Features 1-click single roast presets (100% Lot 1, 100% Lot 2), balanced 50/50 sampler splits, and granular \+/- steppers per estate harvest with real-time bottle tally validation.  
 * Step 3: Delivery Details, NCR PIN Code Validation & Cluster Window Throttling  
 * Step 4: Final Order Review Card & Secure Payment / Corporate Invoice Dispatch
 
