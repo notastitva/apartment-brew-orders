@@ -1871,19 +1871,26 @@ function resetForm() {
 document.addEventListener('DOMContentLoaded', () => {
   highlightActiveDrawerLink();
   if (PAGE === 'ORDER' || PAGE === 'HOME') {
+    renderLots(availableLots);
+    renderPacks(availableB2cPacks, []);
     startCutoffCountdown();
+    checkSavedProfile();
     fetchLiveConfig();
     setInterval(fetchLiveConfig, 30000);
+    goToWizardStep(1);
   } else if (PAGE === 'OFFICE') {
     renderLots(availableLots);
     renderPacks([], availableB2bPacks);
-  } else if (PAGE === 'INDEX') {
     startCutoffCountdown();
     renderClusterOptions();
     checkSavedProfile();
     fetchLiveConfig();
     setInterval(fetchLiveConfig, 30000);
     goToWizardStep(1);
+  } else if (PAGE === 'INDEX') {
+    startCutoffCountdown();
+    fetchLiveConfig();
+    setInterval(fetchLiveConfig, 30000);
   } else if (PAGE === 'MENU') {
     renderLots(availableLots);
     fetchLiveConfig();
