@@ -1,10 +1,61 @@
 // ====================================================================
+// Sticky Top Header & Hamburger Navigation Controller
+// ====================================================================
+function toggleNavDrawer() {
+  const drawer = document.getElementById('navDrawer');
+  const isOpen = drawer ? drawer.classList.contains('open') : false;
+  if (isOpen) {
+    closeNavDrawer();
+  } else {
+    openNavDrawer();
+  }
+}
+
+function openNavDrawer() {
+  const drawer = document.getElementById('navDrawer');
+  const backdrop = document.getElementById('navBackdrop');
+  const btn = document.getElementById('navHamburgerBtn');
+  if (drawer) drawer.classList.add('open');
+  if (backdrop) backdrop.classList.add('open');
+  if (btn) btn.classList.add('is-open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeNavDrawer() {
+  const drawer = document.getElementById('navDrawer');
+  const backdrop = document.getElementById('navBackdrop');
+  const btn = document.getElementById('navHamburgerBtn');
+  if (drawer) drawer.classList.remove('open');
+  if (backdrop) backdrop.classList.remove('open');
+  if (btn) btn.classList.remove('is-open');
+  document.body.style.overflow = '';
+}
+
+function highlightActiveDrawerLink() {
+  document.querySelectorAll('.drawer-link').forEach(link => {
+    const targetPage = link.dataset.pageLink;
+    if (targetPage === PAGE || (PAGE === 'INDEX' && targetPage === 'INDEX') || (PAGE === 'HOME' && targetPage === 'INDEX')) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+}
+
+// Global listener for closing drawer with Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeNavDrawer();
+  }
+});
+
+// ====================================================================
 // THE APARTMENT BREW CO. — FRONTEND CONTROLLER (app.js)
 // ====================================================================
 
 const CONFIG = {
-  razorpayKeyId: "YOUR_RAZORPAY_KEY_ID_HERE", // Replace with your active Key ID (rzp_live_...)
-  googleSheetEndpoint: "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE", // Replace with Apps Script Web App URL ending in /exec
+  razorpayKeyId: "rzp_test_TRVab1bUUwOVN5", // Replace with your active Key ID (rzp_live_...)
+  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbz9kw-PDrwGXaNeHzvgfuOZsQ5A52tKXk-WN2np30ohE12xekUSK7x-bAp_kN_epmig/exec", // Replace with Apps Script Web App URL ending in /exec
   authToken: "TABC_SECURE_TOKEN_2026" // Shared auth token matching Code.gs
 };
 
@@ -1818,6 +1869,7 @@ function resetForm() {
 // Page Initialization Dispatcher
 // --------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
+  highlightActiveDrawerLink();
   if (PAGE === 'ORDER' || PAGE === 'HOME') {
     startCutoffCountdown();
     fetchLiveConfig();
