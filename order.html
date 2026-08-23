@@ -38,14 +38,14 @@
       <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&times;</button>
     </div>
     <nav class="drawer-nav">
-      <a href="index.html" class="drawer-link" data-page-link="INDEX">🏠 Home &amp; Story</a>
-      <a href="order.html" class="drawer-link active" data-page-link="ORDER">☕ Saturday Individual Drop</a>
-      <a href="office.html" class="drawer-link" data-page-link="OFFICE">🏢 Friday Office Drops</a>
-      <a href="menu.html" class="drawer-link" data-page-link="MENU">📖 Harvests &amp; Sensory Menu</a>
-      <a href="guide.html" class="drawer-link" data-page-link="GUIDE">❄️ 48-Hour Freshness Guide</a>
-      <a href="about.html" class="drawer-link" data-page-link="ABOUT">🌱 Craft Philosophy</a>
-      <a href="events.html" class="drawer-link" data-page-link="EVENTS">🎉 Events &amp; Coffee Runs</a>
-      <a href="track.html" class="drawer-link" data-page-link="TRACK">🔍 Live Order Tracker</a>
+      <a href="index.html" class="drawer-link" data-page-link="INDEX">Home</a>
+      <a href="order.html" class="drawer-link active" data-page-link="ORDER">Individual Brew</a>
+      <a href="office.html" class="drawer-link" data-page-link="OFFICE">Team Brew</a>
+      <a href="menu.html" class="drawer-link" data-page-link="MENU">Harvests &amp; Sensory Menu</a>
+      <a href="guide.html" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
+      <a href="about.html" class="drawer-link" data-page-link="ABOUT">Craft &amp; Philosophy</a>
+      <a href="events.html" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
+      <a href="track.html" class="drawer-link" data-page-link="TRACK">Enquiry/Order Tracker</a>
     </nav>
     <div class="drawer-footer">
       <div class="drawer-footer-text">☕ Hand-Brewed Fresh to Order in Gurugram</div>
@@ -117,10 +117,10 @@
           <span class="section-subtitle">Fresh Roast</span>
         </div>
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
-          Choose your preferred estate harvest lot, or select Discovery Flight to blend roasts.
+          Choose your preferred estate harvest lot, or select Mix &amp; Match to customize your split.
         </p>
   
-        <!-- Dynamic Coffee Lot Grid (3 Options: Lot 1, Lot 2, Discovery Flight) -->
+        <!-- Dynamic Coffee Lot Grid (3 Options: Lot 1, Lot 2, Mix & Match) -->
         <div class="lot-grid" id="lotGrid"></div>
   
         <button type="button" class="btn btn-pay" style="margin-top: 14px;" onclick="nextWizardStep(2)">
@@ -144,10 +144,10 @@
           <div class="field-error" id="errQty">Please enter a valid pack quantity (minimum 1).</div>
         </div>
   
-        <!-- Discovery Flight Custom Ratio Splitter (Visible in Step 2 when Discovery Flight is selected) -->
+        <!-- Mix & Match Custom Ratio Splitter (Visible in Step 2 when Mix & Match is selected) -->
         <div class="custom-splitter-card" id="customSplitter" style="display: none;">
           <div class="splitter-header">
-            <span class="splitter-title">🎯 Discovery Flight Bottle Split</span>
+            <span class="splitter-title">🎯 Mix &amp; Match Bottle Split</span>
             <span class="splitter-tally" id="splitterTally">Allocated: <strong><span id="allocCount">4</span> / <span id="targetCount">4</span></strong> bottles</span>
           </div>
           <div id="tallyStatus" class="splitter-tally-note" style="font-size: 0.76rem; color: var(--accent); margin-bottom: 8px; text-align: center;"></div>

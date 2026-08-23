@@ -13,7 +13,7 @@
     <div class="header-inner">
       <a href="index.html" class="nav-logo">
         <span class="logo-text">The Apartment Brew Co.</span>
-        <span class="logo-sub">Specialty Coffee &amp; bull; Gurugram</span>
+        <span class="logo-sub">Specialty Coffee &bull; Gurugram</span>
       </a>
       <button type="button" class="nav-hamburger-btn" id="navHamburgerBtn" aria-label="Toggle navigation menu" onclick="toggleNavDrawer()">
         <span class="hamburger-bar"></span>
@@ -22,29 +22,29 @@
       </button>
     </div>
   </header>
-
+  
   <!-- Navigation Drawer Backdrop & Overlay Menu -->
   <div class="nav-backdrop" id="navBackdrop" onclick="closeNavDrawer()"></div>
   <aside class="nav-drawer" id="navDrawer">
     <div class="drawer-header">
       <span class="drawer-title">Navigation Menu</span>
-      <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&amp;times;</button>
+      <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&times;</button>
     </div>
     <nav class="drawer-nav">
-      <a href="index.html" class="drawer-link" data-page-link="INDEX">🏠 Home &amp;amp; Story</a>
-      <a href="order.html" class="drawer-link" data-page-link="ORDER">☕ Saturday Individual Drop</a>
-      <a href="office.html" class="drawer-link" data-page-link="OFFICE">🏢 Friday Office Drops</a>
-      <a href="menu.html" class="drawer-link" data-page-link="MENU">📖 Harvests &amp;amp; Sensory Menu</a>
-      <a href="guide.html" class="drawer-link" data-page-link="GUIDE">❄️ 48-Hour Freshness Guide</a>
-      <a href="about.html" class="drawer-link" data-page-link="ABOUT">🌱 Craft Philosophy</a>
-      <a href="events.html" class="drawer-link" data-page-link="EVENTS">🎉 Events &amp;amp; Coffee Runs</a>
-      <a href="track.html" class="drawer-link active" data-page-link="TRACK">🔍 Live Order Tracker</a>
+      <a href="index.html" class="drawer-link" data-page-link="INDEX">Home</a>
+      <a href="order.html" class="drawer-link" data-page-link="ORDER">Individual Brew</a>
+      <a href="office.html" class="drawer-link" data-page-link="OFFICE">Team Brew</a>
+      <a href="menu.html" class="drawer-link" data-page-link="MENU">Harvests &amp; Sensory Menu</a>
+      <a href="guide.html" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
+      <a href="about.html" class="drawer-link" data-page-link="ABOUT">Craft &amp; Philosophy</a>
+      <a href="events.html" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
+      <a href="track.html" class="drawer-link active" data-page-link="TRACK">Enquiry/Order Tracker</a>
     </nav>
     <div class="drawer-footer">
       <div class="drawer-footer-text">☕ Hand-Brewed Fresh to Order in Gurugram</div>
     </div>
   </aside>
-
+  
   <div class="container">
     
     <!-- Branding Header -->
@@ -60,6 +60,7 @@
         ☕ Hand-Brewed Separately in Small Batches &bull; Crafted Fresh to Order
       </div>
     </header>
+
     <!-- Order Tracker View -->
     <main id="trackerSection">
       <section class="section-card">
@@ -76,7 +77,7 @@
           <button type="button" id="btnSubmitTrack" class="btn-track" onclick="submitTrackOrder()">Track</button>
         </div>
         <div id="trackStatusMsg" class="track-status-msg" style="display: none;"></div>
-
+  
         <!-- Tracker Results Container -->
         <div id="trackerResult" style="display: none; margin-top: 18px;">
           <!-- Visual Fulfillment Stepper -->
@@ -121,7 +122,7 @@
               </div>
             </div>
           </div>
-
+  
           <!-- Order Summary Card -->
           <div class="tracker-summary-card" id="trackerSummaryCard">
             <div class="tracker-summary-header">
@@ -169,9 +170,9 @@
         </div>
       </section>
     </main>
-
+  
   </div>
-
+  
   <!-- Service Worker Registration -->
   <script>
     if ('serviceWorker' in navigator) {
@@ -183,3 +184,4 @@
   <script src="app.js"></script>
 </body>
 </html>
+

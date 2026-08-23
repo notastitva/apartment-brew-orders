@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body data-page="EVENTS">
-
+  
   <!-- Sticky Top Header & Hamburger Navigation (Topmost Component) -->
   <header class="site-header-sticky">
     <div class="header-inner">
@@ -23,7 +23,7 @@
       </button>
     </div>
   </header>
-
+  
   <!-- Navigation Drawer Backdrop & Overlay Menu -->
   <div class="nav-backdrop" id="navBackdrop" onclick="closeNavDrawer()"></div>
   <aside class="nav-drawer" id="navDrawer">
@@ -32,20 +32,20 @@
       <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&times;</button>
     </div>
     <nav class="drawer-nav">
-      <a href="index.html" class="drawer-link" data-page-link="INDEX">🏠 Home &amp; Story</a>
-      <a href="order.html" class="drawer-link" data-page-link="ORDER">☕ Saturday Individual Drop</a>
-      <a href="office.html" class="drawer-link" data-page-link="OFFICE">🏢 Friday Office Drops</a>
-      <a href="menu.html" class="drawer-link" data-page-link="MENU">📖 Harvests &amp; Sensory Menu</a>
-      <a href="guide.html" class="drawer-link" data-page-link="GUIDE">❄️ 48-Hour Freshness Guide</a>
-      <a href="about.html" class="drawer-link" data-page-link="ABOUT">🌱 Craft Philosophy</a>
-      <a href="events.html" class="drawer-link active" data-page-link="EVENTS">🎉 Events &amp; Coffee Runs</a>
-      <a href="track.html" class="drawer-link" data-page-link="TRACK">🔍 Live Order Tracker</a>
+      <a href="index.html" class="drawer-link" data-page-link="INDEX">Home</a>
+      <a href="order.html" class="drawer-link" data-page-link="ORDER">Individual Brew</a>
+      <a href="office.html" class="drawer-link" data-page-link="OFFICE">Team Brew</a>
+      <a href="menu.html" class="drawer-link" data-page-link="MENU">Harvests &amp; Sensory Menu</a>
+      <a href="guide.html" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
+      <a href="about.html" class="drawer-link" data-page-link="ABOUT">Craft &amp; Philosophy</a>
+      <a href="events.html" class="drawer-link active" data-page-link="EVENTS">Event Runs</a>
+      <a href="track.html" class="drawer-link" data-page-link="TRACK">Enquiry/Order Tracker</a>
     </nav>
     <div class="drawer-footer">
       <div class="drawer-footer-text">☕ Hand-Brewed Fresh to Order in Gurugram</div>
     </div>
   </aside>
-
+  
   <div class="container">
     
     <!-- Branding Header -->
@@ -53,7 +53,7 @@
       <div class="drop-banner">
         <span>🎉</span> Tailored Specialty Coffee for Teams &amp; Events
       </div>
-
+  
       <div class="geo-badge" style="margin-top: 12px;">
         📍 Serving Tech Startups, Hackathons, Product Launches &amp; Offsites Across Delhi NCR
       </div>
@@ -62,7 +62,7 @@
         ☕ Hand-Brewed Separately in Small Batches &bull; Crafted Fresh to Order
       </div>
     </header>
-
+  
     <!-- Custom Event Intake Form -->
     <main id="customInquirySection">
       <section class="section-card">
@@ -73,31 +73,31 @@
         <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4;">
           Planning a company townhall, hackathon, product launch, pop-up booth, or a dedicated team coffee run? Tell us what you need and our roastery team will curate a custom package for you.
         </p>
-
+  
         <div class="form-group">
           <label for="inqCompany">Organization / Startup / Event Name *</label>
           <input type="text" id="inqCompany" placeholder="e.g. Zomato / Google India / Tech Hackathon 2026" oninput="validateInqField('inqCompany')" />
           <div class="field-error" id="errInqCompany">Please enter your organization or event name.</div>
         </div>
-
+  
         <div class="form-group">
           <label for="inqName">Contact Person Name *</label>
           <input type="text" id="inqName" placeholder="e.g. Astitva Gupta" oninput="validateInqField('inqName')" />
           <div class="field-error" id="errInqName">Please enter your name.</div>
         </div>
-
+  
         <div class="form-group">
           <label for="inqEmail">Work Email Address *</label>
           <input type="email" id="inqEmail" placeholder="e.g. astitva@company.com" oninput="validateInqEmail()" />
           <div class="field-error" id="errInqEmail">Please enter a valid work email address.</div>
         </div>
-
+  
         <div class="form-group">
           <label for="inqPhone">WhatsApp / Mobile Number *</label>
           <input type="tel" id="inqPhone" placeholder="e.g. 9876543210" maxlength="10" oninput="validateInqPhone()" />
           <div class="field-error" id="errInqPhone">Please enter a valid 10-digit mobile number.</div>
         </div>
-
+  
         <div class="form-group">
           <label for="inqType">Requirement Type *</label>
           <select id="inqType">
@@ -109,7 +109,7 @@
             <option value="Other Custom Requirement">Other Custom Requirement</option>
           </select>
         </div>
-
+  
         <div class="form-group">
           <label for="inqHeadcount">Estimated Headcount / Bottles Needed</label>
           <select id="inqHeadcount">
@@ -120,33 +120,33 @@
             <option value="Not sure yet / Need Recommendation">Not sure yet / Need Recommendation</option>
           </select>
         </div>
-
+  
         <div class="form-group">
           <label for="inqDate">Target Event / Delivery Date *</label>
           <input type="text" id="inqDate" placeholder="e.g. 4 Sep 2026 or Next Friday" oninput="validateInqField('inqDate')" />
           <div class="field-error" id="errInqDate">Please specify your target date or timeline.</div>
         </div>
-
+  
         <div class="form-group">
           <label for="inqLocation">Venue Location / Tech Park (Delhi NCR)</label>
           <input type="text" id="inqLocation" placeholder="e.g. DLF Cyber City / Ambience Mall / Office HQ" />
         </div>
-
+  
         <div class="form-group">
           <label for="inqNotes">Special Requirements &amp; Preferences</label>
           <textarea id="inqNotes" rows="3" placeholder="Tell us about specific taste preferences, ice setup, barista station, custom branding labels, or delivery schedule..."></textarea>
         </div>
-
+  
         <button id="btnSubmitCustom" class="btn btn-pay" onclick="handleCustomInquirySubmit()">
           <span id="btnCustomText">&#128233; Submit Custom Request</span>
         </button>
-
+  
         <div id="inqStatusMsg" class="track-status-msg" style="display: none; margin-top: 14px;"></div>
       </section>
     </main>
-
+  
   </div>
-
+  
   <!-- Service Worker Registration -->
   <script>
     if ('serviceWorker' in navigator) {
@@ -158,3 +158,4 @@
   <script src="app.js"></script>
 </body>
 </html>
+
