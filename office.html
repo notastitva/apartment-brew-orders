@@ -40,7 +40,7 @@
     </div>
     <nav class="drawer-nav">
       <a href="index.html" class="drawer-link" data-page-link="INDEX">🏠 Home &amp; Story</a>
-      <a href="order.html" class="drawer-link" data-page-link="ORDER">☕ Saturday Individual Drop</a>
+      <a href="order.html" class="drawer-link active" data-page-link="ORDER">☕ Saturday Individual Drop</a>
       <a href="office.html" class="drawer-link active" data-page-link="OFFICE">🏢 Friday Office Drops</a>
       <a href="menu.html" class="drawer-link" data-page-link="MENU">📖 Harvests &amp; Sensory Menu</a>
       <a href="guide.html" class="drawer-link" data-page-link="GUIDE">❄️ 48-Hour Freshness Guide</a>
@@ -109,7 +109,7 @@
         </div>
       </div>
   
-      <!-- STEP 1: Select Coffee Harvest & Flavor Ratio -->
+      <!-- STEP 1: Select Coffee Harvest -->
       <section class="section-card wizard-step-panel" id="stepPanel1">
         <div class="section-title">
           <span>Step 1: Select Coffee Harvest</span>
@@ -121,22 +121,6 @@
   
         <!-- Dynamic Coffee Lot Grid (3 Options: Lot 1, Lot 2, Discovery Flight) -->
         <div class="lot-grid" id="lotGrid"></div>
-  
-        <!-- Flavor Ratio Presets Container (Visible when Discovery Flight is selected) -->
-        <div id="flavorRatioContainer" style="display: none; margin-top: 10px; padding: 12px; background: rgba(212, 163, 115, 0.05); border: 1px dashed var(--accent); border-radius: 10px;">
-          <div style="font-size: 0.8rem; font-weight: 700; color: var(--accent); margin-bottom: 6px;">
-            ✨ Choose Your Team's Discovery Tasting Profile:
-          </div>
-          <div class="mix-preset-grid" id="flavorRatioPresets">
-            <button type="button" class="mix-preset-btn active" id="btnRatioBalanced" onclick="setFlavorRatioPreset('BALANCED')">✨ 50/50 Balanced</button>
-            <button type="button" class="mix-preset-btn" id="btnRatioLot1" onclick="setFlavorRatioPreset('LOT1_DOMINANT')">🍓 75% Lot 1 / 25% Lot 2</button>
-            <button type="button" class="mix-preset-btn" id="btnRatioLot2" onclick="setFlavorRatioPreset('LOT2_DOMINANT')">🍏 25% Lot 1 / 75% Lot 2</button>
-            <button type="button" class="mix-preset-btn" id="btnRatioCustom" onclick="setFlavorRatioPreset('CUSTOM')">🎯 Custom Ratio</button>
-          </div>
-          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 8px; line-height: 1.35;">
-            ⚡ Your total bottles and exact pack breakdown will automatically adapt in Step 2.
-          </div>
-        </div>
   
         <button type="button" class="btn btn-pay" style="margin-top: 14px;" onclick="nextWizardStep(2)">
           <span>Continue to Batch Size &rarr;</span>

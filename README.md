@@ -117,10 +117,10 @@ To reset the capacity counter between weekly drops:
 #### **2\. Uniform 4-Step Ordering Wizard Architecture**
 
 * The ordering workflow is uniform across both individual (order.html) and office (office.html) drops:  
-  * Step 1: Harvest (Select Single-Estate Harvest): Customer chooses flavor direction: Lot 1, Lot 2, or Discovery Flight (with quick ratio presets: 50/50 Balanced, 75/25, 25/75, or Custom).  
-  * Step 2: Batch Size (Choose Batch Size & Quantity): Customer selects any pack size (2, 4, 6, 10, 20, 40, 60 bottles), and the system automatically calculates the exact bottle split with interactive steppers and segmented ratio bar.  
-  * Step 3: Delivery (Delivery & Contact / Office Details): Delivery & contact details.  
-  * Step 4: Review (Order Review & Gateway / Corporate Invoicing): Final order summary and checkout / corporate invoice.
+  * Step 1: Harvest (Select Single-Estate Harvest): Clean 3-choice lot grid (Lot 1, Lot 2, or Discovery Flight).  
+  * Step 2: Batch Size (Choose Batch Size & Quantity): Batch size selection with dynamic Discovery Flight Bottle Splitter (steppers, automatic 50/50 scaling to any pack size, live ratio bar).  
+  * Step 3: Delivery (Delivery & Contact / Office Details): Delivery and contact/office details.  
+  * Step 4: Review (Order Review & Gateway / Corporate Invoicing): Confirmation and checkout / invoicing.
 
 #### **3\. Global Navigation System & Controller Dispatcher in app.js**
 

@@ -113,7 +113,6 @@ let availableCoupons = [
 let appliedCoupon = null;
 let selectedBean = "Ratnagiri Estate (Anaerobic Naturals)";
 let isCustomSplit = false;
-let flavorRatioPreset = 'BALANCED'; // 'BALANCED', 'LOT1_DOMINANT', 'LOT2_DOMINANT', 'CUSTOM'
 let customSplit = { lot1: (PAGE === 'OFFICE' ? 5 : 2), lot2: (PAGE === 'OFFICE' ? 5 : 2) };
 let selectedB2cPack = { name: "Weekend Pack", bottles: 4, unitPrice: 899 };
 let selectedB2bPack = { name: "Team Pack", bottles: 10, unitPrice: 1800 };
@@ -124,30 +123,8 @@ function normalizeStr(s) {
 }
 
 // --------------------------------------------------------------------
-// Flavor Ratio & Discovery Split Engine (Solution A)
+// Discovery Flight & Splitter Engine (Step 2 Dynamic Calculation)
 // --------------------------------------------------------------------
-function setFlavorRatioPreset(presetKey) {
-  flavorRatioPreset = presetKey;
-  
-  // Update button active state
-  ['Balanced', 'Lot1', 'Lot2', 'Custom'].forEach(key => {
-    const btn = document.getElementById(`btnRatio${key}`);
-    if (btn) btn.classList.remove('active');
-  });
-  
-  if (presetKey === 'BALANCED') {
-    document.getElementById('btnRatioBalanced')?.classList.add('active');
-  } else if (presetKey === 'LOT1_DOMINANT') {
-    document.getElementById('btnRatioLot1')?.classList.add('active');
-  } else if (presetKey === 'LOT2_DOMINANT') {
-    document.getElementById('btnRatioLot2')?.classList.add('active');
-  } else if (presetKey === 'CUSTOM') {
-    document.getElementById('btnRatioCustom')?.classList.add('active');
-  }
-  
-  rebalanceSplitter();
-}
-
 function getTotalBottles() {
   const qtyInput = document.getElementById('packQty');
   let qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
@@ -158,32 +135,17 @@ function getTotalBottles() {
 
 function rebalanceSplitter() {
   const total = getTotalBottles();
+  const prevSum = (customSplit.lot1 || 0) + (customSplit.lot2 || 0);
   
-  if (flavorRatioPreset === 'BALANCED') {
+  if (prevSum > 0 && prevSum !== total) {
+    const ratio = customSplit.lot1 / prevSum;
+    const newLot1 = Math.round(ratio * total);
+    customSplit.lot1 = newLot1;
+    customSplit.lot2 = total - newLot1;
+  } else {
     const half = Math.floor(total / 2);
     customSplit.lot1 = half;
     customSplit.lot2 = total - half;
-  } else if (flavorRatioPreset === 'LOT1_DOMINANT') {
-    const l1 = Math.max(1, Math.round(total * 0.75));
-    customSplit.lot1 = l1;
-    customSplit.lot2 = Math.max(0, total - l1);
-  } else if (flavorRatioPreset === 'LOT2_DOMINANT') {
-    const l1 = Math.max(0, Math.round(total * 0.25));
-    customSplit.lot1 = l1;
-    customSplit.lot2 = Math.max(1, total - l1);
-  } else {
-    // Custom: maintain ratio when total bottles change
-    const prevSum = (customSplit.lot1 || 0) + (customSplit.lot2 || 0);
-    if (prevSum > 0 && prevSum !== total) {
-      const ratio = customSplit.lot1 / prevSum;
-      const newLot1 = Math.round(ratio * total);
-      customSplit.lot1 = newLot1;
-      customSplit.lot2 = total - newLot1;
-    } else if (prevSum === 0 || prevSum !== total) {
-      const half = Math.floor(total / 2);
-      customSplit.lot1 = half;
-      customSplit.lot2 = total - half;
-    }
   }
   
   renderSplitterUI();
@@ -191,13 +153,6 @@ function rebalanceSplitter() {
 
 function adjustSplit(lotKey, delta) {
   const total = getTotalBottles();
-  flavorRatioPreset = 'CUSTOM';
-  
-  // Update ratio buttons active state to custom
-  ['Balanced', 'Lot1', 'Lot2'].forEach(key => {
-    document.getElementById(`btnRatio${key}`)?.classList.remove('active');
-  });
-  document.getElementById('btnRatioCustom')?.classList.add('active');
   
   if (lotKey === 'lot1') {
     let newL1 = customSplit.lot1 + delta;
@@ -693,16 +648,12 @@ function selectLot(lotName, element) {
   document.querySelectorAll('#lotGrid .lot-card').forEach(el => el.classList.remove('active'));
   if (element) element.classList.add('active');
   
-  const ratioContainer = document.getElementById('flavorRatioContainer');
-  
   if (lotName && (lotName.includes('Custom Ratio Split') || lotName.includes('Discovery Flight') || lotName.includes('Custom Split') || lotName.includes('Build Your Own Batch'))) {
     isCustomSplit = true;
-    if (ratioContainer) ratioContainer.style.display = 'block';
     rebalanceSplitter();
   } else {
     isCustomSplit = false;
     selectedBean = lotName;
-    if (ratioContainer) ratioContainer.style.display = 'none';
     renderSplitterUI();
   }
 }
