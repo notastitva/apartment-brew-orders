@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Corporate & Office Coffee Drops | The Apartment Brew Co.</title>
+  <link rel="stylesheet" href="style.css" />
+  
+  <!-- Resource Hints for Payment SDK -->
+  <link rel="preconnect" href="https://checkout.razorpay.com" />
+  <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
+  
+  <!-- Razorpay Standard Checkout SDK -->
+  <script defer src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body data-page="OFFICE">
+  <div class="container">
+    
+    <!-- Branding Header -->
+    <header class="header-card">
+      <h1 class="brand-title">The Apartment Brew Co.</h1>
+      <div class="brand-subtitle">Corporate &amp; Office Batch Drops &bull; Gurugram &amp; Delhi NCR</div>
+      
+      <div class="drop-banner" id="dropBanner">
+        <span>⚡</span> Next Office Drop: Friday Delivery
+      </div>
+      <div class="countdown-timer" id="countdownTimer">Friday Cutoff closes in: Loading...</div>
+
+      <!-- Scarcity Bar -->
+      <div class="scarcity-bar-container">
+        <div class="scarcity-label">
+          <span>🔥 Roastery Batch Capacity</span>
+          <span id="scarcityText">Loading batch availability...</span>
+        </div>
+        <div class="scarcity-progress-track">
+          <div class="scarcity-progress-fill" id="scarcityFill"></div>
+        </div>
+      </div>
+
+      <!-- Store Status Banner (Dynamic for PAUSED / SOLD_OUT) -->
+      <div class="store-status-banner" id="storeStatusBanner" style="display: none;"></div>
+
+      <div class="geo-badge">
+        📍 Scheduled Friday Drops Across DLF Cyber City, One Horizon, Candor TechSpace &amp; NCR Commercial Hubs
+      </div>
+      
+      <div class="craft-badge">
+        ☕ Hand-Brewed Separately in Small Batches &bull; Crafted Fresh to Order
+      </div>
+    </header>
+
+    <!-- Global Multi-Page Navigation Bar -->
+    <nav class="site-nav">
+      <a href="index.html" class="nav-link">☕ Individual</a>
+      <a href="office.html" class="nav-link active">🏢 Office Drops</a>
+      <a href="events.html" class="nav-link">🎉 Events &amp; Custom</a>
+      <a href="track.html" class="nav-link">🔍 Track Order</a>
+    </nav>
+
+    <!-- Office Drop Order Form View -->
+    <main id="orderFormView">
+      
+      <!-- Section 1: Coffee Lot & Corporate Packs -->
+      <section class="section-card">
+        <div class="section-title">
+          <span>1. Select Coffee Lot</span>
+          <span class="section-subtitle">Single-Estate Harvests</span>
+        </div>
+
+        <!-- Dynamic Coffee Lot Grid -->
+        <div class="lot-grid" id="lotGrid"></div>
+
+        <!-- Custom Ratio Splitter Module -->
+        <div class="custom-splitter-card" id="customSplitter" style="display: none;">
+          <div class="splitter-header">
+            <span class="splitter-title">🎯 Build Your Own Batch Ratio</span>
+            <span class="splitter-tally" id="splitterTally">Allocated: <strong><span id="allocCount">10</span> / <span id="targetCount">10</span></strong> bottles</span>
+            <div id="tallyStatus" class="splitter-tally-note" style="font-size: 0.76rem; color: var(--accent); margin-top: 6px; text-align: center;"></div>
+          </div>
+          <div class="splitter-controls">
+            <div class="splitter-row">
+              <div class="splitter-lot-info">
+                <span class="splitter-lot-name" id="splitLot1Name">Lot 1</span>
+                <span class="splitter-lot-sub" id="splitLot1Sub">Anaerobic Naturals</span>
+              </div>
+              <div class="qty-stepper">
+                <button type="button" class="stepper-btn" onclick="adjustSplit('lot1', -1)">&ndash;</button>
+                <span class="stepper-val" id="splitLot1Count">5</span>
+                <button type="button" class="stepper-btn" onclick="adjustSplit('lot1', 1)">+</button>
+              </div>
+            </div>
+            <div class="splitter-row">
+              <div class="splitter-lot-info">
+                <span class="splitter-lot-name" id="splitLot2Name">Lot 2</span>
+                <span class="splitter-lot-sub" id="splitLot2Sub">Washed Lot</span>
+              </div>
+              <div class="qty-stepper">
+                <button type="button" class="stepper-btn" onclick="adjustSplit('lot2', -1)">&ndash;</button>
+                <span class="stepper-val" id="splitLot2Count">5</span>
+                <button type="button" class="stepper-btn" onclick="adjustSplit('lot2', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="splitter-ratio-bar">
+            <div class="ratio-segment ratio-ratnagiri" id="ratioBarLot1" style="width: 50%;"></div>
+            <div class="ratio-segment ratio-thogarihunkal" id="ratioBarLot2" style="width: 50%;"></div>
+          </div>
+        </div>
+
+        <div class="section-title" style="margin-top: 16px;">
+          <span>Choose Corporate Batch Tier</span>
+          <span class="section-subtitle">Friday Drop (Cutoff: Thu 6 PM)</span>
+        </div>
+
+        <!-- Dynamic B2B Packs Grid -->
+        <div class="pack-grid" id="b2bPacks"></div>
+
+        <div class="form-group" style="margin-top: 10px;">
+          <label for="packQty">Quantity of Selected Packs</label>
+          <input type="number" id="packQty" min="1" value="1" oninput="updateTotal()" />
+          <div class="field-error" id="errQty">Please enter a valid pack quantity (minimum 1).</div>
+        </div>
+
+        <!-- Coupon Code Input -->
+        <div class="form-group" style="margin-top: 14px;">
+          <label for="couponInput">Corporate Promo Code</label>
+          <div class="coupon-input-group">
+            <input type="text" id="couponInput" placeholder="e.g. OFFICE10 / NCRFIRST" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();applyCoupon();}" />
+            <button type="button" id="btnApplyCoupon" class="btn-coupon" onclick="applyCoupon()">Apply</button>
+            <button type="button" id="btnRemoveCoupon" class="btn-coupon-remove" onclick="removeCoupon()" style="display: none;">Remove</button>
+          </div>
+          <div id="couponStatus" class="coupon-status" style="display: none;"></div>
+        </div>
+
+        <div class="summary-box">
+          <div class="summary-breakdown" id="summaryBreakdown" style="display: none;">
+            <div class="summary-line">
+              <span>Subtotal:</span>
+              <span id="subtotalDisplay">₹1,800</span>
+            </div>
+            <div class="summary-line summary-discount" id="discountLine">
+              <span id="discountLabel">Promo Discount:</span>
+              <span id="discountDisplay">-₹0</span>
+            </div>
+          </div>
+          <div class="summary-total-line">
+            <span style="font-size:0.85rem; color:var(--text-muted);">Total (Free Tech Park Office Drop):</span>
+            <span class="summary-total" id="totalAmountDisplay">₹1,800</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Office Delivery & Invoicing Details -->
+      <section class="section-card" style="margin-top: 14px;">
+        <div class="section-title">
+          <span>2. Office Delivery &amp; Invoicing Details</span>
+        </div>
+
+        <div class="saved-profile-bar" id="savedProfileBar">
+          <span id="savedProfileText">👋 Welcome back! Autofill corporate details?</span>
+          <button class="saved-profile-btn" onclick="applySavedProfile()">Autofill</button>
+        </div>
+
+        <div class="form-group">
+          <label for="custCompany">Company / Business Name *</label>
+          <input type="text" id="custCompany" placeholder="e.g. Google India / Zomato HQ" oninput="validateField('custCompany')" />
+          <div class="field-error" id="errCompany">Please enter your company or organization name.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="b2bTechPark">Tech Park / Commercial Hub *</label>
+          <select id="b2bTechPark" onchange="updateDeliveryWindows()">
+            <option value="DLF Cyber City / Cyber Hub (Gurugram)">DLF Cyber City / Cyber Hub (Gurugram)</option>
+            <option value="One Horizon Center / Golf Course Rd (Gurugram)">One Horizon Center / Golf Course Rd (Gurugram)</option>
+            <option value="Candor TechSpace / Sector 48 (Gurugram)">Candor TechSpace / Sector 48 (Gurugram)</option>
+            <option value="Cyber Park / Sector 67 (Gurugram)">Cyber Park / Sector 67 (Gurugram)</option>
+            <option value="Udyog Vihar Phases 1-5 (Gurugram)">Udyog Vihar Phases 1-5 (Gurugram)</option>
+            <option value="Noida Sector 62 / 126 / 135 Tech Parks">Noida Sector 62 / 126 / 135 Tech Parks</option>
+            <option value="South / Central Delhi Office Area">South / Central Delhi Office Area</option>
+            <option value="Other Commercial Complex">Other Commercial Complex</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="b2bDeliveryWindow">Friday Delivery Window *</label>
+          <select id="b2bDeliveryWindow" onchange="updateDeliveryWindows()">
+            <option value="Morning Kickoff (9:30 AM – 11:30 AM)">Morning Kickoff (9:30 AM &ndash; 11:30 AM)</option>
+            <option value="Afternoon Recharge (2:00 PM – 4:00 PM)">Afternoon Recharge (2:00 PM &ndash; 4:00 PM)</option>
+          </select>
+          <div id="slotStatusAlert" class="slot-status-alert" style="display: none;"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="custGstin">Company GSTIN (Optional, for 18% Input Tax Credit)</label>
+          <input type="text" id="custGstin" placeholder="e.g. 06AAAAA0000A1Z5" maxlength="15" oninput="validateGstinField()" />
+          <div class="field-error" id="errGstin">Please enter a valid 15-character GSTIN.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="custPincode">6-Digit PIN Code *</label>
+          <input type="text" id="custPincode" maxlength="6" placeholder="e.g. 122002" oninput="validatePincodeField()" />
+          <div id="pinStatus" class="pin-status"></div>
+          <div class="field-error" id="errPincode">Please enter a valid 6-digit Delhi NCR PIN code.</div>
+        </div>
+
+        <div class="form-group">
+          <label id="labelName" for="custName">Contact Person Name &amp; Role *</label>
+          <input type="text" id="custName" placeholder="e.g. Astitva Gupta (Floor Lead)" oninput="validateField('custName')" />
+          <div class="field-error" id="errName">Please enter your name.</div>
+        </div>
+
+        <div class="form-group">
+          <label id="labelEmail" for="custEmail">Corporate Work Email (For Tax Invoices &amp; Updates) *</label>
+          <input type="email" id="custEmail" placeholder="e.g. astitva@company.com" oninput="validateEmailField()" />
+          <div class="field-error" id="errEmail">Please enter a valid work email address.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="custPhone">WhatsApp / Mobile Number *</label>
+          <input type="tel" id="custPhone" placeholder="e.g. 9876543210" maxlength="10" oninput="validatePhoneField()" />
+          <div class="field-error" id="errPhone">Please enter a valid 10-digit Indian mobile number.</div>
+        </div>
+
+        <div class="form-group">
+          <label id="labelAddress" for="custAddress">Office Address (Tower, Building, Floor Details) *</label>
+          <textarea id="custAddress" rows="2" placeholder="e.g. Tower B, 6th Floor, Reception Desk" oninput="validateField('custAddress')"></textarea>
+          <div class="field-error" id="errAddress">Please enter your complete office address.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="dropInstructions">Delivery / Reception Drop Preference</label>
+          <select id="dropInstructions">
+            <option value="Deliver directly to door / desk">Deliver directly to floor / reception desk</option>
+            <option value="Leave with Tower Security / Concierge Desk">Leave with Tower Security / Concierge Desk</option>
+            <option value="Call upon arrival for pickup">Call upon arrival for pickup</option>
+          </select>
+        </div>
+
+        <!-- B2B Payment Method -->
+        <div class="form-group" style="margin-top: 8px;">
+          <label>Payment Method</label>
+          <div style="display: flex; gap: 8px; margin-top: 4px;">
+            <button type="button" class="mode-tab active" id="payOptionGateway" style="flex:1; border:1px solid var(--card-border);" onclick="setB2bPayOption('GATEWAY')">&#128179; Razorpay (UPI/Cards)</button>
+            <button type="button" class="mode-tab" id="payOptionInvoice" style="flex:1; border:1px solid var(--card-border);" onclick="setB2bPayOption('INVOICE')">&#128196; Corporate Invoice (Net-7)</button>
+          </div>
+        </div>
+
+        <button id="payNowBtn" class="btn btn-pay" onclick="handlePayClick()">
+          <span id="btnText">&#128179; Pay &amp; Confirm Office Batch (<span id="btnAmount">₹1,800</span>)</span>
+        </button>
+      </section>
+    </main>
+
+    <!-- Confirmation View -->
+    <section id="confirmationView" style="display: none;">
+      <div class="section-card" style="text-align: center;">
+        <div class="success-badge">&#10003; Office Batch Confirmed</div>
+        <h2 style="font-size: 1.3rem; margin-bottom: 4px;">Thank You for Your Order!</h2>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">Your office drop is scheduled for fresh roast &amp; chilled delivery.</p>
+
+        <div class="freshness-alert">
+          &#10052; <strong>Hand-Brewed Fresh to Order:</strong> Each coffee is brewed separately by hand with zero preservatives. Because every batch is handcrafted, enjoy subtle artisanal nuances in every bottle. Please transfer to your office refrigerator upon delivery and consume within 48 hours for peak flavor!
+        </div>
+
+        <div class="receipt-details">
+          <div class="receipt-row">
+            <span class="receipt-label">Order ID</span>
+            <span class="receipt-val" id="rOrderId" style="font-family: monospace;">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Company</span>
+            <span class="receipt-val" id="rCompany">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Payment Ref</span>
+            <span class="receipt-val" id="rPayId" style="font-family: monospace; font-size: 0.78rem;">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Delivery Date</span>
+            <span class="receipt-val" id="rDropDate" style="color: var(--accent);">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Delivery Slot</span>
+            <span class="receipt-val" id="rWindow">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Point of Contact</span>
+            <span class="receipt-val" id="rName">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Email</span>
+            <span class="receipt-val" id="rEmail">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Coffee Lot</span>
+            <span class="receipt-val" id="rBean">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Selection</span>
+            <span class="receipt-val" id="rPack">-</span>
+          </div>
+
+          <div class="receipt-row" id="rSubtotalRow">
+            <span class="receipt-label">Subtotal</span>
+            <span class="receipt-val" id="rSubtotal">-</span>
+          </div>
+          <div class="receipt-row" id="rDiscountRow" style="display:none;">
+            <span class="receipt-label">Coupon Discount</span>
+            <span class="receipt-val" id="rDiscount" style="color: #d93025;">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Total Amount</span>
+            <span class="receipt-val" id="rTotal" style="color: var(--accent); font-size: 1.05rem;">-</span>
+          </div>
+        </div>
+
+        <button class="btn btn-calendar" onclick="addToGoogleCalendar()">
+          <span>&#128197; Add Office Drop to Google Calendar</span>
+        </button>
+
+        <button class="btn btn-whatsapp" onclick="sendWhatsAppReceipt()">
+          <span>&#128241; Send Receipt / Updates to WhatsApp</span>
+        </button>
+
+        <a href="track.html" id="linkTrackOrder" class="btn" style="background: rgba(212, 163, 115, 0.15); color: var(--accent); border: 1px solid var(--accent); margin-top: 10px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+          <span>&#128269; View Live Order Status</span>
+        </a>
+
+        <button class="btn btn-secondary" onclick="resetForm()">
+          <span>+ Place Another Office Drop</span>
+        </button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW error:', err));
+      });
+    }
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>

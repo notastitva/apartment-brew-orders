@@ -10,7 +10,14 @@ const CONFIG = {
 
 let cachedProfile = null;
 
-let currentMode = "B2C";
+// Determine current page from body dataset or pathname
+const PAGE = document.body.dataset.page || (
+  window.location.pathname.includes('office') ? 'OFFICE' :
+  window.location.pathname.includes('events') ? 'EVENTS' :
+  window.location.pathname.includes('track') ? 'TRACK' : 'HOME'
+);
+
+let currentMode = (PAGE === 'OFFICE') ? "B2B" : "B2C";
 let currentB2bPayOption = "GATEWAY";
 let currentStoreStatus = "OPEN";
 
@@ -51,7 +58,7 @@ let availableCoupons = [
 let appliedCoupon = null;
 let selectedBean = "Ratnagiri Estate (Anaerobic Naturals)";
 let isCustomSplit = false;
-let customSplit = { lot1: 2, lot2: 2 };
+let customSplit = { lot1: (PAGE === 'OFFICE' ? 5 : 2), lot2: (PAGE === 'OFFICE' ? 5 : 2) };
 let selectedB2cPack = { name: "Weekend Pack", bottles: 4, unitPrice: 899 };
 let selectedB2bPack = { name: "Team Pack", bottles: 10, unitPrice: 1800 };
 let currentOrderDetails = null;
@@ -238,7 +245,7 @@ function renderLots(lots) {
 }
 
 function renderPacks(b2cPacks, b2bPacks) {
-  if (Array.isArray(b2cPacks) && b2cPacks.length > 0) {
+  if (PAGE === 'HOME' && Array.isArray(b2cPacks) && b2cPacks.length > 0) {
     availableB2cPacks = b2cPacks;
     const b2cGrid = document.getElementById('b2cPacks');
     if (b2cGrid) {
@@ -264,7 +271,7 @@ function renderPacks(b2cPacks, b2bPacks) {
     }
   }
   
-  if (Array.isArray(b2bPacks) && b2bPacks.length > 0) {
+  if (PAGE === 'OFFICE' && Array.isArray(b2bPacks) && b2bPacks.length > 0) {
     availableB2bPacks = b2bPacks;
     const b2bGrid = document.getElementById('b2bPacks');
     if (b2bGrid) {
@@ -337,7 +344,7 @@ function applyConfigToUI(data) {
   if (Array.isArray(data.coupons) && data.coupons.length > 0) {
     availableCoupons = data.coupons;
   }
-  if (Array.isArray(data.clusters) && data.clusters.length > 0) {
+  if (PAGE === 'OFFICE' && Array.isArray(data.clusters) && data.clusters.length > 0) {
     availableClusters = data.clusters;
     renderClusterOptions();
   }
@@ -380,7 +387,7 @@ function startCutoffCountdown() {
     if (!timerEl) return;
   
     const now = new Date();
-    const isB2c = currentMode === "B2C";
+    const isB2c = (PAGE === 'HOME' || currentMode === "B2C");
     const target = new Date();
   
     if (isB2c) {
@@ -413,96 +420,6 @@ function startCutoffCountdown() {
   setInterval(updateTimer, 1000);
 }
 
-// Switch between B2C, B2B, CUSTOM & TRACK Modes
-function switchMode(mode) {
-  currentMode = mode;
-  const isB2c = mode === 'B2C';
-  const isB2b = mode === 'B2B';
-  const isCustom = mode === 'CUSTOM';
-  const isTrack = mode === 'TRACK';
-  
-  const tabB2c = document.getElementById('tabB2c');
-  const tabB2b = document.getElementById('tabB2b');
-  const tabCustom = document.getElementById('tabCustom');
-  const tabTrack = document.getElementById('tabTrack');
-  const orderFormView = document.getElementById('orderFormView');
-  const customInquirySection = document.getElementById('customInquirySection');
-  const trackerSection = document.getElementById('trackerSection');
-  const confirmationView = document.getElementById('confirmationView');
-  
-  const dropBanner = document.getElementById('dropBanner');
-  const packSubtext = document.getElementById('packSubtext');
-  const b2cPacks = document.getElementById('b2cPacks');
-  const b2bPacks = document.getElementById('b2bPacks');
-  const b2bFields = document.getElementById('b2bFields');
-  const b2cCityGroup = document.getElementById('b2cCityGroup');
-  const b2bPaymentChoiceGroup = document.getElementById('b2bPaymentChoiceGroup');
-  const labelName = document.getElementById('labelName');
-  const labelEmail = document.getElementById('labelEmail');
-  const labelAddress = document.getElementById('labelAddress');
-  
-  if (tabB2c) tabB2c.classList.toggle('active', isB2c);
-  if (tabB2b) tabB2b.classList.toggle('active', isB2b);
-  if (tabCustom) tabCustom.classList.toggle('active', isCustom);
-  if (tabTrack) tabTrack.classList.toggle('active', isTrack);
-  
-  if (isTrack) {
-    if (orderFormView) orderFormView.style.display = 'none';
-    if (customInquirySection) customInquirySection.style.display = 'none';
-    if (confirmationView) confirmationView.style.display = 'none';
-    if (trackerSection) trackerSection.style.display = 'block';
-    if (dropBanner) dropBanner.innerHTML = `<span>🔍</span> Live Fulfillment Status Tracker`;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    return;
-  }
-  
-  if (isCustom) {
-    if (orderFormView) orderFormView.style.display = 'none';
-    if (trackerSection) trackerSection.style.display = 'none';
-    if (confirmationView) confirmationView.style.display = 'none';
-    if (customInquirySection) customInquirySection.style.display = 'block';
-    if (dropBanner) dropBanner.innerHTML = `<span>🎉</span> Tailored Coffee Bars &amp; Custom Corporate Runs`;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    return;
-  }
-  
-  if (trackerSection) trackerSection.style.display = 'none';
-  if (customInquirySection) customInquirySection.style.display = 'none';
-  if (confirmationView) confirmationView.style.display = 'none';
-  if (orderFormView) orderFormView.style.display = 'block';
-  
-  if (dropBanner) {
-    dropBanner.innerHTML = isB2c 
-      ? `<span>⚡</span> Next Fresh Drop: ${getUpcomingSaturdayFormatted()} (Morning)` 
-      : `<span>⚡</span> Next Office Drop: ${getUpcomingFridayFormatted()} (Friday Delivery)`;
-  }
-  
-  if (packSubtext) packSubtext.textContent = isB2c ? 'Saturday Drop' : 'Friday Office Drop (Cutoff: Thu 6 PM)';
-  if (b2cPacks) b2cPacks.style.display = isB2c ? 'grid' : 'none';
-  if (b2bPacks) b2bPacks.style.display = isB2c ? 'none' : 'grid';
-  if (b2bFields) b2bFields.style.display = isB2c ? 'none' : 'block';
-  if (b2cCityGroup) b2cCityGroup.style.display = isB2c ? 'flex' : 'none';
-  if (b2bPaymentChoiceGroup) b2bPaymentChoiceGroup.style.display = isB2c ? 'none' : 'block';
-  
-  if (labelName) labelName.textContent = isB2c ? 'Your Name *' : 'Contact Person Name & Role *';
-  if (labelEmail) labelEmail.textContent = isB2c ? 'Email Address *' : 'Work Email *';
-  if (labelAddress) labelAddress.textContent = isB2c ? 'Delivery Address (Building, Flat, Society) *' : 'Building / Tower / Floor Details *';
-  
-  if (isB2c) currentB2bPayOption = 'GATEWAY';
-  
-  if (appliedCoupon) {
-    const coupon = availableCoupons.find(c => c.code.toUpperCase() === appliedCoupon.code);
-    const couponMode = coupon ? (coupon.mode || 'ALL').toUpperCase() : 'ALL';
-    if (couponMode !== 'ALL' && couponMode !== mode) {
-      removeCoupon();
-    }
-  }
-  
-  updateTotal();
-  if (isCustomSplit) rebalanceSplitter();
-  if (isB2b) renderClusterOptions();
-}
-
 function selectLot(lotName, element) {
   document.querySelectorAll('#lotGrid .lot-card').forEach(el => el.classList.remove('active'));
   if (element) element.classList.add('active');
@@ -524,7 +441,7 @@ function getTotalBottles() {
   const qtyInput = document.getElementById('packQty');
   let qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
   if (isNaN(qty) || qty < 1) qty = 1;
-  const active = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
+  const active = (PAGE === 'OFFICE' || currentMode === 'B2B') ? selectedB2bPack : selectedB2cPack;
   return (active && active.bottles ? active.bottles : 1) * qty;
 }
 
@@ -568,7 +485,7 @@ function renderSplitterUI() {
   const alloc = customSplit.lot1 + customSplit.lot2;
   const qtyInput = document.getElementById('packQty');
   const qty = qtyInput ? parseInt(qtyInput.value, 10) || 1 : 1;
-  const activePack = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
+  const activePack = (PAGE === 'OFFICE' || currentMode === 'B2B') ? selectedB2bPack : selectedB2cPack;
   const lot1Name = availableLots[0] ? availableLots[0].name : "Lot 1";
   const lot2Name = availableLots[1] ? availableLots[1].name : "Lot 2";
   
@@ -630,7 +547,7 @@ function calculateSubtotal() {
   const qtyInput = document.getElementById('packQty');
   let qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
   if (isNaN(qty) || qty < 1) qty = 1;
-  const active = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
+  const active = (PAGE === 'OFFICE' || currentMode === 'B2B') ? selectedB2bPack : selectedB2cPack;
   return (active && active.unitPrice ? active.unitPrice : 0) * qty;
 }
 
@@ -689,7 +606,8 @@ function applyCoupon() {
   }
   
   const couponMode = (coupon.mode || 'ALL').toUpperCase();
-  if (couponMode !== 'ALL' && couponMode !== currentMode) {
+  const targetCheck = (PAGE === 'OFFICE' || currentMode === 'B2B') ? 'B2B' : 'B2C';
+  if (couponMode !== 'ALL' && couponMode !== targetCheck) {
     const targetMode = couponMode === 'B2C' ? 'individual pre-orders (B2C)' : 'corporate office drops (B2B)';
     if (statusEl) {
       statusEl.textContent = `✕ Coupon "${coupon.code}" is valid only for ${targetMode}.`;
@@ -806,8 +724,10 @@ function updateTotal() {
   if (btnAmount) btnAmount.textContent = formattedTotal;
   
   if (btnText && currentStoreStatus === 'OPEN') {
-    if (currentMode === 'B2B' && currentB2bPayOption === 'INVOICE') {
+    if (PAGE === 'OFFICE' && currentB2bPayOption === 'INVOICE') {
       btnText.innerHTML = `📄 Request Corporate Invoice (<span id="btnAmount">${formattedTotal}</span>)`;
+    } else if (PAGE === 'OFFICE') {
+      btnText.innerHTML = `💳 Pay & Confirm Office Batch (<span id="btnAmount">${formattedTotal}</span>)`;
     } else {
       btnText.innerHTML = `💳 Pay & Confirm Pre-Order (<span id="btnAmount">${formattedTotal}</span>)`;
     }
@@ -917,7 +837,7 @@ function validateField(fieldId) {
     return setFieldState(el, errEl, val.length >= 2);
   } else if (fieldId === 'custCompany') {
     errEl = document.getElementById('errCompany');
-    return setFieldState(el, errEl, currentMode !== 'B2B' || val.length >= 2);
+    return setFieldState(el, errEl, PAGE !== 'OFFICE' || val.length >= 2);
   } else if (fieldId === 'custAddress') {
     errEl = document.getElementById('errAddress');
     return setFieldState(el, errEl, val.length >= 5);
@@ -997,11 +917,11 @@ function validateAllInputs() {
   const isPhoneValid = validatePhoneField();
   const isAddressValid = validateField('custAddress');
   const isPinValid = validatePincodeField();
-  const isCompanyValid = currentMode === 'B2B' ? validateField('custCompany') : true;
-  const isGstinValid = currentMode === 'B2B' ? validateGstinField() : true;
+  const isCompanyValid = PAGE === 'OFFICE' ? validateField('custCompany') : true;
+  const isGstinValid = PAGE === 'OFFICE' ? validateGstinField() : true;
   
   let isSlotValid = true;
-  if (currentMode === 'B2B') {
+  if (PAGE === 'OFFICE') {
     const parkSelect = document.getElementById('b2bTechPark');
     const windowSelect = document.getElementById('b2bDeliveryWindow');
     if (parkSelect && windowSelect) {
@@ -1035,7 +955,7 @@ function handlePayClick() {
     return;
   }
   
-  if (currentMode === 'B2B') {
+  if (PAGE === 'OFFICE') {
     const park = document.getElementById('b2bTechPark')?.value;
     const win = document.getElementById('b2bDeliveryWindow')?.value;
     const cluster = availableClusters.find(c => normalizeStr(c.techPark) === normalizeStr(park) && normalizeStr(c.window) === normalizeStr(win));
@@ -1050,7 +970,7 @@ function handlePayClick() {
     return;
   }
   
-  if (currentMode === 'B2B' && currentB2bPayOption === 'INVOICE') {
+  if (PAGE === 'OFFICE' && currentB2bPayOption === 'INVOICE') {
     const invId = "INV-REQ-" + Math.floor(100000 + Math.random() * 900000);
     handleOrderSuccess(invId, 'Corporate Invoice Requested (Net Terms)');
     return;
@@ -1060,7 +980,7 @@ function handlePayClick() {
   const name = (document.getElementById('custName')?.value || '').trim();
   const email = (document.getElementById('custEmail')?.value || '').trim();
   const phone = (document.getElementById('custPhone')?.value || '').trim();
-  const activePack = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
+  const activePack = PAGE === 'OFFICE' ? selectedB2bPack : selectedB2cPack;
   
   if (CONFIG.razorpayKeyId && !CONFIG.razorpayKeyId.includes("YOUR_RAZORPAY")) {
     const options = {
@@ -1068,7 +988,7 @@ function handlePayClick() {
       amount: total * 100,
       currency: "INR",
       name: "The Apartment Brew Co.",
-      description: `${currentMode === 'B2B' ? 'Office Drop' : 'Pre-Order'}: ${activePack.name}`,
+      description: `${PAGE === 'OFFICE' ? 'Office Drop' : 'Pre-Order'}: ${activePack.name}`,
       prefill: { name: name, email: email, contact: phone },
       theme: { color: "#d4a373" },
       handler: function (response) { handleOrderSuccess(response.razorpay_payment_id, "Paid via Gateway"); }
@@ -1095,18 +1015,18 @@ async function handleOrderSuccess(paymentId, statusText) {
   const discount = appliedCoupon ? appliedCoupon.discount : 0;
   const couponCode = appliedCoupon ? appliedCoupon.code : 'NONE';
   const total = calculateTotal();
-  const activePack = currentMode === 'B2C' ? selectedB2cPack : selectedB2bPack;
+  const isB2b = (PAGE === 'OFFICE');
+  const activePack = isB2b ? selectedB2bPack : selectedB2cPack;
   const dropInstructions = document.getElementById('dropInstructions')?.value || 'Deliver directly to door / desk';
   
-  const isB2c = currentMode === 'B2C';
-  const orderId = isB2c ? "TABC-" + Math.floor(100000 + Math.random() * 900000) : "TABC-B2B-" + Math.floor(100000 + Math.random() * 900000);
-  const dropDate = isB2c ? getUpcomingSaturdayFormatted() : getUpcomingFridayFormatted();
-  const location = isB2c ? (document.getElementById('custCity')?.value || '') : (document.getElementById('b2bTechPark')?.value || '');
-  const deliveryWindow = isB2c ? "Saturday Morning (8:00 AM – 11:00 AM)" : (document.getElementById('b2bDeliveryWindow')?.value || '');
-  const company = isB2c ? "N/A" : ((document.getElementById('custCompany')?.value || '').trim() || "N/A");
-  const gstin = isB2c ? "N/A" : ((document.getElementById('custGstin')?.value || '').trim() || "N/A");
+  const orderId = isB2b ? "TABC-B2B-" + Math.floor(100000 + Math.random() * 900000) : "TABC-" + Math.floor(100000 + Math.random() * 900000);
+  const dropDate = isB2b ? getUpcomingFridayFormatted() : getUpcomingSaturdayFormatted();
+  const location = isB2b ? (document.getElementById('b2bTechPark')?.value || '') : (document.getElementById('custCity')?.value || '');
+  const deliveryWindow = isB2b ? (document.getElementById('b2bDeliveryWindow')?.value || '') : "Saturday Morning (8:00 AM – 11:00 AM)";
+  const company = isB2b ? ((document.getElementById('custCompany')?.value || '').trim() || "N/A") : "N/A";
+  const gstin = isB2b ? ((document.getElementById('custGstin')?.value || '').trim() || "N/A") : "N/A";
   const buildingFloor = (document.getElementById('custAddress')?.value || '').trim();
-  const paymentMode = isB2c ? "Razorpay Gateway" : (currentB2bPayOption === 'INVOICE' ? "Corporate Invoice (Net Terms)" : "Razorpay Gateway");
+  const paymentMode = isB2b ? (currentB2bPayOption === 'INVOICE' ? "Corporate Invoice (Net Terms)" : "Razorpay Gateway") : "Razorpay Gateway";
   
   const lot1Name = availableLots[0] ? availableLots[0].name : "Lot 1";
   const lot2Name = availableLots[1] ? availableLots[1].name : "Lot 2";
@@ -1118,8 +1038,8 @@ async function handleOrderSuccess(paymentId, statusText) {
   const orderPayload = {
     authToken: CONFIG.authToken,
     botTrap: "",
-    orderType: currentMode,
-    targetSheet: isB2c ? 'Sheet1' : 'B2B Orders',
+    orderType: isB2b ? 'B2B' : 'B2C',
+    targetSheet: isB2b ? 'B2B Orders' : 'Sheet1',
     orderId: orderId,
     company: company,
     name: name,
@@ -1143,7 +1063,7 @@ async function handleOrderSuccess(paymentId, statusText) {
     paymentMode: paymentMode,
     paymentStatus: `${statusText} (${paymentId})`,
     deliveryStatus: 'Pre-Ordered',
-    notes: (isB2c ? `Payment ID: ${paymentId}` : (currentB2bPayOption === 'INVOICE' ? `Invoice Ref: ${paymentId} (Net Terms)` : `Payment ID: ${paymentId}`)) + (discount > 0 ? ` | Coupon: ${couponCode} (-₹${discount})` : '')
+    notes: (isB2b ? (currentB2bPayOption === 'INVOICE' ? `Invoice Ref: ${paymentId} (Net Terms)` : `Payment ID: ${paymentId}`) : `Payment ID: ${paymentId}`) + (discount > 0 ? ` | Coupon: ${couponCode} (-₹${discount})` : '')
   };
   
   currentOrderDetails = orderPayload;
@@ -1181,11 +1101,12 @@ async function handleOrderSuccess(paymentId, statusText) {
   const rSubtotal = document.getElementById('rSubtotal');
   const rDiscountRow = document.getElementById('rDiscountRow');
   const rDiscount = document.getElementById('rDiscount');
+  const linkTrackOrder = document.getElementById('linkTrackOrder');
   
   if (rOrderId) rOrderId.textContent = orderId;
-  if (rOrderType) rOrderType.textContent = isB2c ? 'Individual Pre-Order (Sat Drop)' : 'Corporate Office Drop (Fri Drop)';
-  if (rCompanyRow) rCompanyRow.style.display = isB2c ? 'none' : 'flex';
-  if (!isB2c && rCompany) rCompany.textContent = company;
+  if (rOrderType) rOrderType.textContent = isB2b ? 'Corporate Office Drop (Fri Drop)' : 'Individual Pre-Order (Sat Drop)';
+  if (rCompanyRow) rCompanyRow.style.display = isB2b ? 'flex' : 'none';
+  if (isB2b && rCompany) rCompany.textContent = company;
   if (rWindowRow) rWindowRow.style.display = 'flex';
   if (rWindow) rWindow.textContent = deliveryWindow;
   
@@ -1205,6 +1126,10 @@ async function handleOrderSuccess(paymentId, statusText) {
   } else {
     if (rSubtotalRow) rSubtotalRow.style.display = 'none';
     if (rDiscountRow) rDiscountRow.style.display = 'none';
+  }
+  
+  if (linkTrackOrder) {
+    linkTrackOrder.href = `track.html?orderId=${encodeURIComponent(orderId)}`;
   }
   
   const orderFormView = document.getElementById('orderFormView');
@@ -1340,9 +1265,14 @@ function renderInquirySuccess(inqId, name, comp, reqType, waUrl) {
       <p style="font-size: 0.8rem; color: #fefae0; margin: 0 0 10px; line-height: 1.4;">
         Thank you, <strong>${name}</strong>! We've logged your request for <strong>${comp}</strong> (${reqType}). Our curation team will review batch sizes and reach out within 24 hours.
       </p>
-      <a href="${waUrl}" target="_blank" style="display: inline-block; background: #25d366; color: #141312; font-size: 0.78rem; font-weight: 800; padding: 8px 14px; border-radius: 6px; text-decoration: none; margin-top: 4px;">
-        💬 Chat With Roastery Team on WhatsApp Now
-      </a>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
+        <a href="${waUrl}" target="_blank" style="display: inline-block; background: #25d366; color: #141312; font-size: 0.78rem; font-weight: 800; padding: 8px 14px; border-radius: 6px; text-decoration: none;">
+          💬 Chat on WhatsApp Now
+        </a>
+        <a href="track.html?orderId=${encodeURIComponent(inqId)}" style="display: inline-block; background: rgba(212, 163, 115, 0.15); border: 1px solid var(--accent); color: var(--accent); font-size: 0.78rem; font-weight: 800; padding: 8px 14px; border-radius: 6px; text-decoration: none;">
+          🔍 Track Inquiry Status
+        </a>
+      </div>
     `;
     statusMsg.className = 'track-status-msg msg-success';
     statusMsg.style.display = 'block';
@@ -1352,17 +1282,6 @@ function renderInquirySuccess(inqId, name, comp, reqType, waUrl) {
 // --------------------------------------------------------------------
 // Customer Self-Service Live Order Tracker Controller
 // --------------------------------------------------------------------
-function trackCurrentOrder() {
-  if (currentOrderDetails && currentOrderDetails.orderId) {
-    const input = document.getElementById('trackOrderIdInput');
-    if (input) input.value = currentOrderDetails.orderId;
-    switchMode('TRACK');
-    submitTrackOrder();
-  } else {
-    switchMode('TRACK');
-  }
-}
-
 function submitTrackOrder() {
   const input = document.getElementById('trackOrderIdInput');
   const statusMsg = document.getElementById('trackStatusMsg');
@@ -1743,7 +1662,8 @@ window.addEventListener('online', () => {
 function addToGoogleCalendar() {
   if (!currentOrderDetails) return;
   const d = currentOrderDetails;
-  const title = encodeURIComponent(`The Apartment Brew Co. Drop: ${d.orderId}`);
+  const isB2b = (d.orderType === 'B2B');
+  const title = encodeURIComponent(isB2b ? `The Apartment Brew Co. Office Drop: ${d.company}` : `The Apartment Brew Co. Drop: ${d.orderId}`);
   const details = encodeURIComponent(`Fresh Flash-Brew Specialty Coffee Drop\nOrder ID: ${d.orderId}\nLot: ${d.bean}\nSelection: ${d.pack}\nInstruction: ${d.dropInstructions}\nTotal: ₹${d.totalAmount}\n\nNote: Please refrigerate upon delivery and enjoy within 48 hours for peak flavor!`);
   const location = encodeURIComponent(`${d.buildingFloor}, ${d.techPark} (PIN: ${d.pinCode})`);
   const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}`;
@@ -1784,10 +1704,6 @@ function sendWhatsAppReceipt() {
 function resetForm() {
   const orderFormView = document.getElementById('orderFormView');
   const confirmationView = document.getElementById('confirmationView');
-  const trackerSection = document.getElementById('trackerSection');
-  const customInquirySection = document.getElementById('customInquirySection');
-  if (trackerSection) trackerSection.style.display = 'none';
-  if (customInquirySection) customInquirySection.style.display = 'none';
   if (orderFormView) orderFormView.style.display = 'block';
   if (confirmationView) confirmationView.style.display = 'none';
   
@@ -1806,13 +1722,33 @@ function resetForm() {
   removeCoupon();
 }
 
+// --------------------------------------------------------------------
+// Page Initialization Dispatcher
+// --------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
-  renderLots(availableLots);
-  renderPacks(availableB2cPacks, availableB2bPacks);
-  switchMode('B2C');
-  startCutoffCountdown();
-  renderClusterOptions();
-  checkSavedProfile();
-  fetchLiveConfig();
-  setInterval(fetchLiveConfig, 30000);
+  if (PAGE === 'HOME') {
+    renderLots(availableLots);
+    renderPacks(availableB2cPacks, []);
+    startCutoffCountdown();
+    checkSavedProfile();
+    fetchLiveConfig();
+    setInterval(fetchLiveConfig, 30000);
+  } else if (PAGE === 'OFFICE') {
+    renderLots(availableLots);
+    renderPacks([], availableB2bPacks);
+    startCutoffCountdown();
+    renderClusterOptions();
+    checkSavedProfile();
+    fetchLiveConfig();
+    setInterval(fetchLiveConfig, 30000);
+  } else if (PAGE === 'TRACK') {
+    // Check for query param ?orderId=... or ?id=...
+    const urlParams = new URLSearchParams(window.location.search);
+    const qId = urlParams.get('orderId') || urlParams.get('id');
+    if (qId) {
+      const input = document.getElementById('trackOrderIdInput');
+      if (input) input.value = qId;
+      submitTrackOrder();
+    }
+  }
 });

@@ -32,8 +32,9 @@ The Apartment Brew Co. maintains a strict manual extraction protocol to ensure p
 ```
 +-----------------------------------------------------------------------------------+
 |                                   CLIENT LAYER                                    |
-|   index.html (Semantic UI)  +  style.css (Dark Roast Design System)               |
-|   app.js (Dynamic CMS Render, SWR Caching, Real-time Validation, Offline Queue)  |
+|   Multi-Page Architecture (GitHub Pages): index, office, events, track.html       |
+|   .site-nav (Global Navigation) + style.css (Dark Roast Design System)            |
+|   app.js (Page Dispatcher, CMS Render, SWR Caching, Real-time Validation)         |
 +--------------------------+------------------------------------+-------------------+
                            |                                    |
                 Payment Gateway Callback                HTTP GET / POST (JSON)
@@ -55,7 +56,7 @@ The Apartment Brew Co. maintains a strict manual extraction protocol to ensure p
               |  - Tab 1: Menu & Config (Headless CMS)       |      |  - B2C Saturday Drop Receipt  |
               |  - Tab 2: Sheet1 (B2C Orders, 17 Columns)    |      |  - B2B Friday Corporate Drop  |
               |  - Tab 3: B2B Orders (Corporate, 22 Columns) |      |  - 1-Click Calendar Links     |
-              +----------------------------------------------+      +-------------------------------+
+              |  - Tab 4: Custom Inquiries (13 Columns)      |      +-------------------------------+
 ```
 
 ---
@@ -100,12 +101,12 @@ To reset the capacity counter between weekly drops:
 
 ### **🚀 5\. Detailed Component Breakdown**
 
-#### **1\. index.html (Frontend Structure)**
+#### **1\. Multi-Page Structure (Frontend Pages)**
 
-* Branding Header & Cluster UI: Brand titles, active drop announcement banner (\#dropBanner), live cutoff countdown (\#countdownTimer), limited batch scarcity progress bar (\#scarcityText, \#scarcityFill), and real-time delivery cluster slot availability badges.  
-* Coupon Code Engine & Pricing Breakdown: Features a promo coupon input group (\#promoInput), dynamic validation status badge (\#couponBadge), and structured price breakdown UI displaying subtotal, coupon savings line, and final order total.  
-* Segmented Mode Switch: Smooth toggle between B2C (\#tabB2c) and B2B (\#tabB2b).  
-* Build Your Own Batch (Custom Ratio Splitter): Features dynamic bottle counters (+ / \-) for customizing exact lot ratios between harvests across any pack size, supported by automatic allocation rebalancing and a live dual-tone ratio bar visualization. Includes a 2-bottle Curated Discovery Flight preset (1:1 auto-split across active estates).  
+* index.html (Individual Saturday Morning Drop): Dedicated B2C landing page featuring branding header, fresh roast selections via the \#lotGrid, 2-bottle Curated Discovery Flight presets, live cutoff countdown, and the interactive 48-Hour storage and serving guide accordion.  
+* office.html (Corporate Friday Office Batch Drops): Dedicated B2B portal featuring the delivery cluster tech park slot picker with real-time capacity badges, GSTIN validator, and payment preferences supporting both Razorpay and Corporate Invoice (Net-7 terms).  
+* events.html (Custom Events & Startup Coffee Runs): Specialized lead intake page for high-volume catering, bespoke roastery requirements, and pop-up bars, routed to the 13-column inquiry database.  
+* track.html (Customer Self-Service Tracker): Dedicated tracking view with auto-query parameter lookup (?orderId=...) and an animated dual-mode stepper that adapts to standard orders or event inquiries.  
 * Interactive Lot Selector: Single-estate visual cards with tasting notes, roast levels, and acidity/body sensory meters (\#lotGrid).  
 * Pack Selection Grids:  
   * B2C: Single Bottle (₹240), Duo Pack / Discovery Sampler Flight (2x 250ml, ₹480), Weekend Pack (₹899), Mega Weekend (6x 250ml, ₹1,200).  
@@ -114,14 +115,16 @@ To reset the capacity counter between weekly drops:
 * Interactive Freshness Accordion: 48-Hour storage and serving guide (.guide-accordion).  
 * Confirmation View: Order receipt, Google Calendar 1-click reminder button (.btn-calendar), and formatted WhatsApp receipt trigger (.btn-whatsapp).
 
-#### **2\. style.css (Design System)**
+#### **2\. style.css (Design System & Navigation)**
 
+* Global Navigation (.site-nav): Consistent navigation bar providing clean, uncluttered access across the four operational modes (Individual, Office, Events, and Track Order).  
 * Color Palette: Dark roast aesthetic (--bg: \#141312, \--card-bg: \#1f1d1a, \--card-inner: \#151413) with coffee gold accents (--accent: \#d4a373) and status indicators (--whatsapp: \#25d366, \--success: \#2d6a4f, \--info-blue: \#90e0ef, \--slot-full: \#6c757d).  
 * Responsive Layout: Mobile-first flex container capped at 520px width.  
 * Component Styling: Styled lot cards with CSS containment (contain: content), sensory meter fill bars using GPU acceleration, scarcity tracks, and hardware-accelerated micro-interactions.
 
-#### **3\. app.js (Frontend Controller)**
+#### **3\. app.js (Frontend Controller & Dispatcher)**
 
+* Page Dispatcher Logic: Centralized management for multi-page routing and rendering based on the active HTML context, ensuring seamless data flow between the GitHub Pages architecture and the Apps Script backend.  
 * **Custom Ratio Splitter & Discovery Engine:** Features dynamic bottle counters (+ / \-) for customizing exact lot ratios between harvests across any pack size. For Discovery Sampler packs, defaults automatically to a balanced 50/50 split across active single-estate harvests (scaling dynamically with pack quantity: 1 pack \= 1:1, 2 packs \= 2:2, etc.) and preserves custom proportional ratios when pack quantities change.  
 * Coupon Code Engine Logic: Supports flat (₹) and percentage (%) discounts with minimum order threshold verification and mode enforcement (B2C, B2B, or ALL). Includes dynamic discount rebalancing on quantity or pack changes, Razorpay discounted payload dispatch, and structured confirmation receipt breakdowns.  
 * Dynamic Cutoff & Slot Engine: Calculates closest Saturday morning delivery for B2C and Friday for B2B. Computes live ticking countdown to Thursday 6:00 PM (B2B) and Friday 10:00 PM (B2C) cutoffs. Dynamically renders available delivery windows and disables full slots based on real-time cluster capacity data.  

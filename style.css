@@ -1618,3 +1618,85 @@ select option:disabled {
   max-width: 65%;
   word-break: break-word;
 }
+/* ==================================================================== */
+/* Global Navigation Bar (Multi-Page Architecture)                      */
+/* ==================================================================== */
+
+.site-nav {
+
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 6px;
+
+  background: var(--card-inner);
+
+  border: 1px solid var(--card-border);
+
+  padding: 4px;
+
+  border-radius: 12px;
+
+  margin-bottom: 14px;
+}
+
+@media (max-width: 480px) {
+
+  .site-nav {
+
+    grid-template-columns: repeat(2, 1fr);
+
+  }
+}
+
+.nav-link {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  padding: 10px 8px;
+
+  font-size: 0.82rem;
+
+  font-weight: 600;
+
+  border-radius: 8px;
+
+  color: var(--text-muted);
+
+  text-decoration: none;
+
+  background: transparent;
+
+  border: 1px solid transparent;
+
+  transition: all 0.2s ease;
+
+  will-change: transform, opacity;
+}
+
+.nav-link:hover {
+
+  color: var(--text);
+
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.nav-link.active {
+
+  background: var(--card-bg);
+
+  color: var(--accent);
+
+  border-color: var(--card-border);
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+  font-weight: 700;
+}
