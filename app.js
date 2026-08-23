@@ -1375,7 +1375,7 @@ function submitTrackOrder() {
   
   if (!rawId) {
     if (statusMsg) {
-      statusMsg.textContent = 'Please enter a valid Order ID (e.g. TABC-154359 or TABC-B2B-287603).';
+      statusMsg.textContent = 'Please enter a valid Order or Inquiry ID (e.g. TABC-154359, TABC-B2B-287603, or TABC-EVT-804299).';
       statusMsg.className = 'track-status-msg msg-error';
       statusMsg.style.display = 'block';
     }
@@ -1398,22 +1398,61 @@ function submitTrackOrder() {
         if (statusMsg) statusMsg.style.display = 'none';
         renderTrackingDetails(currentOrderDetails);
       } else {
+        const isEvent = rawId.includes('EVT');
         const isB2b = rawId.includes('B2B');
-        const mockOrder = {
-          orderId: rawId,
-          orderType: isB2b ? 'B2B' : 'B2C',
-          customerName: isB2b ? "Amr" : "Astitva Gupta",
-          company: isB2b ? "Cognizant Technology Solutions" : "N/A",
-          deliveryAddress: isB2b ? "KALUA 9480, DLF Cyber City / Cyber Hub (Gurugram) (PIN: 122009)" : "Flat 402, DLF Phase 5, Gurugram (PIN: 122009)",
-          dropInstructions: "Deliver directly to door / desk",
-          deliveryWindow: isB2b ? "Morning Kickoff (9:30 AM – 11:30 AM)" : "Saturday Morning (8:00 AM – 11:00 AM)",
-          dropDate: isB2b ? "Fri, 28 Aug, 2026" : getUpcomingSaturdayFormatted(),
-          bean: "Ratnagiri Estate (Anaerobic Naturals)",
-          pack: isB2b ? "Office Batch x 1 (20 bottles)" : "Weekend Pack x 1 (4 bottles)",
-          totalAmount: isB2b ? 3060 : 899,
-          paymentStatus: isB2b ? "Corporate Invoice Requested (Net Terms)" : "Paid via Gateway",
-          deliveryStatus: "Pre-Ordered"
-        };
+        
+        let mockOrder;
+        if (isEvent) {
+          mockOrder = {
+            orderId: rawId,
+            orderType: 'CUSTOM_EVENT',
+            customerName: "Astitva Gupta",
+            company: "Zomato HQ (Tech Meetup)",
+            requirementType: "Hackathon / Townhall Bulk Drop",
+            headcount: "100–250 people (150 bottles)",
+            dropDate: "Fri, 4 Sep, 2026",
+            deliveryAddress: "One Horizon Center, Golf Course Rd, Gurugram",
+            deliveryWindow: "Target Date: Fri, 4 Sep, 2026",
+            bean: "Hackathon / Townhall Bulk Drop",
+            pack: "100–250 people (150 bottles)",
+            totalAmount: 0,
+            paymentStatus: "Custom Quote / In Discussion",
+            deliveryStatus: "In Discussion",
+            notes: "Special cold brew station setup with custom branded tasting cards."
+          };
+        } else if (isB2b) {
+          mockOrder = {
+            orderId: rawId,
+            orderType: 'B2B',
+            customerName: "Amr",
+            company: "Cognizant Technology Solutions",
+            deliveryAddress: "KALUA 9480, DLF Cyber City / Cyber Hub (Gurugram) (PIN: 122009)",
+            dropInstructions: "Deliver directly to door / desk",
+            deliveryWindow: "Morning Kickoff (9:30 AM – 11:30 AM)",
+            dropDate: "Fri, 28 Aug, 2026",
+            bean: "Ratnagiri Estate (Anaerobic Naturals)",
+            pack: "Office Batch x 1 (20 bottles)",
+            totalAmount: 3060,
+            paymentStatus: "Corporate Invoice Requested (Net Terms)",
+            deliveryStatus: "Pre-Ordered"
+          };
+        } else {
+          mockOrder = {
+            orderId: rawId,
+            orderType: 'B2C',
+            customerName: "Sarthak",
+            company: "N/A",
+            deliveryAddress: "Flat 402, DLF Phase 5, Gurugram (PIN: 122009)",
+            dropInstructions: "Deliver directly to door / desk",
+            deliveryWindow: "Saturday Morning (8:00 AM – 11:00 AM)",
+            dropDate: getUpcomingSaturdayFormatted(),
+            bean: "Ratnagiri Estate (Anaerobic Naturals)",
+            pack: "Weekend Pack x 1 (4 bottles)",
+            totalAmount: 899,
+            paymentStatus: "Paid via Gateway",
+            deliveryStatus: "Brewing"
+          };
+        }
         if (statusMsg) statusMsg.style.display = 'none';
         renderTrackingDetails(mockOrder);
       }
@@ -1431,7 +1470,6 @@ function submitTrackOrder() {
         if (statusMsg) statusMsg.style.display = 'none';
         renderTrackingDetails(data.order);
       } else if (data && data.status === 'success' && !data.order && data.lots) {
-        // Detected older version of Apps Script running default doGet menu handler
         if (statusMsg) {
           statusMsg.innerHTML = `⚠️ <strong>Apps Script Update Needed:</strong> The live Web App is currently running an earlier script version. Please open Google Sheets > <strong>Extensions > Apps Script</strong>, paste the latest <a href="https://docs.google.com/document/d/1S0vG9ueF8I7IFqteMsHO7QbTN9mdXmzcI20D-ZA-aG4/edit" target="_blank" style="color:var(--accent);">Code.gs</a>, and deploy as a <strong>New Version</strong>.`;
           statusMsg.className = 'track-status-msg msg-error';
@@ -1440,7 +1478,7 @@ function submitTrackOrder() {
         if (resultContainer) resultContainer.style.display = 'none';
       } else {
         if (statusMsg) {
-          statusMsg.textContent = data.message || `✕ No active order found with ID "${rawId}". Please verify your order ID.`;
+          statusMsg.textContent = data.message || `✕ No active order or inquiry found with ID "${rawId}". Please verify your ID.`;
           statusMsg.className = 'track-status-msg msg-error';
           statusMsg.style.display = 'block';
         }
@@ -1450,7 +1488,7 @@ function submitTrackOrder() {
     .catch(err => {
       if (btnTrack) btnTrack.disabled = false;
       if (statusMsg) {
-        statusMsg.textContent = `⚠️ Network error checking order status. Please check your connection and try again.`;
+        statusMsg.textContent = `⚠️ Network error checking status. Please check your connection and try again.`;
         statusMsg.className = 'track-status-msg msg-error';
         statusMsg.style.display = 'block';
       }
@@ -1462,6 +1500,72 @@ function renderTrackingDetails(order) {
   const resultContainer = document.getElementById('trackerResult');
   if (!resultContainer) return;
   
+  const isEvent = order.orderType === 'CUSTOM_EVENT' || (order.orderId && order.orderId.startsWith('TABC-EVT'));
+  
+  // 1. Dynamic Stepper Labels & Descriptions
+  const sTitle1 = document.getElementById('stepTitle1');
+  const sDesc1 = document.getElementById('stepDesc1');
+  const sTitle2 = document.getElementById('stepTitle2');
+  const sDesc2 = document.getElementById('stepDesc2');
+  const sTitle3 = document.getElementById('stepTitle3');
+  const sDesc3 = document.getElementById('stepDesc3');
+  const sTitle4 = document.getElementById('stepTitle4');
+  const sDesc4 = document.getElementById('stepDesc4');
+  
+  if (isEvent) {
+    if (sTitle1) sTitle1.textContent = 'Inquiry Received';
+    if (sDesc1) sDesc1.textContent = 'Requirement logged & queued for review';
+    if (sTitle2) sTitle2.textContent = 'Proposal & Curation';
+    if (sDesc2) sDesc2.textContent = 'Tasting menu, batch scale & pricing discussion';
+    if (sTitle3) sTitle3.textContent = 'Event Confirmed';
+    if (sDesc3) sDesc3.textContent = 'Date locked & roastery extraction scheduled';
+    if (sTitle4) sTitle4.textContent = 'Event Completed';
+    if (sDesc4) sDesc4.textContent = 'Coffee bar served & fulfilled';
+  } else {
+    if (sTitle1) sTitle1.textContent = 'Pre-Ordered';
+    if (sDesc1) sDesc1.textContent = 'Order confirmed & queued';
+    if (sTitle2) sTitle2.textContent = 'Brewing';
+    if (sDesc2) sDesc2.textContent = 'Hand-extracted & flash-chilled';
+    if (sTitle3) sTitle3.textContent = 'Dispatched';
+    if (sDesc3) sDesc3.textContent = 'Out for cold-chain delivery';
+    if (sTitle4) sTitle4.textContent = 'Delivered';
+    if (sDesc4) sDesc4.textContent = 'Enjoy fresh within 48 hours';
+  }
+  
+  // 2. Summary Card Labels
+  const lblCustomer = document.getElementById('lblCustomer');
+  const lblCompany = document.getElementById('lblCompany');
+  const lblDeliveryWindow = document.getElementById('lblDeliveryWindow');
+  const lblDestination = document.getElementById('lblDestination');
+  const lblDropNote = document.getElementById('lblDropNote');
+  const lblBean = document.getElementById('lblBean');
+  const lblPack = document.getElementById('lblPack');
+  const lblPayment = document.getElementById('lblPayment');
+  const tFreshnessNote = document.getElementById('tFreshnessNote');
+  
+  if (isEvent) {
+    if (lblCustomer) lblCustomer.textContent = 'Contact Person:';
+    if (lblCompany) lblCompany.textContent = 'Organization / Event:';
+    if (lblDeliveryWindow) lblDeliveryWindow.textContent = 'Target Event Date:';
+    if (lblDestination) lblDestination.textContent = 'Event Venue / Location:';
+    if (lblBean) lblBean.textContent = 'Requirement Type:';
+    if (lblPack) lblPack.textContent = 'Scale / Headcount:';
+    if (lblPayment) lblPayment.textContent = 'Status Stage:';
+    if (lblDropNote) lblDropNote.textContent = 'Special Notes:';
+    if (tFreshnessNote) tFreshnessNote.innerHTML = '☕ <strong>Custom Event Protocol:</strong> Our coffee team will reach out directly to coordinate roast profiles, ice stations, and dispatch timing tailored to your venue.';
+  } else {
+    if (lblCustomer) lblCustomer.textContent = 'Customer:';
+    if (lblCompany) lblCompany.textContent = 'Company:';
+    if (lblDeliveryWindow) lblDeliveryWindow.textContent = 'Delivery Window:';
+    if (lblDestination) lblDestination.textContent = 'Destination:';
+    if (lblBean) lblBean.textContent = 'Coffee Selection:';
+    if (lblPack) lblPack.textContent = 'Pack Tier:';
+    if (lblPayment) lblPayment.textContent = 'Payment:';
+    if (lblDropNote) lblDropNote.textContent = 'Gate / Drop Note:';
+    if (tFreshnessNote) tFreshnessNote.innerHTML = '&#10052; <strong>48-Hour Freshness Window:</strong> Keep refrigerated upon delivery and consume within 48 hours for peak tasting notes!';
+  }
+  
+  // 3. Populate Card Values
   const tBadge = document.getElementById('tBadgeStatus');
   const tOrderId = document.getElementById('tOrderId');
   const tCustomer = document.getElementById('tCustomer');
@@ -1470,18 +1574,30 @@ function renderTrackingDetails(order) {
   const tWindow = document.getElementById('tDeliveryWindow');
   const tDestination = document.getElementById('tDestination');
   const tDropNote = document.getElementById('tDropNote');
+  const tDropNoteRow = document.getElementById('tDropNoteRow');
   const tBean = document.getElementById('tBean');
   const tPack = document.getElementById('tPack');
   const tPayment = document.getElementById('tPayment');
   
   if (tOrderId) tOrderId.textContent = order.orderId;
-  if (tCustomer) tCustomer.textContent = order.customerName || 'Valued Customer';
-  if (tWindow) tWindow.textContent = `${order.dropDate} (${order.deliveryWindow || 'Drop Slot'})`;
-  if (tDestination) tDestination.textContent = order.deliveryAddress || order.techPark || 'Gurugram / Delhi NCR';
-  if (tDropNote) tDropNote.textContent = order.dropInstructions || 'Deliver directly to door / desk';
-  if (tBean) tBean.textContent = order.bean;
-  if (tPack) tPack.textContent = order.pack;
-  if (tPayment) tPayment.textContent = order.paymentStatus || 'Confirmed';
+  if (tCustomer) tCustomer.textContent = order.customerName || 'Valued Organizer';
+  if (tWindow) tWindow.textContent = isEvent ? (order.dropDate || 'Date TBD') : `${order.dropDate} (${order.deliveryWindow || 'Morning Drop'})`;
+  if (tDestination) tDestination.textContent = order.deliveryAddress || order.location || 'Gurugram / Delhi NCR';
+  
+  if (order.notes) {
+    if (tDropNote) tDropNote.textContent = order.notes;
+    if (tDropNoteRow) tDropNoteRow.style.display = 'flex';
+  } else if (!isEvent && order.dropInstructions) {
+    if (tDropNote) tDropNote.textContent = order.dropInstructions;
+    if (tDropNoteRow) tDropNoteRow.style.display = 'flex';
+  } else {
+    if (tDropNoteRow) tDropNoteRow.style.display = isEvent ? 'none' : 'flex';
+    if (tDropNote) tDropNote.textContent = 'Deliver directly to door / desk';
+  }
+  
+  if (tBean) tBean.textContent = isEvent ? (order.requirementType || order.bean) : order.bean;
+  if (tPack) tPack.textContent = isEvent ? (order.headcount || order.pack) : order.pack;
+  if (tPayment) tPayment.textContent = order.paymentStatus || (isEvent ? 'Inquiry / Proposal Phase' : 'Confirmed');
   
   if (tCompanyRow) {
     if (order.company && order.company !== 'N/A') {
@@ -1492,6 +1608,7 @@ function renderTrackingDetails(order) {
     }
   }
   
+  // 4. Stepper Stage Transitions
   const sPre = document.getElementById('stepPreOrdered');
   const sBrew = document.getElementById('stepBrewing');
   const sDisp = document.getElementById('stepDispatched');
@@ -1509,47 +1626,95 @@ function renderTrackingDetails(order) {
   
   const status = normalizeStr(order.deliveryStatus || 'Pre-Ordered');
   
-  if (status.includes('pre-order') || status.includes('preorder') || status.includes('pending') || status.includes('received') || status.includes('lead')) {
-    if (sPre) sPre.classList.add('step-active');
-    if (tBadge) {
-      tBadge.textContent = order.orderType === 'CUSTOM_EVENT' ? 'INQUIRY RECEIVED' : 'PRE-ORDERED';
-      tBadge.className = 'tracker-badge status-preordered';
-    }
-  } else if (status.includes('brew') || status.includes('roast') || status.includes('extract') || status.includes('discussion') || status.includes('quote')) {
-    if (sPre) sPre.classList.add('step-completed');
-    if (l1) l1.classList.add('line-completed');
-    if (sBrew) sBrew.classList.add('step-active');
-    if (tBadge) {
-      tBadge.textContent = order.orderType === 'CUSTOM_EVENT' ? 'PROPOSAL / IN DISCUSSION' : 'BREWING & CHILLING';
-      tBadge.className = 'tracker-badge status-brewing';
-    }
-  } else if (status.includes('dispatch') || status.includes('transit') || status.includes('out for delivery') || status.includes('shipped') || status.includes('confirmed')) {
-    if (sPre) sPre.classList.add('step-completed');
-    if (l1) l1.classList.add('line-completed');
-    if (sBrew) sBrew.classList.add('step-completed');
-    if (l2) l2.classList.add('line-completed');
-    if (sDisp) sDisp.classList.add('step-active');
-    if (tBadge) {
-      tBadge.textContent = order.orderType === 'CUSTOM_EVENT' ? 'EVENT CONFIRMED' : 'OUT FOR DELIVERY';
-      tBadge.className = 'tracker-badge status-dispatched';
-    }
-  } else if (status.includes('deliver') || status.includes('completed') || status.includes('fulfilled')) {
-    if (sPre) sPre.classList.add('step-completed');
-    if (l1) l1.classList.add('line-completed');
-    if (sBrew) sBrew.classList.add('step-completed');
-    if (l2) l2.classList.add('line-completed');
-    if (sDisp) sDisp.classList.add('step-completed');
-    if (l3) l3.classList.add('line-completed');
-    if (sDelv) sDelv.classList.add('step-completed');
-    if (tBadge) {
-      tBadge.textContent = order.orderType === 'CUSTOM_EVENT' ? 'EVENT COMPLETED' : 'DELIVERED';
-      tBadge.className = 'tracker-badge status-delivered';
+  if (isEvent) {
+    // Custom Event Lifecycle
+    if (status.includes('lead') || status.includes('received') || status.includes('inquiry') || status.includes('new')) {
+      if (sPre) sPre.classList.add('step-active');
+      if (tBadge) {
+        tBadge.textContent = 'INQUIRY RECEIVED';
+        tBadge.className = 'tracker-badge status-preordered';
+      }
+    } else if (status.includes('discussion') || status.includes('quote') || status.includes('proposal') || status.includes('curat')) {
+      if (sPre) sPre.classList.add('step-completed');
+      if (l1) l1.classList.add('line-completed');
+      if (sBrew) sBrew.classList.add('step-active');
+      if (tBadge) {
+        tBadge.textContent = 'PROPOSAL & CURATION';
+        tBadge.className = 'tracker-badge status-brewing';
+      }
+    } else if (status.includes('confirm') || status.includes('booked') || status.includes('scheduled')) {
+      if (sPre) sPre.classList.add('step-completed');
+      if (l1) l1.classList.add('line-completed');
+      if (sBrew) sBrew.classList.add('step-completed');
+      if (l2) l2.classList.add('line-completed');
+      if (sDisp) sDisp.classList.add('step-active');
+      if (tBadge) {
+        tBadge.textContent = 'EVENT CONFIRMED';
+        tBadge.className = 'tracker-badge status-dispatched';
+      }
+    } else if (status.includes('complete') || status.includes('deliver') || status.includes('fulfilled')) {
+      if (sPre) sPre.classList.add('step-completed');
+      if (l1) l1.classList.add('line-completed');
+      if (sBrew) sBrew.classList.add('step-completed');
+      if (l2) l2.classList.add('line-completed');
+      if (sDisp) sDisp.classList.add('step-completed');
+      if (l3) l3.classList.add('line-completed');
+      if (sDelv) sDelv.classList.add('step-completed');
+      if (tBadge) {
+        tBadge.textContent = 'EVENT COMPLETED';
+        tBadge.className = 'tracker-badge status-delivered';
+      }
+    } else {
+      if (sPre) sPre.classList.add('step-active');
+      if (tBadge) {
+        tBadge.textContent = order.deliveryStatus.toUpperCase();
+        tBadge.className = 'tracker-badge status-preordered';
+      }
     }
   } else {
-    if (sPre) sPre.classList.add('step-active');
-    if (tBadge) {
-      tBadge.textContent = order.deliveryStatus.toUpperCase();
-      tBadge.className = 'tracker-badge status-preordered';
+    // Standard Order Lifecycle
+    if (status.includes('pre-order') || status.includes('preorder') || status.includes('pending') || status.includes('received')) {
+      if (sPre) sPre.classList.add('step-active');
+      if (tBadge) {
+        tBadge.textContent = 'PRE-ORDERED';
+        tBadge.className = 'tracker-badge status-preordered';
+      }
+    } else if (status.includes('brew') || status.includes('roast') || status.includes('extract')) {
+      if (sPre) sPre.classList.add('step-completed');
+      if (l1) l1.classList.add('line-completed');
+      if (sBrew) sBrew.classList.add('step-active');
+      if (tBadge) {
+        tBadge.textContent = 'BREWING & CHILLING';
+        tBadge.className = 'tracker-badge status-brewing';
+      }
+    } else if (status.includes('dispatch') || status.includes('transit') || status.includes('out for delivery') || status.includes('shipped')) {
+      if (sPre) sPre.classList.add('step-completed');
+      if (l1) l1.classList.add('line-completed');
+      if (sBrew) sBrew.classList.add('step-completed');
+      if (l2) l2.classList.add('line-completed');
+      if (sDisp) sDisp.classList.add('step-active');
+      if (tBadge) {
+        tBadge.textContent = 'OUT FOR DELIVERY';
+        tBadge.className = 'tracker-badge status-dispatched';
+      }
+    } else if (status.includes('deliver') || status.includes('completed') || status.includes('fulfilled')) {
+      if (sPre) sPre.classList.add('step-completed');
+      if (l1) l1.classList.add('line-completed');
+      if (sBrew) sBrew.classList.add('step-completed');
+      if (l2) l2.classList.add('line-completed');
+      if (sDisp) sDisp.classList.add('step-completed');
+      if (l3) l3.classList.add('line-completed');
+      if (sDelv) sDelv.classList.add('step-completed');
+      if (tBadge) {
+        tBadge.textContent = 'DELIVERED';
+        tBadge.className = 'tracker-badge status-delivered';
+      }
+    } else {
+      if (sPre) sPre.classList.add('step-active');
+      if (tBadge) {
+        tBadge.textContent = order.deliveryStatus.toUpperCase();
+        tBadge.className = 'tracker-badge status-preordered';
+      }
     }
   }
   

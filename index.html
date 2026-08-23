@@ -52,10 +52,10 @@
 
     <!-- Mode Selector: B2C vs B2B vs Custom vs Track Order -->
     <div class="mode-switch">
-      <button class="mode-tab active" id="tabB2c" onclick="switchMode('B2C')">Individual Drop</button>
-      <button class="mode-tab" id="tabB2b" onclick="switchMode('B2B')">Team Drop</button>
-      <button class="mode-tab" id="tabCustom" onclick="switchMode('CUSTOM')">Events &amp; Custom</button>
-      <button class="mode-tab" id="tabTrack" onclick="switchMode('TRACK')">Track Order</button>
+      <button class="mode-tab active" id="tabB2c" onclick="switchMode('B2C')">☕ Individual</button>
+      <button class="mode-tab" id="tabB2b" onclick="switchMode('B2B')">🏢 Office Drop</button>
+      <button class="mode-tab" id="tabCustom" onclick="switchMode('CUSTOM')">🎉 Events &amp; Custom</button>
+      <button class="mode-tab" id="tabTrack" onclick="switchMode('TRACK')">🔍 Track Order</button>
     </div>
 
     <!-- Order Form View (B2C & B2B) -->
@@ -396,41 +396,41 @@
           <div class="timeline-stepper" id="timelineStepper">
             <div class="stepper-step" id="stepPreOrdered">
               <div class="step-icon-wrap">
-                <div class="step-icon">1</div>
+                <div class="step-icon" id="stepIcon1">1</div>
               </div>
               <div class="step-info">
-                <div class="step-title">Pre-Ordered</div>
-                <div class="step-desc">Order confirmed &amp; queued</div>
+                <div class="step-title" id="stepTitle1">Pre-Ordered</div>
+                <div class="step-desc" id="stepDesc1">Order confirmed &amp; queued</div>
               </div>
             </div>
             <div class="stepper-line" id="line1"></div>
             <div class="stepper-step" id="stepBrewing">
               <div class="step-icon-wrap">
-                <div class="step-icon">2</div>
+                <div class="step-icon" id="stepIcon2">2</div>
               </div>
               <div class="step-info">
-                <div class="step-title">Brewing</div>
-                <div class="step-desc">Hand-extracted &amp; flash-chilled</div>
+                <div class="step-title" id="stepTitle2">Brewing</div>
+                <div class="step-desc" id="stepDesc2">Hand-extracted &amp; flash-chilled</div>
               </div>
             </div>
             <div class="stepper-line" id="line2"></div>
             <div class="stepper-step" id="stepDispatched">
               <div class="step-icon-wrap">
-                <div class="step-icon">3</div>
+                <div class="step-icon" id="stepIcon3">3</div>
               </div>
               <div class="step-info">
-                <div class="step-title">Dispatched</div>
-                <div class="step-desc">Out for cold-chain delivery</div>
+                <div class="step-title" id="stepTitle3">Dispatched</div>
+                <div class="step-desc" id="stepDesc3">Out for cold-chain delivery</div>
               </div>
             </div>
             <div class="stepper-line" id="line3"></div>
             <div class="stepper-step" id="stepDelivered">
               <div class="step-icon-wrap">
-                <div class="step-icon">4</div>
+                <div class="step-icon" id="stepIcon4">4</div>
               </div>
               <div class="step-info">
-                <div class="step-title">Delivered</div>
-                <div class="step-desc">Enjoy fresh within 48 hours</div>
+                <div class="step-title" id="stepTitle4">Delivered</div>
+                <div class="step-desc" id="stepDesc4">Enjoy fresh within 48 hours</div>
               </div>
             </div>
           </div>
@@ -443,39 +443,39 @@
             </div>
             <div class="tracker-details-list">
               <div class="tracker-detail-row">
-                <span>Customer:</span>
+                <span id="lblCustomer">Customer:</span>
                 <strong id="tCustomer">-</strong>
               </div>
               <div class="tracker-detail-row" id="tCompanyRow" style="display: none;">
-                <span>Company / Event:</span>
+                <span id="lblCompany">Company / Event:</span>
                 <strong id="tCompany">-</strong>
               </div>
               <div class="tracker-detail-row">
-                <span>Delivery Window:</span>
+                <span id="lblDeliveryWindow">Delivery Window:</span>
                 <strong id="tDeliveryWindow" style="color: var(--accent);">-</strong>
               </div>
               <div class="tracker-detail-row">
-                <span>Destination:</span>
+                <span id="lblDestination">Destination:</span>
                 <strong id="tDestination">-</strong>
               </div>
-              <div class="tracker-detail-row">
-                <span>Gate / Drop Note:</span>
+              <div class="tracker-detail-row" id="tDropNoteRow">
+                <span id="lblDropNote">Gate / Drop Note:</span>
                 <strong id="tDropNote">-</strong>
               </div>
               <div class="tracker-detail-row">
-                <span>Coffee Selection:</span>
+                <span id="lblBean">Coffee Selection:</span>
                 <strong id="tBean">-</strong>
               </div>
               <div class="tracker-detail-row">
-                <span>Pack Tier:</span>
+                <span id="lblPack">Pack Tier:</span>
                 <strong id="tPack">-</strong>
               </div>
-              <div class="tracker-detail-row">
-                <span>Payment:</span>
+              <div class="tracker-detail-row" id="tPaymentRow">
+                <span id="lblPayment">Payment Status:</span>
                 <strong id="tPayment">-</strong>
               </div>
             </div>
-            <div class="freshness-alert" style="margin-top: 12px; margin-bottom: 0;">
+            <div class="freshness-alert" id="tFreshnessNote" style="margin-top: 12px; margin-bottom: 0;">
               &#10052; <strong>48-Hour Freshness Window:</strong> Keep refrigerated upon delivery and consume within 48 hours for peak tasting notes!
             </div>
           </div>

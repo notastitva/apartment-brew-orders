@@ -211,12 +211,17 @@ The system is engineered for high-performance rendering and resilience against n
 
 ### **🛰️ 9\. Customer Self-Service Live Order Status Tracker**
 
-The system features a real-time fulfillment lifecycle tracker allowing customers to monitor their micro-batch coffee from extraction to delivery:
+The system features a real-time fulfillment lifecycle tracker allowing customers to monitor their micro-batch coffee from extraction to delivery, utilizing a Dual-Mode Stepper Architecture that adapts to the order type:
 
 * **Pre-Ordered:** Order successfully logged and queued for the upcoming drop.  
 * **Brewing:** Coffee is being hand-extracted and flash-chilled to capture peak aromatics.  
 * **Dispatched:** Order has left the roastery and is in cold-chain transit to the delivery cluster.  
-* **Delivered:** Coffee successfully delivered to the customer’s door or security/concierge desk.
+* **Delivered:** Coffee successfully delivered to the customer’s door or security/concierge desk.  
+* **Custom Requirements & Events (TABC-EVT-XXXXXX):**  
+  * **Inquiry Received:** Specialized request successfully logged in the inquiry database.  
+  * **Proposal & Curation:** Roastery team is evaluating requirements and curating the bespoke discovery workshop or catering plan.  
+  * **Event Confirmed:** Logistics and coffee lots finalized for the scheduled event date.  
+  * **Event Completed:** Successful execution of the custom startup coffee run or event catering service.
 
 #### **Backend Lookup Handler (doGet)**
 
@@ -224,7 +229,7 @@ The tracker is powered by a dedicated *doGet* lookup handler in the backend micr
 
 #### **Client-Side Tracking UI**
 
-The frontend (*app.js*) renders a specialized tracking view featuring an animated 4-step stepper with glowing active states to indicate the current fulfillment stage, complemented by an order details card displaying the specific batch and delivery parameters.  
+The frontend (*app.js*) renders a specialized tracking view featuring an animated 4-step stepper with glowing active states. This tracker dynamically switches stepper headers, descriptions, card fields, and stage transitions based on the detected order type (Standard vs. Events), complemented by an order details card displaying specific batch and delivery parameters.  
 ---
 
 ### **🎉 10\. Custom Requirements, Event Catering & Startup Coffee Runs**
