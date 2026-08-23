@@ -4,28 +4,21 @@
   <meta charset="UTF-8" />
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>The Apartment Brew Co. | Fresh Flash-Chilled Specialty Coffee Drop</title>
+  <title>The Apartment Brew Co. | Micro-Batch Flash-Chilled Specialty Coffee</title>
   <link rel="stylesheet" href="style.css" />
-  
-  <!-- Resource Hints for Payment SDK -->
-  <link rel="preconnect" href="https://checkout.razorpay.com" />
-  <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
-  
-  <!-- Razorpay Standard Checkout SDK -->
-  <script defer src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
-<body data-page="HOME">
+<body data-page="INDEX">
   <div class="container">
     
     <!-- Branding Header -->
     <header class="header-card">
       <h1 class="brand-title">The Apartment Brew Co.</h1>
-      <div class="brand-subtitle">Micro-Batch Flash-Chilled Specialty Coffee &bull; Gurugram</div>
+      <div class="brand-subtitle">Micro-Batch Flash-Chilled Specialty Coffee &bull; Gurugram &amp; Delhi NCR</div>
       
       <div class="drop-banner" id="dropBanner">
-        <span>⚡</span> Next Fresh Drop: Saturday Morning
+        <span>⚡</span> Next Fresh Drop: Saturday Morning &bull; Office Drop: Friday
       </div>
-      <div class="countdown-timer" id="countdownTimer">Cutoff closes in: Loading...</div>
+      <div class="countdown-timer" id="countdownTimer">Loading roastery schedule...</div>
 
       <!-- Scarcity Bar -->
       <div class="scarcity-bar-container">
@@ -38,358 +31,205 @@
         </div>
       </div>
 
-      <!-- Store Status Banner (Dynamic for PAUSED / SOLD_OUT) -->
-      <div class="store-status-banner" id="storeStatusBanner" style="display: none;"></div>
-
       <div class="geo-badge">
-        📍 Delivering Exclusively Across Gurugram &amp; Delhi NCR Residences &amp; Tech Parks
-      </div>
-      
-      <div class="craft-badge">
-        ☕ Hand-Brewed Separately in Small Batches &bull; Crafted Fresh to Order
+        📍 Cold-Chain Drops Across Gurugram, DLF Cyber City, Golf Course Rd &amp; Delhi NCR
       </div>
     </header>
 
     <!-- Global Multi-Page Navigation Bar -->
     <nav class="site-nav">
-      <a href="index.html" class="nav-link active">☕ Saturday</a>
-      <a href="office.html" class="nav-link">🏢 Office</a>
+      <a href="index.html" class="nav-link active">🏠 Home</a>
+      <a href="order.html" class="nav-link">☕ Saturday Drop</a>
+      <a href="office.html" class="nav-link">🏢 Office Drops</a>
       <a href="menu.html" class="nav-link">📖 Harvests</a>
-      <a href="about.html" class="nav-link">🌱 Story</a>
       <a href="guide.html" class="nav-link">❄️ Freshness</a>
       <a href="events.html" class="nav-link">🎉 Events</a>
       <a href="track.html" class="nav-link">🔍 Track</a>
     </nav>
 
-    <!-- Multi-Step Ordering Form View -->
-    <main id="orderFormView">
+    <!-- Brand Story & Core Philosophy -->
+    <main class="story-content">
       
-      <!-- Wizard Progress Header -->
-      <div class="wizard-progress-bar">
-        <div class="wizard-step-node node-active" id="wNode1" onclick="goToWizardStep(1)">
-          <div class="node-circle" id="wCircle1">1</div>
-          <div class="node-label" id="wLabel1">Harvest</div>
-        </div>
-        <div class="wizard-node-line" id="wLine1"></div>
-        <div class="wizard-step-node" id="wNode2" onclick="goToWizardStep(2)">
-          <div class="node-circle" id="wCircle2">2</div>
-          <div class="node-label" id="wLabel2">Packs</div>
-        </div>
-        <div class="wizard-node-line" id="wLine2"></div>
-        <div class="wizard-step-node" id="wNode3" onclick="goToWizardStep(3)">
-          <div class="node-circle" id="wCircle3">3</div>
-          <div class="node-label" id="wLabel3">Delivery</div>
-        </div>
-        <div class="wizard-node-line" id="wLine3"></div>
-        <div class="wizard-step-node" id="wNode4" onclick="goToWizardStep(4)">
-          <div class="node-circle" id="wCircle4">4</div>
-          <div class="node-label" id="wLabel4">Review</div>
-        </div>
-      </div>
-
-      <!-- STEP 1: Choose Coffee Lot & Custom Split -->
-      <section class="section-card wizard-step-panel" id="stepPanel1">
+      <!-- Hero Intro Card -->
+      <section class="section-card">
         <div class="section-title">
-          <span>Step 1: Select Single-Estate Harvest</span>
-          <span class="section-subtitle">Fresh Roast</span>
+          <span>Hot Extracted. Instantly Flash-Chilled.</span>
+          <span class="section-subtitle">Our Manifesto</span>
         </div>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
-          Choose your preferred estate harvest lot, or select a Discovery Flight to customize your split.
+        <p class="story-p">
+          We operate as an asset-light, pre-order micro-roastery in Gurugram. Instead of mass-producing coffee in giant commercial tanks to sit on supermarket shelves for months, we brew each coffee separately by hand in small batches specifically for scheduled weekly drops.
+        </p>
+        
+        <div class="hero-quote">
+          &ldquo;We don't make shelf-stable concentrates. We extract single-estate specialty coffee hot, flash-chill it over ice to lock in volatile aromatics, and deliver it fresh within a strict 48-hour peak window.&rdquo;
+        </div>
+
+        <div class="craft-badge" style="margin-top: 10px;">
+          ☕ Hand-Brewed Separately in Small Batches &bull; Crafted Fresh to Order
+        </div>
+      </section>
+
+      <!-- The Core Pillars -->
+      <section class="section-card">
+        <div class="section-title">
+          <span>Why The Apartment Brew Co. Is Different</span>
+        </div>
+        
+        <div class="feature-grid">
+          <div class="feature-box">
+            <div class="feature-box-title">&#128293; 1. Hot Extraction &bull; Thermal Flash-Chill</div>
+            <div class="feature-box-desc">
+              Coffee needs heat (92&ndash;94&deg;C) to dissolve sweet fruit sugars and delicate floral aromatic oils. We extract hot and flash-chill the brew over ice to 4&deg;C in seconds, permanently trapping wild berry and citrus aromatics before oxidation can begin.
+            </div>
+          </div>
+
+          <div class="feature-box">
+            <div class="feature-box-title">&#127793; 2. Single-Estate Farm Direct Beans</div>
+            <div class="feature-box-desc">
+              We roast 100% specialty arabica sourced directly from partner farms in the Western Ghats (including Ratnagiri Estate Anaerobic Naturals). No cheap robusta, no artificial extracts, and no dark bitter roasts.
+            </div>
+          </div>
+
+          <div class="feature-box">
+            <div class="feature-box-title">&#10052; 3. 100% Preservative Free (48-Hr Peak)</div>
+            <div class="feature-box-desc">
+              Zero chemical stabilizers, zero pasteurization, and zero additives. Bottled fresh overnight for scheduled morning drops. Keep refrigerated and enjoy poured over ice within 48 hours for pure cafe pour-over quality.
+            </div>
+          </div>
+
+          <div class="feature-box">
+            <div class="feature-box-title">&#9995; 4. Artisanal Nuance in Every Bottle</div>
+            <div class="feature-box-desc">
+              Every order is brewed manually by hand rather than automated commercial machines. Slight cup-to-cup character is celebrated as a deliberate hallmark of manual craft extraction.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Comparison Matrix Table -->
+      <section class="section-card">
+        <div class="section-title">
+          <span>The Comparison: How We Differ</span>
+          <span class="section-subtitle">Side-by-Side</span>
+        </div>
+        
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">
+          How our flash-chilled specialty brew stacks up against standard cold brews and traditional instant coffee:
         </p>
 
-        <!-- Dynamic Coffee Lot Grid -->
-        <div class="lot-grid" id="lotGrid"></div>
-
-        <!-- Custom Ratio Splitter Module -->
-        <div class="custom-splitter-card" id="customSplitter" style="display: none;">
-          <div class="splitter-header">
-            <span class="splitter-title">🎯 Build Your Own Batch Ratio</span>
-            <span class="splitter-tally" id="splitterTally">Allocated: <strong><span id="allocCount">4</span> / <span id="targetCount">4</span></strong> bottles</span>
-            <div id="tallyStatus" class="splitter-tally-note" style="font-size: 0.76rem; color: var(--accent); margin-top: 6px; text-align: center;"></div>
-          </div>
-          <div class="splitter-controls">
-            <div class="splitter-row">
-              <div class="splitter-lot-info">
-                <span class="splitter-lot-name" id="splitLot1Name">Lot 1</span>
-                <span class="splitter-lot-sub" id="splitLot1Sub">Anaerobic Naturals</span>
-              </div>
-              <div class="qty-stepper">
-                <button type="button" class="stepper-btn" onclick="adjustSplit('lot1', -1)">&ndash;</button>
-                <span class="stepper-val" id="splitLot1Count">2</span>
-                <button type="button" class="stepper-btn" onclick="adjustSplit('lot1', 1)">+</button>
-              </div>
-            </div>
-            <div class="splitter-row">
-              <div class="splitter-lot-info">
-                <span class="splitter-lot-name" id="splitLot2Name">Lot 2</span>
-                <span class="splitter-lot-sub" id="splitLot2Sub">Washed Lot</span>
-              </div>
-              <div class="qty-stepper">
-                <button type="button" class="stepper-btn" onclick="adjustSplit('lot2', -1)">&ndash;</button>
-                <span class="stepper-val" id="splitLot2Count">2</span>
-                <button type="button" class="stepper-btn" onclick="adjustSplit('lot2', 1)">+</button>
-              </div>
-            </div>
-          </div>
-          <div class="splitter-ratio-bar">
-            <div class="ratio-segment ratio-ratnagiri" id="ratioBarLot1" style="width: 50%;"></div>
-            <div class="ratio-segment ratio-thogarihunkal" id="ratioBarLot2" style="width: 50%;"></div>
-          </div>
+        <div class="comparison-wrap">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th class="col-highlight">The Apartment Brew Co.</th>
+                <th>Standard Cold Brew</th>
+                <th>Traditional Instant</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Brewing Method</strong></td>
+                <td class="col-highlight"><span class="comp-badge-good">Hot Brew + Flash-Chilled</span></td>
+                <td>18-hr Cold Immersion</td>
+                <td>Industrial Heat Spray-Dried</td>
+              </tr>
+              <tr>
+                <td><strong>Aromatic Profile</strong></td>
+                <td class="col-highlight"><span class="comp-badge-good">Vibrant Florals &amp; Berries</span></td>
+                <td>Flat, muted &amp; oxidized</td>
+                <td class="comp-badge-bad">Bitter, woody, burnt</td>
+              </tr>
+              <tr>
+                <td><strong>Acidity &amp; Clarity</strong></td>
+                <td class="col-highlight"><span class="comp-badge-good">Crisp, clean &amp; fruit-forward</span></td>
+                <td>Heavy, flat &amp; muddy</td>
+                <td class="comp-badge-bad">Harsh &amp; chemical</td>
+              </tr>
+              <tr>
+                <td><strong>Preservatives &amp; Additives</strong></td>
+                <td class="col-highlight"><span class="comp-badge-good">Zero (100% Pure Coffee)</span></td>
+                <td>Preservatives / Stabilizers</td>
+                <td class="comp-badge-bad">Artificial additives &amp; sugar</td>
+              </tr>
+              <tr>
+                <td><strong>Peak Freshness</strong></td>
+                <td class="col-highlight"><span class="comp-badge-good">Strict 48-Hour Peak Window</span></td>
+                <td>2–4 weeks shelf life</td>
+                <td>12–24 months shelf life</td>
+              </tr>
+              <tr>
+                <td><strong>Bean Quality</strong></td>
+                <td class="col-highlight"><span class="comp-badge-good">Single-Estate Specialty Arabica</span></td>
+                <td>Commercial blended beans</td>
+                <td class="comp-badge-bad">Low-grade robusta</td>
+              </tr>
+              <tr>
+                <td><strong>Craft Scale</strong></td>
+                <td class="col-highlight"><span class="comp-badge-good">Manual Small-Batch to Order</span></td>
+                <td>Bulk commercial vats</td>
+                <td>Factory automated mass volume</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-
-        <button type="button" class="btn btn-pay" style="margin-top: 14px;" onclick="nextWizardStep(2)">
-          <span>Continue to Pack Selection &rarr;</span>
-        </button>
       </section>
 
-      <!-- STEP 2: Choose Pack Tier & Promo Code -->
-      <section class="section-card wizard-step-panel" id="stepPanel2" style="display: none;">
+      <!-- Quick-Access Portals -->
+      <section class="section-card">
         <div class="section-title">
-          <span>Step 2: Choose Pack Tier</span>
-          <span class="section-subtitle">Saturday Morning Drop</span>
+          <span>Choose Your Pathway</span>
+          <span class="section-subtitle">Order &amp; Inquire</span>
         </div>
 
-        <!-- Dynamic B2C Packs Grid -->
-        <div class="pack-grid" id="b2cPacks"></div>
-
-        <div class="form-group" style="margin-top: 12px;">
-          <label for="packQty">Quantity of Selected Packs</label>
-          <input type="number" id="packQty" min="1" value="1" oninput="updateTotal()" />
-          <div class="field-error" id="errQty">Please enter a valid pack quantity (minimum 1).</div>
-        </div>
-
-        <!-- Coupon Code Input -->
-        <div class="form-group" style="margin-top: 14px;">
-          <label for="couponInput">Promo / Coupon Code</label>
-          <div class="coupon-input-group">
-            <input type="text" id="couponInput" placeholder="e.g. FRESHDROP / NCRFIRST" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();applyCoupon();}" />
-            <button type="button" id="btnApplyCoupon" class="btn-coupon" onclick="applyCoupon()">Apply</button>
-            <button type="button" id="btnRemoveCoupon" class="btn-coupon-remove" onclick="removeCoupon()" style="display: none;">Remove</button>
-          </div>
-          <div id="couponStatus" class="coupon-status" style="display: none;"></div>
-        </div>
-
-        <div class="summary-box">
-          <div class="summary-breakdown" id="summaryBreakdown" style="display: none;">
-            <div class="summary-line">
-              <span>Subtotal:</span>
-              <span id="subtotalDisplay">₹899</span>
+        <div class="portal-grid">
+          <!-- Portal 1: Saturday Individual Drop -->
+          <a href="order.html" class="portal-card">
+            <div>
+              <div class="portal-header">☕ Saturday Individual Drop</div>
+              <div class="portal-desc">
+                Weekend micro-batches delivered fresh to your doorstep Saturday morning. Single bottles, Discovery Flights, and Weekend 4-Packs.
+              </div>
             </div>
-            <div class="summary-line summary-discount" id="discountLine">
-              <span id="discountLabel">Promo Discount:</span>
-              <span id="discountDisplay">-₹0</span>
+            <div class="portal-cta">Start Individual Pre-Order &rarr;</div>
+          </a>
+
+          <!-- Portal 2: Friday Office Drop -->
+          <a href="office.html" class="portal-card">
+            <div>
+              <div class="portal-header">🏢 Friday Office Drops</div>
+              <div class="portal-desc">
+                Batch deliveries (10 to 60 bottles) for tech parks across Gurugram &amp; NCR. Morning Kickoff or Afternoon Recharge with Net-7 corporate invoicing.
+              </div>
             </div>
-          </div>
-          <div class="summary-total-line">
-            <span style="font-size:0.85rem; color:var(--text-muted);">Total (Free Delhi NCR Drop):</span>
-            <span class="summary-total" id="totalAmountDisplay">₹899</span>
-          </div>
-        </div>
+            <div class="portal-cta">Start Corporate Office Order &rarr;</div>
+          </a>
 
-        <div class="wizard-nav-btns">
-          <button type="button" class="btn-secondary" onclick="goToWizardStep(1)">&larr; Back to Harvest</button>
-          <button type="button" class="btn btn-pay" onclick="nextWizardStep(3)">
-            <span>Continue to Delivery &rarr;</span>
-          </button>
+          <!-- Portal 3: Custom Events -->
+          <a href="events.html" class="portal-card">
+            <div>
+              <div class="portal-header">🎉 Events &amp; Coffee Runs</div>
+              <div class="portal-desc">
+                Custom specialty coffee bars and bulk drops for startup hackathons, townhalls, product launches, and team outings.
+              </div>
+            </div>
+            <div class="portal-cta">Submit Custom Requirement &rarr;</div>
+          </a>
+
+          <!-- Portal 4: Order Tracker -->
+          <a href="track.html" class="portal-card">
+            <div>
+              <div class="portal-header">🔍 Live Order Tracker</div>
+              <div class="portal-desc">
+                Customer self-service tracker. Enter your Order or Inquiry ID to view real-time brewing, chilling, dispatch, and delivery stages.
+              </div>
+            </div>
+            <div class="portal-cta">Track Fulfillment Status &rarr;</div>
+          </a>
         </div>
       </section>
 
-      <!-- STEP 3: Delivery & Contact Details -->
-      <section class="section-card wizard-step-panel" id="stepPanel3" style="display: none;">
-        <div class="section-title">
-          <span>Step 3: Delivery &amp; Contact Details</span>
-        </div>
-
-        <div class="saved-profile-bar" id="savedProfileBar">
-          <span id="savedProfileText">👋 Welcome back! Autofill previous order info?</span>
-          <button class="saved-profile-btn" onclick="applySavedProfile()">Autofill</button>
-        </div>
-
-        <div class="form-group" id="b2cCityGroup">
-          <label for="custCity">City / Region (Delhi NCR Only)</label>
-          <select id="custCity">
-            <option value="Gurugram (DLF Phase 1-5 / Cyber City / Golf Course Rd)">Gurugram (DLF Phase 1-5 / Cyber City / Golf Course Rd)</option>
-            <option value="South / Central Delhi">South / Central Delhi</option>
-            <option value="Noida / Greater Noida">Noida / Greater Noida</option>
-            <option value="Faridabad / Ghaziabad">Faridabad / Ghaziabad</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="custPincode">6-Digit PIN Code *</label>
-          <input type="text" id="custPincode" maxlength="6" placeholder="e.g. 122002" oninput="validatePincodeField()" />
-          <div id="pinStatus" class="pin-status"></div>
-          <div class="field-error" id="errPincode">Please enter a valid 6-digit Delhi NCR PIN code.</div>
-        </div>
-
-        <div class="form-group">
-          <label id="labelName" for="custName">Your Name *</label>
-          <input type="text" id="custName" placeholder="e.g. Astitva Gupta" oninput="validateField('custName')" />
-          <div class="field-error" id="errName">Please enter your name (at least 2 characters).</div>
-        </div>
-
-        <div class="form-group">
-          <label id="labelEmail" for="custEmail">Email Address (For Order Updates &amp; Invoices) *</label>
-          <input type="email" id="custEmail" placeholder="e.g. astitva@example.com" oninput="validateEmailField()" />
-          <div class="field-error" id="errEmail">Please enter a valid email address.</div>
-        </div>
-
-        <div class="form-group">
-          <label for="custPhone">WhatsApp / Mobile Number *</label>
-          <input type="tel" id="custPhone" placeholder="e.g. 9876543210" maxlength="10" oninput="validatePhoneField()" />
-          <div class="field-error" id="errPhone">Please enter a valid 10-digit Indian mobile number.</div>
-        </div>
-
-        <div class="form-group">
-          <label id="labelAddress" for="custAddress">Delivery Address (Building, Flat, Society) *</label>
-          <textarea id="custAddress" rows="2" placeholder="e.g. Flat 402, Tower 3, DLF Phase 5" oninput="validateField('custAddress')"></textarea>
-          <div class="field-error" id="errAddress">Please enter your complete address.</div>
-        </div>
-
-        <div class="form-group">
-          <label for="dropInstructions">Delivery / Gate Drop Preference</label>
-          <select id="dropInstructions">
-            <option value="Deliver directly to door / desk">Deliver directly to door / desk</option>
-            <option value="Leave with Tower Security / Concierge Desk">Leave with Tower Security / Concierge Desk</option>
-            <option value="Call upon arrival for pickup">Call upon arrival for pickup</option>
-          </select>
-        </div>
-
-        <div class="wizard-nav-btns">
-          <button type="button" class="btn-secondary" onclick="goToWizardStep(2)">&larr; Back to Packs</button>
-          <button type="button" class="btn btn-pay" onclick="nextWizardStep(4)">
-            <span>Review Order &rarr;</span>
-          </button>
-        </div>
-      </section>
-
-      <!-- STEP 4: Review & Pay -->
-      <section class="section-card wizard-step-panel" id="stepPanel4" style="display: none;">
-        <div class="section-title">
-          <span>Step 4: Review &amp; Confirm Order</span>
-        </div>
-
-        <!-- Order Summary Card -->
-        <div class="order-review-card">
-          <div class="review-row">
-            <span>Coffee Selection:</span>
-            <strong id="revBean">-</strong>
-          </div>
-          <div class="review-row">
-            <span>Pack Tier:</span>
-            <strong id="revPack">-</strong>
-          </div>
-          <div class="review-row">
-            <span>Delivery Date:</span>
-            <strong id="revDate" style="color: var(--accent);">-</strong>
-          </div>
-          <div class="review-row">
-            <span>Delivering To:</span>
-            <strong id="revAddress">-</strong>
-          </div>
-          <div class="review-row">
-            <span>Customer:</span>
-            <strong id="revCustomer">-</strong>
-          </div>
-          <div class="review-row" id="revDiscountRow" style="display: none;">
-            <span>Promo Discount:</span>
-            <strong id="revDiscount" style="color: var(--success-light);">-</strong>
-          </div>
-          <div class="review-row review-total-row">
-            <span style="color: var(--text);">Total Amount:</span>
-            <strong id="revTotal" style="color: var(--accent); font-size: 1.1rem;">₹899</strong>
-          </div>
-        </div>
-
-        <div class="freshness-alert" style="margin-top: 12px; margin-bottom: 0;">
-          &#10052; <strong>48-Hour Peak Freshness:</strong> Micro-batched overnight for Saturday morning delivery. Please refrigerate upon arrival!
-        </div>
-
-        <div class="wizard-nav-btns">
-          <button type="button" class="btn-secondary" onclick="goToWizardStep(3)">&larr; Edit Details</button>
-          <button id="payNowBtn" class="btn btn-pay" onclick="handlePayClick()">
-            <span id="btnText">&#128179; Pay &amp; Confirm Pre-Order (<span id="btnAmount">₹899</span>)</span>
-          </button>
-        </div>
-      </section>
     </main>
-
-    <!-- Confirmation View -->
-    <section id="confirmationView" style="display: none;">
-      <div class="section-card" style="text-align: center;">
-        <div class="success-badge">&#10003; Order Confirmed</div>
-        <h2 style="font-size: 1.3rem; margin-bottom: 4px;">Thank You for Your Order!</h2>
-        <p style="font-size: 0.82rem; color: var(--text-muted);">Your micro-batch is scheduled for fresh roast &amp; chilled delivery.</p>
-
-        <div class="freshness-alert">
-          &#10052; <strong>Hand-Brewed Fresh to Order:</strong> Each coffee is brewed separately by hand with zero preservatives. Because every batch is handcrafted, enjoy subtle artisanal nuances in every bottle. Keep refrigerated upon arrival and consume within 48 hours for peak flavor!
-        </div>
-
-        <div class="receipt-details">
-          <div class="receipt-row">
-            <span class="receipt-label">Order ID</span>
-            <span class="receipt-val" id="rOrderId" style="font-family: monospace;">-</span>
-          </div>
-          <div class="receipt-row">
-            <span class="receipt-label">Order Type</span>
-            <span class="receipt-val" id="rOrderType">Individual Pre-Order (Sat Drop)</span>
-          </div>
-          <div class="receipt-row">
-            <span class="receipt-label">Payment Ref</span>
-            <span class="receipt-val" id="rPayId" style="font-family: monospace; font-size: 0.78rem;">-</span>
-          </div>
-          <div class="receipt-row">
-            <span class="receipt-label">Delivery Date</span>
-            <span class="receipt-val" id="rDropDate" style="color: var(--accent);">-</span>
-          </div>
-          <div class="receipt-row">
-            <span class="receipt-label">Customer</span>
-            <span class="receipt-val" id="rName">-</span>
-          </div>
-          <div class="receipt-row">
-            <span class="receipt-label">Email</span>
-            <span class="receipt-val" id="rEmail">-</span>
-          </div>
-          <div class="receipt-row">
-            <span class="receipt-label">Coffee Lot</span>
-            <span class="receipt-val" id="rBean">-</span>
-          </div>
-          <div class="receipt-row">
-            <span class="receipt-label">Selection</span>
-            <span class="receipt-val" id="rPack">-</span>
-          </div>
-
-          <div class="receipt-row" id="rSubtotalRow">
-            <span class="receipt-label">Subtotal</span>
-            <span class="receipt-val" id="rSubtotal">-</span>
-          </div>
-          <div class="receipt-row" id="rDiscountRow" style="display:none;">
-            <span class="receipt-label">Coupon Discount</span>
-            <span class="receipt-val" id="rDiscount" style="color: #d93025;">-</span>
-          </div>
-          <div class="receipt-row">
-            <span class="receipt-label">Total Amount</span>
-            <span class="receipt-val" id="rTotal" style="color: var(--accent); font-size: 1.05rem;">-</span>
-          </div>
-        </div>
-
-        <button class="btn btn-calendar" onclick="addToGoogleCalendar()">
-          <span>&#128197; Add Delivery Window to Google Calendar</span>
-        </button>
-
-        <button class="btn btn-whatsapp" onclick="sendWhatsAppReceipt()">
-          <span>&#128241; Send Receipt / Updates to My WhatsApp</span>
-        </button>
-
-        <a href="track.html" id="linkTrackOrder" class="btn" style="background: rgba(212, 163, 115, 0.15); color: var(--accent); border: 1px solid var(--accent); margin-top: 10px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
-          <span>&#128269; View Live Order Status</span>
-        </a>
-
-        <button class="btn btn-secondary" onclick="resetForm()">
-          <span>+ Place Another Pre-Order</span>
-        </button>
-      </div>
-    </section>
 
   </div>
 

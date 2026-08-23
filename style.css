@@ -1884,3 +1884,156 @@ select option:disabled {
 .feature-item strong {
   color: var(--accent);
 }
+
+/* ==================================================================== */
+/* Homepage Brand Hub & Comparison Styles                              */
+/* ==================================================================== */
+
+.hero-quote {
+  font-style: italic;
+  font-size: 0.86rem;
+  color: var(--accent);
+  border-left: 3px solid var(--accent);
+  padding-left: 12px;
+  margin: 12px 0;
+  line-height: 1.45;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.feature-box {
+  background: var(--card-inner);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.feature-box-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.feature-box-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* Comparison Table */
+.comparison-wrap {
+  overflow-x: auto;
+  margin: 12px 0;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.76rem;
+  text-align: left;
+  background: var(--card-inner);
+}
+
+.comparison-table th, 
+.comparison-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #262320;
+}
+
+.comparison-table th {
+  background: #1e1b18;
+  color: var(--text);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.comparison-table th.col-highlight,
+.comparison-table td.col-highlight {
+  background: rgba(212, 163, 115, 0.08);
+  border-left: 1px solid rgba(212, 163, 115, 0.3);
+  border-right: 1px solid rgba(212, 163, 115, 0.3);
+  font-weight: 600;
+}
+
+.comparison-table td.col-highlight {
+  color: #fff;
+}
+
+.comp-badge-good {
+  color: var(--success-light);
+  font-weight: 800;
+}
+
+.comp-badge-bad {
+  color: var(--error-light);
+  font-weight: 700;
+}
+
+/* Portal Action Cards */
+.portal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 14px;
+}
+
+@media (max-width: 480px) {
+  .portal-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.portal-card {
+  background: var(--card-inner);
+  border: 1.5px solid var(--card-border);
+  border-radius: 12px;
+  padding: 14px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.portal-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  background: rgba(212, 163, 115, 0.06);
+}
+
+.portal-header {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.portal-desc {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+.portal-cta {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+}

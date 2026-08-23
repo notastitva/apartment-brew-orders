@@ -32,7 +32,7 @@ The Apartment Brew Co. maintains a strict manual extraction protocol to ensure p
 ```
 +-----------------------------------------------------------------------------------+
 |                                   CLIENT LAYER                                    |
-|   Multi-Page Architecture (GitHub Pages): index, office, events, track.html       |
+|   Multi-Page Architecture (GitHub Pages): index, order, office, events, track.html|
 |   .site-nav (Global Navigation) + style.css (Dark Roast Design System)            |
 |   app.js (Page Dispatcher, CMS Render, SWR Caching, Real-time Validation)         |
 +--------------------------+------------------------------------+-------------------+
@@ -103,12 +103,13 @@ To reset the capacity counter between weekly drops:
 
 #### **1\. Multi-Page Architecture & Information Structure**
 
-* index.html: Individual Saturday Morning Drop (4-Step Wizard)  
-* office.html: Corporate Friday Office Drops (4-Step Wizard)  
-* menu.html: Single-Estate Harvest Showcase, Sensory Profiles & Discovery Flights  
-* about.html: Roastery Origin, Small-Batch Manual Brewing Philosophy & Direct Farm Sourcing  
-* guide.html: 48-Hour Freshness Science, Thermal Flash-Chilling & Storage/Serving Ritual  
-* events.html: Custom Events, Team Coffee Runs & Pop-Up Specialty Coffee Bars  
+* index.html: Dedicated Brand Manifesto, Roastery Philosophy, Core Craft Pillars & Side-by-Side Comparison Matrix (Flash-Chilled vs Cold Brew vs Instant)  
+* order.html: Dedicated Individual Saturday Morning Drop Pre-Order (4-Step Wizard)  
+* office.html: Dedicated Corporate Friday Office Batch Drops (4-Step Wizard)  
+* menu.html: Single-Estate Harvest Showcase & Sensory Profiles  
+* about.html: Roastery Origin Story & Farm Direct Sourcing  
+* guide.html: 48-Hour Peak Freshness Science & Serving Ritual  
+* events.html: Custom Events, Hackathons & Pop-Up Coffee Bars  
 * track.html: Customer Self-Service Live Order & Inquiry Status Tracker
 
 #### **2\. Multi-Step Ordering Wizard**

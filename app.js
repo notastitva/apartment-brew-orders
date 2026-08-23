@@ -3,8 +3,8 @@
 // ====================================================================
 
 const CONFIG = {
-  razorpayKeyId: "rzp_test_TRVab1bUUwOVN5", // Replace with your active Key ID (rzp_live_...)
-  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbz9kw-PDrwGXaNeHzvgfuOZsQ5A52tKXk-WN2np30ohE12xekUSK7x-bAp_kN_epmig/exec", // Replace with Apps Script Web App URL ending in /exec
+  razorpayKeyId: "YOUR_RAZORPAY_KEY_ID_HERE", // Replace with your active Key ID (rzp_live_...)
+  googleSheetEndpoint: "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE", // Replace with Apps Script Web App URL ending in /exec
   authToken: "TABC_SECURE_TOKEN_2026" // Shared auth token matching Code.gs
 };
 
@@ -12,12 +12,13 @@ let cachedProfile = null;
 
 // Determine current page from body dataset or pathname
 const PAGE = document.body.dataset.page || (
+  window.location.pathname.includes('order') ? 'ORDER' :
   window.location.pathname.includes('office') ? 'OFFICE' :
   window.location.pathname.includes('events') ? 'EVENTS' :
   window.location.pathname.includes('track') ? 'TRACK' :
   window.location.pathname.includes('about') ? 'ABOUT' :
   window.location.pathname.includes('guide') ? 'GUIDE' :
-  window.location.pathname.includes('menu') ? 'MENU' : 'HOME'
+  window.location.pathname.includes('menu') ? 'MENU' : 'INDEX'
 );
 
 let currentMode = (PAGE === 'OFFICE') ? "B2B" : "B2C";
@@ -400,7 +401,7 @@ function renderLots(lots) {
 }
 
 function renderPacks(b2cPacks, b2bPacks) {
-  if (PAGE === 'HOME' && Array.isArray(b2cPacks) && b2cPacks.length > 0) {
+  if ((PAGE === 'ORDER' || PAGE === 'HOME') && Array.isArray(b2cPacks) && b2cPacks.length > 0) {
     availableB2cPacks = b2cPacks;
     const b2cGrid = document.getElementById('b2cPacks');
     if (b2cGrid) {
@@ -542,7 +543,7 @@ function startCutoffCountdown() {
     if (!timerEl) return;
   
     const now = new Date();
-    const isB2c = (PAGE === 'HOME' || currentMode === "B2C");
+    const isB2c = (PAGE === 'ORDER' || currentMode === "B2C");
     const target = new Date();
   
     if (isB2c) {
@@ -1817,17 +1818,14 @@ function resetForm() {
 // Page Initialization Dispatcher
 // --------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
-  if (PAGE === 'HOME') {
-    renderLots(availableLots);
-    renderPacks(availableB2cPacks, []);
+  if (PAGE === 'ORDER' || PAGE === 'HOME') {
     startCutoffCountdown();
-    checkSavedProfile();
     fetchLiveConfig();
     setInterval(fetchLiveConfig, 30000);
-    goToWizardStep(1);
   } else if (PAGE === 'OFFICE') {
     renderLots(availableLots);
     renderPacks([], availableB2bPacks);
+  } else if (PAGE === 'INDEX') {
     startCutoffCountdown();
     renderClusterOptions();
     checkSavedProfile();
