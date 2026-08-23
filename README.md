@@ -5,6 +5,14 @@
 A lightweight, high-performance, serverless e-commerce and order intake portal designed for scheduled micro-batch craft coffee drops, dynamic Google Sheets headless CMS configuration, direct payment gateway integration, live order tracking, and automated customer notifications. All coffee is standardized into 200ml glass bottles across all distribution tiers.  
 ---
 
+### **✨ Redesigned Landing Page Overview**
+
+The new landing page features a highly visual and interactive storytelling experience:
+
+* **Hero Interaction:** Animated SVG 200ml glass bottle illustration with floating micro-chips.  
+* **Interactive Craft Extraction Story:** A 4-step visual journey detailing the process: Hot Extract at 94°C \&rarr; Thermal Shock at 4°C \&rarr; 200ml Glass Bottling \&rarr; Cold-Chain Morning Drop.  
+* **Dynamic Modules:** Visual active harvest cards, comparison matrix cards, and community reviews.
+
 ### **📌 1\. Overview & Business Model**
 
 The Apartment Brew Co. operates an asset-light, pre-order only micro-batch craft coffee roastery:
