@@ -8,35 +8,7 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body data-page="INDEX">
-  <div class="container">
-    
-    <!-- Branding Header -->
-    <header class="header-card">
-      <h1 class="brand-title">The Apartment Brew Co.</h1>
-      <div class="brand-subtitle">Micro-Batch Flash-Chilled Specialty Coffee &bull; Gurugram &amp; Delhi NCR</div>
-      
-      <div class="drop-banner" id="dropBanner">
-        <span>⚡</span> Next Fresh Drop: Saturday Morning &bull; Office Drop: Friday
-      </div>
-      <div class="countdown-timer" id="countdownTimer">Loading roastery schedule...</div>
-
-      <!-- Scarcity Bar -->
-      <div class="scarcity-bar-container">
-        <div class="scarcity-label">
-          <span>🔥 Limited Batch Capacity</span>
-          <span id="scarcityText">Loading batch availability...</span>
-        </div>
-        <div class="scarcity-progress-track">
-          <div class="scarcity-progress-fill" id="scarcityFill"></div>
-        </div>
-      </div>
-
-      <div class="geo-badge">
-        📍 Cold-Chain Drops Across Gurugram, DLF Cyber City, Golf Course Rd &amp; Delhi NCR
-      </div>
-    </header>
-
-  <!-- Sticky Top Header & Hamburger Navigation -->
+  <!-- Sticky Top Header & Hamburger Navigation (Topmost Component) -->
   <header class="site-header-sticky">
     <div class="header-inner">
       <a href="index.html" class="nav-logo">
@@ -59,7 +31,7 @@
       <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&times;</button>
     </div>
     <nav class="drawer-nav">
-      <a href="index.html" class="drawer-link" data-page-link="INDEX">🏠 Home &amp; Story</a>
+      <a href="index.html" class="drawer-link active" data-page-link="INDEX">🏠 Home &amp; Story</a>
       <a href="order.html" class="drawer-link" data-page-link="ORDER">☕ Saturday Individual Drop</a>
       <a href="office.html" class="drawer-link" data-page-link="OFFICE">🏢 Friday Office Drops</a>
       <a href="menu.html" class="drawer-link" data-page-link="MENU">📖 Harvests &amp; Sensory Menu</a>
@@ -72,6 +44,31 @@
       <div class="drawer-footer-text">☕ Hand-Brewed Fresh to Order in Gurugram</div>
     </div>
   </aside>
+  <div class="container">
+    
+    <!-- Branding Header -->
+    <!-- Live Drop & Batch Capacity Card -->
+    <section class="header-card">
+      <div class="drop-banner" id="dropBanner">
+        <span>⚡</span> Next Fresh Drop: Saturday Morning &bull; Office Drop: Friday
+      </div>
+      <div class="countdown-timer" id="countdownTimer">Loading roastery schedule...</div>
+
+      <!-- Scarcity Bar -->
+      <div class="scarcity-bar-container">
+        <div class="scarcity-label">
+          <span>🔥 Limited Batch Capacity</span>
+          <span id="scarcityText">Loading batch availability...</span>
+        </div>
+        <div class="scarcity-progress-track">
+          <div class="scarcity-progress-fill" id="scarcityFill"></div>
+        </div>
+      </div>
+
+      <div class="geo-badge">
+        📍 Cold-Chain Drops Across Gurugram, DLF Cyber City, Golf Course Rd &amp; Delhi NCR
+      </div>
+    </header>
 
     <!-- Brand Story & Core Philosophy -->
     <main class="story-content">
