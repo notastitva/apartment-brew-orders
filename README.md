@@ -117,10 +117,10 @@ To reset the capacity counter between weekly drops:
 #### **2\. Uniform 4-Step Ordering Wizard Architecture**
 
 * The ordering workflow is uniform across both individual (order.html) and office (office.html) drops:  
-  * Step 1: Harvest (Select Single-Estate Harvest): Choose from three selection types: Lot 1, Lot 2, or Discovery Flight / Custom Split. Selecting the Discovery Flight triggers the interactive custom ratio splitter for manual lot balancing via steppers.  
-  * Step 2: Batch Size (Choose Batch Size & Quantity): Select pack tiers with real-time capacity validation and apply coupons via the promo engine.  
-  * Step 3: Delivery (Delivery & Contact / Office Details): Input customer or office location details with NCR PIN validation and slot throttling.  
-  * Step 4: Review (Order Review & Gateway / Corporate Invoicing): Final order summary followed by Razorpay payment or corporate invoice generation.
+  * Step 1: Harvest (Select Single-Estate Harvest): Customer chooses flavor direction: Lot 1, Lot 2, or Discovery Flight (with quick ratio presets: 50/50 Balanced, 75/25, 25/75, or Custom).  
+  * Step 2: Batch Size (Choose Batch Size & Quantity): Customer selects any pack size (2, 4, 6, 10, 20, 40, 60 bottles), and the system automatically calculates the exact bottle split with interactive steppers and segmented ratio bar.  
+  * Step 3: Delivery (Delivery & Contact / Office Details): Delivery & contact details.  
+  * Step 4: Review (Order Review & Gateway / Corporate Invoicing): Final order summary and checkout / corporate invoice.
 
 #### **3\. Global Navigation System & Controller Dispatcher in app.js**
 

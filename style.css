@@ -2421,3 +2421,35 @@ select option:disabled {
 .mix-tally-status.status-matched { color: var(--success-light); }
 .mix-tally-status.status-under { color: var(--accent); }
 .mix-tally-status.status-over { color: var(--error-light); }
+.mix-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+  margin-bottom: 4px;
+}
+
+.mix-preset-btn {
+  background: var(--card-inner);
+  border: 1px solid var(--card-border);
+  color: var(--text-muted);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.mix-preset-btn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.mix-preset-btn.active {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 700;
+}

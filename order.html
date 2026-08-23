@@ -110,23 +110,60 @@
         </div>
       </div>
   
-      <!-- STEP 1: Choose Coffee Lot & Custom Split -->
+      <!-- STEP 1: Choose Coffee Lot & Flavor Ratio -->
       <section class="section-card wizard-step-panel" id="stepPanel1">
         <div class="section-title">
           <span>Step 1: Select Single-Estate Harvest</span>
           <span class="section-subtitle">Fresh Roast</span>
         </div>
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
-          Choose your preferred estate harvest lot, or select Discovery Flight to customize your ratio split.
+          Choose your preferred estate harvest lot, or select Discovery Flight to blend roasts.
         </p>
   
         <!-- Dynamic Coffee Lot Grid (3 Options: Lot 1, Lot 2, Discovery Flight) -->
         <div class="lot-grid" id="lotGrid"></div>
   
-        <!-- Custom Ratio Splitter Module -->
+        <!-- Flavor Ratio Presets Container (Visible when Discovery Flight is selected) -->
+        <div id="flavorRatioContainer" style="display: none; margin-top: 10px; padding: 12px; background: rgba(212, 163, 115, 0.05); border: 1px dashed var(--accent); border-radius: 10px;">
+          <div style="font-size: 0.8rem; font-weight: 700; color: var(--accent); margin-bottom: 6px;">
+            ✨ Choose Your Discovery Tasting Profile:
+          </div>
+          <div class="mix-preset-grid" id="flavorRatioPresets">
+            <button type="button" class="mix-preset-btn active" id="btnRatioBalanced" onclick="setFlavorRatioPreset('BALANCED')">✨ 50/50 Balanced</button>
+            <button type="button" class="mix-preset-btn" id="btnRatioLot1" onclick="setFlavorRatioPreset('LOT1_DOMINANT')">🍓 75% Lot 1 / 25% Lot 2</button>
+            <button type="button" class="mix-preset-btn" id="btnRatioLot2" onclick="setFlavorRatioPreset('LOT2_DOMINANT')">🍏 25% Lot 1 / 75% Lot 2</button>
+            <button type="button" class="mix-preset-btn" id="btnRatioCustom" onclick="setFlavorRatioPreset('CUSTOM')">🎯 Custom Ratio</button>
+          </div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 8px; line-height: 1.35;">
+            ⚡ Your total bottles and exact pack breakdown will automatically adapt in Step 2.
+          </div>
+        </div>
+  
+        <button type="button" class="btn btn-pay" style="margin-top: 14px;" onclick="nextWizardStep(2)">
+          <span>Continue to Batch Size &rarr;</span>
+        </button>
+      </section>
+  
+      <!-- STEP 2: Choose Batch Size & Fine-Tune Split -->
+      <section class="section-card wizard-step-panel" id="stepPanel2" style="display: none;">
+        <div class="section-title">
+          <span>Step 2: Choose Batch Size &amp; Quantity</span>
+          <span class="section-subtitle">Saturday Morning Drop</span>
+        </div>
+  
+        <!-- Dynamic B2C Packs Grid -->
+        <div class="pack-grid" id="b2cPacks"></div>
+  
+        <div class="form-group" style="margin-top: 12px;">
+          <label for="packQty">Quantity of Selected Batches / Packs</label>
+          <input type="number" id="packQty" min="1" value="1" oninput="updateTotal()" />
+          <div class="field-error" id="errQty">Please enter a valid pack quantity (minimum 1).</div>
+        </div>
+  
+        <!-- Discovery Flight Custom Ratio Splitter (Visible in Step 2 when Discovery Flight is selected) -->
         <div class="custom-splitter-card" id="customSplitter" style="display: none;">
           <div class="splitter-header">
-            <span class="splitter-title">🎯 Build Your Own Batch Ratio</span>
+            <span class="splitter-title">🎯 Discovery Flight Bottle Split</span>
             <span class="splitter-tally" id="splitterTally">Allocated: <strong><span id="allocCount">4</span> / <span id="targetCount">4</span></strong> bottles</span>
           </div>
           <div id="tallyStatus" class="splitter-tally-note" style="font-size: 0.76rem; color: var(--accent); margin-bottom: 8px; text-align: center;"></div>
@@ -158,27 +195,6 @@
             <div class="ratio-segment ratio-ratnagiri" id="ratioBarLot1" style="width: 50%;"></div>
             <div class="ratio-segment ratio-thogarihunkal" id="ratioBarLot2" style="width: 50%;"></div>
           </div>
-        </div>
-  
-        <button type="button" class="btn btn-pay" style="margin-top: 14px;" onclick="nextWizardStep(2)">
-          <span>Continue to Batch Size &rarr;</span>
-        </button>
-      </section>
-  
-      <!-- STEP 2: Choose Batch Size & Promo Code -->
-      <section class="section-card wizard-step-panel" id="stepPanel2" style="display: none;">
-        <div class="section-title">
-          <span>Step 2: Choose Batch Size &amp; Quantity</span>
-          <span class="section-subtitle">Saturday Morning Drop</span>
-        </div>
-  
-        <!-- Dynamic B2C Packs Grid -->
-        <div class="pack-grid" id="b2cPacks"></div>
-  
-        <div class="form-group" style="margin-top: 12px;">
-          <label for="packQty">Quantity of Selected Batches / Packs</label>
-          <input type="number" id="packQty" min="1" value="1" oninput="updateTotal()" />
-          <div class="field-error" id="errQty">Please enter a valid pack quantity (minimum 1).</div>
         </div>
   
         <!-- Real-Time Batch Capacity Warning Container -->
