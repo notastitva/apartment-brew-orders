@@ -86,7 +86,7 @@
     <!-- Office Drop Multi-Step Form View -->
     <main id="orderFormView">
       
-      <!-- Wizard Progress Header -->
+      <!-- Wizard Progress Header (Uniform Across Pages) -->
       <div class="wizard-progress-bar">
         <div class="wizard-step-node node-active" id="wNode1" onclick="goToWizardStep(1)">
           <div class="node-circle" id="wCircle1">1</div>
@@ -95,12 +95,12 @@
         <div class="wizard-node-line" id="wLine1"></div>
         <div class="wizard-step-node" id="wNode2" onclick="goToWizardStep(2)">
           <div class="node-circle" id="wCircle2">2</div>
-          <div class="node-label" id="wLabel2">Batches</div>
+          <div class="node-label" id="wLabel2">Batch Size</div>
         </div>
         <div class="wizard-node-line" id="wLine2"></div>
         <div class="wizard-step-node" id="wNode3" onclick="goToWizardStep(3)">
           <div class="node-circle" id="wCircle3">3</div>
-          <div class="node-label" id="wLabel3">Details</div>
+          <div class="node-label" id="wLabel3">Delivery</div>
         </div>
         <div class="wizard-node-line" id="wLine3"></div>
         <div class="wizard-step-node" id="wNode4" onclick="goToWizardStep(4)">
@@ -167,7 +167,7 @@
       <!-- STEP 2: Choose Corporate Batch Tier & Promo -->
       <section class="section-card wizard-step-panel" id="stepPanel2" style="display: none;">
         <div class="section-title">
-          <span>Step 2: Choose Corporate Batch Tier</span>
+          <span>Step 2: Choose Batch Size &amp; Quantity</span>
           <span class="section-subtitle">Friday Drop (Cutoff: Thu 6 PM)</span>
         </div>
   
@@ -212,7 +212,7 @@
         <div class="wizard-nav-btns">
           <button type="button" class="btn-secondary" onclick="goToWizardStep(1)">&larr; Back to Harvest</button>
           <button type="button" id="btnStep2Next" class="btn btn-pay" onclick="nextWizardStep(3)">
-            <span>Continue to Office Details &rarr;</span>
+            <span>Continue to Delivery &rarr;</span>
           </button>
         </div>
       </section>
@@ -304,7 +304,7 @@
         </div>
   
         <div class="wizard-nav-btns">
-          <button type="button" class="btn-secondary" onclick="goToWizardStep(2)">&larr; Back to Batches</button>
+          <button type="button" class="btn-secondary" onclick="goToWizardStep(2)">&larr; Back to Batch Size</button>
           <button type="button" class="btn btn-pay" onclick="nextWizardStep(4)">
             <span>Review &amp; Pay / Invoice &rarr;</span>
           </button>
@@ -328,7 +328,7 @@
             <strong id="revBean">-</strong>
           </div>
           <div class="review-row">
-            <span>Batch Tier:</span>
+            <span>Batch Size:</span>
             <strong id="revPack">-</strong>
           </div>
           <div class="review-row">
@@ -436,9 +436,9 @@
             <span class="receipt-label">Coupon Discount</span>
             <span class="receipt-val" id="rDiscount" style="color: #d93025;">-</span>
           </div>
-          <div class="receipt-row">
+          <div class="receipt-row" id="rTotal" style="color: var(--accent); font-size: 1.05rem;">
             <span class="receipt-label">Total Amount</span>
-            <span class="receipt-val" id="rTotal" style="color: var(--accent); font-size: 1.05rem;">-</span>
+            <span class="receipt-val" id="rTotalVal">₹1,800</span>
           </div>
         </div>
   

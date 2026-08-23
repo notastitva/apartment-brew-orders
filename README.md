@@ -114,13 +114,13 @@ To reset the capacity counter between weekly drops:
 * events.html: Custom Events, Hackathons & Pop-Up Coffee Bars  
 * track.html: Customer Self-Service Live Order & Inquiry Status Tracker
 
-#### **2\. 4-Step Ordering Wizard Architecture**
+#### **2\. Uniform 4-Step Ordering Wizard Architecture**
 
-* Step 1: Coffee Harvest Selection & Single-Estate Profiles: Select individual roast presets (100% Lot 1 or 100% Lot 2\) to highlight detailed single-estate info, harvest notes, and sensory profiles (acidity, body, and flavor pills).  
-* Discovery Flight & Custom Ratio Splitter: Selecting the Discovery Flight sampler enables the interactive custom ratio splitter with real-time lot balancing via granular \+/- steppers, allowing for balanced 50/50 splits or custom proportional ratios across active harvests.  
-* Step 2: Pack Selection, Quantity & Promo Engine: Choose pack tiers with dynamic capacity checks (graying out tiers that exceed roastery limits) and apply flat or percentage discount coupons via the promo engine.  
-* Step 3: Delivery Details & Contact Information: Input customer details with real-time NCR PIN code validation and delivery cluster slot throttling.  
-* Step 4: Final Review & Secure Payment: Comprehensive order review card followed by Razorpay gateway dispatch or corporate invoice generation.
+* The ordering workflow is uniform across both individual (order.html) and office (office.html) drops:  
+  * Step 1: Harvest (Select Single-Estate Harvest): Choose from three selection types: Lot 1, Lot 2, or Discovery Flight / Custom Split. Selecting the Discovery Flight triggers the interactive custom ratio splitter for manual lot balancing via steppers.  
+  * Step 2: Batch Size (Choose Batch Size & Quantity): Select pack tiers with real-time capacity validation and apply coupons via the promo engine.  
+  * Step 3: Delivery (Delivery & Contact / Office Details): Input customer or office location details with NCR PIN validation and slot throttling.  
+  * Step 4: Review (Order Review & Gateway / Corporate Invoicing): Final order summary followed by Razorpay payment or corporate invoice generation.
 
 #### **3\. Global Navigation System & Controller Dispatcher in app.js**
 

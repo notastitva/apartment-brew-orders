@@ -87,7 +87,7 @@
     <!-- Multi-Step Ordering Form View -->
     <main id="orderFormView">
       
-      <!-- Wizard Progress Header -->
+      <!-- Wizard Progress Header (Uniform Across Pages) -->
       <div class="wizard-progress-bar">
         <div class="wizard-step-node node-active" id="wNode1" onclick="goToWizardStep(1)">
           <div class="node-circle" id="wCircle1">1</div>
@@ -96,7 +96,7 @@
         <div class="wizard-node-line" id="wLine1"></div>
         <div class="wizard-step-node" id="wNode2" onclick="goToWizardStep(2)">
           <div class="node-circle" id="wCircle2">2</div>
-          <div class="node-label" id="wLabel2">Packs</div>
+          <div class="node-label" id="wLabel2">Batch Size</div>
         </div>
         <div class="wizard-node-line" id="wLine2"></div>
         <div class="wizard-step-node" id="wNode3" onclick="goToWizardStep(3)">
@@ -161,14 +161,14 @@
         </div>
   
         <button type="button" class="btn btn-pay" style="margin-top: 14px;" onclick="nextWizardStep(2)">
-          <span>Continue to Pack Selection &rarr;</span>
+          <span>Continue to Batch Size &rarr;</span>
         </button>
       </section>
   
-      <!-- STEP 2: Choose Pack Tier & Promo Code -->
+      <!-- STEP 2: Choose Batch Size & Promo Code -->
       <section class="section-card wizard-step-panel" id="stepPanel2" style="display: none;">
         <div class="section-title">
-          <span>Step 2: Choose Pack Tier &amp; Quantity</span>
+          <span>Step 2: Choose Batch Size &amp; Quantity</span>
           <span class="section-subtitle">Saturday Morning Drop</span>
         </div>
   
@@ -176,7 +176,7 @@
         <div class="pack-grid" id="b2cPacks"></div>
   
         <div class="form-group" style="margin-top: 12px;">
-          <label for="packQty">Quantity of Selected Packs</label>
+          <label for="packQty">Quantity of Selected Batches / Packs</label>
           <input type="number" id="packQty" min="1" value="1" oninput="updateTotal()" />
           <div class="field-error" id="errQty">Please enter a valid pack quantity (minimum 1).</div>
         </div>
@@ -282,7 +282,7 @@
         </div>
   
         <div class="wizard-nav-btns">
-          <button type="button" class="btn-secondary" onclick="goToWizardStep(2)">&larr; Back to Packs</button>
+          <button type="button" class="btn-secondary" onclick="goToWizardStep(2)">&larr; Back to Batch Size</button>
           <button type="button" class="btn btn-pay" onclick="nextWizardStep(4)">
             <span>Review Order &rarr;</span>
           </button>
@@ -302,7 +302,7 @@
             <strong id="revBean">-</strong>
           </div>
           <div class="review-row">
-            <span>Pack Tier:</span>
+            <span>Batch Size:</span>
             <strong id="revPack">-</strong>
           </div>
           <div class="review-row">
@@ -393,9 +393,9 @@
             <span class="receipt-label">Coupon Discount</span>
             <span class="receipt-val" id="rDiscount" style="color: #d93025;">-</span>
           </div>
-          <div class="receipt-row">
+          <div class="receipt-row" id="rTotal" style="color: var(--accent); font-size: 1.05rem;">
             <span class="receipt-label">Total Amount</span>
-            <span class="receipt-val" id="rTotal" style="color: var(--accent); font-size: 1.05rem;">-</span>
+            <span class="receipt-val" id="rTotalVal">₹899</span>
           </div>
         </div>
   

@@ -394,7 +394,7 @@ function updateDeliveryWindows() {
 // Dynamic Menu & Config Rendering (Data-Driven from Google Sheets)
 // --------------------------------------------------------------------
 function renderLots(lots) {
-  if (!Array.isArray(lots) || lots.length === 0) return;
+  if (!Array.isArray(lots) || lots.length === 0) lots = availableLots;
   availableLots = lots;
   
   const lotGrid = document.getElementById('lotGrid');
@@ -430,29 +430,44 @@ function renderLots(lots) {
       </div>`;
   });
   
-  if (lots.length >= 2 && PAGE !== 'MENU') {
+  // 3rd Option: Discovery Flight / Custom Split (Always render in ORDER, OFFICE, INDEX, HOME)
+  if (PAGE !== 'MENU') {
+    const l1 = lots[0] || { name: "Ratnagiri Estate", process: "Anaerobic Naturals" };
+    const l2 = lots[1] || { name: "Banana Banger", process: "Fermented Lot" };
+    
     html += `
       <div class="lot-card ${isCustomSplit ? 'active' : ''}" onclick="selectLot('Discovery Flight / Custom Split (Build Your Own Batch)', this)">
         <div class="lot-header">
           <span class="lot-name">Discovery Flight / Custom Split</span>
           <span class="lot-tag">Sampler Split</span>
         </div>
-        <div class="lot-notes">&#127915; Sample both harvests (1x ${lots[0].name} + 1x ${lots[1].name}) or customize your exact split</div>
+        <div class="lot-notes">&#127915; Sample both single-estate harvests (${l1.name} + ${l2.name}) or customize your exact bottle split across your batch</div>
         <div class="flavor-pills">
           <span class="flavor-pill">Tasting Flight</span>
-          <span class="flavor-pill">1:1 Discovery</span>
+          <span class="flavor-pill">Custom Split</span>
+          <span class="flavor-pill">50/50 Balanced</span>
+        </div>
+        <div class="sensory-meters">
+          <div class="meter-row">
+            <span>Acidity Blend</span>
+            <div class="meter-bar"><div class="meter-fill" style="width: 80%;"></div></div>
+          </div>
+          <div class="meter-row">
+            <span>Body Balance</span>
+            <div class="meter-bar"><div class="meter-fill" style="width: 70%;"></div></div>
+          </div>
         </div>
       </div>`;
-  
+
     const l1Name = document.getElementById('splitLot1Name');
     const l1Sub = document.getElementById('splitLot1Sub');
     const l2Name = document.getElementById('splitLot2Name');
     const l2Sub = document.getElementById('splitLot2Sub');
-  
-    if (l1Name) l1Name.textContent = lots[0].name;
-    if (l1Sub) l1Sub.textContent = lots[0].process;
-    if (l2Name) l2Name.textContent = lots[1].name;
-    if (l2Sub) l2Sub.textContent = lots[1].process;
+
+    if (l1Name) l1Name.textContent = l1.name;
+    if (l1Sub) l1Sub.textContent = l1.process;
+    if (l2Name) l2Name.textContent = l2.name;
+    if (l2Sub) l2Sub.textContent = l2.process;
   }
   
   lotGrid.innerHTML = html;
@@ -525,7 +540,7 @@ function renderPacks(b2cPacks, b2bPacks) {
             <div class="pack-desc">${p.bottles}x 250ml${perBottle}</div>
           </div>`;
       });
-      b2cGrid.innerHTML = b2bHtml;
+      b2bGrid.innerHTML = b2bHtml;
 
       if (!hasDefault && fallback) {
         selectedB2bPack = { name: fallback.name, bottles: fallback.bottles, unitPrice: fallback.price };
@@ -540,7 +555,7 @@ function selectLot(lotName, element) {
   
   const customSplitter = document.getElementById('customSplitter');
   
-  if (lotName && (lotName.includes('Custom Ratio Split') || lotName.includes('Discovery Flight') || lotName.includes('Custom Split'))) {
+  if (lotName && (lotName.includes('Custom Ratio Split') || lotName.includes('Discovery Flight') || lotName.includes('Custom Split') || lotName.includes('Build Your Own Batch'))) {
     isCustomSplit = true;
     if (customSplitter) customSplitter.style.display = 'block';
     rebalanceSplitter();
@@ -1721,7 +1736,7 @@ function renderTrackingDetails(order) {
     if (lblDeliveryWindow) lblDeliveryWindow.textContent = 'Delivery Window:';
     if (lblDestination) lblDestination.textContent = 'Destination:';
     if (lblBean) lblBean.textContent = 'Coffee Selection:';
-    if (lblPack) lblPack.textContent = 'Pack Tier:';
+    if (lblPack) lblPack.textContent = 'Batch Size:';
     if (lblPayment) lblPayment.textContent = 'Payment:';
     if (lblDropNote) lblDropNote.textContent = 'Gate / Drop Note:';
     if (tFreshnessNote) tFreshnessNote.innerHTML = '&#10052; <strong>48-Hour Freshness Window:</strong> Keep refrigerated upon delivery and consume within 48 hours for peak tasting notes!';
