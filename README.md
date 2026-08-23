@@ -213,6 +213,47 @@ To reset the capacity counter between weekly drops:
 
 ---
 
+## **\#\# 7\. Order & Inquiry Status Keyword Reference (Live Tracker Mapping)**
+
+This section provides a dictionary of exact keywords, spreadsheet mappings, and resulting frontend timeline stages for the live tracking system.
+
+### **1\. Individual Pre-Orders (Sheet1 \-\> Column P Delivery Status)**
+
+* **Stage 1: Pre-Ordered** (Keywords: Pre-Ordered, Pending, Received) \-\> Highlights Step 1: Pre-Ordered  
+* **Stage 2: Brewing** (Keywords: Brewing, Roasting, Extracting, Chilling, Prep) \-\> Highlights Step 2: Brewing & Chilling  
+* **Stage 3: Dispatched** (Keywords: Dispatched, Out for Delivery, In Transit, Shipped, On the way) \-\> Highlights Step 3: Out for Delivery  
+* **Stage 4: Delivered** (Keywords: Delivered, Completed, Fulfilled, Received by customer) \-\> Marks all 4 steps complete & green (Delivered)
+
+### **2\. Corporate Office Drops (B2B Orders \-\> Column U Delivery Status)**
+
+* **Stage 1: Pre-Ordered** \-\> Highlights Step 1  
+* **Stage 2: Brewing** \-\> Highlights Step 2  
+* **Stage 3: Dispatched / Out for Delivery** \-\> Highlights Step 3  
+* **Stage 4: Delivered** \-\> Highlights Step 4
+
+### **3\. Custom & Event Inquiries (Custom & Event Inquiries \-\> Column L Status)**
+
+* **Stage 1: Inquiry Received** (Keywords: New Lead, Lead, Received, Inquiry, New) \-\> Step 1: Requirement logged & queued for review  
+* **Stage 2: Proposal & Curation** (Keywords: In Discussion, Discussion, Quote, Proposal, Curating, Review) \-\> Step 2: Tasting menu, batch scale & pricing discussion  
+* **Stage 3: Event Confirmed** (Keywords: Event Confirmed, Confirmed, Booked, Scheduled, Locked) \-\> Step 3: Date locked & roastery extraction scheduled  
+* **Stage 4: Event Completed** (Keywords: Event Completed, Delivered, Completed, Fulfilled, Done) \-\> Step 4: Coffee bar served & fulfilled
+
+### **4\. Event Inquiries Data Column Dictionary**
+
+* Col C (Company): Organization / Event Name  
+* Col D (Contact Name): Contact Person  
+* Col G (Requirement Type): Requirement Type (Pop-up bar, Hackathon drop, etc.)  
+* Col H (Headcount): Scale & Headcount / Bottles  
+* Col I (Target Date): Target Event Date  
+* Col J (Location): Event Venue & Tech Park  
+* Col K (Notes): Special Notes & Tasting Preferences Callout Banner  
+* Col L (Status): Controls Timeline Stepper & Status Badge
+
+### **5\. Operational SOP for Roastery Updates**
+
+* **Google Sheets Updates:** Roastery operators must manually update the status columns (Column P in Sheet1, Column U in B2B Orders, or Column L in Inquiries) using the keywords above to trigger frontend timeline changes.  
+* **Apps Script Versioning:** When Code.gs is updated, ensure you use **Deploy \> Manage deployments \> Edit \> Version: New version \> Deploy** to ensure the live tracker runs the latest logic.
+
 ### **⚙️ 7\. Deployment & Configuration Guide**
 
 1. **1\. Deploy Google Apps Script:** Open your Google Spreadsheet (*The Apartment Brew Co. — Live Order Tracker*), navigate to Extensions \> Apps Script, paste Code.gs, click Deploy \> New Deployment (Web App, Execute as: Me, Access: Anyone), and copy the Web App URL.  
