@@ -1963,7 +1963,7 @@ select option:disabled {
 
 .wizard-progress-bar {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   background: var(--card-inner);
   border: 1px solid var(--card-border);
@@ -1976,15 +1976,18 @@ select option:disabled {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   cursor: pointer;
   z-index: 2;
   transition: all 0.2s ease;
+  min-width: 52px;
+  text-align: center;
 }
 
 .node-circle {
   width: 28px;
   height: 28px;
+  min-width: 28px;
   border-radius: 50%;
   background: #2a2724;
   color: var(--text-muted);
@@ -2002,15 +2005,16 @@ select option:disabled {
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.3px;
   transition: color 0.3s ease;
+  white-space: nowrap;
 }
 
 .wizard-node-line {
   flex: 1;
   height: 2px;
   background: #2a2724;
-  margin: 0 6px 14px;
+  margin: 13px 4px 0;
   transition: background 0.3s ease;
 }
 
@@ -2346,6 +2350,31 @@ select option:disabled {
   justify-content: space-between;
   gap: 12px;
   transition: border-color 0.2s ease;
+}
+
+.lot-card-mix-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #2a2724;
+}
+
+.lot-bottle-tally-pill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(212, 163, 115, 0.12);
+  border: 1px solid rgba(212, 163, 115, 0.35);
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.lot-bottle-tally-pill.zero {
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.03);
+  border-color: var(--card-border);
 }
 
 .mix-lot-card.active-allocation {
