@@ -101,21 +101,24 @@ To reset the capacity counter between weekly drops:
 
 ### **🚀 5\. Detailed Component Breakdown**
 
-#### **1\. Multi-Page Structure (Frontend Pages)**
+#### **1\. Multi-Page Architecture & Information Structure**
 
-* index.html (Individual Saturday Morning Drop): Dedicated B2C landing page featuring branding header, fresh roast selections via the \#lotGrid, 2-bottle Curated Discovery Flight presets, live cutoff countdown, and the interactive 48-Hour storage and serving guide accordion.  
-* office.html (Corporate Friday Office Batch Drops): Dedicated B2B portal featuring the delivery cluster tech park slot picker with real-time capacity badges, GSTIN validator, and payment preferences supporting both Razorpay and Corporate Invoice (Net-7 terms).  
-* events.html (Custom Events & Startup Coffee Runs): Specialized lead intake page for high-volume catering, bespoke roastery requirements, and pop-up bars, routed to the 13-column inquiry database.  
-* track.html (Customer Self-Service Tracker): Dedicated tracking view with auto-query parameter lookup (?orderId=...) and an animated dual-mode stepper that adapts to standard orders or event inquiries.  
-* Interactive Lot Selector: Single-estate visual cards with tasting notes, roast levels, and acidity/body sensory meters (\#lotGrid).  
-* Pack Selection Grids:  
-  * B2C: Single Bottle (₹240), Duo Pack / Discovery Sampler Flight (2x 250ml, ₹480), Weekend Pack (₹899), Mega Weekend (6x 250ml, ₹1,200).  
-  * B2B: Team Pack (₹1,800), Office Batch (₹3,400), Floor Pack (₹6,000), Townhall Bulk (₹8,700).  
-* Customer & Delivery Details: Returning customer 1-click autofill banner (\#savedProfileBar), PIN Code validator (\#pinStatus), and drop & gate instruction selector (Door drop vs Security / Concierge desk).  
-* Interactive Freshness Accordion: 48-Hour storage and serving guide (.guide-accordion).  
-* Confirmation View: Order receipt, Google Calendar 1-click reminder button (.btn-calendar), and formatted WhatsApp receipt trigger (.btn-whatsapp).
+* index.html: Individual Saturday Morning Drop (4-Step Wizard)  
+* office.html: Corporate Friday Office Drops (4-Step Wizard)  
+* menu.html: Single-Estate Harvest Showcase, Sensory Profiles & Discovery Flights  
+* about.html: Roastery Origin, Small-Batch Manual Brewing Philosophy & Direct Farm Sourcing  
+* guide.html: 48-Hour Freshness Science, Thermal Flash-Chilling & Storage/Serving Ritual  
+* events.html: Custom Events, Team Coffee Runs & Pop-Up Specialty Coffee Bars  
+* track.html: Customer Self-Service Live Order & Inquiry Status Tracker
 
-#### **2\. style.css (Design System & Navigation)**
+#### **2\. Multi-Step Ordering Wizard**
+
+* Step 1: Single-Estate Harvest Selection & Custom Ratio Splitter  
+* Step 2: Pack Selection, Quantity Stepper, Promo Engine & Summary Breakdown  
+* Step 3: Delivery Details, NCR PIN Code Validation & Cluster Window Throttling  
+* Step 4: Final Order Review Card & Secure Payment / Corporate Invoice Dispatch
+
+#### **3\. Global Navigation System & Controller Dispatcher in app.js**
 
 * Global Navigation (.site-nav): Consistent navigation bar providing clean, uncluttered access across the four operational modes (Individual, Office, Events, and Track Order).  
 * Color Palette: Dark roast aesthetic (--bg: \#141312, \--card-bg: \#1f1d1a, \--card-inner: \#151413) with coffee gold accents (--accent: \#d4a373) and status indicators (--whatsapp: \#25d366, \--success: \#2d6a4f, \--info-blue: \#90e0ef, \--slot-full: \#6c757d).  
