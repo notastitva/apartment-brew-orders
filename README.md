@@ -114,12 +114,13 @@ To reset the capacity counter between weekly drops:
 * events.html: Custom Events, Hackathons & Pop-Up Coffee Bars  
 * track.html: Customer Self-Service Live Order & Inquiry Status Tracker
 
-#### **2\. Multi-Step Ordering Wizard**
+#### **2\. 4-Step Ordering Wizard Architecture**
 
-* Step 1: Pack Selection, Quantity Stepper, Promo Engine & Summary Breakdown  
-* Step 2: Coffee Harvest Selection & Mix-and-Match Customizer: Features 1-click single roast presets (100% Lot 1, 100% Lot 2), balanced 50/50 sampler splits, and granular \+/- steppers per estate harvest with real-time bottle tally validation.  
-* Step 3: Delivery Details, NCR PIN Code Validation & Cluster Window Throttling  
-* Step 4: Final Order Review Card & Secure Payment / Corporate Invoice Dispatch
+* Step 1: Coffee Harvest Selection & Single-Estate Profiles: Select individual roast presets (100% Lot 1 or 100% Lot 2\) to highlight detailed single-estate info, harvest notes, and sensory profiles (acidity, body, and flavor pills).  
+* Discovery Flight & Custom Ratio Splitter: Selecting the Discovery Flight sampler enables the interactive custom ratio splitter with real-time lot balancing via granular \+/- steppers, allowing for balanced 50/50 splits or custom proportional ratios across active harvests.  
+* Step 2: Pack Selection, Quantity & Promo Engine: Choose pack tiers with dynamic capacity checks (graying out tiers that exceed roastery limits) and apply flat or percentage discount coupons via the promo engine.  
+* Step 3: Delivery Details & Contact Information: Input customer details with real-time NCR PIN code validation and delivery cluster slot throttling.  
+* Step 4: Final Review & Secure Payment: Comprehensive order review card followed by Razorpay gateway dispatch or corporate invoice generation.
 
 #### **3\. Global Navigation System & Controller Dispatcher in app.js**
 

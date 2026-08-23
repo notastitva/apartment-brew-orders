@@ -29,7 +29,7 @@
       </button>
     </div>
   </header>
-
+  
   <!-- Navigation Drawer Backdrop & Overlay Menu -->
   <div class="nav-backdrop" id="navBackdrop" onclick="closeNavDrawer()"></div>
   <aside class="nav-drawer" id="navDrawer">
@@ -51,17 +51,16 @@
       <div class="drawer-footer-text">☕ Hand-Brewed Fresh to Order in Gurugram</div>
     </div>
   </aside>
-
+  
   <div class="container">
     
     <!-- Live Drop & Batch Capacity Card -->
     <header class="header-card">
-      
       <div class="drop-banner" id="dropBanner">
         <span>⚡</span> Next Fresh Drop: Saturday Morning
       </div>
       <div class="countdown-timer" id="countdownTimer">Saturday Cutoff closes in: Loading...</div>
-
+  
       <!-- Scarcity Bar -->
       <div class="scarcity-bar-container">
         <div class="scarcity-label">
@@ -72,10 +71,10 @@
           <div class="scarcity-progress-fill" id="scarcityFill"></div>
         </div>
       </div>
-
+  
       <!-- Store Status Banner (Dynamic for PAUSED / SOLD_OUT) -->
       <div class="store-status-banner" id="storeStatusBanner" style="display: none;"></div>
-
+  
       <div class="geo-badge">
         📍 Delivering Exclusively Across Gurugram &amp; Delhi NCR Residences &amp; Societies
       </div>
@@ -84,12 +83,12 @@
         ☕ Hand-Brewed Separately in Small Batches &bull; Crafted Fresh to Order
       </div>
     </header>
-
+  
     <!-- Multi-Step Ordering Form View -->
     <main id="orderFormView">
       
       <!-- Wizard Progress Header -->
-<div class="wizard-progress-bar"><div class="wizard-step-node node-active" id="wNode1" onclick="goToWizardStep(1)"><div class="node-circle" id="wCircle1">1</div><div class="node-label" id="wLabel1">Packs</div></div><div class="wizard-node-line" id="wLine1"/><div class="wizard-step-node" id="wNode2" onclick="goToWizardStep(2)"><div class="node-circle" id="wCircle2">2</div><div class="node-label" id="wLabel2">Coffee Mix</div></div><div class="wizard-node-line" id="wLine2"/><div class="wizard-step-node" id="wNode3" onclick="goToWizardStep(3)"><div class="node-circle" id="wCircle3">3</div><div class="node-label" id="wLabel3">Delivery</div></div><div class="wizard-node-line" id="wLine3"/><div class="wizard-step-node" id="wNode4" onclick="goToWizardStep(4)"><div class="node-circle" id="wCircle4">4</div><div class="node-label" id="wLabel4">Review</div></div></div>
+      <div class="wizard-progress-bar">
         <div class="wizard-step-node node-active" id="wNode1" onclick="goToWizardStep(1)">
           <div class="node-circle" id="wCircle1">1</div>
           <div class="node-label" id="wLabel1">Harvest</div>
@@ -110,58 +109,81 @@
           <div class="node-label" id="wLabel4">Review</div>
         </div>
       </div>
-
-      <!-- STEP 1: Choose Pack Tier &amp; Quantity -->
+  
+      <!-- STEP 1: Choose Coffee Lot & Custom Split -->
       <section class="section-card wizard-step-panel" id="stepPanel1">
         <div class="section-title">
-          <span>Step 1: Choose Pack Tier</span>
-          <span class="section-subtitle">Saturday Morning Drop</span>
+          <span>Step 1: Select Single-Estate Harvest</span>
+          <span class="section-subtitle">Fresh Roast</span>
         </div>
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
-          Choose your pack size and quantity. In the next step, you can allocate individual coffee lots or customize your mix-and-match split.</p>
-
+          Choose your preferred estate harvest lot, or select Discovery Flight to customize your ratio split.
+        </p>
+  
+        <!-- Dynamic Coffee Lot Grid (3 Options: Lot 1, Lot 2, Discovery Flight) -->
+        <div class="lot-grid" id="lotGrid"></div>
+  
+        <!-- Custom Ratio Splitter Module -->
+        <div class="custom-splitter-card" id="customSplitter" style="display: none;">
+          <div class="splitter-header">
+            <span class="splitter-title">🎯 Build Your Own Batch Ratio</span>
+            <span class="splitter-tally" id="splitterTally">Allocated: <strong><span id="allocCount">4</span> / <span id="targetCount">4</span></strong> bottles</span>
+          </div>
+          <div id="tallyStatus" class="splitter-tally-note" style="font-size: 0.76rem; color: var(--accent); margin-bottom: 8px; text-align: center;"></div>
+          <div class="splitter-controls">
+            <div class="splitter-row">
+              <div class="splitter-lot-info">
+                <span class="splitter-lot-name" id="splitLot1Name">Lot 1</span>
+                <span class="splitter-lot-sub" id="splitLot1Sub">Anaerobic Naturals</span>
+              </div>
+              <div class="qty-stepper">
+                <button type="button" class="stepper-btn" onclick="adjustSplit('lot1', -1)">&ndash;</button>
+                <span class="stepper-val" id="splitLot1Count">2</span>
+                <button type="button" class="stepper-btn" onclick="adjustSplit('lot1', 1)">+</button>
+              </div>
+            </div>
+            <div class="splitter-row">
+              <div class="splitter-lot-info">
+                <span class="splitter-lot-name" id="splitLot2Name">Lot 2</span>
+                <span class="splitter-lot-sub" id="splitLot2Sub">Washed Lot</span>
+              </div>
+              <div class="qty-stepper">
+                <button type="button" class="stepper-btn" onclick="adjustSplit('lot2', -1)">&ndash;</button>
+                <span class="stepper-val" id="splitLot2Count">2</span>
+                <button type="button" class="stepper-btn" onclick="adjustSplit('lot2', 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="splitter-ratio-bar">
+            <div class="ratio-segment ratio-ratnagiri" id="ratioBarLot1" style="width: 50%;"></div>
+            <div class="ratio-segment ratio-thogarihunkal" id="ratioBarLot2" style="width: 50%;"></div>
+          </div>
+        </div>
+  
+        <button type="button" class="btn btn-pay" style="margin-top: 14px;" onclick="nextWizardStep(2)">
+          <span>Continue to Pack Selection &rarr;</span>
+        </button>
+      </section>
+  
+      <!-- STEP 2: Choose Pack Tier & Promo Code -->
+      <section class="section-card wizard-step-panel" id="stepPanel2" style="display: none;">
+        <div class="section-title">
+          <span>Step 2: Choose Pack Tier &amp; Quantity</span>
+          <span class="section-subtitle">Saturday Morning Drop</span>
+        </div>
+  
         <!-- Dynamic B2C Packs Grid -->
         <div class="pack-grid" id="b2cPacks"></div>
-
+  
         <div class="form-group" style="margin-top: 12px;">
           <label for="packQty">Quantity of Selected Packs</label>
           <input type="number" id="packQty" min="1" value="1" oninput="updateTotal()" />
           <div class="field-error" id="errQty">Please enter a valid pack quantity (minimum 1).</div>
         </div>
-
+  
         <!-- Real-Time Batch Capacity Warning Container -->
         <div class="capacity-warning-msg" id="errCapacityLimit" style="display: none;"></div>
-
-        <button type="button" id="btnStep1Next" class="btn btn-pay" style="margin-top: 14px;" onclick="nextWizardStep(2)">
-          <span>Continue to Coffee Selection &amp;rarr;</span>
-        </button>
-      </section>
-
-      <!-- STEP 2: Choose Coffee Lots &amp; Mix-and-Match Breakdown -->
-      <section class="section-card wizard-step-panel" id="stepPanel2" style="display: none;">
-        <div class="section-title">
-          <span>Step 2: Customize Coffee Lots</span>
-          <span class="section-subtitle">Mix &amp;amp; Match to Order</span>
-        </div>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
-          Select a 1-click single roast preset, or use the steppers to mix and match individual harvest bottles for your pack.</p>
-
-        <!-- Quick Mix Presets -->
-        <div class="mix-preset-grid" id="mixPresets"></div>
-
-        <!-- Allocation Tally Box -->
-        <div class="mix-tally-box">
-          <div class="mix-tally-header">
-            <span>📦 Total Pack Bottles: <strong id="tallyTargetBottles">4</strong></span>
-            <span class="mix-tally-count">Allocated: <strong id="tallyAllocatedBottles">4</strong> / <span id="tallyTargetSpan">4</span></span>
-          </div>
-          <div class="mix-tally-bar" id="mixTallyBar"></div>
-          <div class="mix-tally-status" id="tallyStatusNote">✓ Exactly 4 bottles allocated</div>
-        </div>
-
-        <!-- Interactive Lot Stepper List -->
-        <div class="mix-lot-list" id="mixLotList"></div>
-
+  
         <!-- Coupon Code Input -->
         <div class="form-group" style="margin-top: 14px;">
           <label for="couponInput">Promo / Coupon Code</label>
@@ -172,7 +194,7 @@
           </div>
           <div id="couponStatus" class="coupon-status" style="display: none;"></div>
         </div>
-
+  
         <div class="summary-box">
           <div class="summary-breakdown" id="summaryBreakdown" style="display: none;">
             <div class="summary-line">
@@ -189,27 +211,26 @@
             <span class="summary-total" id="totalAmountDisplay">₹899</span>
           </div>
         </div>
-
+  
         <div class="wizard-nav-btns">
-          <button type="button" class="btn-secondary" onclick="goToWizardStep(1)">&amp;larr; Back to Packs</button>
+          <button type="button" class="btn-secondary" onclick="goToWizardStep(1)">&larr; Back to Harvest</button>
           <button type="button" id="btnStep2Next" class="btn btn-pay" onclick="nextWizardStep(3)">
-            <span>Continue to Delivery &amp;rarr;</span>
+            <span>Continue to Delivery &rarr;</span>
           </button>
         </div>
       </section>
-      </section>
-
+  
       <!-- STEP 3: Delivery & Contact Details -->
       <section class="section-card wizard-step-panel" id="stepPanel3" style="display: none;">
         <div class="section-title">
           <span>Step 3: Delivery &amp; Contact Details</span>
         </div>
-
+  
         <div class="saved-profile-bar" id="savedProfileBar">
           <span id="savedProfileText">👋 Welcome back! Autofill previous order info?</span>
           <button class="saved-profile-btn" onclick="applySavedProfile()">Autofill</button>
         </div>
-
+  
         <div class="form-group" id="b2cCityGroup">
           <label for="custCity">City / Region (Delhi NCR Only)</label>
           <select id="custCity">
@@ -219,38 +240,38 @@
             <option value="Faridabad / Ghaziabad">Faridabad / Ghaziabad</option>
           </select>
         </div>
-
+  
         <div class="form-group">
           <label for="custPincode">6-Digit PIN Code *</label>
           <input type="text" id="custPincode" maxlength="6" placeholder="e.g. 122002" oninput="validatePincodeField()" />
           <div id="pinStatus" class="pin-status"></div>
           <div class="field-error" id="errPincode">Please enter a valid 6-digit Delhi NCR PIN code.</div>
         </div>
-
+  
         <div class="form-group">
           <label id="labelName" for="custName">Your Name *</label>
           <input type="text" id="custName" placeholder="e.g. Astitva Gupta" oninput="validateField('custName')" />
           <div class="field-error" id="errName">Please enter your name (at least 2 characters).</div>
         </div>
-
+  
         <div class="form-group">
           <label id="labelEmail" for="custEmail">Email Address (For Order Updates &amp; Invoices) *</label>
           <input type="email" id="custEmail" placeholder="e.g. astitva@example.com" oninput="validateEmailField()" />
           <div class="field-error" id="errEmail">Please enter a valid email address.</div>
         </div>
-
+  
         <div class="form-group">
           <label for="custPhone">WhatsApp / Mobile Number *</label>
           <input type="tel" id="custPhone" placeholder="e.g. 9876543210" maxlength="10" oninput="validatePhoneField()" />
           <div class="field-error" id="errPhone">Please enter a valid 10-digit Indian mobile number.</div>
         </div>
-
+  
         <div class="form-group">
           <label id="labelAddress" for="custAddress">Delivery Address (Building, Flat, Society) *</label>
           <textarea id="custAddress" rows="2" placeholder="e.g. Flat 402, Tower 3, DLF Phase 5" oninput="validateField('custAddress')"></textarea>
           <div class="field-error" id="errAddress">Please enter your complete address.</div>
         </div>
-
+  
         <div class="form-group">
           <label for="dropInstructions">Delivery / Gate Drop Preference</label>
           <select id="dropInstructions">
@@ -259,7 +280,7 @@
             <option value="Call upon arrival for pickup">Call upon arrival for pickup</option>
           </select>
         </div>
-
+  
         <div class="wizard-nav-btns">
           <button type="button" class="btn-secondary" onclick="goToWizardStep(2)">&larr; Back to Packs</button>
           <button type="button" class="btn btn-pay" onclick="nextWizardStep(4)">
@@ -267,13 +288,13 @@
           </button>
         </div>
       </section>
-
+  
       <!-- STEP 4: Review & Pay -->
       <section class="section-card wizard-step-panel" id="stepPanel4" style="display: none;">
         <div class="section-title">
           <span>Step 4: Review &amp; Confirm Order</span>
         </div>
-
+  
         <!-- Order Summary Card -->
         <div class="order-review-card">
           <div class="review-row">
@@ -305,31 +326,31 @@
             <strong id="revTotal" style="color: var(--accent); font-size: 1.1rem;">₹899</strong>
           </div>
         </div>
-
+  
         <div class="freshness-alert" style="margin-top: 12px; margin-bottom: 0;">
-          &#10052; <strong>48-Hour Peak Freshness:</strong> Micro-batched overnight for Saturday morning delivery. Please refrigerate upon arrival!
+          ❄️ <strong>48-Hour Peak Freshness:</strong> Micro-batched overnight for Saturday morning delivery. Please refrigerate upon arrival!
         </div>
-
+  
         <div class="wizard-nav-btns">
           <button type="button" class="btn-secondary" onclick="goToWizardStep(3)">&larr; Edit Details</button>
           <button id="payNowBtn" class="btn btn-pay" onclick="handlePayClick()">
-            <span id="btnText">&#128179; Pay &amp; Confirm Pre-Order (<span id="btnAmount">₹899</span>)</span>
+            <span id="btnText">💳 Pay &amp; Confirm Pre-Order (<span id="btnAmount">₹899</span>)</span>
           </button>
         </div>
       </section>
     </main>
-
+  
     <!-- Confirmation View -->
     <section id="confirmationView" style="display: none;">
       <div class="section-card" style="text-align: center;">
         <div class="success-badge">&#10003; Order Confirmed</div>
         <h2 style="font-size: 1.3rem; margin-bottom: 4px;">Thank You for Your Order!</h2>
         <p style="font-size: 0.82rem; color: var(--text-muted);">Your micro-batch is scheduled for fresh roast &amp; chilled delivery.</p>
-
+  
         <div class="freshness-alert">
-          &#10052; <strong>Hand-Brewed Fresh to Order:</strong> Each coffee is brewed separately by hand with zero preservatives. Because every batch is handcrafted, enjoy subtle artisanal nuances in every bottle. Keep refrigerated upon arrival and consume within 48 hours for peak flavor!
+          ❄️ <strong>Hand-Brewed Fresh to Order:</strong> Each coffee is brewed separately by hand with zero preservatives. Because every batch is handcrafted, enjoy subtle artisanal nuances in every bottle. Keep refrigerated upon arrival and consume within 48 hours for peak flavor!
         </div>
-
+  
         <div class="receipt-details">
           <div class="receipt-row">
             <span class="receipt-label">Order ID</span>
@@ -363,7 +384,7 @@
             <span class="receipt-label">Selection</span>
             <span class="receipt-val" id="rPack">-</span>
           </div>
-
+  
           <div class="receipt-row" id="rSubtotalRow">
             <span class="receipt-label">Subtotal</span>
             <span class="receipt-val" id="rSubtotal">-</span>
@@ -377,27 +398,27 @@
             <span class="receipt-val" id="rTotal" style="color: var(--accent); font-size: 1.05rem;">-</span>
           </div>
         </div>
-
+  
         <button class="btn btn-calendar" onclick="addToGoogleCalendar()">
           <span>&#128197; Add Delivery Window to Google Calendar</span>
         </button>
-
+  
         <button class="btn btn-whatsapp" onclick="sendWhatsAppReceipt()">
           <span>&#128241; Send Receipt / Updates to My WhatsApp</span>
         </button>
-
+  
         <a href="track.html" id="linkTrackOrder" class="btn" style="background: rgba(212, 163, 115, 0.15); color: var(--accent); border: 1px solid var(--accent); margin-top: 10px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
           <span>&#128269; View Live Order Status</span>
         </a>
-
+  
         <button class="btn btn-secondary" onclick="resetForm()">
           <span>+ Place Another Pre-Order</span>
         </button>
       </div>
     </section>
-
+  
   </div>
-
+  
   <!-- Service Worker Registration -->
   <script>
     if ('serviceWorker' in navigator) {
@@ -409,3 +430,4 @@
   <script src="app.js"></script>
 </body>
 </html>
+

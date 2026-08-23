@@ -111,225 +111,15 @@ let availableCoupons = [
 ];
 
 let appliedCoupon = null;
+let selectedBean = "Ratnagiri Estate (Anaerobic Naturals)";
+let isCustomSplit = false;
+let customSplit = { lot1: (PAGE === 'OFFICE' ? 5 : 2), lot2: (PAGE === 'OFFICE' ? 5 : 2) };
 let selectedB2cPack = { name: "Weekend Pack", bottles: 4, unitPrice: 899 };
 let selectedB2bPack = { name: "Team Pack", bottles: 10, unitPrice: 1800 };
 let currentOrderDetails = null;
 
-// Mix-and-Match Lot Allocation State
-let lotAllocations = {};
-let activeMixPreset = 'BALANCED'; // 'BALANCED', 'ALL_LOT1', 'ALL_LOT2', 'CUSTOM'
-
 function normalizeStr(s) {
   return String(s || '').replace(/[\u2010-\u2015\u2212]/g, '-').replace(/\s+/g, ' ').trim().toLowerCase();
-}
-
-// --------------------------------------------------------------------
-// Mix-and-Match Lot Allocation Engine
-// --------------------------------------------------------------------
-function initLotAllocations() {
-  const targetBottles = getTotalBottles();
-  if (availableLots.length === 0) return;
-
-  if (activeMixPreset === 'ALL_LOT1' && availableLots[0]) {
-    lotAllocations = {};
-    availableLots.forEach((l, i) => { lotAllocations[l.id] = (i === 0 ? targetBottles : 0); });
-  } else if (activeMixPreset === 'ALL_LOT2' && availableLots[1]) {
-    lotAllocations = {};
-    availableLots.forEach((l, i) => { lotAllocations[l.id] = (i === 1 ? targetBottles : 0); });
-  } else if (activeMixPreset === 'BALANCED' || !activeMixPreset) {
-    lotAllocations = {};
-    if (availableLots.length === 1) {
-      lotAllocations[availableLots[0].id] = targetBottles;
-    } else {
-      const half = Math.floor(targetBottles / 2);
-      lotAllocations[availableLots[0].id] = half;
-      lotAllocations[availableLots[1].id] = targetBottles - half;
-      for (let i = 2; i < availableLots.length; i++) {
-        lotAllocations[availableLots[i].id] = 0;
-      }
-    }
-  } else {
-    // Custom: ensure sum matches or scale proportionally
-    let currentSum = 0;
-    Object.values(lotAllocations).forEach(v => { currentSum += (v || 0); });
-    if (currentSum === 0 || currentSum !== targetBottles) {
-      const half = Math.floor(targetBottles / 2);
-      lotAllocations[availableLots[0].id] = half;
-      if (availableLots[1]) lotAllocations[availableLots[1].id] = targetBottles - half;
-    }
-  }
-
-  renderMixAndMatchUI();
-}
-
-function applyMixPreset(presetKey) {
-  activeMixPreset = presetKey;
-  const targetBottles = getTotalBottles();
-
-  if (presetKey === 'ALL_LOT1' && availableLots[0]) {
-    lotAllocations = {};
-    availableLots.forEach((l, i) => { lotAllocations[l.id] = (i === 0 ? targetBottles : 0); });
-  } else if (presetKey === 'ALL_LOT2' && availableLots[1]) {
-    lotAllocations = {};
-    availableLots.forEach((l, i) => { lotAllocations[l.id] = (i === 1 ? targetBottles : 0); });
-  } else if (presetKey === 'BALANCED') {
-    lotAllocations = {};
-    if (availableLots.length === 1) {
-      lotAllocations[availableLots[0].id] = targetBottles;
-    } else {
-      const half = Math.floor(targetBottles / 2);
-      lotAllocations[availableLots[0].id] = half;
-      lotAllocations[availableLots[1].id] = targetBottles - half;
-      for (let i = 2; i < availableLots.length; i++) {
-        lotAllocations[availableLots[i].id] = 0;
-      }
-    }
-  }
-
-  renderMixAndMatchUI();
-}
-
-function adjustLotAllocation(lotId, delta) {
-  const targetBottles = getTotalBottles();
-  const currentCount = lotAllocations[lotId] || 0;
-  const newCount = Math.max(0, currentCount + delta);
-  
-  lotAllocations[lotId] = newCount;
-  activeMixPreset = 'CUSTOM';
-
-  renderMixAndMatchUI();
-}
-
-function getTotalAllocatedBottles() {
-  let total = 0;
-  Object.values(lotAllocations).forEach(v => { total += (v || 0); });
-  return total;
-}
-
-function renderMixAndMatchUI() {
-  const targetBottles = getTotalBottles();
-  const totalAllocated = getTotalAllocatedBottles();
-
-  // 1. Render Preset Buttons
-  const presetContainer = document.getElementById('mixPresets');
-  if (presetContainer && availableLots.length > 0) {
-    const l1Name = availableLots[0] ? availableLots[0].name : "Lot 1";
-    const l2Name = availableLots[1] ? availableLots[1].name : "Lot 2";
-
-    let presetHtml = `
-      <button type="button" class="mix-preset-btn ${activeMixPreset === 'BALANCED' ? 'active' : ''}" onclick="applyMixPreset('BALANCED')">
-        ✨ 50/50 Discovery Split
-      </button>
-      <button type="button" class="mix-preset-btn ${activeMixPreset === 'ALL_LOT1' ? 'active' : ''}" onclick="applyMixPreset('ALL_LOT1')">
-        ☕ 100% ${l1Name}
-      </button>
-    `;
-    if (availableLots[1]) {
-      presetHtml += `
-        <button type="button" class="mix-preset-btn ${activeMixPreset === 'ALL_LOT2' ? 'active' : ''}" onclick="applyMixPreset('ALL_LOT2')">
-          ☕ 100% ${l2Name}
-        </button>
-      `;
-    }
-    presetHtml += `
-      <button type="button" class="mix-preset-btn ${activeMixPreset === 'CUSTOM' ? 'active' : ''}" onclick="applyMixPreset('CUSTOM')">
-        🎯 Custom Mix
-      </button>
-    `;
-    presetContainer.innerHTML = presetHtml;
-  }
-
-  // 2. Render Tally Box & Segmented Ratio Bar
-  const tallyTarget = document.getElementById('tallyTargetBottles');
-  const tallyTargetSpan = document.getElementById('tallyTargetSpan');
-  const tallyAllocated = document.getElementById('tallyAllocatedBottles');
-  const tallyStatusNote = document.getElementById('tallyStatusNote');
-  const mixTallyBar = document.getElementById('mixTallyBar');
-  const btnStep2Next = document.getElementById('btnStep2Next');
-
-  if (tallyTarget) tallyTarget.textContent = targetBottles;
-  if (tallyTargetSpan) tallyTargetSpan.textContent = targetBottles;
-  if (tallyAllocated) tallyAllocated.textContent = totalAllocated;
-
-  if (tallyStatusNote) {
-    if (totalAllocated === targetBottles) {
-      tallyStatusNote.textContent = `✓ Exactly ${targetBottles} bottles allocated across your custom batch!`;
-      tallyStatusNote.className = 'mix-tally-status status-matched';
-      if (btnStep2Next) btnStep2Next.disabled = false;
-    } else if (totalAllocated < targetBottles) {
-      const rem = targetBottles - totalAllocated;
-      tallyStatusNote.textContent = `⚠️ Please allocate ${rem} more bottle${rem > 1 ? 's' : ''} to complete your ${targetBottles}-bottle pack.`;
-      tallyStatusNote.className = 'mix-tally-status status-under';
-      if (btnStep2Next) btnStep2Next.disabled = true;
-    } else {
-      const over = totalAllocated - targetBottles;
-      tallyStatusNote.textContent = `⚠️ Allocated ${over} bottle${over > 1 ? 's' : ''} over your pack capacity. Please reduce steppers.`;
-      tallyStatusNote.className = 'mix-tally-status status-over';
-      if (btnStep2Next) btnStep2Next.disabled = true;
-    }
-  }
-
-  if (mixTallyBar) {
-    let barHtml = '';
-    const baseTotal = totalAllocated > 0 ? totalAllocated : targetBottles;
-    availableLots.forEach((l, idx) => {
-      const count = lotAllocations[l.id] || 0;
-      const pct = baseTotal > 0 ? ((count / baseTotal) * 100).toFixed(1) : 0;
-      const segClass = `seg-lot-${(idx % 3) + 1}`;
-      if (count > 0) {
-        barHtml += `<div class="mix-tally-segment ${segClass}" style="width: ${pct}%;" title="${l.name}: ${count} bottles (${pct}%)"></div>`;
-      }
-    });
-    mixTallyBar.innerHTML = barHtml;
-  }
-
-  // 3. Render Lot Steppers
-  const lotListContainer = document.getElementById('mixLotList');
-  if (lotListContainer) {
-    let listHtml = '';
-    availableLots.forEach((l) => {
-      const count = lotAllocations[l.id] || 0;
-      const isSoldOut = l.isSoldOut === true || (typeof l.remainingBottles === 'number' && l.remainingBottles <= 0);
-      const pillsHtml = (l.pills || []).map(p => `<span class="flavor-pill">${p}</span>`).join('');
-
-      listHtml += `
-        <div class="mix-lot-card ${count > 0 ? 'active-allocation' : ''}">
-          <div class="mix-lot-info">
-            <div class="mix-lot-title">${l.name} <span class="lot-tag" style="font-size:0.7rem; margin-left:4px;">${l.process}</span></div>
-            <div class="mix-lot-notes">${l.notes}</div>
-            <div class="flavor-pills" style="margin-top: 4px;">${pillsHtml}</div>
-          </div>
-          <div class="qty-stepper">
-            <button type="button" class="stepper-btn" onclick="adjustLotAllocation('${l.id}', -1)" ${count <= 0 ? 'disabled' : ''}>&ndash;</button>
-            <span class="stepper-val">${count}</span>
-            <button type="button" class="stepper-btn" onclick="adjustLotAllocation('${l.id}', 1)" ${isSoldOut ? 'disabled' : ''}>+</button>
-          </div>
-        </div>
-      `;
-    });
-    lotListContainer.innerHTML = listHtml;
-  }
-}
-
-function getFormattedCoffeeSelectionString() {
-  const targetBottles = getTotalBottles();
-  const parts = [];
-
-  availableLots.forEach(l => {
-    const count = lotAllocations[l.id] || 0;
-    if (count > 0) {
-      parts.push(`${count}x ${l.name}`);
-    }
-  });
-
-  if (parts.length === 0) {
-    return availableLots[0] ? `${availableLots[0].name} (${targetBottles} bottles)` : `Single Harvest (${targetBottles} bottles)`;
-  }
-  if (parts.length === 1) {
-    const onlyLot = availableLots.find(l => (lotAllocations[l.id] || 0) > 0);
-    return onlyLot ? `100% ${onlyLot.name} (${targetBottles} bottles)` : parts[0];
-  }
-  return `Discovery Mix & Match (${parts.join(' + ')})`;
 }
 
 // --------------------------------------------------------------------
@@ -337,6 +127,9 @@ function getFormattedCoffeeSelectionString() {
 // --------------------------------------------------------------------
 function validateWizardStep(stepNum) {
   if (stepNum === 1) {
+    return true; // Lot 1, Lot 2, or Discovery Flight is always selected
+  }
+  if (stepNum === 2) {
     const qtyInput = document.getElementById('packQty');
     const qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
     const errQty = document.getElementById('errQty');
@@ -355,15 +148,6 @@ function validateWizardStep(stepNum) {
       }
     }
     return isValid && isUnderCapacity;
-  }
-  if (stepNum === 2) {
-    const totalAllocated = getTotalAllocatedBottles();
-    const targetBottles = getTotalBottles();
-    if (totalAllocated !== targetBottles) {
-      alert(`Please allocate exactly ${targetBottles} bottles across your selected coffee lots before continuing.`);
-      return false;
-    }
-    return true;
   }
   if (stepNum === 3) {
     const isNameValid = validateField('custName');
@@ -402,6 +186,7 @@ function nextWizardStep(targetStep) {
   if (targetStep > currentWizardStep) {
     for (let s = currentWizardStep; s < targetStep; s++) {
       if (!validateWizardStep(s)) {
+        alert('Please complete the required information before continuing.');
         return;
       }
     }
@@ -416,11 +201,6 @@ function goToWizardStep(stepNum) {
   }
   
   currentWizardStep = stepNum;
-  
-  // When entering Step 2, initialize or refresh lot allocations for current pack size
-  if (stepNum === 2) {
-    initLotAllocations();
-  }
   
   // Show / Hide Step Panels
   for (let i = 1; i <= 4; i++) {
@@ -462,7 +242,11 @@ function populateOrderReview() {
   const total = calculateTotal();
   const discount = appliedCoupon ? appliedCoupon.discount : 0;
   
-  const coffeeLotDisplay = getFormattedCoffeeSelectionString();
+  const lot1Name = availableLots[0] ? availableLots[0].name : "Lot 1";
+  const lot2Name = availableLots[1] ? availableLots[1].name : "Lot 2";
+  const coffeeLotDisplay = isCustomSplit 
+    ? `Discovery Flight / Custom Split (${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name})` 
+    : selectedBean;
   
   const name = (document.getElementById('custName')?.value || '').trim();
   const address = (document.getElementById('custAddress')?.value || '').trim();
@@ -614,38 +398,67 @@ function renderLots(lots) {
   availableLots = lots;
   
   const lotGrid = document.getElementById('lotGrid');
-  if (lotGrid) {
-    let html = '';
-    lots.forEach((lot, idx) => {
-      const pillsHtml = (lot.pills || []).map(p => `<span class="flavor-pill">${p}</span>`).join('');
-      const isSoldOut = lot.isSoldOut === true || (typeof lot.remainingBottles === 'number' && lot.remainingBottles <= 0);
-      const soldOutTag = isSoldOut ? `<span class="sold-out-tag" style="background:#e63946; color:#fff; font-size:10px; padding:2px 6px; border-radius:4px; margin-left:6px;">SOLD OUT</span>` : '';
-      
-      html += `
-        <div class="lot-card ${idx === 0 ? 'active' : ''} ${isSoldOut ? 'lot-sold-out' : ''}" style="${isSoldOut ? 'opacity:0.5; cursor:not-allowed;' : ''}">
-          <div class="lot-header">
-            <span class="lot-name">${lot.name} ${soldOutTag}</span>
-            <span class="lot-tag">${lot.process}</span>
+  if (!lotGrid) return;
+  
+  let html = '';
+  lots.forEach((lot, idx) => {
+    const fullName = `${lot.name} (${lot.process})`;
+    const isFirstActive = idx === 0 && !isCustomSplit;
+    const pillsHtml = (lot.pills || []).map(p => `<span class="flavor-pill">${p}</span>`).join('');
+    const isSoldOut = lot.isSoldOut === true || (typeof lot.remainingBottles === 'number' && lot.remainingBottles <= 0);
+    const soldOutTag = isSoldOut ? `<span class="sold-out-tag" style="background:#e63946; color:#fff; font-size:10px; padding:2px 6px; border-radius:4px; margin-left:6px;">SOLD OUT</span>` : '';
+    const clickHandler = isSoldOut ? '' : `onclick="selectLot('${fullName}', this)"`;
+    
+    html += `
+      <div class="lot-card ${isFirstActive && !isSoldOut ? 'active' : ''} ${isSoldOut ? 'lot-sold-out' : ''}" style="${isSoldOut ? 'opacity:0.5; cursor:not-allowed;' : ''}" ${clickHandler}>
+        <div class="lot-header">
+          <span class="lot-name">${lot.name} ${soldOutTag}</span>
+          <span class="lot-tag">${lot.process}</span>
+        </div>
+        <div class="lot-notes">${lot.notes}</div>
+        <div class="flavor-pills">${pillsHtml}</div>
+        <div class="sensory-meters">
+          <div class="meter-row">
+            <span>Acidity</span>
+            <div class="meter-bar"><div class="meter-fill" style="width: ${lot.acidity || 75}%;"></div></div>
           </div>
-          <div class="lot-notes">${lot.notes}</div>
-          <div class="flavor-pills">${pillsHtml}</div>
-          <div class="sensory-meters">
-            <div class="meter-row">
-              <span>Acidity</span>
-              <div class="meter-bar"><div class="meter-fill" style="width: ${lot.acidity || 75}%;"></div></div>
-            </div>
-            <div class="meter-row">
-              <span>Body</span>
-              <div class="meter-bar"><div class="meter-fill" style="width: ${lot.body || 65}%;"></div></div>
-            </div>
+          <div class="meter-row">
+            <span>Body</span>
+            <div class="meter-bar"><div class="meter-fill" style="width: ${lot.body || 65}%;"></div></div>
           </div>
-        </div>`;
-    });
-    lotGrid.innerHTML = html;
+        </div>
+      </div>`;
+  });
+  
+  if (lots.length >= 2 && PAGE !== 'MENU') {
+    html += `
+      <div class="lot-card ${isCustomSplit ? 'active' : ''}" onclick="selectLot('Discovery Flight / Custom Split (Build Your Own Batch)', this)">
+        <div class="lot-header">
+          <span class="lot-name">Discovery Flight / Custom Split</span>
+          <span class="lot-tag">Sampler Split</span>
+        </div>
+        <div class="lot-notes">&#127915; Sample both harvests (1x ${lots[0].name} + 1x ${lots[1].name}) or customize your exact split</div>
+        <div class="flavor-pills">
+          <span class="flavor-pill">Tasting Flight</span>
+          <span class="flavor-pill">1:1 Discovery</span>
+        </div>
+      </div>`;
+  
+    const l1Name = document.getElementById('splitLot1Name');
+    const l1Sub = document.getElementById('splitLot1Sub');
+    const l2Name = document.getElementById('splitLot2Name');
+    const l2Sub = document.getElementById('splitLot2Sub');
+  
+    if (l1Name) l1Name.textContent = lots[0].name;
+    if (l1Sub) l1Sub.textContent = lots[0].process;
+    if (l2Name) l2Name.textContent = lots[1].name;
+    if (l2Sub) l2Sub.textContent = lots[1].process;
   }
-
-  if (PAGE === 'ORDER' || PAGE === 'OFFICE') {
-    initLotAllocations();
+  
+  lotGrid.innerHTML = html;
+  
+  if (!isCustomSplit && lots[0] && !lots[0].isSoldOut) {
+    selectedBean = `${lots[0].name} (${lots[0].process})`;
   }
 }
 
@@ -712,7 +525,7 @@ function renderPacks(b2cPacks, b2bPacks) {
             <div class="pack-desc">${p.bottles}x 250ml${perBottle}</div>
           </div>`;
       });
-      b2bGrid.innerHTML = b2bHtml;
+      b2cGrid.innerHTML = b2bHtml;
 
       if (!hasDefault && fallback) {
         selectedB2bPack = { name: fallback.name, bottles: fallback.bottles, unitPrice: fallback.price };
@@ -721,12 +534,29 @@ function renderPacks(b2cPacks, b2bPacks) {
   }
 }
 
+function selectLot(lotName, element) {
+  document.querySelectorAll('#lotGrid .lot-card').forEach(el => el.classList.remove('active'));
+  if (element) element.classList.add('active');
+  
+  const customSplitter = document.getElementById('customSplitter');
+  
+  if (lotName && (lotName.includes('Custom Ratio Split') || lotName.includes('Discovery Flight') || lotName.includes('Custom Split'))) {
+    isCustomSplit = true;
+    if (customSplitter) customSplitter.style.display = 'block';
+    rebalanceSplitter();
+  } else {
+    isCustomSplit = false;
+    selectedBean = lotName;
+    if (customSplitter) customSplitter.style.display = 'none';
+  }
+}
+
 function selectB2cPack(name, bottles, price, el) {
   document.querySelectorAll('#b2cPacks .pack-option').forEach(e => e.classList.remove('active'));
   if (el) el.classList.add('active');
   selectedB2cPack = { name, bottles, unitPrice: price };
   updateTotal();
-  initLotAllocations();
+  if (isCustomSplit) rebalanceSplitter();
 }
 
 function selectB2bPack(name, bottles, price, el) {
@@ -734,7 +564,7 @@ function selectB2bPack(name, bottles, price, el) {
   if (el) el.classList.add('active');
   selectedB2bPack = { name, bottles, unitPrice: price };
   updateTotal();
-  initLotAllocations();
+  if (isCustomSplit) rebalanceSplitter();
 }
 
 function applyStoreStatus(status) {
@@ -798,6 +628,7 @@ function applyConfigToUI(data) {
   }
   
   updateTotal();
+  if (isCustomSplit) rebalanceSplitter();
 }
 
 function fetchLiveConfig() {
@@ -867,6 +698,78 @@ function getTotalBottles() {
   if (isNaN(qty) || qty < 1) qty = 1;
   const active = (PAGE === 'OFFICE' || currentMode === 'B2B') ? selectedB2bPack : selectedB2cPack;
   return (active && active.bottles ? active.bottles : 1) * qty;
+}
+
+function rebalanceSplitter() {
+  const total = getTotalBottles();
+  const prevSum = (customSplit.lot1 || 0) + (customSplit.lot2 || 0);
+  
+  if (prevSum > 0 && prevSum !== total) {
+    const ratio = customSplit.lot1 / prevSum;
+    const newLot1 = Math.round(ratio * total);
+    customSplit.lot1 = newLot1;
+    customSplit.lot2 = total - newLot1;
+  } else if (prevSum === 0 || prevSum !== total) {
+    const half = Math.floor(total / 2);
+    customSplit.lot1 = half;
+    customSplit.lot2 = total - half;
+  }
+  renderSplitterUI();
+}
+
+function adjustSplit(lotKey, delta) {
+  const total = getTotalBottles();
+  if (lotKey === 'lot1') {
+    let newL1 = customSplit.lot1 + delta;
+    if (newL1 >= 0 && newL1 <= total) {
+      customSplit.lot1 = newL1;
+      customSplit.lot2 = total - newL1;
+    }
+  } else {
+    let newL2 = customSplit.lot2 + delta;
+    if (newL2 >= 0 && newL2 <= total) {
+      customSplit.lot2 = newL2;
+      customSplit.lot1 = total - newL2;
+    }
+  }
+  renderSplitterUI();
+}
+
+function renderSplitterUI() {
+  const total = getTotalBottles();
+  const alloc = customSplit.lot1 + customSplit.lot2;
+  const qtyInput = document.getElementById('packQty');
+  const qty = qtyInput ? parseInt(qtyInput.value, 10) || 1 : 1;
+  const activePack = (PAGE === 'OFFICE' || currentMode === 'B2B') ? selectedB2bPack : selectedB2cPack;
+  const lot1Name = availableLots[0] ? availableLots[0].name : "Lot 1";
+  const lot2Name = availableLots[1] ? availableLots[1].name : "Lot 2";
+  
+  const allocEl = document.getElementById('allocCount');
+  const targetEl = document.getElementById('targetCount');
+  const l1Count = document.getElementById('splitLot1Count');
+  const l2Count = document.getElementById('splitLot2Count');
+  const bar1 = document.getElementById('ratioBarLot1');
+  const bar2 = document.getElementById('ratioBarLot2');
+  const tallyEl = document.getElementById('tallyStatus');
+  
+  if (allocEl) allocEl.textContent = alloc;
+  if (targetEl) targetEl.textContent = total;
+  if (l1Count) l1Count.textContent = customSplit.lot1;
+  if (l2Count) l2Count.textContent = customSplit.lot2;
+  
+  if (tallyEl) {
+    if (customSplit.lot1 === customSplit.lot2) {
+      tallyEl.textContent = `✨ Balanced Discovery Flight: ${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name} (${qty}x ${activePack.name})`;
+    } else {
+      tallyEl.textContent = `🎯 Custom Flight: ${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name} (Total ${total} bottles across ${qty} pack${qty > 1 ? 's' : ''})`;
+    }
+  }
+  
+  const l1Percent = total > 0 ? (customSplit.lot1 / total) * 100 : 50;
+  const l2Percent = total > 0 ? (customSplit.lot2 / total) * 100 : 50;
+  
+  if (bar1) bar1.style.width = `${l1Percent}%`;
+  if (bar2) bar2.style.width = `${l2Percent}%`;
 }
 
 function setB2bPayOption(option) {
@@ -1017,7 +920,7 @@ function updateTotal() {
   const subtotal = calculateSubtotal();
   const totalBottles = getTotalBottles();
   const errCap = document.getElementById('errCapacityLimit');
-  const btnStep1Next = document.getElementById('btnStep1Next');
+  const btnStep2Next = document.getElementById('btnStep2Next');
   const payBtn = document.getElementById('payNowBtn');
   
   if (totalBottles > liveRemainingBatchBottles) {
@@ -1025,11 +928,11 @@ function updateTotal() {
       errCap.textContent = `⚠️ Selected order (${totalBottles} bottles) exceeds remaining batch capacity (${liveRemainingBatchBottles} bottles left). Please reduce quantity or select a smaller pack.`;
       errCap.style.display = 'block';
     }
-    if (btnStep1Next) btnStep1Next.disabled = true;
+    if (btnStep2Next) btnStep2Next.disabled = true;
     if (payBtn) payBtn.disabled = true;
   } else {
     if (errCap) errCap.style.display = 'none';
-    if (btnStep1Next) btnStep1Next.disabled = false;
+    if (btnStep2Next) btnStep2Next.disabled = false;
     if (payBtn && currentStoreStatus === 'OPEN') payBtn.disabled = false;
   }
 
@@ -1087,9 +990,7 @@ function updateTotal() {
     }
   }
   
-  if (PAGE === 'ORDER' || PAGE === 'OFFICE') {
-    initLotAllocations();
-  }
+  if (isCustomSplit) rebalanceSplitter();
 }
 
 function checkSavedProfile() {
@@ -1326,7 +1227,12 @@ async function handleOrderSuccess(paymentId, statusText) {
   const buildingFloor = (document.getElementById('custAddress')?.value || '').trim();
   const paymentMode = isB2b ? (currentB2bPayOption === 'INVOICE' ? "Corporate Invoice (Net Terms)" : "Razorpay Gateway") : "Razorpay Gateway";
   
-  const coffeeLotDisplay = getFormattedCoffeeSelectionString();
+  const lot1Name = availableLots[0] ? availableLots[0].name : "Lot 1";
+  const lot2Name = availableLots[1] ? availableLots[1].name : "Lot 2";
+  
+  const coffeeLotDisplay = isCustomSplit 
+    ? `Discovery Flight / Custom Split (${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name})` 
+    : selectedBean;
   
   const orderPayload = {
     authToken: CONFIG.authToken,
@@ -2096,3 +2002,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
+

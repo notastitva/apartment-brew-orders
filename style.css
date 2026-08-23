@@ -584,10 +584,11 @@ body {
 /* Coffee Lot Visual Cards */
 
 .lot-grid {
-
   display: flex;
-
   flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+  width: 100%;
 
   gap: 10px;
 
@@ -596,13 +597,15 @@ body {
 }
 
 .lot-card {
-
   background: var(--card-inner);
-
   border: 1.5px solid var(--card-border);
-
   border-radius: 10px;
-
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
   padding: 12px;
 
   cursor: pointer;
@@ -757,10 +760,11 @@ body {
 /* Pack Selection Grids */
 
 .pack-grid {
-
   display: grid;
-
   grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+  width: 100%;
 
   gap: 8px;
 
@@ -1446,6 +1450,8 @@ input:focus, select:focus, textarea:focus {
   padding: 14px;
   margin-top: 12px;
   animation: fadeIn 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
   contain: layout style;
 }
 
@@ -1963,12 +1969,14 @@ select option:disabled {
 
 .wizard-progress-bar {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   background: var(--card-inner);
   border: 1px solid var(--card-border);
   border-radius: 12px;
-  padding: 12px 14px;
+  padding: 10px 12px;
+  width: 100%;
+  box-sizing: border-box;
   margin-bottom: 16px;
 }
 
@@ -1976,18 +1984,17 @@ select option:disabled {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   cursor: pointer;
   z-index: 2;
-  transition: all 0.2s ease;
-  min-width: 52px;
+  flex: 0 0 auto;
   text-align: center;
 }
 
 .node-circle {
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
   border-radius: 50%;
   background: #2a2724;
   color: var(--text-muted);
@@ -1995,13 +2002,13 @@ select option:disabled {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.76rem;
+  font-size: 0.75rem;
   font-weight: 800;
   transition: all 0.3s ease;
 }
 
 .node-label {
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -2011,10 +2018,11 @@ select option:disabled {
 }
 
 .wizard-node-line {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 8px;
   height: 2px;
   background: #2a2724;
-  margin: 13px 4px 0;
+  margin: 0 4px 14px;
   transition: background 0.3s ease;
 }
 
@@ -2298,40 +2306,6 @@ select option:disabled {
   gap: 4px;
   margin-top: 4px;
 }
-
-/* Mix & Match Lot Builder & Preset Grid */
-.mix-preset-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 8px;
-  margin-bottom: 14px;
-}
-
-.mix-preset-btn {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  color: var(--text-muted);
-  border-radius: 8px;
-  padding: 8px 10px;
-  font-size: 0.76rem;
-  font-weight: 600;
-  cursor: pointer;
-  text-align: center;
-  transition: all 0.2s ease;
-}
-
-.mix-preset-btn:hover {
-  border-color: var(--accent);
-  color: var(--text);
-}
-
-.mix-preset-btn.active {
-  background: var(--accent-light);
-  border-color: var(--accent);
-  color: var(--accent);
-  font-weight: 700;
-}
-
 /* Mix & Match Lot Row Cards */
 .mix-lot-list {
   display: flex;
