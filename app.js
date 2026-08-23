@@ -317,7 +317,7 @@ function applyStoreStatus(status) {
 }
 
 function applyConfigToUI(data) {
-  if (!data) return;
+  if (!data || data.action === 'track') return;
   
   const cap = data.batchCapacity || 150;
   const resCount = data.reservedBottles || 0;
@@ -1224,7 +1224,7 @@ function submitTrackOrder() {
   
   if (!rawId) {
     if (statusMsg) {
-      statusMsg.textContent = 'Please enter a valid Order ID (e.g. TABC-154359).';
+      statusMsg.textContent = 'Please enter a valid Order ID (e.g. TABC-154359 or TABC-B2B-287603).';
       statusMsg.className = 'track-status-msg msg-error';
       statusMsg.style.display = 'block';
     }
@@ -1239,34 +1239,34 @@ function submitTrackOrder() {
   }
   if (btnTrack) btnTrack.disabled = true;
   
+  // If endpoint is not configured, run local mock search for testing
   if (!CONFIG.googleSheetEndpoint || CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
-    // Demo / Local Fallback Lookup
     setTimeout(() => {
       if (btnTrack) btnTrack.disabled = false;
       if (currentOrderDetails && normalizeStr(currentOrderDetails.orderId) === normalizeStr(rawId)) {
         if (statusMsg) statusMsg.style.display = 'none';
         renderTrackingDetails(currentOrderDetails);
       } else {
-        // Sample mock order for preview
+        const isB2b = rawId.includes('B2B');
         const mockOrder = {
           orderId: rawId,
-          orderType: rawId.includes('B2B') ? 'B2B' : 'B2C',
-          customerName: "Astitva Gupta",
-          company: rawId.includes('B2B') ? "Cognizant Technology Solutions" : "N/A",
-          deliveryAddress: "Flat 402, DLF Phase 5, Gurugram (PIN: 122009)",
+          orderType: isB2b ? 'B2B' : 'B2C',
+          customerName: isB2b ? "Amr" : "Astitva Gupta",
+          company: isB2b ? "Cognizant Technology Solutions" : "N/A",
+          deliveryAddress: isB2b ? "KALUA 9480, DLF Cyber City / Cyber Hub (Gurugram) (PIN: 122009)" : "Flat 402, DLF Phase 5, Gurugram (PIN: 122009)",
           dropInstructions: "Deliver directly to door / desk",
-          deliveryWindow: rawId.includes('B2B') ? "Morning Kickoff (9:30 AM – 11:30 AM)" : "Saturday Morning (8:00 AM – 11:00 AM)",
-          dropDate: rawId.includes('B2B') ? getUpcomingFridayFormatted() : getUpcomingSaturdayFormatted(),
+          deliveryWindow: isB2b ? "Morning Kickoff (9:30 AM – 11:30 AM)" : "Saturday Morning (8:00 AM – 11:00 AM)",
+          dropDate: isB2b ? "Fri, 28 Aug, 2026" : getUpcomingSaturdayFormatted(),
           bean: "Ratnagiri Estate (Anaerobic Naturals)",
-          pack: rawId.includes('B2B') ? "Team Pack x 1 (10 bottles)" : "Weekend Pack x 1 (4 bottles)",
-          totalAmount: rawId.includes('B2B') ? 1800 : 899,
-          paymentStatus: "Paid via Gateway",
-          deliveryStatus: "Brewing"
+          pack: isB2b ? "Office Batch x 1 (20 bottles)" : "Weekend Pack x 1 (4 bottles)",
+          totalAmount: isB2b ? 3060 : 899,
+          paymentStatus: isB2b ? "Corporate Invoice Requested (Net Terms)" : "Paid via Gateway",
+          deliveryStatus: "Pre-Ordered"
         };
         if (statusMsg) statusMsg.style.display = 'none';
         renderTrackingDetails(mockOrder);
       }
-    }, 600);
+    }, 500);
     return;
   }
   
@@ -1279,6 +1279,14 @@ function submitTrackOrder() {
       if (data && data.status === 'success' && data.order) {
         if (statusMsg) statusMsg.style.display = 'none';
         renderTrackingDetails(data.order);
+      } else if (data && data.status === 'success' && !data.order && data.lots) {
+        // Detected older version of Apps Script running default doGet menu handler
+        if (statusMsg) {
+          statusMsg.innerHTML = `⚠️ <strong>Apps Script Update Needed:</strong> The live Web App is currently running an earlier script version. Please open Google Sheets > <strong>Extensions > Apps Script</strong>, paste the latest <a href="https://docs.google.com/document/d/1HcqX_5o_Sjp7pHHCc_kMzOL3Mi0pm_0e4e30dImWLoU/edit" target="_blank" style="color:var(--accent);">Code.gs</a>, and deploy as a <strong>New Version</strong>.`;
+          statusMsg.className = 'track-status-msg msg-error';
+          statusMsg.style.display = 'block';
+        }
+        if (resultContainer) resultContainer.style.display = 'none';
       } else {
         if (statusMsg) {
           statusMsg.textContent = data.message || `✕ No active order found with ID "${rawId}". Please verify your order ID.`;
@@ -1291,7 +1299,7 @@ function submitTrackOrder() {
     .catch(err => {
       if (btnTrack) btnTrack.disabled = false;
       if (statusMsg) {
-        statusMsg.textContent = `⚠️ Network error checking order status. Please try again.`;
+        statusMsg.textContent = `⚠️ Network error checking order status. Please check your connection and try again.`;
         statusMsg.className = 'track-status-msg msg-error';
         statusMsg.style.display = 'block';
       }
