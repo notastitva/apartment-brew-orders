@@ -175,6 +175,7 @@
           <label for="packQty">Quantity of Selected Batches</label>
           <input type="number" id="packQty" min="1" value="1" oninput="updateTotal()" />
           <div class="field-error" id="errQty">Please enter a valid batch quantity (minimum 1).</div>
+<div class="capacity-warning-msg" id="errCapacityLimit" style="display: none;"></div>
         </div>
 
         <!-- Coupon Code Input -->
@@ -207,7 +208,7 @@
 
         <div class="wizard-nav-btns">
           <button type="button" class="btn-secondary" onclick="goToWizardStep(1)">&larr; Back to Harvest</button>
-          <button type="button" class="btn btn-pay" onclick="nextWizardStep(3)">
+<button type="button" id="btnStep3" class="btn btn-pay" onclick="nextWizardStep(3)">
             <span>Continue to Office Details &rarr;</span>
           </button>
         </div>

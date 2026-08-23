@@ -79,6 +79,8 @@ The website is 100% data-driven by the Menu & Config tab in the Google Spreadshe
    4. The interactive Custom Ratio Splitter automatically updates its lot labels and split controls based on active harvests, allowing 2-bottle Duo Packs to be configured as Discovery Sampler Flights with custom 1:1 split ratios.  
 4. B2C & B2B Pack Tiers Management:  
    1. Edit pack names, bottle quantities, unit prices (₹), and marketing badges (e.g. Popular, Value, MOQ). Note that 2-bottle Duo Packs can be configured as Discovery Sampler Flights with custom 1:1 split ratios between active single-estate harvests.  
+   2. **Dynamic Pack Disabling:** Pack tiers whose bottle size exceeds live remaining roastery capacity (batchCapacity \- reservedBottles) are automatically grayed out and disabled on the frontend.  
+   3. **Multi-Pack Quantity Throttling:** If increasing the quantity causes total bottles to exceed remaining capacity, a real-time warning (\#errCapacityLimit) triggers and blocks checkout navigation to ensure inventory integrity.  
 5. Coupon Discount Engine:  
    1. Define flat (₹) or percentage (%) discount coupon codes with minimum order thresholds and mode applicability (B2C, B2B, ALL).  
 6. Delivery Clusters & Slot Throttling:  
@@ -266,4 +268,10 @@ All specialized requests are routed to a dedicated database tab with the followi
 
 #### **Backend Processing & SLA**
 
-The backend *doPost* engine handles intake for these requests by appending data to the inquiry sheet and triggering an automated HTML confirmation email via GmailApp. The system is configured for a standard 24-hour response SLA for all custom lead evaluations.
+The backend *doPost* engine handles intake for these requests by appending data to the inquiry sheet and triggering an automated HTML confirmation email via GmailApp. The system is configured for a standard 24-hour response SLA for all custom lead evaluations.  
+---
+
+### **🛠️ 11\. Troubleshooting & Configuration Recovery**
+
+1. **Delivery Cluster Capacity Limits:** Ensure the Max Orders column in the *Menu & Config* tab is set appropriately (e.g., 25 orders) so active cluster capacity does not block test or production B2B orders by meeting the *isFull* flag prematurely.  
+2. **Apps Script Deployment:** When updating *Code.gs*, roastery operators must deploy using **Deploy \> Manage deployments \> Edit \> Version: New version \> Deploy**. This is critical to ensure the live /exec endpoint runs the latest B2B order handling and capacity validation code.

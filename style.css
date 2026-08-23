@@ -848,6 +848,46 @@ body {
 
 }
 
+/* Disabled Pack Option (Exceeds Batch Capacity) */
+.pack-option.pack-disabled {
+  opacity: 0.45;
+  cursor: not-allowed !important;
+  border-color: #383430 !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+
+.pack-option.pack-disabled:hover {
+  border-color: #383430 !important;
+  transform: none !important;
+}
+
+.pack-disabled-badge {
+  position: absolute;
+  top: -8px;
+  right: 8px;
+  background: #e63946;
+  color: #ffffff;
+  font-size: 0.6rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 10px;
+  text-transform: uppercase;
+}
+
+/* Capacity Warning Message */
+.capacity-warning-msg {
+  font-size: 0.76rem;
+  color: var(--error-light);
+  background: rgba(230, 57, 70, 0.12);
+  border: 1px solid var(--error);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: 10px;
+  line-height: 1.35;
+  font-weight: 600;
+  animation: fadeIn 0.3s ease;
+}
+
 /* Summary & Pricing Display */
 
 .summary-box {

@@ -76,6 +76,7 @@ let currentMode = (PAGE === 'OFFICE') ? "B2B" : "B2C";
 let currentWizardStep = 1;
 let currentB2bPayOption = "GATEWAY";
 let currentStoreStatus = "OPEN";
+let liveRemainingBatchBottles = 250;
 
 // Default Dynamic State (Overridden by live Google Sheets Menu & Config)
 let availableLots = [
@@ -137,6 +138,7 @@ function validateWizardStep(stepNum) {
     const isValid = !isNaN(qty) && qty >= 1;
     setFieldState(qtyInput, errQty, isValid);
     return isValid;
+    return isValid && (getTotalBottles() <= liveRemainingBatchBottles);
   }
   if (stepNum === 3) {
     const isNameValid = validateField('custName');
@@ -452,6 +454,13 @@ function renderLots(lots) {
 }
 
 function renderPacks(b2cPacks, b2bPacks) {
+  const fallbackPack = (packs, current) => {
+    if (!current.name || current.bottles > liveRemainingBatchBottles) {
+      const largest = [...packs].filter(p => p.bottles <= liveRemainingBatchBottles).sort((a, b) => b.bottles - a.bottles)[0];
+      return largest ? { name: largest.name, bottles: largest.bottles, unitPrice: largest.price } : current;
+    }
+    return current;
+  };
   if ((PAGE === 'ORDER' || PAGE === 'HOME') && Array.isArray(b2cPacks) && b2cPacks.length > 0) {
     availableB2cPacks = b2cPacks;
     const b2cGrid = document.getElementById('b2cPacks');
@@ -461,9 +470,13 @@ function renderPacks(b2cPacks, b2bPacks) {
         const isDefault = p.name === selectedB2cPack.name || (idx === 2 && !selectedB2cPack.name);
         const badgeHtml = p.badge ? `<div class="pack-badge">${p.badge}</div>` : '';
         const perBottle = p.bottles > 1 ? ` (@ ₹${Math.round(p.price / p.bottles)})` : '';
+        const isOverCap = p.bottles > liveRemainingBatchBottles;
+        const disabledBadge = isOverCap ? `<div class="pack-disabled-badge">Cap Exceeded</div>` : '';
   
         b2cHtml += `
-          <div class="pack-option ${isDefault ? 'active' : ''}" onclick="selectB2cPack('${p.name}', ${p.bottles}, ${p.price}, this)">
+        b2cHtml += `
+          <div class="pack-option ${isDefault ? 'active' : ''} ${isOverCap ? 'pack-disabled' : ''}" ${isOverCap ? '' : `onclick="selectB2cPack('${p.name}', ${p.bottles}, ${p.price}, this)"`}>
+            ${disabledBadge}
             ${badgeHtml}
             <div class="pack-name">${p.name}</div>
             <div class="pack-price">₹${p.price.toLocaleString('en-IN')}</div>
@@ -476,6 +489,7 @@ function renderPacks(b2cPacks, b2bPacks) {
       });
       b2cGrid.innerHTML = b2cHtml;
     }
+    selectedB2cPack = fallbackPack(availableB2cPacks, selectedB2cPack);
   }
   
   if (PAGE === 'OFFICE' && Array.isArray(b2bPacks) && b2bPacks.length > 0) {
@@ -486,9 +500,13 @@ function renderPacks(b2cPacks, b2bPacks) {
       b2bPacks.forEach((p, idx) => {
         const isDefault = p.name === selectedB2bPack.name || (idx === 0 && !selectedB2bPack.name);
         const perBottle = ` (₹${Math.round(p.price / p.bottles)}/ea)`;
+        const isOverCap = p.bottles > liveRemainingBatchBottles;
+        const disabledBadge = isOverCap ? `<div class="pack-disabled-badge">Cap Exceeded</div>` : '';
   
         b2bHtml += `
-          <div class="pack-option ${isDefault ? 'active' : ''}" onclick="selectB2bPack('${p.name}', ${p.bottles}, ${p.price}, this)">
+        b2bHtml += `
+          <div class="pack-option ${isDefault ? 'active' : ''} ${isOverCap ? 'pack-disabled' : ''}" ${isOverCap ? '' : `onclick="selectB2bPack('${p.name}', ${p.bottles}, ${p.price}, this)"`}>
+            ${disabledBadge}
             <div class="pack-name">${p.name}</div>
             <div class="pack-price">₹${p.price.toLocaleString('en-IN')}</div>
             <div class="pack-desc">${p.bottles}x 250ml${perBottle}</div>
@@ -500,6 +518,7 @@ function renderPacks(b2cPacks, b2bPacks) {
       });
       b2bGrid.innerHTML = b2bHtml;
     }
+    selectedB2bPack = fallbackPack(availableB2bPacks, selectedB2bPack);
   }
 }
 
@@ -537,6 +556,7 @@ function applyConfigToUI(data) {
   const resCount = data.reservedBottles || 0;
   const scarcityText = document.getElementById('scarcityText');
   const scarcityFill = document.getElementById('scarcityFill');
+  liveRemainingBatchBottles = typeof data.remainingBatchBottles === 'number' ? data.remainingBatchBottles : Math.max(0, cap - resCount);
   
   if (scarcityText) {
     scarcityText.textContent = `${resCount} / ${cap} Bottles Reserved`;
@@ -886,6 +906,20 @@ function removeCoupon() {
 
 function updateTotal() {
   const subtotal = calculateSubtotal();
+  const totalBottles = getTotalBottles();
+  const errCap = document.getElementById('errCapacityLimit');
+  const checkoutBtns = [document.getElementById('payNowBtn'), document.getElementById('btnNextStep2')];
+
+  if (totalBottles > liveRemainingBatchBottles) {
+    if (errCap) {
+      errCap.textContent = `⚠️ Selected order (${totalBottles} bottles) exceeds remaining batch capacity (${liveRemainingBatchBottles} bottles left). Please reduce quantity or select a smaller pack.`;
+      errCap.style.display = 'block';
+    }
+    checkoutBtns.forEach(btn => { if (btn) btn.disabled = true; });
+  } else {
+    if (errCap) errCap.style.display = 'none';
+    if (currentStoreStatus === 'OPEN') checkoutBtns.forEach(btn => { if (btn) btn.disabled = false; });
+  }
   const total = calculateTotal();
   const formattedTotal = `₹${total.toLocaleString('en-IN')}`;
   const formattedSubtotal = `₹${subtotal.toLocaleString('en-IN')}`;
