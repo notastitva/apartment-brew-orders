@@ -50,14 +50,15 @@
       </div>
     </div>
 
-    <!-- Mode Selector: B2C vs B2B vs Track Order -->
+    <!-- Mode Selector: B2C vs B2B vs Custom vs Track Order -->
     <div class="mode-switch">
-      <button class="mode-tab active" id="tabB2c" onclick="switchMode('B2C')">☕ Individual (Sat)</button>
-      <button class="mode-tab" id="tabB2b" onclick="switchMode('B2B')">🏢 Office Drop (Fri)</button>
+      <button class="mode-tab active" id="tabB2c" onclick="switchMode('B2C')">☕ Individual</button>
+      <button class="mode-tab" id="tabB2b" onclick="switchMode('B2B')">🏢 Office Drop</button>
+      <button class="mode-tab" id="tabCustom" onclick="switchMode('CUSTOM')">🎉 Events &amp; Custom</button>
       <button class="mode-tab" id="tabTrack" onclick="switchMode('TRACK')">🔍 Track Order</button>
     </div>
 
-    <!-- Order Form View -->
+    <!-- Order Form View (B2C & B2B) -->
     <div id="orderFormView">
       
       <!-- Section 1: Coffee Lot & Packs -->
@@ -290,6 +291,88 @@
       </div>
     </div>
 
+    <!-- Custom Events & Startup Coffee Runs View -->
+    <div id="customInquirySection" style="display: none;">
+      <div class="section-card">
+        <div class="section-title">
+          <span>Custom Requirements &amp; Event Catering</span>
+          <span class="section-subtitle">Tailored Specialty Coffee</span>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4;">
+          Planning a company townhall, hackathon, product launch, pop-up booth, or a dedicated team coffee run? Tell us what you need and our roastery team will curate a custom package for you.
+        </p>
+
+        <div class="form-group">
+          <label for="inqCompany">Organization / Startup / Event Name *</label>
+          <input type="text" id="inqCompany" placeholder="e.g. Zomato / Google India / Hackathon 2026" oninput="validateInqField('inqCompany')" />
+          <div class="field-error" id="errInqCompany">Please enter your organization or event name.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="inqName">Contact Person Name *</label>
+          <input type="text" id="inqName" placeholder="e.g. Astitva Gupta" oninput="validateInqField('inqName')" />
+          <div class="field-error" id="errInqName">Please enter your name.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="inqEmail">Work Email Address *</label>
+          <input type="email" id="inqEmail" placeholder="e.g. astitva@company.com" oninput="validateInqEmail()" />
+          <div class="field-error" id="errInqEmail">Please enter a valid work email.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="inqPhone">WhatsApp / Mobile Number *</label>
+          <input type="tel" id="inqPhone" placeholder="e.g. 9876543210" maxlength="10" oninput="validateInqPhone()" />
+          <div class="field-error" id="errInqPhone">Please enter a valid 10-digit mobile number.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="inqType">Requirement Type *</label>
+          <select id="inqType">
+            <option value="Event Catering / Pop-Up Specialty Coffee Bar">Event Catering / Pop-Up Specialty Coffee Bar</option>
+            <option value="Office Coffee Run / Team Outing Batch">Office Coffee Run / Team Outing Batch</option>
+            <option value="Townhall / Hackathon Bulk Drop (100+ bottles)">Townhall / Hackathon Bulk Drop (100+ bottles)</option>
+            <option value="Custom Blend / Private Roasting & Labeling">Custom Blend / Private Roasting & Labeling</option>
+            <option value="Recurring Office Weekly Subscription">Recurring Office Weekly Subscription</option>
+            <option value="Other Custom Requirement">Other Custom Requirement</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="inqHeadcount">Estimated Headcount / Bottles Needed</label>
+          <select id="inqHeadcount">
+            <option value="20–50 people (~30-50 bottles)">20–50 people (~30-50 bottles)</option>
+            <option value="50–100 people (~75-100 bottles)">50–100 people (~75-100 bottles)</option>
+            <option value="100–250 people (~150-250 bottles)">100–250 people (~150-250 bottles)</option>
+            <option value="250+ people (Custom Roastery Scale)">250+ people (Custom Roastery Scale)</option>
+            <option value="Not sure yet / Need Recommendation">Not sure yet / Need Recommendation</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="inqDate">Target Event / Delivery Date *</label>
+          <input type="text" id="inqDate" placeholder="e.g. 4 Sep 2026 or Next Friday" oninput="validateInqField('inqDate')" />
+          <div class="field-error" id="errInqDate">Please specify your target date or timeline.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="inqLocation">Venue Location / Tech Park (Delhi NCR)</label>
+          <input type="text" id="inqLocation" placeholder="e.g. DLF Cyber City / Ambience Mall / Office HQ" />
+        </div>
+
+        <div class="form-group">
+          <label for="inqNotes">Special Requirements &amp; Preferences</label>
+          <textarea id="inqNotes" rows="3" placeholder="Tell us about specific taste preferences, ice setup, barista station, custom branding labels, or delivery schedule..."></textarea>
+        </div>
+
+        <button id="btnSubmitCustom" class="btn btn-pay" onclick="handleCustomInquirySubmit()">
+          <span id="btnCustomText">&#128233; Submit Custom Request</span>
+        </button>
+
+        <div id="inqStatusMsg" class="track-status-msg" style="display: none; margin-top: 14px;"></div>
+      </div>
+    </div>
+
     <!-- Order Tracker View -->
     <div id="trackerSection" style="display: none;">
       <div class="section-card">
@@ -298,7 +381,7 @@
           <span class="section-subtitle">Real-Time Roastery Fulfillment</span>
         </div>
         <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4;">
-          Enter your Order ID (e.g. <code>TABC-154359</code> or <code>TABC-B2B-582709</code>) to see live extraction, dispatch, and delivery updates.
+          Enter your Order or Inquiry ID (e.g. <code>TABC-154359</code>, <code>TABC-B2B-287603</code>, or <code>TABC-EVT-804299</code>) to see live extraction, dispatch, and delivery updates.
         </p>
         
         <div class="tracker-input-group">
@@ -364,7 +447,7 @@
                 <strong id="tCustomer">-</strong>
               </div>
               <div class="tracker-detail-row" id="tCompanyRow" style="display: none;">
-                <span>Company:</span>
+                <span>Company / Event:</span>
                 <strong id="tCompany">-</strong>
               </div>
               <div class="tracker-detail-row">

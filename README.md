@@ -224,4 +224,33 @@ The tracker is powered by a dedicated *doGet* lookup handler in the backend micr
 
 #### **Client-Side Tracking UI**
 
-The frontend (*app.js*) renders a specialized tracking view featuring an animated 4-step stepper with glowing active states to indicate the current fulfillment stage, complemented by an order details card displaying the specific batch and delivery parameters.
+The frontend (*app.js*) renders a specialized tracking view featuring an animated 4-step stepper with glowing active states to indicate the current fulfillment stage, complemented by an order details card displaying the specific batch and delivery parameters.  
+---
+
+### **🎉 10\. Custom Requirements, Event Catering & Startup Coffee Runs**
+
+The system includes a dedicated module for managing high-volume event catering and bespoke roastery requirements, integrated directly into the serverless architecture.
+
+#### **4-Mode Website Structure**
+
+The frontend navigation and logic are segmented into four primary operational modes:
+
+* **Individual (B2C):** Standard Saturday morning micro-batch drops for retail customers.  
+* **Office Drop (B2B):** Scheduled Friday corporate deliveries for established office clusters.  
+* **Events & Custom:** Specialized intake for catering, discovery workshops, and startup coffee runs.  
+* **Track Order:** Real-time fulfillment status lookup for active orders.
+
+#### **Custom & Event Inquiries Sheet Schema (13 Columns)**
+
+All specialized requests are routed to a dedicated database tab with the following structure:
+
+| Column | Field Definition |
+| :---- | :---- |
+| A \- B | Timestamp, Inquiry ID |
+| C \- F | Organization Name, Contact Person, Work Email, WhatsApp |
+| G \- J | Requirement Type, Headcount/Bottles, Event Date, Location |
+| K \- M | Notes, Status, Lead Owner |
+
+#### **Backend Processing & SLA**
+
+The backend *doPost* engine handles intake for these requests by appending data to the inquiry sheet and triggering an automated HTML confirmation email via GmailApp. The system is configured for a standard 24-hour response SLA for all custom lead evaluations.

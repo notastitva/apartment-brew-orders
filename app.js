@@ -413,17 +413,20 @@ function startCutoffCountdown() {
   setInterval(updateTimer, 1000);
 }
 
-// Switch between B2C, B2B & TRACK Modes
+// Switch between B2C, B2B, CUSTOM & TRACK Modes
 function switchMode(mode) {
   currentMode = mode;
   const isB2c = mode === 'B2C';
   const isB2b = mode === 'B2B';
+  const isCustom = mode === 'CUSTOM';
   const isTrack = mode === 'TRACK';
   
   const tabB2c = document.getElementById('tabB2c');
   const tabB2b = document.getElementById('tabB2b');
+  const tabCustom = document.getElementById('tabCustom');
   const tabTrack = document.getElementById('tabTrack');
   const orderFormView = document.getElementById('orderFormView');
+  const customInquirySection = document.getElementById('customInquirySection');
   const trackerSection = document.getElementById('trackerSection');
   const confirmationView = document.getElementById('confirmationView');
   
@@ -440,10 +443,12 @@ function switchMode(mode) {
   
   if (tabB2c) tabB2c.classList.toggle('active', isB2c);
   if (tabB2b) tabB2b.classList.toggle('active', isB2b);
+  if (tabCustom) tabCustom.classList.toggle('active', isCustom);
   if (tabTrack) tabTrack.classList.toggle('active', isTrack);
   
   if (isTrack) {
     if (orderFormView) orderFormView.style.display = 'none';
+    if (customInquirySection) customInquirySection.style.display = 'none';
     if (confirmationView) confirmationView.style.display = 'none';
     if (trackerSection) trackerSection.style.display = 'block';
     if (dropBanner) dropBanner.innerHTML = `<span>🔍</span> Live Fulfillment Status Tracker`;
@@ -451,7 +456,18 @@ function switchMode(mode) {
     return;
   }
   
+  if (isCustom) {
+    if (orderFormView) orderFormView.style.display = 'none';
+    if (trackerSection) trackerSection.style.display = 'none';
+    if (confirmationView) confirmationView.style.display = 'none';
+    if (customInquirySection) customInquirySection.style.display = 'block';
+    if (dropBanner) dropBanner.innerHTML = `<span>🎉</span> Tailored Coffee Bars &amp; Custom Corporate Runs`;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+  
   if (trackerSection) trackerSection.style.display = 'none';
+  if (customInquirySection) customInquirySection.style.display = 'none';
   if (confirmationView) confirmationView.style.display = 'none';
   if (orderFormView) orderFormView.style.display = 'block';
   
@@ -1199,6 +1215,141 @@ async function handleOrderSuccess(paymentId, statusText) {
 }
 
 // --------------------------------------------------------------------
+// Custom Requirements & Event Catering Controller
+// --------------------------------------------------------------------
+function validateInqField(fieldId) {
+  const el = document.getElementById(fieldId);
+  if (!el) return true;
+  const val = el.value.trim();
+  let errId = 'err' + fieldId.charAt(0).toUpperCase() + fieldId.slice(1);
+  let errEl = document.getElementById(errId);
+  return setFieldState(el, errEl, val.length >= 2);
+}
+
+function validateInqEmail() {
+  const el = document.getElementById('inqEmail');
+  const errEl = document.getElementById('errInqEmail');
+  if (!el) return true;
+  const val = el.value.trim();
+  const emailRegex = /^[a-zA-Z0-9._%+-\\\]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return setFieldState(el, errEl, emailRegex.test(val));
+}
+
+function validateInqPhone() {
+  const el = document.getElementById('inqPhone');
+  const errEl = document.getElementById('errInqPhone');
+  if (!el) return true;
+  let val = el.value.replace(/[^0-9]/g, '');
+  el.value = val;
+  const phoneRegex = /^[6-9]\d{9}$/;
+  return setFieldState(el, errEl, phoneRegex.test(val));
+}
+
+function handleCustomInquirySubmit() {
+  const isCompValid = validateInqField('inqCompany');
+  const isNameValid = validateInqField('inqName');
+  const isEmailValid = validateInqEmail();
+  const isPhoneValid = validateInqPhone();
+  const isDateValid = validateInqField('inqDate');
+  
+  if (!isCompValid || !isNameValid || !isEmailValid || !isPhoneValid || !isDateValid) {
+    alert('Please fill in the required fields before submitting your custom request.');
+    return;
+  }
+  
+  const comp = (document.getElementById('inqCompany')?.value || '').trim();
+  const name = (document.getElementById('inqName')?.value || '').trim();
+  const email = (document.getElementById('inqEmail')?.value || '').trim();
+  const phone = (document.getElementById('inqPhone')?.value || '').trim();
+  const reqType = document.getElementById('inqType')?.value || 'Event Catering';
+  const headcount = document.getElementById('inqHeadcount')?.value || '20–50 people';
+  const date = (document.getElementById('inqDate')?.value || '').trim();
+  const loc = (document.getElementById('inqLocation')?.value || '').trim() || 'Gurugram / NCR';
+  const notes = (document.getElementById('inqNotes')?.value || '').trim();
+  
+  const inqId = "TABC-EVT-" + Math.floor(100000 + Math.random() * 900000);
+  const btnSubmit = document.getElementById('btnSubmitCustom');
+  const statusMsg = document.getElementById('inqStatusMsg');
+  
+  if (btnSubmit) btnSubmit.disabled = true;
+  if (statusMsg) {
+    statusMsg.textContent = '⏳ Dispatching requirement to roastery team...';
+    statusMsg.className = 'track-status-msg msg-info';
+    statusMsg.style.display = 'block';
+  }
+  
+  const inqPayload = {
+    authToken: CONFIG.authToken,
+    botTrap: "",
+    orderType: "CUSTOM_EVENT",
+    targetSheet: "Custom & Event Inquiries",
+    orderId: inqId,
+    company: comp,
+    name: name,
+    email: email,
+    phone: phone,
+    requirementType: reqType,
+    headcount: headcount,
+    eventDate: date,
+    location: loc,
+    notes: notes
+  };
+  
+  const whatsappMsg = `*☕ NEW CUSTOM COFFEE / EVENT INQUIRY*\n` +
+                      `------------------------------------\n` +
+                      `*Inquiry ID:* ${inqId}\n` +
+                      `*Organization:* ${comp}\n` +
+                      `*Contact:* ${name} (${phone})\n` +
+                      `*Email:* ${email}\n` +
+                      `*Requirement:* ${reqType}\n` +
+                      `*Scale:* ${headcount}\n` +
+                      `*Target Date:* ${date}\n` +
+                      `*Location:* ${loc}\n` +
+                      `*Notes:* ${notes || 'None'}\n` +
+                      `------------------------------------\n` +
+                      `_Submitted via The Apartment Brew Co. Website_`;
+  
+  const directWaUrl = `https://wa.me/919719510654?text=${encodeURIComponent(whatsappMsg)}`;
+  
+  if (CONFIG.googleSheetEndpoint && !CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
+    fetch(CONFIG.googleSheetEndpoint, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(inqPayload)
+    }).then(() => {
+      renderInquirySuccess(inqId, name, comp, reqType, directWaUrl);
+    }).catch(() => {
+      renderInquirySuccess(inqId, name, comp, reqType, directWaUrl);
+    });
+  } else {
+    setTimeout(() => {
+      renderInquirySuccess(inqId, name, comp, reqType, directWaUrl);
+    }, 600);
+  }
+}
+
+function renderInquirySuccess(inqId, name, comp, reqType, waUrl) {
+  const btnSubmit = document.getElementById('btnSubmitCustom');
+  const statusMsg = document.getElementById('inqStatusMsg');
+  if (btnSubmit) btnSubmit.disabled = false;
+  
+  if (statusMsg) {
+    statusMsg.innerHTML = `
+      <div style="font-size: 0.95rem; font-weight: 800; color: #95d5b2; margin-bottom: 6px;">✓ Requirement Received! (ID: ${inqId})</div>
+      <p style="font-size: 0.8rem; color: #fefae0; margin: 0 0 10px; line-height: 1.4;">
+        Thank you, <strong>${name}</strong>! We've logged your request for <strong>${comp}</strong> (${reqType}). Our curation team will review batch sizes and reach out within 24 hours.
+      </p>
+      <a href="${waUrl}" target="_blank" style="display: inline-block; background: #25d366; color: #141312; font-size: 0.78rem; font-weight: 800; padding: 8px 14px; border-radius: 6px; text-decoration: none; margin-top: 4px;">
+        💬 Chat With Roastery Team on WhatsApp Now
+      </a>
+    `;
+    statusMsg.className = 'track-status-msg msg-success';
+    statusMsg.style.display = 'block';
+  }
+}
+
+// --------------------------------------------------------------------
 // Customer Self-Service Live Order Tracker Controller
 // --------------------------------------------------------------------
 function trackCurrentOrder() {
@@ -1282,7 +1433,7 @@ function submitTrackOrder() {
       } else if (data && data.status === 'success' && !data.order && data.lots) {
         // Detected older version of Apps Script running default doGet menu handler
         if (statusMsg) {
-          statusMsg.innerHTML = `⚠️ <strong>Apps Script Update Needed:</strong> The live Web App is currently running an earlier script version. Please open Google Sheets > <strong>Extensions > Apps Script</strong>, paste the latest <a href="https://docs.google.com/document/d/1HcqX_5o_Sjp7pHHCc_kMzOL3Mi0pm_0e4e30dImWLoU/edit" target="_blank" style="color:var(--accent);">Code.gs</a>, and deploy as a <strong>New Version</strong>.`;
+          statusMsg.innerHTML = `⚠️ <strong>Apps Script Update Needed:</strong> The live Web App is currently running an earlier script version. Please open Google Sheets > <strong>Extensions > Apps Script</strong>, paste the latest <a href="https://docs.google.com/document/d/1S0vG9ueF8I7IFqteMsHO7QbTN9mdXmzcI20D-ZA-aG4/edit" target="_blank" style="color:var(--accent);">Code.gs</a>, and deploy as a <strong>New Version</strong>.`;
           statusMsg.className = 'track-status-msg msg-error';
           statusMsg.style.display = 'block';
         }
@@ -1358,28 +1509,28 @@ function renderTrackingDetails(order) {
   
   const status = normalizeStr(order.deliveryStatus || 'Pre-Ordered');
   
-  if (status.includes('pre-order') || status.includes('preorder') || status.includes('pending') || status.includes('received')) {
+  if (status.includes('pre-order') || status.includes('preorder') || status.includes('pending') || status.includes('received') || status.includes('lead')) {
     if (sPre) sPre.classList.add('step-active');
     if (tBadge) {
-      tBadge.textContent = 'PRE-ORDERED';
+      tBadge.textContent = order.orderType === 'CUSTOM_EVENT' ? 'INQUIRY RECEIVED' : 'PRE-ORDERED';
       tBadge.className = 'tracker-badge status-preordered';
     }
-  } else if (status.includes('brew') || status.includes('roast') || status.includes('extract')) {
+  } else if (status.includes('brew') || status.includes('roast') || status.includes('extract') || status.includes('discussion') || status.includes('quote')) {
     if (sPre) sPre.classList.add('step-completed');
     if (l1) l1.classList.add('line-completed');
     if (sBrew) sBrew.classList.add('step-active');
     if (tBadge) {
-      tBadge.textContent = 'BREWING & CHILLING';
+      tBadge.textContent = order.orderType === 'CUSTOM_EVENT' ? 'PROPOSAL / IN DISCUSSION' : 'BREWING & CHILLING';
       tBadge.className = 'tracker-badge status-brewing';
     }
-  } else if (status.includes('dispatch') || status.includes('transit') || status.includes('out for delivery') || status.includes('shipped')) {
+  } else if (status.includes('dispatch') || status.includes('transit') || status.includes('out for delivery') || status.includes('shipped') || status.includes('confirmed')) {
     if (sPre) sPre.classList.add('step-completed');
     if (l1) l1.classList.add('line-completed');
     if (sBrew) sBrew.classList.add('step-completed');
     if (l2) l2.classList.add('line-completed');
     if (sDisp) sDisp.classList.add('step-active');
     if (tBadge) {
-      tBadge.textContent = 'OUT FOR DELIVERY';
+      tBadge.textContent = order.orderType === 'CUSTOM_EVENT' ? 'EVENT CONFIRMED' : 'OUT FOR DELIVERY';
       tBadge.className = 'tracker-badge status-dispatched';
     }
   } else if (status.includes('deliver') || status.includes('completed') || status.includes('fulfilled')) {
@@ -1391,7 +1542,7 @@ function renderTrackingDetails(order) {
     if (l3) l3.classList.add('line-completed');
     if (sDelv) sDelv.classList.add('step-completed');
     if (tBadge) {
-      tBadge.textContent = 'DELIVERED';
+      tBadge.textContent = order.orderType === 'CUSTOM_EVENT' ? 'EVENT COMPLETED' : 'DELIVERED';
       tBadge.className = 'tracker-badge status-delivered';
     }
   } else {
@@ -1469,11 +1620,13 @@ function resetForm() {
   const orderFormView = document.getElementById('orderFormView');
   const confirmationView = document.getElementById('confirmationView');
   const trackerSection = document.getElementById('trackerSection');
+  const customInquirySection = document.getElementById('customInquirySection');
   if (trackerSection) trackerSection.style.display = 'none';
+  if (customInquirySection) customInquirySection.style.display = 'none';
   if (orderFormView) orderFormView.style.display = 'block';
   if (confirmationView) confirmationView.style.display = 'none';
   
-  const fields = ['custName', 'custEmail', 'custPhone', 'custAddress', 'custPincode', 'custCompany', 'custGstin'];
+  const fields = ['custName', 'custEmail', 'custPhone', 'custAddress', 'custPincode', 'custCompany', 'custGstin', 'inqCompany', 'inqName', 'inqEmail', 'inqPhone', 'inqDate', 'inqLocation', 'inqNotes'];
   fields.forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';

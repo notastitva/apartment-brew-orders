@@ -256,10 +256,10 @@ body {
 
   display: grid;
 
-  grid-template-columns: 1fr 1fr;
-
-  gap: 8px;
-
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 16px;
+  background: #191816;
   background: var(--card-inner);
 
   padding: 4px;
@@ -268,6 +268,12 @@ body {
 
   border: 1px solid var(--card-border);
 
+
+@media (max-width: 480px) {
+  .mode-switch {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 }
 
 .mode-tab {
@@ -1441,6 +1447,12 @@ select option:disabled {
   background: rgba(144, 224, 239, 0.08);
   border: 1px solid rgba(144, 224, 239, 0.25);
   color: var(--info-blue);
+}
+
+.track-status-msg.msg-success {
+  background: rgba(45, 106, 79, 0.25);
+  border: 1px solid var(--success);
+  color: var(--success-light);
 }
 
 /* 4-Step Vertical/Horizontal Stepper */
