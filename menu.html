@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Coffee Lots &amp; Harvest Menu | The Apartment Brew Co.</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="MENU">
+  <div class="container">
+    
+    <!-- Branding Header -->
+    <header class="header-card">
+      <h1 class="brand-title">The Apartment Brew Co.</h1>
+      <div class="brand-subtitle">Single-Estate Coffee Harvests &bull; Gurugram</div>
+      <div class="drop-banner">
+        <span>📖</span> Active Single-Estate Harvest Showcase
+      </div>
+    </header>
+
+    <!-- Global Multi-Page Navigation Bar -->
+    <nav class="site-nav">
+      <a href="index.html" class="nav-link">☕ Saturday</a>
+      <a href="office.html" class="nav-link">🏢 Office</a>
+      <a href="menu.html" class="nav-link active">📖 Harvests</a>
+      <a href="about.html" class="nav-link">🌱 Story</a>
+      <a href="guide.html" class="nav-link">❄️ Freshness</a>
+      <a href="events.html" class="nav-link">🎉 Events</a>
+      <a href="track.html" class="nav-link">🔍 Track</a>
+    </nav>
+
+    <!-- Harvest Showcase Content -->
+    <main class="story-content">
+      <section class="section-card">
+        <div class="section-title">
+          <span>Active Harvests &bull; Sensory Profiles</span>
+          <span class="section-subtitle">Live Menu</span>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4;">
+          Each week we select and roast limited micro-lots from award-winning Indian coffee farms. Our menu is synced directly with our roastery inventory.
+        </p>
+
+        <!-- Dynamic Lot Showcase Container -->
+        <div class="lot-grid" id="lotGrid"></div>
+      </section>
+
+      <!-- Discovery Sampler Flight Feature -->
+      <section class="section-card" style="margin-top: 14px;">
+        <div class="section-title">
+          <span>Tasting Sampler Flights</span>
+        </div>
+        <p class="story-p">
+          Can't decide between lots? Our <strong>Discovery Duo Pack</strong> gives you a balanced 1:1 split (1x Ratnagiri Estate + 1x Banana Banger) so you can compare natural fruit-forward fermentations against clean floral notes side-by-side.
+        </p>
+        <p class="story-p">
+          On multi-bottle orders (Weekend 4-Pack or Mega 6-Pack), use our interactive ratio splitter at checkout to customize your exact personal harvest ratio (e.g. 3x Ratnagiri + 1x Banana Banger).
+        </p>
+      </section>
+
+      <!-- CTA to Order -->
+      <section class="section-card" style="margin-top: 14px; text-align: center;">
+        <h3 style="font-size: 1.1rem; color: var(--accent); margin-bottom: 6px;">Ready to Taste?</h3>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">Pre-order this weekend's drop before Friday 10 PM.</p>
+        <a href="index.html" class="btn btn-pay" style="text-decoration: none; display: inline-block;">
+          <span>☕ Order Fresh Pre-Order</span>
+        </a>
+      </section>
+    </main>
+
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

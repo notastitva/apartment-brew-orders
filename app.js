@@ -14,10 +14,14 @@ let cachedProfile = null;
 const PAGE = document.body.dataset.page || (
   window.location.pathname.includes('office') ? 'OFFICE' :
   window.location.pathname.includes('events') ? 'EVENTS' :
-  window.location.pathname.includes('track') ? 'TRACK' : 'HOME'
+  window.location.pathname.includes('track') ? 'TRACK' :
+  window.location.pathname.includes('about') ? 'ABOUT' :
+  window.location.pathname.includes('guide') ? 'GUIDE' :
+  window.location.pathname.includes('menu') ? 'MENU' : 'HOME'
 );
 
 let currentMode = (PAGE === 'OFFICE') ? "B2B" : "B2C";
+let currentWizardStep = 1;
 let currentB2bPayOption = "GATEWAY";
 let currentStoreStatus = "OPEN";
 
@@ -65,6 +69,157 @@ let currentOrderDetails = null;
 
 function normalizeStr(s) {
   return String(s || '').replace(/[\u2010-\u2015\u2212]/g, '-').replace(/\s+/g, ' ').trim().toLowerCase();
+}
+
+// --------------------------------------------------------------------
+// Multi-Step Ordering Wizard Engine (Step Navigation & Validation)
+// --------------------------------------------------------------------
+function validateWizardStep(stepNum) {
+  if (stepNum === 1) {
+    return true; // Lot / Split selection is always pre-selected
+  }
+  if (stepNum === 2) {
+    const qtyInput = document.getElementById('packQty');
+    const qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
+    const errQty = document.getElementById('errQty');
+    const isValid = !isNaN(qty) && qty >= 1;
+    setFieldState(qtyInput, errQty, isValid);
+    return isValid;
+  }
+  if (stepNum === 3) {
+    const isNameValid = validateField('custName');
+    const isEmailValid = validateEmailField();
+    const isPhoneValid = validatePhoneField();
+    const isAddressValid = validateField('custAddress');
+    const isPinValid = validatePincodeField();
+    const isCompanyValid = (PAGE === 'OFFICE') ? validateField('custCompany') : true;
+    const isGstinValid = (PAGE === 'OFFICE') ? validateGstinField() : true;
+    
+    let isSlotValid = true;
+    if (PAGE === 'OFFICE') {
+      const parkSelect = document.getElementById('b2bTechPark');
+      const windowSelect = document.getElementById('b2bDeliveryWindow');
+      if (parkSelect && windowSelect) {
+        const park = parkSelect.value;
+        const win = windowSelect.value;
+        const cluster = availableClusters.find(c => normalizeStr(c.techPark) === normalizeStr(park) && normalizeStr(c.window) === normalizeStr(win));
+        if (cluster && cluster.isFull) {
+          isSlotValid = false;
+          const alertEl = document.getElementById('slotStatusAlert');
+          if (alertEl) {
+            alertEl.textContent = `⚠️ Selected delivery slot is fully booked. Please choose another window.`;
+            alertEl.className = 'slot-status-alert slot-full';
+            alertEl.style.display = 'block';
+          }
+        }
+      }
+    }
+    return isNameValid && isEmailValid && isPhoneValid && isAddressValid && isPinValid && isCompanyValid && isGstinValid && isSlotValid;
+  }
+  return true;
+}
+
+function nextWizardStep(targetStep) {
+  if (targetStep > currentWizardStep) {
+    for (let s = currentWizardStep; s < targetStep; s++) {
+      if (!validateWizardStep(s)) {
+        alert('Please complete the required information before continuing.');
+        return;
+      }
+    }
+  }
+  goToWizardStep(targetStep);
+}
+
+function goToWizardStep(stepNum) {
+  if (stepNum < 1 || stepNum > 4) return;
+  if (stepNum > currentWizardStep && !validateWizardStep(currentWizardStep)) {
+    return;
+  }
+  
+  currentWizardStep = stepNum;
+  
+  // Show / Hide Step Panels
+  for (let i = 1; i <= 4; i++) {
+    const panel = document.getElementById(`stepPanel${i}`);
+    if (panel) panel.style.display = (i === stepNum) ? 'block' : 'none';
+  }
+  
+  // Update Progress Nodes & Connecting Lines
+  for (let i = 1; i <= 4; i++) {
+    const node = document.getElementById(`wNode${i}`);
+    const line = document.getElementById(`wLine${i}`);
+    
+    if (node) {
+      node.classList.remove('node-active', 'node-completed');
+      if (i === stepNum) {
+        node.classList.add('node-active');
+      } else if (i < stepNum) {
+        node.classList.add('node-completed');
+      }
+    }
+    
+    if (line) {
+      line.classList.toggle('line-completed', i < stepNum);
+    }
+  }
+  
+  if (stepNum === 4) {
+    populateOrderReview();
+  }
+  
+  window.scrollTo({ top: 120, behavior: 'smooth' });
+}
+
+function populateOrderReview() {
+  const isB2b = (PAGE === 'OFFICE');
+  const activePack = isB2b ? selectedB2bPack : selectedB2cPack;
+  const qty = parseInt(document.getElementById('packQty')?.value, 10) || 1;
+  const subtotal = calculateSubtotal();
+  const total = calculateTotal();
+  const discount = appliedCoupon ? appliedCoupon.discount : 0;
+  
+  const lot1Name = availableLots[0] ? availableLots[0].name : "Lot 1";
+  const lot2Name = availableLots[1] ? availableLots[1].name : "Lot 2";
+  const coffeeLotDisplay = isCustomSplit 
+    ? `Discovery Flight (${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name})` 
+    : selectedBean;
+  
+  const name = (document.getElementById('custName')?.value || '').trim();
+  const address = (document.getElementById('custAddress')?.value || '').trim();
+  const pin = (document.getElementById('custPincode')?.value || '').trim();
+  const location = isB2b ? (document.getElementById('b2bTechPark')?.value || '') : (document.getElementById('custCity')?.value || '');
+  const deliveryWindow = isB2b ? (document.getElementById('b2bDeliveryWindow')?.value || '') : "Saturday Morning (8:00 AM – 11:00 AM)";
+  const dropDate = isB2b ? getUpcomingFridayFormatted() : getUpcomingSaturdayFormatted();
+  const company = (document.getElementById('custCompany')?.value || '').trim();
+  
+  const revBean = document.getElementById('revBean');
+  const revPack = document.getElementById('revPack');
+  const revDate = document.getElementById('revDate');
+  const revWindow = document.getElementById('revWindow');
+  const revAddress = document.getElementById('revAddress');
+  const revCustomer = document.getElementById('revCustomer');
+  const revCompany = document.getElementById('revCompany');
+  const revDiscountRow = document.getElementById('revDiscountRow');
+  const revDiscount = document.getElementById('revDiscount');
+  const revTotal = document.getElementById('revTotal');
+  
+  if (revBean) revBean.textContent = coffeeLotDisplay;
+  if (revPack) revPack.textContent = `${activePack.name} x ${qty} (${activePack.bottles * qty} bottles)`;
+  if (revDate) revDate.textContent = dropDate;
+  if (revWindow) revWindow.textContent = deliveryWindow;
+  if (revAddress) revAddress.textContent = `${address}, ${location} (PIN: ${pin})`;
+  if (revCustomer) revCustomer.textContent = name;
+  if (revCompany) revCompany.textContent = company || 'N/A';
+  
+  if (discount > 0) {
+    if (revDiscountRow) revDiscountRow.style.display = 'flex';
+    if (revDiscount) revDiscount.textContent = `-₹${discount.toLocaleString('en-IN')} (${appliedCoupon.code})`;
+  } else {
+    if (revDiscountRow) revDiscountRow.style.display = 'none';
+  }
+  
+  if (revTotal) revTotal.textContent = `₹${total.toLocaleString('en-IN')}`;
 }
 
 // Dynamic Date Calculations
@@ -212,7 +367,7 @@ function renderLots(lots) {
       </div>`;
   });
   
-  if (lots.length >= 2) {
+  if (lots.length >= 2 && PAGE !== 'MENU') {
     html += `
       <div class="lot-card ${isCustomSplit ? 'active' : ''}" onclick="selectLot('Discovery Flight / Custom Split (Build Your Own Batch)', this)">
         <div class="lot-header">
@@ -426,7 +581,7 @@ function selectLot(lotName, element) {
   
   const customSplitter = document.getElementById('customSplitter');
   
-  if (lotName && (lotName.includes('Custom Ratio Split') || lotName.includes('Discovery Flight'))) {
+  if (lotName && (lotName.includes('Custom Ratio Split') || lotName.includes('Discovery Flight') || lotName.includes('Custom Split'))) {
     isCustomSplit = true;
     if (customSplitter) customSplitter.style.display = 'block';
     rebalanceSplitter();
@@ -781,7 +936,7 @@ function applySavedProfile() {
       if (profile.company && compInput) compInput.value = profile.company;
       if (profile.gstin && gstinInput) gstinInput.value = profile.gstin;
   
-      validateAllInputs();
+      validateWizardStep(3);
     }
   } catch (e) {}
 }
@@ -800,16 +955,6 @@ function saveCustomerProfile(data) {
     cachedProfile = profile;
     localStorage.setItem('tabc_customer_profile', JSON.stringify(profile));
   } catch (e) {}
-}
-
-function toggleGuide() {
-  const body = document.getElementById('guideBody');
-  const arrow = document.getElementById('guideArrow');
-  if (!body) return;
-  
-  const isOpen = body.style.display === 'block';
-  body.style.display = isOpen ? 'none' : 'block';
-  if (arrow) arrow.textContent = isOpen ? '▼' : '▲';
 }
 
 function setFieldState(inputEl, errorEl, isValid) {
@@ -911,61 +1056,13 @@ function validateGstinField() {
   return setFieldState(el, errEl, gstinRegex.test(val));
 }
 
-function validateAllInputs() {
-  const isNameValid = validateField('custName');
-  const isEmailValid = validateEmailField();
-  const isPhoneValid = validatePhoneField();
-  const isAddressValid = validateField('custAddress');
-  const isPinValid = validatePincodeField();
-  const isCompanyValid = PAGE === 'OFFICE' ? validateField('custCompany') : true;
-  const isGstinValid = PAGE === 'OFFICE' ? validateGstinField() : true;
-  
-  let isSlotValid = true;
-  if (PAGE === 'OFFICE') {
-    const parkSelect = document.getElementById('b2bTechPark');
-    const windowSelect = document.getElementById('b2bDeliveryWindow');
-    if (parkSelect && windowSelect) {
-      const park = parkSelect.value;
-      const win = windowSelect.value;
-      const cluster = availableClusters.find(c => normalizeStr(c.techPark) === normalizeStr(park) && normalizeStr(c.window) === normalizeStr(win));
-      if (cluster && cluster.isFull) {
-        isSlotValid = false;
-        const alertEl = document.getElementById('slotStatusAlert');
-        if (alertEl) {
-          alertEl.textContent = `⚠️ Selected delivery slot is fully booked. Please choose another window.`;
-          alertEl.className = 'slot-status-alert slot-full';
-          alertEl.style.display = 'block';
-        }
-      }
-    }
-  }
-  
-  const qtyInput = document.getElementById('packQty');
-  const qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
-  const isQtyValid = !isNaN(qty) && qty >= 1;
-  const errQty = document.getElementById('errQty');
-  setFieldState(qtyInput, errQty, isQtyValid);
-  
-  return isNameValid && isEmailValid && isPhoneValid && isAddressValid && isPinValid && isCompanyValid && isGstinValid && isQtyValid && isSlotValid;
-}
-
 function handlePayClick() {
   if (currentStoreStatus === 'PAUSED' || currentStoreStatus === 'SOLD_OUT') {
     alert('Pre-orders are currently closed for this drop.');
     return;
   }
   
-  if (PAGE === 'OFFICE') {
-    const park = document.getElementById('b2bTechPark')?.value;
-    const win = document.getElementById('b2bDeliveryWindow')?.value;
-    const cluster = availableClusters.find(c => normalizeStr(c.techPark) === normalizeStr(park) && normalizeStr(c.window) === normalizeStr(win));
-    if (cluster && cluster.isFull) {
-      alert('The selected delivery slot is full. Please choose another delivery window.');
-      return;
-    }
-  }
-  
-  if (!validateAllInputs()) {
+  if (!validateWizardStep(1) || !validateWizardStep(2) || !validateWizardStep(3)) {
     alert('Please correct the highlighted fields before placing your order.');
     return;
   }
@@ -1309,7 +1406,6 @@ function submitTrackOrder() {
   }
   if (btnTrack) btnTrack.disabled = true;
   
-  // If endpoint is not configured, run local mock search for testing
   if (!CONFIG.googleSheetEndpoint || CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
     setTimeout(() => {
       if (btnTrack) btnTrack.disabled = false;
@@ -1421,7 +1517,6 @@ function renderTrackingDetails(order) {
   
   const isEvent = order.orderType === 'CUSTOM_EVENT' || (order.orderId && order.orderId.startsWith('TABC-EVT'));
   
-  // 1. Dynamic Stepper Labels & Descriptions
   const sTitle1 = document.getElementById('stepTitle1');
   const sDesc1 = document.getElementById('stepDesc1');
   const sTitle2 = document.getElementById('stepTitle2');
@@ -1451,7 +1546,6 @@ function renderTrackingDetails(order) {
     if (sDesc4) sDesc4.textContent = 'Enjoy fresh within 48 hours';
   }
   
-  // 2. Summary Card Labels
   const lblCustomer = document.getElementById('lblCustomer');
   const lblCompany = document.getElementById('lblCompany');
   const lblDeliveryWindow = document.getElementById('lblDeliveryWindow');
@@ -1484,7 +1578,6 @@ function renderTrackingDetails(order) {
     if (tFreshnessNote) tFreshnessNote.innerHTML = '&#10052; <strong>48-Hour Freshness Window:</strong> Keep refrigerated upon delivery and consume within 48 hours for peak tasting notes!';
   }
   
-  // 3. Populate Card Values
   const tBadge = document.getElementById('tBadgeStatus');
   const tOrderId = document.getElementById('tOrderId');
   const tCustomer = document.getElementById('tCustomer');
@@ -1527,7 +1620,6 @@ function renderTrackingDetails(order) {
     }
   }
   
-  // 4. Stepper Stage Transitions
   const sPre = document.getElementById('stepPreOrdered');
   const sBrew = document.getElementById('stepBrewing');
   const sDisp = document.getElementById('stepDispatched');
@@ -1546,7 +1638,6 @@ function renderTrackingDetails(order) {
   const status = normalizeStr(order.deliveryStatus || 'Pre-Ordered');
   
   if (isEvent) {
-    // Custom Event Lifecycle
     if (status.includes('lead') || status.includes('received') || status.includes('inquiry') || status.includes('new')) {
       if (sPre) sPre.classList.add('step-active');
       if (tBadge) {
@@ -1591,7 +1682,6 @@ function renderTrackingDetails(order) {
       }
     }
   } else {
-    // Standard Order Lifecycle
     if (status.includes('pre-order') || status.includes('preorder') || status.includes('pending') || status.includes('received')) {
       if (sPre) sPre.classList.add('step-active');
       if (tBadge) {
@@ -1720,6 +1810,7 @@ function resetForm() {
   document.querySelectorAll('.field-error').forEach(el => el.style.display = 'none');
   checkSavedProfile();
   removeCoupon();
+  goToWizardStep(1);
 }
 
 // --------------------------------------------------------------------
@@ -1733,6 +1824,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkSavedProfile();
     fetchLiveConfig();
     setInterval(fetchLiveConfig, 30000);
+    goToWizardStep(1);
   } else if (PAGE === 'OFFICE') {
     renderLots(availableLots);
     renderPacks([], availableB2bPacks);
@@ -1741,8 +1833,11 @@ document.addEventListener('DOMContentLoaded', () => {
     checkSavedProfile();
     fetchLiveConfig();
     setInterval(fetchLiveConfig, 30000);
+    goToWizardStep(1);
+  } else if (PAGE === 'MENU') {
+    renderLots(availableLots);
+    fetchLiveConfig();
   } else if (PAGE === 'TRACK') {
-    // Check for query param ?orderId=... or ?id=...
     const urlParams = new URLSearchParams(window.location.search);
     const qId = urlParams.get('orderId') || urlParams.get('id');
     if (qId) {
