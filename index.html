@@ -44,10 +44,33 @@
       <div class="drawer-footer-text">☕ Hand-Brewed Fresh to Order in Gurugram</div>
     </div>
   </aside>
-
+  
   <div class="container">
     
-    <!-- HERO SECTION: High-Impact Visual Graphic, Animated Bottle & Value Prop -->
+    <!-- LIVE SCHEDULE & BATCH SCARCITY STATUS -->
+    <header class="header-card">
+      <div class="drop-banner" id="dropBanner">
+        <span>⚡</span> Next Drops: Friday (Office) &bull; Saturday &amp; Sunday (Weekend Drops)
+      </div>
+      <div class="countdown-timer" id="countdownTimer">Loading roastery schedule...</div>
+
+      <!-- Scarcity Bar -->
+      <div class="scarcity-bar-container">
+        <div class="scarcity-label">
+          <span>🔥 Limited Roastery Batch Capacity</span>
+          <span id="scarcityText">Loading batch availability...</span>
+        </div>
+        <div class="scarcity-progress-track">
+          <div class="scarcity-progress-fill" id="scarcityFill"></div>
+        </div>
+      </div>
+
+      <div class="geo-badge">
+        📍 Cold-Chain Deliveries Across DLF Cyber City, Golf Course Rd, Candor TechSpace &amp; Delhi NCR
+      </div>
+    </header>
+
+    <!-- HERO SECTION: Clean, High-Impact Value Proposition -->
     <section class="hero-visual-card">
       <div class="hero-tag-badge">
         <span>⚡</span> Micro-Batch Roastery &bull; Gurugram
@@ -55,102 +78,13 @@
 
       <h1 class="hero-main-title">
         Specialty Pour-Over.<br />
-        <span class="hero-gradient-text">Hot Extracted. Flash-Chilled.</span><br />
-        Bottled Fresh at 200ml.
+        <span class="hero-gradient-text">Precision Brewed. Flash-Chilled.</span><br />
+        Delivered Fresh to Order.
       </h1>
 
       <p class="hero-lead-text">
-        We extract single-estate Indian harvests hot (94&deg;C) to dissolve sweet floral aromatics, shock-chill them over ice to 4&deg;C in seconds, and deliver pure cafe-quality pour-overs with <strong>zero preservatives</strong>.
+        We hand-brew single-estate Indian harvests to dissolve delicate floral aromatics and fruit acids, instantly shock-chill over ice to lock in peak freshness, and deliver across Delhi NCR with <strong>zero preservatives</strong>.
       </p>
-
-      <!-- Animated SVG 200ml Amber Glass Bottle Graphic with Floating Badges -->
-      <div class="hero-bottle-graphic-wrap">
-        <svg class="bottle-illustration-svg" viewBox="0 0 160 250" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <!-- Bottle Glass Gradient -->
-            <linearGradient id="glassAmber" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#3d2817" />
-              <stop offset="35%" stop-color="#704423" />
-              <stop offset="70%" stop-color="#24150c" />
-              <stop offset="100%" stop-color="#140a05" />
-            </linearGradient>
-            <!-- Liquid Fill Gradient -->
-            <linearGradient id="liquidGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#2d160b" />
-              <stop offset="50%" stop-color="#1b0c05" />
-              <stop offset="100%" stop-color="#0d0502" />
-            </linearGradient>
-            <!-- Gold Label Gradient -->
-            <linearGradient id="labelGold" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#faedcd" />
-              <stop offset="50%" stop-color="#d4a373" />
-              <stop offset="100%" stop-color="#b08968" />
-            </linearGradient>
-            <!-- Glass Specular Highlight -->
-            <linearGradient id="specular" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
-              <stop offset="40%" stop-color="#ffffff" stop-opacity="0.05" />
-              <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
-            </linearGradient>
-            <!-- Condensation Drop Filter -->
-            <filter id="dropGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="1" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
-          </defs>
-
-          <!-- Bottle Shadow Ground -->
-          <ellipse cx="80" cy="242" rx="48" ry="7" fill="rgba(0,0,0,0.5)" />
-
-          <!-- Bottle Cap (Matte Black with Gold Ridge) -->
-          <rect x="66" y="8" width="28" height="18" rx="3" fill="#1e1c1a" stroke="#d4a373" stroke-width="1.5" />
-          <line x1="68" y1="14" x2="92" y2="14" stroke="#d4a373" stroke-width="1" stroke-opacity="0.6" />
-          <line x1="68" y1="18" x2="92" y2="18" stroke="#d4a373" stroke-width="1" stroke-opacity="0.6" />
-
-          <!-- Bottle Neck -->
-          <path d="M 68 26 L 68 52 Q 68 70 42 85 L 42 225 Q 42 238 56 238 L 104 238 Q 118 238 118 225 L 118 85 Q 92 70 92 52 L 92 26 Z" fill="url(#glassAmber)" stroke="#d4a373" stroke-width="1.2" stroke-opacity="0.4" />
-
-          <!-- Coffee Liquid Body -->
-          <path d="M 44 92 Q 80 88 116 92 L 116 224 Q 116 236 104 236 L 56 236 Q 44 236 44 224 Z" fill="url(#liquidGrad)" />
-
-          <!-- Craft Paper Label on Bottle -->
-          <rect x="48" y="105" width="64" height="92" rx="4" fill="#1b1916" stroke="url(#labelGold)" stroke-width="1.2" />
-          
-          <!-- Label Typography & Badges -->
-          <text x="80" y="122" font-size="7" font-weight="900" fill="#d4a373" text-anchor="middle" letter-spacing="0.8">APARTMENT BREW</text>
-          <line x1="56" y1="127" x2="104" y2="127" stroke="#d4a373" stroke-width="0.8" stroke-opacity="0.6" />
-          <text x="80" y="138" font-size="6" font-weight="700" fill="#fefae0" text-anchor="middle">FLASH-CHILLED</text>
-          <text x="80" y="147" font-size="5" fill="#9c9589" text-anchor="middle">SINGLE-ESTATE</text>
-          <rect x="58" y="154" width="44" height="14" rx="3" fill="rgba(212,163,115,0.15)" stroke="#d4a373" stroke-width="0.7" />
-          <text x="80" y="163" font-size="5.5" font-weight="800" fill="#d4a373" text-anchor="middle">200 ML &bull; 48H PEAK</text>
-          <text x="80" y="186" font-size="4.5" fill="#95d5b2" text-anchor="middle">&#10003; 100% PRESERVATIVE FREE</text>
-
-          <!-- Glass Specular Reflection Highlight Streak -->
-          <path d="M 46 90 L 52 90 L 52 230 L 46 230 Z" fill="url(#specular)" />
-
-          <!-- Cold Condensation Droplets (Visual Micro-details) -->
-          <circle cx="56" cy="98" r="1.5" fill="#90e0ef" opacity="0.7" />
-          <circle cx="106" cy="115" r="1.8" fill="#90e0ef" opacity="0.6" />
-          <circle cx="52" cy="140" r="1.2" fill="#90e0ef" opacity="0.8" />
-          <circle cx="108" cy="180" r="2.2" fill="#90e0ef" opacity="0.7" />
-          <circle cx="54" cy="210" r="1.6" fill="#90e0ef" opacity="0.75" />
-          <circle cx="102" cy="222" r="1.4" fill="#90e0ef" opacity="0.65" />
-        </svg>
-
-        <!-- Floating Interactive Metric Chips around the bottle -->
-        <div class="floating-chip chip-top-left">
-          <span>❄️</span> 4&deg;C Flash-Chilled
-        </div>
-        <div class="floating-chip chip-top-right">
-          <span>☕</span> 100% Arabica
-        </div>
-        <div class="floating-chip chip-bottom-left">
-          <span>⏱️</span> 48-Hour Peak
-        </div>
-        <div class="floating-chip chip-bottom-right">
-          <span>🚫</span> 0 Preservatives
-        </div>
-      </div>
 
       <!-- Action Button Cluster -->
       <div class="hero-cta-cluster">
@@ -165,51 +99,182 @@
       <!-- 4-Stat Micro Highlights Grid -->
       <div class="hero-stats-row">
         <div class="stat-box">
-          <div class="stat-icon">🔥</div>
-          <div class="stat-label">90-94&deg;C Extract</div>
+          <div class="stat-icon">☕</div>
+          <div class="stat-label">100% Single-Estate</div>
         </div>
         <div class="stat-box">
           <div class="stat-icon">❄️</div>
-          <div class="stat-label">4&deg;C Shock Chill</div>
+          <div class="stat-label">4&deg;C Flash-Chilled</div>
         </div>
         <div class="stat-box">
-          <div class="stat-icon">🍾</div>
-          <div class="stat-label">Glass Bottles</div>
+          <div class="stat-icon">⏱️</div>
+          <div class="stat-label">48-Hour Peak</div>
         </div>
         <div class="stat-box">
-          <div class="stat-icon">📍</div>
-          <div class="stat-label">Delhi NCR Drops</div>
+          <div class="stat-icon">🌿</div>
+          <div class="stat-label">0 Preservatives</div>
         </div>
       </div>
     </section>
 
-    <!-- LIVE SCHEDULE & BATCH SCARCITY STATUS -->
-    <header class="header-card">
-      <div class="drop-banner" id="dropBanner">
-        <span>⚡</span> Next Drops: Friday (Office) &bull; Saturday &amp; Sunday (Weekend Drops)
-      </div>
-      <div class="countdown-timer" id="countdownTimer">Loading roastery schedule...</div>
-  
-      <!-- Scarcity Bar -->
-      <div class="scarcity-bar-container">
-        <div class="scarcity-label">
-          <span>🔥 Limited Roastery Batch Capacity (200ml Bottles)</span>
-          <span id="scarcityText">Loading batch availability...</span>
-        </div>
-        <div class="scarcity-progress-track">
-          <div class="scarcity-progress-fill" id="scarcityFill"></div>
-        </div>
-      </div>
-  
-      <div class="geo-badge">
-        📍 Cold-Chain Deliveries Across DLF Cyber City, Golf Course Rd, Candor TechSpace &amp; Delhi NCR
-      </div>
-    </header>
-
-    <!-- INTERACTIVE 4-STEP CRAFT EXTRACTION VISUALIZER -->
+    <!-- SENSORY EXTRACTION SCIENCE & GRAPH COMPARISON -->
     <section class="section-card">
       <div class="section-title">
-        <span>The Flash-Chilling Craft Process</span>
+        <span>Sensory Profile &amp; Extraction</span>
+        <span class="section-subtitle">The Science</span>
+      </div>
+      <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4;">
+        Why flash-chilling unlocks richer flavor than traditional 18-hour cold immersion: Heat dissolves complex fruit acids and aromatic oils, while rapid thermal shock traps them before oxidation.
+      </p>
+
+      <!-- SVG Sensory Graph Comparison Matrix -->
+      <div class="sensory-chart-card">
+        <div class="chart-header">
+          <div class="chart-legend-item">
+            <span class="legend-dot dot-flash"></span>
+            <span class="legend-text">Flash-Chilled Pour-Over</span>
+          </div>
+          <div class="chart-legend-item">
+            <span class="legend-dot dot-cold"></span>
+            <span class="legend-text">Standard Cold Brew</span>
+          </div>
+        </div>
+
+        <div class="chart-bars-list">
+          <!-- Metric 1 -->
+          <div class="chart-metric-row">
+            <div class="metric-label-group">
+              <span class="metric-name">Floral &amp; Berry Aromatics</span>
+              <span class="metric-val highlight">94% vs 32%</span>
+            </div>
+            <div class="dual-bar-track">
+              <div class="bar-fill bar-flash" style="width: 94%;"></div>
+              <div class="bar-fill bar-cold" style="width: 32%;"></div>
+            </div>
+          </div>
+
+          <!-- Metric 2 -->
+          <div class="chart-metric-row">
+            <div class="metric-label-group">
+              <span class="metric-name">Bright Fruit Acidity</span>
+              <span class="metric-val highlight">90% vs 28%</span>
+            </div>
+            <div class="dual-bar-track">
+              <div class="bar-fill bar-flash" style="width: 90%;"></div>
+              <div class="bar-fill bar-cold" style="width: 28%;"></div>
+            </div>
+          </div>
+
+          <!-- Metric 3 -->
+          <div class="chart-metric-row">
+            <div class="metric-label-group">
+              <span class="metric-name">Natural Cane Sweetness</span>
+              <span class="metric-val highlight">88% vs 65%</span>
+            </div>
+            <div class="dual-bar-track">
+              <div class="bar-fill bar-flash" style="width: 88%;"></div>
+              <div class="bar-fill bar-cold" style="width: 65%;"></div>
+            </div>
+          </div>
+
+          <!-- Metric 4 -->
+          <div class="chart-metric-row">
+            <div class="metric-label-group">
+              <span class="metric-name">Cup Clarity &amp; Clean Finish</span>
+              <span class="metric-val highlight">96% vs 40%</span>
+            </div>
+            <div class="dual-bar-track">
+              <div class="bar-fill bar-flash" style="width: 96%;"></div>
+              <div class="bar-fill bar-cold" style="width: 40%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 48-HOUR FRESHNESS CURVE & TIMELINE GRAPH -->
+    <section class="section-card">
+      <div class="section-title">
+        <span>48-Hour Freshness Peak</span>
+        <span class="section-subtitle">Flavor Curve</span>
+      </div>
+      <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
+        With zero stabilizers or artificial pasteurization, our coffee is crafted for a vibrant 48-hour taste window:
+      </p>
+
+      <!-- SVG Freshness Curve Graph -->
+      <div class="freshness-graph-wrapper">
+        <svg class="freshness-curve-svg" viewBox="0 0 460 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="curveFillGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#d4a373" stop-opacity="0.35" />
+              <stop offset="50%" stop-color="#d4a373" stop-opacity="0.25" />
+              <stop offset="85%" stop-color="#d4a373" stop-opacity="0.1" />
+              <stop offset="100%" stop-color="#e63946" stop-opacity="0.05" />
+            </linearGradient>
+            <linearGradient id="curveStrokeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#faedcd" />
+              <stop offset="35%" stop-color="#d4a373" />
+              <stop offset="75%" stop-color="#b08968" />
+              <stop offset="100%" stop-color="#e63946" />
+            </linearGradient>
+          </defs>
+
+          <!-- Grid Lines -->
+          <line x1="20" y1="20" x2="440" y2="20" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3 3" />
+          <line x1="20" y1="65" x2="440" y2="65" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3 3" />
+          <line x1="20" y1="110" x2="440" y2="110" stroke="rgba(255,255,255,0.12)" />
+
+          <!-- Curve Area Fill -->
+          <path d="M 20 110 L 20 40 Q 90 22 160 25 Q 260 30 330 55 Q 380 78 440 108 L 440 110 Z" fill="url(#curveFillGrad)" />
+          
+          <!-- Main Curve Line -->
+          <path d="M 20 40 Q 90 22 160 25 Q 260 30 330 55 Q 380 78 440 108" stroke="url(#curveStrokeGrad)" stroke-width="3" stroke-linecap="round" />
+
+          <!-- Key Points on Curve -->
+          <!-- Point 1 (Drop Morning - Hour 0) -->
+          <circle cx="35" cy="36" r="4.5" fill="#faedcd" stroke="#141312" stroke-width="2" />
+          <text x="35" y="18" fill="#faedcd" font-size="8.5" font-weight="700" text-anchor="middle">Hour 0 (Drop)</text>
+
+          <!-- Point 2 (Peak Balance - Hour 24) -->
+          <circle cx="190" cy="27" r="4.5" fill="#d4a373" stroke="#141312" stroke-width="2" />
+          <text x="190" y="16" fill="#d4a373" font-size="8.5" font-weight="800" text-anchor="middle">Hour 24 (Peak Balance)</text>
+
+          <!-- Point 3 (Mellow Finish - Hour 48) -->
+          <circle cx="350" cy="62" r="4.5" fill="#b08968" stroke="#141312" stroke-width="2" />
+          <text x="350" y="52" fill="#b08968" font-size="8.5" font-weight="700" text-anchor="middle">Hour 48 (Mellow)</text>
+
+          <!-- Axis Labels -->
+          <text x="20" y="126" fill="#9c9589" font-size="8" font-weight="600">0h Dispatch</text>
+          <text x="180" y="126" fill="#9c9589" font-size="8" font-weight="600">24h Balanced</text>
+          <text x="340" y="126" fill="#9c9589" font-size="8" font-weight="600">48h Peak Cutoff</text>
+          <text x="440" y="126" fill="#e63946" font-size="8" font-weight="600" text-anchor="end">72h+ Oxidation</text>
+        </svg>
+      </div>
+
+      <div class="timeline-summary-grid">
+        <div class="timeline-point-card">
+          <div class="tp-time">Hours 0–12</div>
+          <div class="tp-title">Explosive Aromatics</div>
+          <div class="tp-desc">Vibrant berry acidity, crisp citrus, and high floral jasmine aromatics.</div>
+        </div>
+        <div class="timeline-point-card">
+          <div class="tp-time">Hours 12–36</div>
+          <div class="tp-title">Peak Integration</div>
+          <div class="tp-desc">Acidity rounds out seamlessly with dark cacao and sweet stone fruit undertones.</div>
+        </div>
+        <div class="timeline-point-card">
+          <div class="tp-time">Hours 36–48</div>
+          <div class="tp-title">Mellow Finish</div>
+          <div class="tp-desc">Rich, smooth, rounded sweetness. Enjoy fresh before the 48-hour cutoff.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3-STEP CRAFT BREW PROCESS -->
+    <section class="section-card">
+      <div class="section-title">
+        <span>The Craft Process</span>
         <span class="section-subtitle">How We Brew</span>
       </div>
 
@@ -218,48 +283,36 @@
         <div class="craft-flow-step">
           <div class="flow-step-header">
             <div class="flow-step-num">1</div>
-            <div class="flow-step-title">Hot Extraction (94&deg;C)</div>
+            <div class="flow-step-title">Precision Hot Extraction</div>
           </div>
           <div class="flow-step-desc">
-            Coffee needs heat to dissolve delicate fruit acids, floral aromatics, and natural sugars that cold water can never extract.
+            Manual pour-over extraction dissolves delicate fruit acids, floral oils, and natural sugars that cold water cannot unlock.
           </div>
-          <div class="flow-step-tag">🔥 Temperature: 92&ndash;94&deg;C</div>
+          <div class="flow-step-tag">☕ Specialty Single-Estate</div>
         </div>
 
         <!-- Step 2 -->
         <div class="craft-flow-step">
           <div class="flow-step-header">
             <div class="flow-step-num">2</div>
-            <div class="flow-step-title">Thermal Flash-Chill</div>
+            <div class="flow-step-title">Instant Thermal Shock</div>
           </div>
           <div class="flow-step-desc">
-            The hot brew is instantly shock-chilled over ice to 4&deg;C in seconds, trapping volatile flavor oils before oxidation occurs.
+            The hot brew is flash-chilled over clean ice directly to 4&deg;C in seconds, permanently locking in volatile aromatics.
           </div>
-          <div class="flow-step-tag">❄️ Thermal Shock: 4&deg;C</div>
+          <div class="flow-step-tag">❄️ Shock-Chilled to 4&deg;C</div>
         </div>
 
         <!-- Step 3 -->
         <div class="craft-flow-step">
           <div class="flow-step-header">
             <div class="flow-step-num">3</div>
-            <div class="flow-step-title">200ml Glass Bottling</div>
-          </div>
-          <div class="flow-step-desc">
-            Sealed overnight in custom 200ml glass bottles with zero preservatives, stabilizers, or artificial extracts.
-          </div>
-          <div class="flow-step-tag">🍾 Pure Single-Estate</div>
-        </div>
-
-        <!-- Step 4 -->
-        <div class="craft-flow-step">
-          <div class="flow-step-header">
-            <div class="flow-step-num">4</div>
             <div class="flow-step-title">Cold-Chain Morning Drop</div>
           </div>
           <div class="flow-step-desc">
-            Delivered directly to your doorstep Saturday &amp; Sunday morning or your tech park desk on Friday.
+            Sealed fresh and delivered ice-cold to your doorstep Saturday &amp; Sunday mornings or your tech park on Friday.
           </div>
-          <div class="flow-step-tag">⏱️ 48-Hour Peak Window</div>
+          <div class="flow-step-tag">⏱️ 48-Hour Freshness Window</div>
         </div>
       </div>
     </section>
@@ -285,7 +338,7 @@
           <span class="flavor-pill">Fruity</span>
           <span class="flavor-pill">High Acidity</span>
           <span class="flavor-pill">Medium Roast</span>
-          <span class="flavor-pill">200ml</span>
+          <span class="flavor-pill">Chikmagalur</span>
         </div>
       </a>
 
@@ -300,7 +353,7 @@
           <span class="flavor-pill">Floral</span>
           <span class="flavor-pill">Clean Crisp</span>
           <span class="flavor-pill">Light-Med Roast</span>
-          <span class="flavor-pill">200ml</span>
+          <span class="flavor-pill">Special Lot</span>
         </div>
       </a>
 
@@ -335,24 +388,24 @@
         <div class="comp-card highlighted-comp">
           <div class="comp-badge-top">Recommended</div>
           <div class="comp-card-header">
-            <span>✨</span> The Apartment Brew Co. (200ml Flash-Chilled)
+            <span>✨</span> The Apartment Brew Co. (Flash-Chilled)
           </div>
           <div class="comp-points-list">
             <div class="comp-point-item positive">
               <span class="icon">&#10003;</span>
-              <span><strong>Extraction:</strong> Hot brew (94&deg;C) + thermal shock to 4&deg;C</span>
+              <span><strong>Extraction:</strong> Hot pour-over extraction + 4&deg;C rapid thermal shock</span>
             </div>
             <div class="comp-point-item positive">
               <span class="icon">&#10003;</span>
-              <span><strong>Flavor:</strong> Vibrant wild berries, citrus acidity, floral clarity</span>
+              <span><strong>Flavor:</strong> Vibrant wild berries, citrus acidity, floral jasmine clarity</span>
             </div>
             <div class="comp-point-item positive">
               <span class="icon">&#10003;</span>
-              <span><strong>Ingredients:</strong> 100% single-estate arabica &bull; Zero additives</span>
+              <span><strong>Ingredients:</strong> 100% single-estate Arabica &bull; Zero additives or preservatives</span>
             </div>
             <div class="comp-point-item positive">
               <span class="icon">&#10003;</span>
-              <span><strong>Peak Freshness:</strong> Bottled overnight for strict 48-hour peak</span>
+              <span><strong>Peak Freshness:</strong> Brewed fresh for a strict 48-hour flavor window</span>
             </div>
           </div>
         </div>
@@ -365,7 +418,7 @@
           <div class="comp-points-list">
             <div class="comp-point-item">
               <span class="icon">&bull;</span>
-              <span>18-hr cold immersion (fails to extract delicate floral fruit acids)</span>
+              <span>18-hr cold immersion fails to extract delicate floral fruit acids</span>
             </div>
             <div class="comp-point-item">
               <span class="icon">&bull;</span>
@@ -422,7 +475,7 @@
         <div class="review-card">
           <div class="review-stars">★★★★★</div>
           <div class="review-quote">
-            &ldquo;We ordered a 20-bottle Office Batch for our Friday engineering demo. The 200ml glass bottles were ice-cold and finished in 15 minutes. Best team perk!&rdquo;
+            &ldquo;We ordered an Office Batch for our Friday engineering demo. Ice-cold delivery, exceptional floral clarity, and finished in 15 minutes. Best team perk!&rdquo;
           </div>
           <div class="review-author">
             <strong>Mohit K.</strong> <span>DLF Cyber City Tech Lead</span>
@@ -431,56 +484,42 @@
       </div>
     </section>
 
-    <!-- QUICK ACCESS PORTALS -->
+    <!-- STREAMLINED ORDERING & SERVICES HUB -->
     <section class="section-card">
       <div class="section-title">
         <span>Order &amp; Inquire</span>
         <span class="section-subtitle">Choose Portal</span>
       </div>
 
-      <div class="portal-grid">
-        <!-- Portal 1: Weekend Individual Drop -->
-        <a href="order.html" class="portal-card">
-          <div>
-            <div class="portal-header">☕ Individual Brew</div>
-            <div class="portal-desc">
-              Weekend micro-batches (200ml bottles) delivered fresh Saturday or Sunday morning.
-            </div>
+      <div class="streamlined-hub-grid">
+        <!-- Option 1: Weekend Pre-Order -->
+        <a href="order.html" class="streamlined-hub-card">
+          <div class="sh-card-header">
+            <span class="sh-icon">☕</span>
+            <span class="sh-title">Weekend Individual Drops</span>
           </div>
-          <div class="portal-cta">Start Pre-Order &rarr;</div>
+          <p class="sh-desc">Pre-order single or multi-bottle packs delivered Saturday &amp; Sunday morning.</p>
+          <div class="sh-cta">Pre-Order Weekend Drop &rarr;</div>
         </a>
 
-        <!-- Portal 2: Friday Office Drop -->
-        <a href="office.html" class="portal-card">
-          <div>
-            <div class="portal-header">🏢 Team Brew</div>
-            <div class="portal-desc">
-              Corporate batch drops (10 to 60x 200ml bottles) for tech parks with Net-7 invoicing.
-            </div>
+        <!-- Option 2: Corporate Office Drops -->
+        <a href="office.html" class="streamlined-hub-card">
+          <div class="sh-card-header">
+            <span class="sh-icon">🏢</span>
+            <span class="sh-title">Friday Team Brew Drops</span>
           </div>
-          <div class="portal-cta">Start Office Order &rarr;</div>
+          <p class="sh-desc">Corporate batch deliveries across Cyber City &amp; NCR hubs with Net-7 invoicing.</p>
+          <div class="sh-cta">Order Office Batch &rarr;</div>
         </a>
+      </div>
 
-        <!-- Portal 3: Custom Events -->
-        <a href="events.html" class="portal-card">
-          <div>
-            <div class="portal-header">🎉 Event Runs</div>
-            <div class="portal-desc">
-              Pop-up specialty coffee bars for hackathons, townhalls, and startup offsites.
-            </div>
-          </div>
-          <div class="portal-cta">Submit Requirement &rarr;</div>
+      <!-- Quick Utility Links Bar -->
+      <div class="streamlined-sub-links">
+        <a href="events.html" class="sub-link-pill">
+          <span>🎉 Custom Event Catering &amp; Offsites &rarr;</span>
         </a>
-
-        <!-- Portal 4: Order Tracker -->
-        <a href="track.html" class="portal-card">
-          <div>
-            <div class="portal-header">🔍 Order Tracker</div>
-            <div class="portal-desc">
-              Self-service lookup. Track live brewing, chilling, dispatch, and delivery stages.
-            </div>
-          </div>
-          <div class="portal-cta">Track Status &rarr;</div>
+        <a href="track.html" class="sub-link-pill">
+          <span>🔍 Track Existing Order Status &rarr;</span>
         </a>
       </div>
     </section>
