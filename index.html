@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>The Apartment Brew Co. | Micro-Batch Flash-Chilled Specialty Coffee</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://checkout.razorpay.com">
+  <link rel="dns-prefetch" href="https://checkout.razorpay.com">
 </head>
 <body data-page="INDEX">
-  <!-- Sticky Top Header & Hamburger Navigation (Topmost Component) -->
+
+  <!-- Sticky Top Header and Hamburger Navigation -->
   <header class="site-header-sticky">
     <div class="header-inner">
       <a href="index.html" class="nav-logo">
@@ -22,8 +24,8 @@
       </button>
     </div>
   </header>
-  
-  <!-- Navigation Drawer Backdrop & Overlay Menu -->
+
+  <!-- Navigation Drawer Backdrop and Overlay Menu -->
   <div class="nav-backdrop" id="navBackdrop" onclick="closeNavDrawer()"></div>
   <aside class="nav-drawer" id="navDrawer">
     <div class="drawer-header">
@@ -34,9 +36,9 @@
       <a href="index.html" class="drawer-link active" data-page-link="INDEX">Home</a>
       <a href="order.html" class="drawer-link" data-page-link="ORDER">Individual Brew</a>
       <a href="office.html" class="drawer-link" data-page-link="OFFICE">Team Brew</a>
-      <a href="menu.html" class="drawer-link" data-page-link="MENU">Harvests &amp; Sensory Menu</a>
+      <a href="menu.html" class="drawer-link" data-page-link="MENU">Harvests and Sensory Menu</a>
       <a href="guide.html" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
-      <a href="about.html" class="drawer-link" data-page-link="ABOUT">Craft &amp; Philosophy</a>
+      <a href="about.html" class="drawer-link" data-page-link="ABOUT">Craft and Philosophy</a>
       <a href="events.html" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
       <a href="track.html" class="drawer-link" data-page-link="TRACK">Enquiry/Order Tracker</a>
     </nav>
@@ -46,217 +48,487 @@
   </aside>
 
   <div class="container">
-    
-    <!-- Branding Header -->
-    <!-- Live Drop & Batch Capacity Card -->
-    <header class="header-card">
-      <div class="drop-banner" id="dropBanner">
-        <span>⚡</span> Fresh Drops: Friday (Office) &bull; Saturday &amp; Sunday (Weekend Drops)
+
+    <!-- Hero Section: Value Proposition and Dynamic Live Status -->
+    <section class="hero-card animate-fade-in">
+      <div class="hero-pill-badge">
+        <span>⚡</span> Micro-Batch Fresh Flash-Chilled Drop
       </div>
-      <div class="countdown-timer" id="countdownTimer">Loading roastery schedule...</div>
-  
-      <!-- Scarcity Bar -->
-      <div class="scarcity-bar-container">
-        <div class="scarcity-label">
-          <span>🔥 Limited Batch Capacity</span>
-          <span id="scarcityText">Loading batch availability...</span>
+
+      <h1 class="hero-title">
+        Specialty Pour-Over.<br>
+        <span class="highlight">Flash-Chilled Over Ice.</span>
+      </h1>
+
+      <p class="hero-subhead">
+        We hot-extract single-estate Indian specialty coffee (92–94&deg;C) to capture delicate floral aromatics and fruit sugars, then flash-chill immediately to 4&deg;C with zero preservatives. 100% manual, small-batch, and delivered fresh across Gurugram and Delhi NCR.
+      </p>
+
+      <!-- Live Roastery Drop Schedule and Scarcity Tracker -->
+      <div class="header-card" style="margin: 10px 0 16px; padding: 14px; background: rgba(0,0,0,0.35); border-color: rgba(212,163,115,0.25);">
+        <div class="drop-banner" id="dropBanner">
+          <span>⚡</span> Fresh Drops: Friday (Office) &bull; Saturday and Sunday (Weekend Drops)
         </div>
-        <div class="scarcity-progress-track">
-          <div class="scarcity-progress-fill" id="scarcityFill"></div>
+        <div class="countdown-timer" id="countdownTimer">Loading roastery schedule...</div>
+
+        <!-- Scarcity Capacity Bar -->
+        <div class="scarcity-bar-container">
+          <div class="scarcity-label">
+            <span>🔥 Limited Batch Capacity</span>
+            <span id="scarcityText">Loading batch availability...</span>
+          </div>
+          <div class="scarcity-progress-track">
+            <div class="scarcity-progress-fill" id="scarcityFill"></div>
+          </div>
+        </div>
+
+        <div class="store-status-banner" id="storeStatusBanner" style="display: none;"></div>
+      </div>
+
+      <!-- Quick Hero CTAs -->
+      <div class="hero-cta-group">
+        <a href="order.html" class="btn-hero-primary">
+          <span>☕ Pre-Order Weekend Drop (Sat and Sun)</span>
+          <span>&rarr;</span>
+        </a>
+        <a href="office.html" class="btn-hero-secondary">
+          <span>🏢 Friday Corporate Drops (Office Batches)</span>
+          <span>&rarr;</span>
+        </a>
+      </div>
+
+      <!-- Craft Spec Ribbon -->
+      <div class="spec-ribbon">
+        <div class="spec-item">
+          <span class="spec-val">92–94&deg;C</span>
+          <span class="spec-lbl">Hot Extraction</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-val">4&deg;C</span>
+          <span class="spec-lbl">Thermal Shock</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-val">48-Hour</span>
+          <span class="spec-lbl">Peak Window</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-val">200ml</span>
+          <span class="spec-lbl">Glass Format</span>
         </div>
       </div>
-  
+
       <div class="geo-badge">
-        📍 Cold-Chain Drops Across Gurugram, DLF Cyber City, Golf Course Rd &amp; Delhi NCR
+        📍 Cold-Chain Drops Across Gurugram, DLF Cyber City, Golf Course Rd, Sector 48, Noida and Delhi NCR
       </div>
-    </header>
-  
-    <!-- Brand Story & Core Philosophy -->
-    <main class="story-content">
-      
-      <!-- Hero Intro Card -->
-      <section class="section-card">
-        <div class="section-title">
-          <span>Hot Extracted. Instantly Flash-Chilled.</span>
-          <span class="section-subtitle">Our Manifesto</span>
-        </div>
-        <p class="story-p">
-          We operate as an asset-light, pre-order micro-roastery in Gurugram. Instead of mass-producing coffee in giant commercial tanks to sit on supermarket shelves for months, we brew each coffee separately by hand in small batches specifically for scheduled weekly drops.
-        </p>
-        
-        <div class="hero-quote">
-          &ldquo;We don't make shelf-stable concentrates. We extract single-estate specialty coffee hot, flash-chill it over ice to lock in volatile aromatics, and deliver it fresh within a strict 48-hour peak window.&rdquo;
-        </div>
-  
-        <div class="craft-badge" style="margin-top: 10px;">
-          ☕ Hand-Brewed Separately in Small Batches &bull; Crafted Fresh to Order
-        </div>
-      </section>
-  
-      <!-- The Core Pillars -->
-      <section class="section-card">
-        <div class="section-title">
-          <span>Why The Apartment Brew Co. Is Different</span>
-        </div>
-        
-        <div class="feature-grid">
-          <div class="feature-box">
-            <div class="feature-box-title">&#128293; 1. Hot Extraction &bull; Thermal Flash-Chill</div>
-            <div class="feature-box-desc">
-              Coffee needs heat (92&ndash;94&deg;C) to dissolve sweet fruit sugars and delicate floral aromatic oils. We extract hot and flash-chill the brew over ice to 4&deg;C in seconds, permanently trapping wild berry and citrus aromatics before oxidation can begin.
-            </div>
-          </div>
-  
-          <div class="feature-box">
-            <div class="feature-box-title">&#127793; 2. Single-Estate Farm Direct Beans</div>
-            <div class="feature-box-desc">
-              We roast 100% specialty arabica sourced directly from partner farms in the Western Ghats (including Ratnagiri Estate Anaerobic Naturals). No cheap robusta, no artificial extracts, and no dark bitter roasts.
-            </div>
-          </div>
-  
-          <div class="feature-box">
-            <div class="feature-box-title">&#10052; 3. 100% Preservative Free (48-Hr Peak)</div>
-            <div class="feature-box-desc">
-              Zero chemical stabilizers, zero pasteurization, and zero additives. Bottled fresh overnight for scheduled weekend and Friday office drops. Keep refrigerated and enjoy poured over ice within 48 hours for pure cafe pour-over quality.
-            </div>
-          </div>
-  
-          <div class="feature-box">
-            <div class="feature-box-title">&#9995; 4. Artisanal Nuance in Every Bottle</div>
-            <div class="feature-box-desc">
-              Every order is brewed manually by hand rather than automated commercial machines. Slight cup-to-cup character is celebrated as a deliberate hallmark of manual craft extraction.
-            </div>
+    </section>
+
+    <!-- The 4 Core Craft Pillars -->
+    <section class="section-card animate-fade-in">
+      <div class="section-title">
+        <span>The Craft Philosophy</span>
+        <span class="section-subtitle">Why We Are Different</span>
+      </div>
+
+      <div class="hero-quote">
+        “We don't brew shelf-stable supermarket concentrates. We extract single-estate specialty coffee hot to dissolve volatile aromatics, flash-chill them instantly over ice, and deliver them fresh within 48 hours.”
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-box">
+          <div class="feature-box-title">🔥 1. Hot Extraction and Thermal Flash-Chill</div>
+          <div class="feature-box-desc">
+            Coffee needs heat (92–94&deg;C) to dissolve sweet fruit sugars and delicate floral aromatic oils. We extract hot and instantly flash-chill the brew over ice to 4&deg;C in seconds, permanently locking in volatile aromatics before oxidation can begin.
           </div>
         </div>
-      </section>
-  
-      <!-- Comparison Matrix Table -->
-      <section class="section-card">
-        <div class="section-title">
-          <span>The Comparison: How We Differ</span>
-          <span class="section-subtitle">Side-by-Side</span>
+
+        <div class="feature-box">
+          <div class="feature-box-title">🌱 2. Single-Estate Farm Direct Arabica</div>
+          <div class="feature-box-desc">
+            We roast 100% specialty grade arabica sourced directly from partner farms in the Western Ghats (including Ratnagiri Estate Anaerobic Naturals). Zero robusta, zero artificial extracts, and zero dark burnt roasts.
+          </div>
         </div>
-        
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px;">
-          How our flash-chilled specialty brew stacks up against standard cold brews and traditional instant coffee:
-        </p>
-  
-        <div class="comparison-wrap">
-          <table class="comparison-table">
-            <thead>
-              <tr>
-                <th>Feature</th>
-                <th class="col-highlight">The Apartment Brew Co.</th>
-                <th>Standard Cold Brew</th>
-                <th>Traditional Instant</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Brewing Method</strong></td>
-                <td class="col-highlight"><span class="comp-badge-good">Hot Brew + Flash-Chilled</span></td>
-                <td>18-hr Cold Immersion</td>
-                <td>Industrial Heat Spray-Dried</td>
-              </tr>
-              <tr>
-                <td><strong>Aromatic Profile</strong></td>
-                <td class="col-highlight"><span class="comp-badge-good">Vibrant Florals &amp; Berries</span></td>
-                <td>Flat, muted &amp; oxidized</td>
-                <td class="comp-badge-bad">Bitter, woody, burnt</td>
-              </tr>
-              <tr>
-                <td><strong>Acidity &amp; Clarity</strong></td>
-                <td class="col-highlight"><span class="comp-badge-good">Crisp, clean &amp; fruit-forward</span></td>
-                <td>Heavy, flat &amp; muddy</td>
-                <td class="comp-badge-bad">Harsh &amp; chemical</td>
-              </tr>
-              <tr>
-                <td><strong>Preservatives &amp; Additives</strong></td>
-                <td class="col-highlight"><span class="comp-badge-good">Zero (100% Pure Coffee)</span></td>
-                <td>Preservatives / Stabilizers</td>
-                <td class="comp-badge-bad">Artificial additives &amp; sugar</td>
-              </tr>
-              <tr>
-                <td><strong>Peak Freshness</strong></td>
-                <td class="col-highlight"><span class="comp-badge-good">Strict 48-Hour Peak Window</span></td>
-                <td>2–4 weeks shelf life</td>
-                <td>12–24 months shelf life</td>
-              </tr>
-              <tr>
-                <td><strong>Bean Quality</strong></td>
-                <td class="col-highlight"><span class="comp-badge-good">Single-Estate Specialty Arabica</span></td>
-                <td>Commercial blended beans</td>
-                <td class="comp-badge-bad">Low-grade robusta</td>
-              </tr>
-              <tr>
-                <td><strong>Craft Scale</strong></td>
-                <td class="col-highlight"><span class="comp-badge-good">Manual Small-Batch to Order</span></td>
-                <td>Bulk commercial vats</td>
-                <td>Factory automated mass volume</td>
-              </tr>
-            </tbody>
-          </table>
+
+        <div class="feature-box">
+          <div class="feature-box-title">❄️ 3. 100% Preservative Free (48-Hr Peak Rule)</div>
+          <div class="feature-box-desc">
+            Zero chemical stabilizers, zero industrial pasteurization, and zero additives. Bottled fresh overnight in premium 200ml glass bottles. Keep refrigerated and enjoy poured over ice within 48 hours for pure cafe pour-over quality.
+          </div>
         </div>
-      </section>
-  
-      <!-- Quick-Access Portals -->
-      <section class="section-card">
-        <div class="section-title">
-          <span>Choose Your Pathway</span>
-          <span class="section-subtitle">Order &amp; Inquire</span>
+
+        <div class="feature-box">
+          <div class="feature-box-title">🖐️ 4. Artisanal Nuance in Every Bottle</div>
+          <div class="feature-box-desc">
+            Every batch is brewed separately by hand rather than pumped out of automated mass-market tanks. Slight cup-to-cup character is celebrated as a deliberate hallmark of manual specialty extraction.
+          </div>
         </div>
-  
-        <div class="portal-grid">
-          <!-- Portal 1: Saturday & Sunday Individual Drop -->
-          <a href="order.html" class="portal-card">
-            <div>
-              <div class="portal-header">☕ Individual Brew</div>
-              <div class="portal-desc">
-                Weekend micro-batches delivered fresh Saturday or Sunday morning. Single bottles, Mix &amp; Match, and Weekend 4-Packs.
-              </div>
-            </div>
-            <div class="portal-cta">Start Individual Pre-Order &rarr;</div>
-          </a>
-  
-          <!-- Portal 2: Friday Office Drop -->
-          <a href="office.html" class="portal-card">
-            <div>
-              <div class="portal-header">🏢 Team Brew</div>
-              <div class="portal-desc">
-                Batch deliveries (10 to 60 bottles) for tech parks across Gurugram &amp; NCR. Morning Kickoff or Afternoon Recharge with Net-7 corporate invoicing.
-              </div>
-            </div>
-            <div class="portal-cta">Start Corporate Office Order &rarr;</div>
-          </a>
-  
-          <!-- Portal 3: Custom Events -->
-          <a href="events.html" class="portal-card">
-            <div>
-              <div class="portal-header">🎉 Event Runs</div>
-              <div class="portal-desc">
-                Custom specialty coffee bars and bulk drops for startup hackathons, townhalls, product launches, and team outings.
-              </div>
-            </div>
-            <div class="portal-cta">Submit Custom Requirement &rarr;</div>
-          </a>
-  
-          <!-- Portal 4: Order Tracker -->
-          <a href="track.html" class="portal-card">
-            <div>
-              <div class="portal-header">🔍 Enquiry/Order Tracker</div>
-              <div class="portal-desc">
-                Customer self-service tracker. Enter your Order or Inquiry ID to view real-time brewing, chilling, dispatch, and delivery stages.
-              </div>
-            </div>
-            <div class="portal-cta">Track Fulfillment Status &rarr;</div>
-          </a>
+      </div>
+    </section>
+
+    <!-- Active Harvest Micro-Lots Preview -->
+    <section class="section-card animate-fade-in">
+      <div class="section-title">
+        <span>This Week's Micro-Lots</span>
+        <span class="section-subtitle">Freshly Roasted</span>
+      </div>
+
+      <p class="story-p">
+        Each week we roast limited micro-batches from premier Indian coffee estates. Synced directly with live roastery batch capacity:
+      </p>
+
+      <div class="lot-preview-grid">
+        <div class="lot-preview-card">
+          <div class="lot-preview-header">
+            <span class="lot-preview-title">Ratnagiri Estate</span>
+            <span class="lot-preview-process">Anaerobic Naturals</span>
+          </div>
+          <div class="lot-preview-notes">Wild Raspberry, Stone Fruit and Dark Cacao</div>
+          <div class="flavor-pills">
+            <span class="flavor-pill">Fruity</span>
+            <span class="flavor-pill">High Acidity (85%)</span>
+            <span class="flavor-pill">Medium Body (70%)</span>
+          </div>
         </div>
-      </section>
-  
-    </main>
-  
+
+        <div class="lot-preview-card">
+          <div class="lot-preview-header">
+            <span class="lot-preview-title">Banana Banger</span>
+            <span class="lot-preview-process">Fermented Lot</span>
+          </div>
+          <div class="lot-preview-notes">Orange Blossom, Jasmine and Crisp Green Apple</div>
+          <div class="flavor-pills">
+            <span class="flavor-pill">Floral</span>
+            <span class="flavor-pill">Crisp Acidity (75%)</span>
+            <span class="flavor-pill">Clean Body (60%)</span>
+          </div>
+        </div>
+
+        <div class="lot-preview-card">
+          <div class="lot-preview-header">
+            <span class="lot-preview-title">Mix and Match Custom Split</span>
+            <span class="lot-preview-process">Custom Distribution</span>
+          </div>
+          <div class="lot-preview-notes">Curious about trying both harvests? Customize your exact personal bottle distribution at checkout.</div>
+          <div class="flavor-pills">
+            <span class="flavor-pill">Balanced Flight</span>
+            <span class="flavor-pill">Custom Ratios</span>
+            <span class="flavor-pill">Full Spectrum</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 14px; text-align: center;">
+        <a href="menu.html" class="btn btn-secondary" style="display: inline-flex; width: auto; padding: 10px 18px; font-size: 0.82rem;">
+          <span>🌿 View Interactive Sensory Menu &rarr;</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Side-by-Side Comparison Matrix -->
+    <section class="section-card animate-fade-in">
+      <div class="section-title">
+        <span>The Comparison</span>
+        <span class="section-subtitle">Side-by-Side</span>
+      </div>
+
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; line-height: 1.45;">
+        How our hot-extracted, flash-chilled specialty brew compares to mass-market 18-hour cold brews and traditional instant coffee:
+      </p>
+
+      <div class="comparison-wrap">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Craft Dimension</th>
+              <th class="col-highlight">The Apartment Brew Co.</th>
+              <th>Standard Cold Brew</th>
+              <th>Commercial RTD / Instant</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Extraction Method</strong></td>
+              <td class="col-highlight"><span class="comp-badge-good">92–94&deg;C Hot Brew + 4&deg;C Ice Flash-Chill</span></td>
+              <td>18-hr Cold Water Immersion</td>
+              <td>Industrial Heat Spray-Dried / Powder</td>
+            </tr>
+            <tr>
+              <td><strong>Aromatic Profile</strong></td>
+              <td class="col-highlight"><span class="comp-badge-good">Vibrant Florals, Berries and Citrus</span></td>
+              <td>Muted, flat, heavy oxidation</td>
+              <td class="comp-badge-bad">Bitter, burnt, chemical</td>
+            </tr>
+            <tr>
+              <td><strong>Acidity and Clarity</strong></td>
+              <td class="col-highlight"><span class="comp-badge-good">Crisp, clean and fruit-forward</span></td>
+              <td>Low acid, muddy, oxidized</td>
+              <td class="comp-badge-bad">Harsh, artificial acidity</td>
+            </tr>
+            <tr>
+              <td><strong>Preservatives</strong></td>
+              <td class="col-highlight"><span class="comp-badge-good">Zero (100% Pure Coffee)</span></td>
+              <td>Stabilizers and acidity regulators</td>
+              <td class="comp-badge-bad">Preservatives, oils and additives</td>
+            </tr>
+            <tr>
+              <td><strong>Peak Freshness</strong></td>
+              <td class="col-highlight"><span class="comp-badge-good">Strict 48-Hour Peak Window</span></td>
+              <td>2–4 weeks shelf life</td>
+              <td>12–24 months shelf life</td>
+            </tr>
+            <tr>
+              <td><strong>Bean Quality</strong></td>
+              <td class="col-highlight"><span class="comp-badge-good">Single-Estate Specialty Arabica</span></td>
+              <td>Commercial blended beans</td>
+              <td class="comp-badge-bad">Low-grade robusta / filler</td>
+            </tr>
+            <tr>
+              <td><strong>Production Scale</strong></td>
+              <td class="col-highlight"><span class="comp-badge-good">Manual Small-Batch to Order</span></td>
+              <td>Large commercial steel vats</td>
+              <td>Automated factory mass volume</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- The Micro-Batch Drop Model / How It Works -->
+    <section class="section-card animate-fade-in">
+      <div class="section-title">
+        <span>The Drop Lifecycle</span>
+        <span class="section-subtitle">How It Works</span>
+      </div>
+
+      <div class="process-grid">
+        <div class="process-card">
+          <div class="process-num">1</div>
+          <div class="process-info">
+            <div class="process-title">Pre-Order Window Opens</div>
+            <div class="process-desc">Select your coffee harvest, bottle count (200ml glass), and delivery slot before weekly batch capacity sells out.</div>
+          </div>
+        </div>
+
+        <div class="process-card">
+          <div class="process-num">2</div>
+          <div class="process-info">
+            <div class="process-title">Night Hot-Brew and Flash-Chilling</div>
+            <div class="process-desc">Freshly roasted single-estate beans are hot-extracted at 92–94&deg;C and instantly thermal-shocked over ice to lock in delicate flavor notes.</div>
+          </div>
+        </div>
+
+        <div class="process-card">
+          <div class="process-num">3</div>
+          <div class="process-info">
+            <div class="process-title">Cold-Chain Morning Delivery</div>
+            <div class="process-desc">Batches are packed in thermal cooling bags and dispatched directly to your doorstep or tech park office desk.</div>
+          </div>
+        </div>
+
+        <div class="process-card">
+          <div class="process-num">4</div>
+          <div class="process-info">
+            <div class="process-title">Refrigerate and Sip (48h Peak)</div>
+            <div class="process-desc">Refrigerate immediately on arrival. Pour over clean, dense ice cubes and savor pour-over complexity for up to 48 hours.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick-Access Portals and Pathways -->
+    <section class="section-card animate-fade-in">
+      <div class="section-title">
+        <span>Explore All Portals</span>
+        <span class="section-subtitle">Order and Inquire</span>
+      </div>
+
+      <div class="portal-grid">
+        <!-- Portal 1: Individual Pre-Order -->
+        <a href="order.html" class="portal-card">
+          <div>
+            <div class="portal-header">☕ Individual Brew</div>
+            <div class="portal-desc">
+              Weekend residential drops (Saturday or Sunday morning). Single bottles (&#8377;240), Duo Discovery Samplers (&#8377;480), Weekend 4-Packs (&#8377;899), and Mega 6-Packs (&#8377;1,200).
+            </div>
+          </div>
+          <div class="portal-cta">Start Individual Pre-Order &rarr;</div>
+        </a>
+
+        <!-- Portal 2: Corporate Office Drops -->
+        <a href="office.html" class="portal-card">
+          <div>
+            <div class="portal-header">🏢 Team Brew</div>
+            <div class="portal-desc">
+              Scheduled Friday drops (10 to 60 bottles) across DLF Cyber City, One Horizon, Candor TechSpace, and NCR office hubs with Net-7 corporate invoicing.
+            </div>
+          </div>
+          <div class="portal-cta">Start Corporate Office Order &rarr;</div>
+        </a>
+
+        <!-- Portal 3: Sensory Harvest Menu -->
+        <a href="menu.html" class="portal-card">
+          <div>
+            <div class="portal-header">🌿 Harvests and Sensory Menu</div>
+            <div class="portal-desc">
+              Interactive tasting profiles, estate origin details, processing methods, and dynamic acidity/body meters for all active single-estate lots.
+            </div>
+          </div>
+          <div class="portal-cta">Explore Sensory Profiles &rarr;</div>
+        </a>
+
+        <!-- Portal 4: Freshness Guide -->
+        <a href="guide.html" class="portal-card">
+          <div>
+            <div class="portal-header">❄️ Freshness Guide</div>
+            <div class="portal-desc">
+              The chemical science behind hot extraction and thermal flash-chilling, the 48-hour peak flavor curve, and optimal storage rituals.
+            </div>
+          </div>
+          <div class="portal-cta">Read Freshness Guide &rarr;</div>
+        </a>
+
+        <!-- Portal 5: Craft and Philosophy -->
+        <a href="about.html" class="portal-card">
+          <div>
+            <div class="portal-header">📖 Craft and Philosophy</div>
+            <div class="portal-desc">
+              The Apartment Roastery origin story, why we reject industrial supermarket models, and our direct-trade sourcing across the Western Ghats.
+            </div>
+          </div>
+          <div class="portal-cta">Read Our Story &rarr;</div>
+        </a>
+
+        <!-- Portal 6: Custom Event Runs -->
+        <a href="events.html" class="portal-card">
+          <div>
+            <div class="portal-header">🎉 Event Runs</div>
+            <div class="portal-desc">
+              Tailored specialty coffee bars and bulk drops for tech hackathons, startup townhalls, product launches, and team coffee runs.
+            </div>
+          </div>
+          <div class="portal-cta">Submit Event Requirement &rarr;</div>
+        </a>
+
+        <!-- Portal 7: Order and Inquiry Tracker -->
+        <a href="track.html" class="portal-card" style="grid-column: 1 / -1;">
+          <div>
+            <div class="portal-header">🔍 Live Order and Inquiry Status Tracker</div>
+            <div class="portal-desc">
+              Self-service status lookup. Enter your Order ID (TABC-XXXXXX, TABC-B2B-XXXXXX) or Inquiry ID (TABC-EVT-XXXXXX) to view live brewing, chilling, dispatch, and delivery stages.
+            </div>
+          </div>
+          <div class="portal-cta">Track Your Brew Status &rarr;</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Interactive FAQ Accordion -->
+    <section class="section-card animate-fade-in">
+      <div class="section-title">
+        <span>Frequently Asked Questions</span>
+        <span class="section-subtitle">Everything You Need to Know</span>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            <span>Why flash-chill over ice instead of traditional cold brew?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Traditional cold brew steeps coffee in cold water for 18–24 hours. While smooth and low-acid, it fails to dissolve the delicate aromatic oils and fruit acids that give light-to-medium specialty coffees their signature berry and floral notes. We extract hot (92–94&deg;C) to capture the full flavor spectrum, then flash-chill immediately to 4&deg;C to lock in those aromatics before oxidation occurs.
+          </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            <span>How long does the coffee stay fresh?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Because our coffee has zero preservatives, zero chemical stabilizers, and zero pasteurization, it is designed to be enjoyed within <strong>48 hours of delivery</strong>. Keep your 200ml glass bottles refrigerated below 4&deg;C upon arrival and pour over clean ice for peak flavor.
+          </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            <span>Where do you deliver across Delhi NCR?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            We operate scheduled cold-chain delivery drops across Gurugram (DLF Phase 1–5, Cyber City, Cyber Hub, Golf Course Road, Golf Course Extension, Sector 48, Candor TechSpace, Udyog Vihar), South and Central Delhi, and Noida (Sectors 62, 126, 135).
+          </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            <span>How do the order cutoffs and delivery slots work?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            For weekend residential drops, Saturday deliveries close Friday at 10:00 PM, and Sunday deliveries close Saturday at 10:00 PM (both delivered 8:00 AM – 11:00 AM). For Friday corporate office drops, orders close Thursday at 6:00 PM with Morning Kickoff (9:30–11:30 AM) and Afternoon Recharge (2:00–4:00 PM) delivery windows.
+          </div>
+        </div>
+
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">
+            <span>What bottle format and sizes do you use?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Every order across all consumer packs, corporate tiers, and event batches is standardized into <strong>200ml premium glass bottles</strong>. Glass preserves the delicate fruit acidity and aroma without leaching chemicals or altering flavor.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Roastery Quality and Trust Banner -->
+    <div class="header-card" style="margin-top: 4px; padding: 18px; text-align: center; background: linear-gradient(180deg, #1d1b18 0%, #151311 100%);">
+      <div style="font-size: 0.95rem; font-weight: 800; color: var(--accent); margin-bottom: 6px;">
+        <span>☕</span> Handcrafted in Gurugram, India
+      </div>
+      <p style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.45; max-width: 480px; margin: 0 auto 10px;">
+        100% Direct Trade Single-Estate Specialty Arabica &bull; FSSAI Petty FBO Registered &bull; Zero Additives &bull; Recyclable Glass Packaging
+      </p>
+      <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+        <a href="order.html" class="btn btn-pay" style="width: auto; padding: 10px 20px; font-size: 0.82rem; margin-top: 0; text-decoration: none;">
+          Pre-Order Weekend Drop
+        </a>
+        <a href="office.html" class="btn btn-secondary" style="width: auto; padding: 10px 20px; font-size: 0.82rem; margin-top: 0; text-decoration: none;">
+          Schedule Office Drop
+        </a>
+      </div>
+    </div>
+
+    <!-- Site Footer -->
+    <footer class="site-footer">
+      <nav class="footer-nav">
+        <a href="index.html" class="footer-link">Home</a>
+        <a href="order.html" class="footer-link">Individual Pre-Order</a>
+        <a href="office.html" class="footer-link">Office Drops</a>
+        <a href="menu.html" class="footer-link">Sensory Menu</a>
+        <a href="guide.html" class="footer-link">Freshness Guide</a>
+        <a href="about.html" class="footer-link">Craft Philosophy</a>
+        <a href="events.html" class="footer-link">Custom Events</a>
+        <a href="track.html" class="footer-link">Order Tracker</a>
+      </nav>
+      <div class="footer-copy">
+        &copy; 2026 The Apartment Brew Co. &bull; Micro-Batch Flash-Chilled Specialty Coffee &bull; Gurugram, Haryana, India.
+      </div>
+    </footer>
+
   </div>
-  
+
+  <!-- FAQ Accordion Script -->
+  <script>
+    function toggleFaq(card) {
+      const isActive = card.classList.contains('active');
+      document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('active'));
+      if (!isActive) {
+        card.classList.add('active');
+      }
+    }
+  </script>
+
   <!-- Service Worker Registration -->
   <script>
     if ('serviceWorker' in navigator) {
@@ -265,6 +537,8 @@
       });
     }
   </script>
+
+  <!-- Frontend Controller -->
   <script src="app.js"></script>
 </body>
 </html>
