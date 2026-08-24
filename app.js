@@ -598,7 +598,7 @@ function renderPacks(b2cPacks, b2bPacks) {
             ${badgeHtml}
             <div class="pack-name">${p.name}</div>
             <div class="pack-price">₹${p.price.toLocaleString('en-IN')}</div>
-            <div class="pack-desc">${p.bottles}x 200ml${perBottle}</div>
+            <div class="pack-desc">${p.bottles}x bottles${perBottle}</div>
           </div>`;
       });
       b2cGrid.innerHTML = b2cHtml;
@@ -632,7 +632,7 @@ function renderPacks(b2cPacks, b2bPacks) {
             ${disabledBadge}
             <div class="pack-name">${p.name}</div>
             <div class="pack-price">₹${p.price.toLocaleString('en-IN')}</div>
-            <div class="pack-desc">${p.bottles}x 200ml${perBottle}</div>
+            <div class="pack-desc">${p.bottles}x bottles${perBottle}</div>
           </div>`;
       });
       b2bGrid.innerHTML = b2bHtml;
@@ -1904,7 +1904,7 @@ function sendWhatsAppReceipt() {
                   `\*Coffee Lot:\* ${d.bean}\n` +
                   `\*Selection:\* ${d.pack}\n` +
                   discountText +
-                  `\*Total Bottles:\* ${d.bottles} bottles\n` +
+                  `\*Total Bottles:\* ${d.bottles}x bottles\n` +
                   `\*Total Paid:\* ₹${d.totalAmount} (${d.paymentStatus})\n` +
                   `------------------------------------\n` +
                   `\_Freshness Reminder: Extracted hot and flash-chilled with zero preservatives. Please refrigerate and consume within 48 hours!\_`;
