@@ -572,7 +572,6 @@ function renderLots(lots) {
   }
 }
 
-// Render Packs — Keeping 200ml ONLY in this Batch Size Section
 function renderPacks(b2cPacks, b2bPacks) {
   if ((PAGE === 'ORDER' || PAGE === 'HOME') && Array.isArray(b2cPacks) && b2cPacks.length > 0) {
     availableB2cPacks = b2cPacks;
@@ -797,7 +796,7 @@ function startCutoffCountdown() {
     const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const secs = Math.floor((diff % (1000 * 60)) / 1000);
   
-    const cutoffLabel = (PAGE === 'INDEX') ? "Weekend Drops Cutoff" : (isB2c ? "Weekend Drop Cutoff" : "Friday Drop Cutoff");
+    const cutoffLabel = (PAGE === 'INDEX') ? "Weekend Drops Cutoff" : (isB2c ? "Saturday/Sunday Drop Cutoff" : "Friday Drop Cutoff");
     timerEl.textContent = `⏱️ ${cutoffLabel} closes in ${hours}h ${mins}m ${secs}s`;
   }
   
@@ -1703,7 +1702,7 @@ function renderTrackingDetails(order) {
     if (lblPack) lblPack.textContent = 'Scale / Headcount:';
     if (lblPayment) lblPayment.textContent = 'Status Stage:';
     if (lblDropNote) lblDropNote.textContent = 'Special Notes:';
-    if (tFreshnessNote) tFreshnessNote.innerHTML = '☕ <strong>Custom Event Protocol:</strong> Our coffee team will reach out directly to coordinate roast profiles, bar setup, and ice stations tailored to your venue.';
+    if (tFreshnessNote) tFreshnessNote.innerHTML = '☕ <strong>Custom Event Protocol:</strong> Our coffee team will reach out directly to coordinate roast profiles and ice stations tailored to your venue.';
   } else {
     if (lblCustomer) lblCustomer.textContent = 'Customer:';
     if (lblCompany) lblCompany.textContent = 'Company:';
@@ -1979,4 +1978,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
-
