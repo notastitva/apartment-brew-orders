@@ -572,6 +572,7 @@ function renderLots(lots) {
   }
 }
 
+// Render Packs — Keeping 200ml ONLY in this Batch Size Section
 function renderPacks(b2cPacks, b2bPacks) {
   if ((PAGE === 'ORDER' || PAGE === 'HOME') && Array.isArray(b2cPacks) && b2cPacks.length > 0) {
     availableB2cPacks = b2cPacks;
@@ -598,7 +599,7 @@ function renderPacks(b2cPacks, b2bPacks) {
             ${badgeHtml}
             <div class="pack-name">${p.name}</div>
             <div class="pack-price">₹${p.price.toLocaleString('en-IN')}</div>
-            <div class="pack-desc">${p.bottles}x bottles${perBottle}</div>
+            <div class="pack-desc">${p.bottles}x 200ml${perBottle}</div>
           </div>`;
       });
       b2cGrid.innerHTML = b2cHtml;
@@ -632,7 +633,7 @@ function renderPacks(b2cPacks, b2bPacks) {
             ${disabledBadge}
             <div class="pack-name">${p.name}</div>
             <div class="pack-price">₹${p.price.toLocaleString('en-IN')}</div>
-            <div class="pack-desc">${p.bottles}x bottles${perBottle}</div>
+            <div class="pack-desc">${p.bottles}x 200ml${perBottle}</div>
           </div>`;
       });
       b2bGrid.innerHTML = b2bHtml;
@@ -796,7 +797,7 @@ function startCutoffCountdown() {
     const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const secs = Math.floor((diff % (1000 * 60)) / 1000);
   
-    const cutoffLabel = (PAGE === 'INDEX') ? "Weekend Drops Cutoff" : (isB2c ? "Saturday/Sunday Drop Cutoff" : "Friday Drop Cutoff");
+    const cutoffLabel = (PAGE === 'INDEX') ? "Weekend Drops Cutoff" : (isB2c ? "Weekend Drop Cutoff" : "Friday Drop Cutoff");
     timerEl.textContent = `⏱️ ${cutoffLabel} closes in ${hours}h ${mins}m ${secs}s`;
   }
   
@@ -1702,7 +1703,7 @@ function renderTrackingDetails(order) {
     if (lblPack) lblPack.textContent = 'Scale / Headcount:';
     if (lblPayment) lblPayment.textContent = 'Status Stage:';
     if (lblDropNote) lblDropNote.textContent = 'Special Notes:';
-    if (tFreshnessNote) tFreshnessNote.innerHTML = '☕ <strong>Custom Event Protocol:</strong> Our coffee team will reach out directly to coordinate roast profiles and ice stations tailored to your venue.';
+    if (tFreshnessNote) tFreshnessNote.innerHTML = '☕ <strong>Custom Event Protocol:</strong> Our coffee team will reach out directly to coordinate roast profiles, bar setup, and ice stations tailored to your venue.';
   } else {
     if (lblCustomer) lblCustomer.textContent = 'Customer:';
     if (lblCompany) lblCompany.textContent = 'Company:';
@@ -1904,7 +1905,7 @@ function sendWhatsAppReceipt() {
                   `\*Coffee Lot:\* ${d.bean}\n` +
                   `\*Selection:\* ${d.pack}\n` +
                   discountText +
-                  `\*Total Bottles:\* ${d.bottles}x bottles\n` +
+                  `\*Total Bottles:\* ${d.bottles} bottles\n` +
                   `\*Total Paid:\* ₹${d.totalAmount} (${d.paymentStatus})\n` +
                   `------------------------------------\n` +
                   `\_Freshness Reminder: Extracted hot and flash-chilled with zero preservatives. Please refrigerate and consume within 48 hours!\_`;

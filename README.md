@@ -2,7 +2,7 @@
 
 ## **Micro-Batch Flash-Chilled Specialty Coffee • Gurugram & Delhi NCR**
 
-A lightweight, serverless e-commerce and order intake platform built for scheduled micro-batch craft coffee drops, Google Sheets headless CMS management, Razorpay payment gateway integration, real-time order tracking, and automated transactional customer communications. All coffee is standardized into 200ml glass bottles across all retail and corporate tiers.  
+A lightweight, serverless e-commerce and order intake platform built for scheduled micro-batch craft coffee drops, Google Sheets headless CMS management, Razorpay payment gateway integration, real-time order tracking, and automated transactional customer communications. All coffee is standardized into 200ml glass bottles across all retail and corporate tiers, with sizing presented specifically within the "Batch Size" configuration.  
 ---
 
 ## **1\. Business Model & Craft Operations**
@@ -86,9 +86,9 @@ The entire website frontend is dynamically powered by the Menu & Config tab in G
 ### 4.1 General Store Settings
 
 * Store Status: OPEN (active ordering), PAUSED (temporarily paused), or SOLD\_OUT (batch capacity reached).  
-* Independent Batch Capacities:  
-  * B2C Batch Capacity: 150 bottles (200ml) for weekend drops.  
-  * B2B Batch Capacity: 200 bottles (200ml) for Friday corporate drops.  
+* Independent Batch Capacities & Cutoffs:  
+  * B2C Batch Capacity: 150 bottles (200ml) for weekend drops (Cutoffs: Friday 10 PM for Saturday drop, Saturday 10 PM for Sunday drop).  
+  * B2B Batch Capacity: 200 bottles (200ml) for Friday corporate drops (Cutoff: Thursday 6 PM).  
 * Announcement Banner: Custom text displayed in the header drop banner.
 
 ### 4.2 Single-Estate Harvest Lots
