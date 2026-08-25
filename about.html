@@ -8,12 +8,12 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body data-page="ABOUT">
-  <!-- Sticky Top Header & Hamburger Navigation (Topmost Component) -->
+  <!-- Sticky Top Header &amp; Hamburger Navigation (Topmost Component) -->
   <header class="site-header-sticky">
     <div class="header-inner">
       <a href="index.html" class="nav-logo">
         <span class="logo-text">The Apartment Brew Co.</span>
-        <span class="logo-sub">Specialty Coffee &bull; Gurugram</span>
+<span class="logo-sub">Specialty Coffee &bull; Gurugram</span>
       </a>
       <button type="button" class="nav-hamburger-btn" id="navHamburgerBtn" aria-label="Toggle navigation menu" onclick="toggleNavDrawer()">
         <span class="hamburger-bar"></span>
@@ -23,20 +23,20 @@
     </div>
   </header>
   
-  <!-- Navigation Drawer Backdrop & Overlay Menu -->
+  <!-- Navigation Drawer Backdrop &amp; Overlay Menu -->
   <div class="nav-backdrop" id="navBackdrop" onclick="closeNavDrawer()"></div>
   <aside class="nav-drawer" id="navDrawer">
     <div class="drawer-header">
       <span class="drawer-title">Navigation Menu</span>
-      <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&times;</button>
+<button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&times;</button>
     </div>
     <nav class="drawer-nav">
-      <a href="index" class="drawer-link" data-page-link="INDEX">Home</a>
+      <a href="/" class="drawer-link active" data-page-link="INDEX">Home</a>
       <a href="order" class="drawer-link" data-page-link="ORDER">Individual Brew</a>
       <a href="office" class="drawer-link" data-page-link="OFFICE">Team Brew</a>
       <a href="menu" class="drawer-link" data-page-link="MENU">Harvests &amp; Sensory Menu</a>
       <a href="guide" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
-      <a href="about" class="drawer-link active" data-page-link="ABOUT">Craft &amp; Philosophy</a>
+      <a href="about" class="drawer-link" data-page-link="ABOUT">Craft &amp; Philosophy</a>
       <a href="events" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
       <a href="track" class="drawer-link" data-page-link="TRACK">Enquiry/Order Tracker</a>
     </nav>
@@ -52,6 +52,9 @@
       <div class="drop-banner">
         <span>🌱</span> Craft Roastery Story &amp; Philosophy
       </div>
+      <div class="geo-badge" style="margin-top: 12px;">
+        📍 Hand-Brewed Micro-Roastery Operating in Gurugram, India
+      </div>
     </header>
   
     <!-- Story Content Sections -->
@@ -63,10 +66,68 @@
         <p class="story-p">
           The Apartment Brew Co. was born out of a relentless obsession with specialty pour-over coffee and a frustration with supermarket cold brews that sit on shelves for weeks with preservatives, losing all delicate floral and fruity aromatics.
         </p>
-        <p class="story-p">
+        <p class="story-p" style="margin-top: 8px;">
           We operate as an asset-light, pre-order only micro-roastery based in Gurugram, India. Instead of mass-producing coffee in large industrial vats, we roast and extract in small, dedicated batches purely to order.
         </p>
       </article>
+  
+      <!-- COMPARATIVE GRAPH: MICRO-ROASTERY VS MASS RETAIL -->
+      <section class="section-card" style="margin-top: 14px;">
+        <div class="section-title">
+          <span>Micro-Batch vs Mass-Market</span>
+          <span class="section-subtitle">The Distinction</span>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4;">
+          How our pre-order craft drop model fundamentally outperforms mass-market bottled coffee:
+        </p>
+        <div style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 14px;">
+          <!-- Metric 1: Aromatic Volatiles Retained -->
+          <div style="display: flex; flex-direction: column; gap: 5px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.76rem; font-weight: 600; color: var(--text);">
+              <span>Aromatic Volatiles &amp; Fruit Acids Retained</span>
+              <span style="color: var(--accent); font-weight: 800;">94% vs 32%</span>
+            </div>
+            <div style="height: 14px; background: #23201d; border-radius: 7px; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 0 2px;">
+              <div style="height: 5px; width: 94%; background: linear-gradient(90deg, #d4a373 0%, #faedcd 100%); border-radius: 3px; margin-bottom: 2px; box-shadow: 0 0 8px rgba(212, 163, 115, 0.4);"></div>
+              <div style="height: 5px; width: 32%; background: #55504a; border-radius: 3px;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text-muted);">
+              <span style="color: var(--accent);">■ Flash-Chilled (Hot Extract 94°C)</span>
+              <span>■ Cold Immersion / RTD Concentrate</span>
+            </div>
+          </div>
+          <!-- Metric 2: Freshness Window &amp; Shelf Latency -->
+          <div style="display: flex; flex-direction: column; gap: 5px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.76rem; font-weight: 600; color: var(--text);">
+              <span>Delivery Turnaround / Freshness Cycle</span>
+              <span style="color: var(--success-light); font-weight: 800;">48h Peak vs 45 Days</span>
+            </div>
+            <div style="height: 14px; background: #23201d; border-radius: 7px; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 0 2px;">
+              <div style="height: 5px; width: 96%; background: linear-gradient(90deg, #52b788 0%, #95d5b2 100%); border-radius: 3px; margin-bottom: 2px; box-shadow: 0 0 8px rgba(149, 213, 178, 0.4);"></div>
+              <div style="height: 5px; width: 20%; background: #e63946; border-radius: 3px;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text-muted);">
+              <span style="color: var(--success-light);">■ 0 Preservatives (Brewed Fresh Fri/Sat)</span>
+              <span style="color: var(--error-light);">■ Pasteurization &amp; Warehousing</span>
+            </div>
+          </div>
+          <!-- Metric 3: Single-Estate Purity -->
+          <div style="display: flex; flex-direction: column; gap: 5px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.76rem; font-weight: 600; color: var(--text);">
+              <span>Arabica Micro-Lot Traceability</span>
+              <span style="color: var(--info-blue); font-weight: 800;">100% Single-Estate vs 0% (Blend)</span>
+            </div>
+            <div style="height: 14px; background: #23201d; border-radius: 7px; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 0 2px;">
+              <div style="height: 5px; width: 100%; background: linear-gradient(90deg, #90e0ef 0%, #48cae4 100%); border-radius: 3px; margin-bottom: 2px; box-shadow: 0 0 8px rgba(144, 224, 239, 0.4);"></div>
+              <div style="height: 5px; width: 25%; background: #55504a; border-radius: 3px;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text-muted);">
+              <span style="color: var(--info-blue);">■ Award-Winning Farms (Ratnagiri, etc.)</span>
+              <span>■ Anonymous Commercial Robusta Blends</span>
+            </div>
+          </div>
+        </div>
+      </section>
   
       <article class="section-card" style="margin-top: 14px;">
         <div class="section-title">
@@ -75,24 +136,77 @@
         <p class="story-p">
           <strong>Brewed Separately to Order:</strong> Every single coffee is brewed separately by hand in small batches just for your order. Because each batch is crafted manually rather than by automated machinery, subtle, natural flavor nuances exist across bottles—a deliberate hallmark of specialty pour-over extraction.
         </p>
-        <p class="story-p">
-          <strong>Flash-Chilled Over Ice:</strong> We brew coffee hot at precise 92&ndash;94&deg;C extraction temperatures to unlock volatile aromatic compounds, and then instantly flash-chill the brew over clean ice. This locks in vibrant stone fruit, jasmine, and berry notes before oxidation can occur.
+        <p class="story-p" style="margin-top: 8px;">
+<strong>Flash-Chilled Over Ice:</strong> We brew coffee hot at precise 92&ndash;94&deg;C extraction temperatures to unlock volatile aromatic compounds, and then instantly flash-chill the brew over clean ice. This locks in vibrant stone fruit, jasmine, and berry notes before oxidation can occur.
         </p>
       </article>
   
+      <!-- FARM DIRECT VALUE &amp; SOURCING INFOGRAPHIC -->
+      <section class="section-card" style="margin-top: 14px;">
+        <div class="section-title">
+          <span>Direct-from-Estate Sourcing</span>
+          <span class="section-subtitle">Supply Chain</span>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4;">
+          By cutting out intermediate brokers and warehouse distributors, we source direct from award-winning growers in Karnataka and Tamil Nadu:
+        </p>
+        <!-- Visual Flow Comparison -->
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- Apartment Brew Co Direct Flow -->
+          <div style="background: rgba(212, 163, 115, 0.06); border: 1.5px solid var(--accent); border-radius: 10px; padding: 12px;">
+            <div style="font-size: 0.78rem; font-weight: 800; color: var(--accent); margin-bottom: 8px;">
+              ⚡ The Apartment Brew Co. Model (Direct &amp; Fresh)
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.68rem; font-weight: 700; color: var(--text); text-align: center;">
+              <div style="background: var(--card-inner); border: 1px solid var(--card-border); padding: 6px 8px; border-radius: 6px; flex: 1;">
+                🌱 Single Estate<br /><span style="color:var(--text-muted); font-size: 0.6rem;">Western Ghats</span>
+              </div>
+<div style="color: var(--accent); padding: 0 4px;">&rarr;</div>
+              <div style="background: var(--card-inner); border: 1px solid var(--accent); padding: 6px 8px; border-radius: 6px; flex: 1;">
+                ☕ Micro-Roastery<br /><span style="color:var(--accent); font-size: 0.6rem;">Gurugram</span>
+              </div>
+<div style="color: var(--accent); padding: 0 4px;">&rarr;</div>
+              <div style="background: var(--card-inner); border: 1px solid var(--success); padding: 6px 8px; border-radius: 6px; flex: 1;">
+                ❄️ Cold-Chain Drop<br /><span style="color:var(--success-light); font-size: 0.6rem;">Your Doorstep</span>
+              </div>
+            </div>
+            <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 8px;">
+✓ High farm-gate compensation &bull; Zero distributor latency &bull; Harvested at peak freshness
+            </div>
+          </div>
+          <!-- Traditional Commercial Flow -->
+          <div style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 10px; padding: 12px;">
+            <div style="font-size: 0.76rem; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">
+              📦 Traditional Commercial Supply Chain (30–90 Days)
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.62rem; color: var(--text-dim); text-align: center;">
+              <div style="background: #141312; border: 1px solid var(--card-border); padding: 4px; border-radius: 4px; flex: 1;">Farm</div>
+<div style="padding: 0 2px;">&rarr;</div>
+<div style="background: #141312; border: 1px solid var(--card-border); padding: 4px; border-radius: 4px; flex: 1;">Broker</div>
+<div style="padding: 0 2px;">&rarr;</div>
+              <div style="background: #141312; border: 1px solid var(--card-border); padding: 4px; border-radius: 4px; flex: 1;">Vat Factory</div>
+<div style="padding: 0 2px;">&rarr;</div>
+              <div style="background: #141312; border: 1px solid var(--card-border); padding: 4px; border-radius: 4px; flex: 1;">Warehouse</div>
+<div style="padding: 0 2px;">&rarr;</div>
+              <div style="background: #141312; border: 1px solid var(--card-border); padding: 4px; border-radius: 4px; flex: 1;">Shelf</div>
+            </div>
+          </div>
+        </div>
+      </section>
+  
       <article class="section-card" style="margin-top: 14px;">
         <div class="section-title">
-          <span>Single-Estate Farm Direct Sourcing</span>
+          <span>Featured Single-Estate Harvests</span>
         </div>
         <p class="story-p">
           We work directly with award-winning Indian coffee estates across the Western Ghats (Chikmagalur, Bababudangiri, and Shevaroys):
         </p>
-        <div class="story-feature-list">
+        <div class="story-feature-list" style="margin-top: 10px;">
           <div class="feature-item">
-            <strong>Ratnagiri Estate:</strong> Renowned for anaerobic natural fermentations producing intense wild raspberry, dark chocolate, and tropical stone fruit notes.
+            <strong>Ratnagiri Estate (Chikmagalur):</strong> Renowned for anaerobic natural fermentations producing intense wild raspberry, dark chocolate, and tropical stone fruit notes.
           </div>
           <div class="feature-item" style="margin-top: 8px;">
-            <strong>Banana Banger &amp; Special Lots:</strong> Experimental fruit-fermented lots capturing orange blossom, clean acidity, and sparkling apple crispness.
+            <strong>Banana Banger &amp; Experimental Lots:</strong> Specialized fruit-macerated fermentations capturing orange blossom, clean citric acidity, and sparkling apple crispness.
           </div>
         </div>
       </article>
@@ -112,3 +226,5 @@
   <script src="app.js"></script>
 </body>
 </html>
+
+
