@@ -698,6 +698,7 @@ function renderPacks(b2cPacks, b2bPacks) {
   }
 }
 
+
 function selectLot(lotName, element) {
   document.querySelectorAll('#lotGrid .lot-card').forEach(el => el.classList.remove('active'));
   if (element) {
@@ -713,6 +714,21 @@ function selectLot(lotName, element) {
       }
     });
   }
+
+  isCustomSplit = (lotName === 'Mix & Match' || (lotName && lotName.toLowerCase().includes('mix')));
+  if (!isCustomSplit && lotName) {
+    selectedBean = lotName;
+  }
+  
+  const customSplitter = document.getElementById('customSplitter');
+  if (customSplitter) {
+    customSplitter.style.display = isCustomSplit ? 'block' : 'none';
+  }
+  if (isCustomSplit) {
+    rebalanceSplitter();
+  }
+  updateTotal();
+}
 
 function selectB2cPack(name, bottles, price, el) {
   document.querySelectorAll('#b2cPacks .pack-option').forEach(e => e.classList.remove('active'));
