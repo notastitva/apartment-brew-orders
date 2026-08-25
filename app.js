@@ -213,6 +213,60 @@ function renderSplitterUI() {
   if (bar2) bar2.style.width = `${l2Percent}%`;
 }
 // --------------------------------------------------------------------
+// --------------------------------------------------------------------
+// 2-Question Flavor Matcher Engine (menu.html)
+// --------------------------------------------------------------------
+let quizAnswers = { time: 'morning', flavor: 'berry' };
+
+function selectQuizAnswer(questionNum, answerKey, element) {
+  if (questionNum === 1) {
+    quizAnswers.time = answerKey;
+    document.querySelectorAll('.quiz-opt-q1').forEach(b => b.classList.remove('active'));
+  } else if (questionNum === 2) {
+    quizAnswers.flavor = answerKey;
+    document.querySelectorAll('.quiz-opt-q2').forEach(b => b.classList.remove('active'));
+  }
+  if (element) element.classList.add('active');
+  
+  updateQuizRecommendation();
+}
+
+function updateQuizRecommendation() {
+  const resultCard = document.getElementById('quizResultCard');
+  const resultTitle = document.getElementById('quizResultTitle');
+  const resultDesc = document.getElementById('quizResultDesc');
+  const btnPersonal = document.getElementById('quizBtnPersonal');
+  const btnCorporate = document.getElementById('quizBtnCorporate');
+  const resultBadge = document.getElementById('quizResultBadge');
+  
+  if (!resultCard) return;
+  
+  const { time, flavor } = quizAnswers;
+  
+  if (time === 'mix' || flavor === 'mix') {
+    resultCard.className = 'quiz-result-box result-mix';
+    if (resultBadge) resultBadge.textContent = '✨ RECOMMENDED: DUO DISCOVERY FLIGHT';
+    if (resultTitle) resultTitle.textContent = 'Mix & Match Custom Split';
+    if (resultDesc) resultDesc.textContent = 'Experience both single-estate micro-lots in equal parts (or custom ratios) in a single pack! Enjoy wild berry richness in the morning and sparkling jasmine clarity in the afternoon.';
+    if (btnPersonal) btnPersonal.href = '/order?bean=MIX';
+    if (btnCorporate) btnCorporate.href = '/office?bean=MIX';
+  } else if (flavor === 'berry' || time === 'morning') {
+    resultCard.className = 'quiz-result-box result-ratnagiri';
+    if (resultBadge) resultBadge.textContent = '🍇 RECOMMENDED: SINGLE-ESTATE HARVEST';
+    if (resultTitle) resultTitle.textContent = 'Ratnagiri Estate (Anaerobic Naturals)';
+    if (resultDesc) resultDesc.textContent = 'Rich, winey, syrupy body with explosive wild raspberry, stone fruit, and dark cacao notes. Tailored for morning focus and deep work.';
+    if (btnPersonal) btnPersonal.href = '/order?bean=LOT-01';
+    if (btnCorporate) btnCorporate.href = '/office?bean=LOT-01';
+  } else {
+    resultCard.className = 'quiz-result-box result-banana';
+    if (resultBadge) resultBadge.textContent = '🌸 RECOMMENDED: SPECIAL FERMENTATION LOT';
+    if (resultTitle) resultTitle.textContent = 'Banana Banger (Special Yeast Micro-Lot)';
+    if (resultDesc) resultDesc.textContent = 'Clean, floral, sparkling jasmine clarity with crisp green apple and orange blossom notes. Light, tea-like mouthfeel ideal for afternoon recharge.';
+    if (btnPersonal) btnPersonal.href = '/order?bean=LOT-02';
+    if (btnCorporate) btnCorporate.href = '/office?bean=LOT-02';
+  }
+}
+
 // Orders Gateway Controller (orders.html)
 // --------------------------------------------------------------------
 function selectHarvestOption(lotId) {
@@ -1266,7 +1320,6 @@ function handlePayClick() {
   }
   
   if (!validateWizardStep(1) || !validateWizardStep(2)) {
-    alert('Please correct the highlighted fields before placing your order.');
     return;
   }
   
@@ -2091,6 +2144,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } else if (PAGE === 'MENU') {
     renderLots(availableLots);
     fetchLiveConfig();
+    updateQuizRecommendation();
   } else if (PAGE === 'TRACK') {
     const urlParams = new URLSearchParams(window.location.search);
     const qId = urlParams.get('orderId') || urlParams.get('id');

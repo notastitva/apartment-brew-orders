@@ -2761,3 +2761,217 @@ input:focus, select:focus, textarea:focus {
   color: #141312;
 }
 
+/* ==================================================================== */
+/* SENSORY MENU & COMPARISON HUB DESIGN SYSTEM */
+/* ==================================================================== */
+
+.quiz-container {
+  background: var(--card-inner);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.quiz-question-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.quiz-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+}
+
+.quiz-option-btn {
+  background: #191715;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 10px 10px;
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.quiz-option-btn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+  background: rgba(212, 163, 115, 0.08);
+}
+
+.quiz-option-btn.active {
+  border-color: var(--accent);
+  background: rgba(212, 163, 115, 0.15);
+  color: var(--text);
+  box-shadow: 0 0 12px rgba(212, 163, 115, 0.25);
+}
+
+.quiz-result-box {
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.quiz-result-box.result-ratnagiri {
+  background: linear-gradient(135deg, rgba(231, 111, 81, 0.15) 0%, rgba(212, 163, 115, 0.08) 100%);
+  border: 1.5px solid #e76f51;
+  box-shadow: 0 0 20px rgba(231, 111, 81, 0.2);
+}
+
+.quiz-result-box.result-banana {
+  background: linear-gradient(135deg, rgba(42, 157, 143, 0.15) 0%, rgba(0, 180, 216, 0.08) 100%);
+  border: 1.5px solid #2a9d8f;
+  box-shadow: 0 0 20px rgba(42, 157, 143, 0.2);
+}
+
+.quiz-result-box.result-mix {
+  background: linear-gradient(135deg, rgba(212, 163, 115, 0.18) 0%, rgba(164, 121, 226, 0.1) 100%);
+  border: 1.5px solid var(--accent);
+  box-shadow: 0 0 20px rgba(212, 163, 115, 0.25);
+}
+
+.spectrum-comparison-card {
+  background: var(--card-inner);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.spectrum-bar-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.spectrum-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.spectrum-double-track {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bar-track-single {
+  height: 10px;
+  background: #23201d;
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bar-fill-lot1 {
+  height: 100%;
+  background: linear-gradient(90deg, #e76f51 0%, #f4a261 100%);
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(231, 111, 81, 0.5);
+  transition: width 0.5s ease;
+}
+
+.bar-fill-lot2 {
+  height: 100%;
+  background: linear-gradient(90deg, #2a9d8f 0%, #00b4d8 100%);
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(42, 157, 143, 0.5);
+  transition: width 0.5s ease;
+}
+
+.spectrum-metric-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.pairing-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.pairing-card {
+  background: var(--card-inner);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pairing-card.card-ratnagiri {
+  border: 1px solid rgba(231, 111, 81, 0.35);
+  background: linear-gradient(165deg, rgba(231, 111, 81, 0.06) 0%, #151413 100%);
+}
+
+.pairing-card.card-banana {
+  border: 1px solid rgba(42, 157, 143, 0.35);
+  background: linear-gradient(165deg, rgba(42, 157, 143, 0.06) 0%, #151413 100%);
+}
+
+.pairing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pairing-badge-lot1 {
+  background: rgba(231, 111, 81, 0.2);
+  color: #e76f51;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(231, 111, 81, 0.4);
+}
+
+.pairing-badge-lot2 {
+  background: rgba(42, 157, 143, 0.2);
+  color: #2a9d8f;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(42, 157, 143, 0.4);
+}
+
+.pairing-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.pairing-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.pairing-list-item strong {
+  color: var(--text);
+}

@@ -4,16 +4,16 @@
   <meta charset="UTF-8" />
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>Coffee Lots &amp; Harvest Menu | The Apartment Brew Co.</title>
+  <title>Harvest Comparison &amp; Sensory Menu | The Apartment Brew Co.</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body data-page="MENU">
-  <!-- Sticky Top Header & Hamburger Navigation (Topmost Component) -->
+  <!-- Sticky Top Header &amp; Hamburger Navigation (Topmost Component) -->
   <header class="site-header-sticky">
     <div class="header-inner">
       <a href="/" class="nav-logo">
         <span class="logo-text">The Apartment Brew Co.</span>
-        <span class="logo-sub">Specialty Coffee &bull; Gurugram</span>
+        <span class="logo-sub">Specialty Coffee &amp;bull; Gurugram</span>
       </a>
       <button type="button" class="nav-hamburger-btn" id="navHamburgerBtn" aria-label="Toggle navigation menu" onclick="toggleNavDrawer()">
         <span class="hamburger-bar"></span>
@@ -23,12 +23,12 @@
     </div>
   </header>
   
-  <!-- Navigation Drawer Backdrop & Overlay Menu -->
+  <!-- Navigation Drawer Backdrop &amp; Overlay Menu -->
   <div class="nav-backdrop" id="navBackdrop" onclick="closeNavDrawer()"></div>
   <aside class="nav-drawer" id="navDrawer">
     <div class="drawer-header">
       <span class="drawer-title">Navigation Menu</span>
-      <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&times;</button>
+      <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&amp;times;</button>
     </div>
     <nav class="drawer-nav">
       <a href="/" class="drawer-link" data-page-link="INDEX">Home</a>
@@ -49,163 +49,354 @@
     <!-- Branding Header -->
     <header class="header-card">
       <div class="drop-banner">
-        <span>📖</span> Active Single-Estate Harvest Showcase
+        <span>⚡</span> Single-Estate Comparison &amp; Flavor Guide
+      </div>
+      <div class="geo-badge" style="margin-top: 12px;">
+        📍 Sourced from Chikmagalur &amp; Western Ghats Specialty Micro-Lots
       </div>
     </header>
-      <div class="geo-badge" style="margin-top: 12px;">
-        📍 Micro-Lots Sourced Directly from Chikmagalur &amp; Western Ghats Estates
-      </div>
-  
-    <!-- Harvest Showcase Content -->
     <main class="story-content">
-      <!-- SENSORY RADAR / SPIDER COMPARISON GRAPH -->
-<!-- INTERACTIVE SENSORY RADAR / SPIDER COMPARISON GRAPH -->
+      
 <section class="section-card" style="margin-top: 14px;">
   <div class="section-title">
-    <span>Sensory Radar Comparison</span>
+    <span>🎯 2-Question Flavor Matcher</span>
+    <span class="section-subtitle">Find Your Brew</span>
+  </div>
+  <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
+    Can't decide which brew suits you? Tap your preferences below to calculate your ideal match:
+  </p>
+ 
+  <div class="quiz-container">
+    <!-- Question 1 -->
+    <div>
+      <div class="quiz-question-title">
+        <span>1. When will you enjoy your coffee?</span>
+      </div>
+      <div class="quiz-options-grid">
+        <button type="button" class="quiz-option-btn quiz-opt-q1 active" onclick="selectQuizAnswer(1, 'morning', this)">
+          <span style="font-size: 1.05rem;">☀️ Morning Focus</span>
+          <span style="font-size: 0.65rem; color: var(--text-dim);">8–11 AM • Rich, bold deep work</span>
+        </button>
+        <button type="button" class="quiz-option-btn quiz-opt-q1" onclick="selectQuizAnswer(1, 'afternoon', this)">
+          <span style="font-size: 1.05rem;">🌤️ Afternoon Recharge</span>
+          <span style="font-size: 0.65rem; color: var(--text-dim);">1–4 PM • Crisp, floral refresh</span>
+        </button>
+        <button type="button" class="quiz-option-btn quiz-opt-q1" onclick="selectQuizAnswer(1, 'mix', this)">
+          <span style="font-size: 1.05rem;">✨ All-Day / Both</span>
+          <span style="font-size: 0.65rem; color: var(--text-dim);">Duo discovery flight sampler</span>
+        </button>
+      </div>
+    </div>
+ 
+    <!-- Question 2 -->
+    <div>
+      <div class="quiz-question-title">
+        <span>2. Which tasting notes appeal to you?</span>
+      </div>
+      <div class="quiz-options-grid">
+        <button type="button" class="quiz-option-btn quiz-opt-q2 active" onclick="selectQuizAnswer(2, 'berry', this)">
+          <span style="font-size: 1.05rem;">🍇 Wild Berry &amp; Cacao</span>
+          <span style="font-size: 0.65rem; color: var(--text-dim);">Jammy fruit, stone fruit, winey</span>
+        </button>
+        <button type="button" class="quiz-option-btn quiz-opt-q2" onclick="selectQuizAnswer(2, 'floral', this)">
+          <span style="font-size: 1.05rem;">🌸 Jasmine &amp; Apple</span>
+          <span style="font-size: 0.65rem; color: var(--text-dim);">Orange blossom, citric clarity</span>
+        </button>
+        <button type="button" class="quiz-option-btn quiz-opt-q2" onclick="selectQuizAnswer(2, 'mix', this)">
+          <span style="font-size: 1.05rem;">🎯 Love Contrast</span>
+          <span style="font-size: 0.65rem; color: var(--text-dim);">Curious to taste both styles</span>
+        </button>
+      </div>
+    </div>
+ 
+    <!-- Dynamic Result Box -->
+    <div class="quiz-result-box result-ratnagiri" id="quizResultCard">
+      <div id="quizResultBadge" style="font-size: 0.68rem; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 4px;">
+        🍇 RECOMMENDED: SINGLE-ESTATE HARVEST
+      </div>
+      <div id="quizResultTitle" style="font-size: 1.02rem; font-weight: 800; color: var(--text); margin-bottom: 4px;">
+        Ratnagiri Estate (Anaerobic Naturals)
+      </div>
+      <p id="quizResultDesc" style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px;">
+        Rich, winey, syrupy body with explosive wild raspberry, stone fruit, and dark cacao notes. Tailored for morning focus and deep work.
+      </p>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <a href="/order?bean=LOT-01" id="quizBtnPersonal" class="btn btn-pay" style="flex: 1; padding: 9px 12px; font-size: 0.76rem; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
+          <span>☕ Configure Personal Drop &amp;rarr;</span>
+        </a>
+        <a href="/office?bean=LOT-01" id="quizBtnCorporate" class="btn btn-secondary" style="flex: 1; padding: 9px 12px; font-size: 0.76rem; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
+          <span>🏢 Configure Office Batch &amp;rarr;</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- MODULE 2: INTERACTIVE 5-AXIS SENSORY RADAR COMPARISON GRAPH -->
+<section class="section-card" style="margin-top: 14px;">
+  <div class="section-title">
+    <span>📊 Sensory Radar Comparison</span>
     <span class="section-subtitle">5-Axis Tasting Matrix</span>
   </div>
   <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
-    Comparative 5-axis sensory mapping across our active single-estate micro-lots. Tap tabs to focus:
+    Interactive 5-axis comparative mapping showing how both micro-lots contrast in extraction intensity. Tap tabs to isolate:
   </p>
- 
-  <!-- Radar Filter Tabs -->
-  <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
-    <button type="button" class="mode-tab active" id="radarTabOverlay" style="padding: 6px 12px; font-size: 0.72rem;" onclick="setRadarFocus('OVERLAY')">✨ Dual Overlay</button>
-    <button type="button" class="mode-tab" id="radarTabLot1" style="padding: 6px 12px; font-size: 0.72rem;" onclick="setRadarFocus('LOT-01')">🍇 Ratnagiri Estate</button>
-    <button type="button" class="mode-tab" id="radarTabLot2" style="padding: 6px 12px; font-size: 0.72rem;" onclick="setRadarFocus('LOT-02')">🌸 Banana Banger</button>
+          <stop offset="0%" stop-color="#e76f51" stop-opacity="0.65" />
+          <stop offset="0%" stop-color="#2a9d8f" stop-opacity="0.65" />
+      <polygon points="200,80 238.0,107.6 223.5,152.4 176.5,152.4 162.0,107.6" stroke="rgba(255,255,255,0.1)" stroke-width="1" fill="none" />
+      <polygon points="200,60 257.1,101.5 235.3,168.5 164.7,168.5 142.9,101.5" stroke="rgba(255,255,255,0.12)" stroke-width="1" fill="none" />
+      <polygon points="200,40 276.1,95.3 247.0,184.7 153.0,184.7 123.9,95.3" stroke="rgba(212,163,115,0.3)" stroke-width="1.2" fill="none" />
+      <line x1="200" y1="120" x2="200" y2="40" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />
+      <line x1="200" y1="120" x2="276.1" y2="95.3" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />
+      <line x1="200" y1="120" x2="247.0" y2="184.7" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />
+      <line x1="200" y1="120" x2="153.0" y2="184.7" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />
+      <line x1="200" y1="120" x2="123.9" y2="95.3" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />
+      <polygon id="radarPolyBanana" points="200,60 272.3,96.5 237.6,171.8 174.1,155.6 129.6,97.1" fill="url(#bananaRadarGrad)" stroke="#2a9d8f" stroke-width="2.5" style="transition: all 0.35s ease; filter: drop-shadow(0 0 6px rgba(42,157,143,0.4));" />
+      <circle cx="200" cy="60" r="3.5" fill="#2a9d8f" />
+      <circle cx="272.3" cy="96.5" r="3.5" fill="#2a9d8f" />
+      <circle cx="237.6" cy="171.8" r="3.5" fill="#2a9d8f" />
+      <circle cx="174.1" cy="155.6" r="3.5" fill="#2a9d8f" />
+      <circle cx="129.6" cy="97.1" r="3.5" fill="#2a9d8f" />
+      <polygon id="radarPolyRatnagiri" points="200,52 253.3,102.7 242.3,178.2 164.7,168.5 139.1,100.2" fill="url(#ratnagiriRadarGrad)" stroke="#e76f51" stroke-width="2.5" style="transition: all 0.35s ease; filter: drop-shadow(0 0 6px rgba(231,111,81,0.4));" />
+      <circle cx="200" cy="52" r="4" fill="#e76f51" />
+      <circle cx="253.3" cy="102.7" r="4" fill="#e76f51" />
+      <circle cx="242.3" cy="178.2" r="4" fill="#e76f51" />
+      <circle cx="164.7" cy="168.5" r="4" fill="#e76f51" />
+      <circle cx="139.1" cy="100.2" r="4" fill="#e76f51" />
+      <text x="200" y="26" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="middle">Bright Acidity</text>
+      <text x="292" y="93" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="start">Floral Aromatics</text>
+      <text x="258" y="204" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="start">Cane Sweetness</text>
+      <text x="142" y="204" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="end">Body &amp; Texture</text>
+      <text x="108" y="93" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="end">Cup Clarity</text>
   </div>
- 
-  <!-- Radar SVG Container -->
-  <div style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px 10px; text-align: center;">
-    <svg viewBox="0 0 400 250" style="width: 100%; max-width: 380px; height: auto; margin: 0 auto; display: block;" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="ratnagiriRadarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#e76f51" stop-opacity="0.6" />
-          <stop offset="100%" stop-color="#d4a373" stop-opacity="0.25" />
-        </linearGradient>
-        <linearGradient id="bananaRadarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#2a9d8f" stop-opacity="0.6" />
-          <stop offset="100%" stop-color="#00b4d8" stop-opacity="0.25" />
-        </linearGradient>
-      </defs>
- 
-      <!-- Concentric Grid Polygons -->
-      <polygon points="200,100 219.0,113.8 211.8,136.2 188.2,136.2 181.0,113.8" stroke="rgba(255,255,255,0.06)" stroke-width="1" fill="none" />
-      <polygon points="200,80 238.0,107.6 223.5,152.4 176.5,152.4 162.0,107.6" stroke="rgba(255,255,255,0.08)" stroke-width="1" fill="none" />
-      <polygon points="200,60 257.1,101.5 235.3,168.5 164.7,168.5 142.9,101.5" stroke="rgba(255,255,255,0.1)" stroke-width="1" fill="none" />
-      <polygon points="200,40 276.1,95.3 247.0,184.7 153.0,184.7 123.9,95.3" stroke="rgba(212,163,115,0.25)" stroke-width="1.2" fill="none" />
- 
-      <!-- Axis Spokes -->
-      <line x1="200" y1="120" x2="200" y2="40" stroke="rgba(255,255,255,0.12)" stroke-dasharray="2 2" />
-      <line x1="200" y1="120" x2="276.1" y2="95.3" stroke="rgba(255,255,255,0.12)" stroke-dasharray="2 2" />
-      <line x1="200" y1="120" x2="247.0" y2="184.7" stroke="rgba(255,255,255,0.12)" stroke-dasharray="2 2" />
-      <line x1="200" y1="120" x2="153.0" y2="184.7" stroke="rgba(255,255,255,0.12)" stroke-dasharray="2 2" />
-      <line x1="200" y1="120" x2="123.9" y2="95.3" stroke="rgba(255,255,255,0.12)" stroke-dasharray="2 2" />
- 
-      <!-- Lot 2: Banana Banger Radar Area -->
-      <polygon id="radarPolyBanana" points="200,60 272.3,96.5 237.6,171.8 174.1,155.6 129.6,97.1" fill="url(#bananaRadarGrad)" stroke="#2a9d8f" stroke-width="2.2" style="transition: all 0.3s ease;" />
-      <circle cx="200" cy="60" r="3" fill="#2a9d8f" />
-      <circle cx="272.3" cy="96.5" r="3" fill="#2a9d8f" />
-      <circle cx="237.6" cy="171.8" r="3" fill="#2a9d8f" />
-      <circle cx="174.1" cy="155.6" r="3" fill="#2a9d8f" />
-      <circle cx="129.6" cy="97.1" r="3" fill="#2a9d8f" />
- 
-      <!-- Lot 1: Ratnagiri Estate Radar Area -->
-      <polygon id="radarPolyRatnagiri" points="200,52 253.3,102.7 242.3,178.2 164.7,168.5 139.1,100.2" fill="url(#ratnagiriRadarGrad)" stroke="#e76f51" stroke-width="2.2" style="transition: all 0.3s ease;" />
-      <circle cx="200" cy="52" r="3.5" fill="#e76f51" />
-      <circle cx="253.3" cy="102.7" r="3.5" fill="#e76f51" />
-      <circle cx="242.3" cy="178.2" r="3.5" fill="#e76f51" />
-      <circle cx="164.7" cy="168.5" r="3.5" fill="#e76f51" />
-      <circle cx="139.1" cy="100.2" r="3.5" fill="#e76f51" />
- 
-      <!-- Axis Labels -->
-      <text x="200" y="28" fill="#fefae0" font-size="9" font-weight="800" text-anchor="middle">Bright Acidity</text>
-      <text x="290" y="93" fill="#fefae0" font-size="9" font-weight="800" text-anchor="start">Floral Aromatics</text>
-      <text x="256" y="202" fill="#fefae0" font-size="9" font-weight="800" text-anchor="start">Cane Sweetness</text>
-      <text x="144" y="202" fill="#fefae0" font-size="9" font-weight="800" text-anchor="end">Body &amp; Texture</text>
-      <text x="110" y="93" fill="#fefae0" font-size="9" font-weight="800" text-anchor="end">Cup Clarity</text>
-    </svg>
-  </div>
-</section>
-  
-      <!-- ROAST PROFILE & FERMENTATION SPECTRUM GRAPH -->
+          
+          <!-- Radar Legend -->
+          <div style="display: flex; justify-content: center; gap: 16px; margin-top: 10px; font-size: 0.74rem;">
+            <div style="display: flex; align-items: center; gap: 6px; color: #e76f51; font-weight: 700;">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: #e76f51; display: inline-block;"></span>
+              Ratnagiri Estate (Winey &amp; Syrupy)
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px; color: #2a9d8f; font-weight: 700;">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: #2a9d8f; display: inline-block;"></span>
+              Banana Banger (Silky &amp; Floral)
+            </div>
+          </div>
+      <!-- MODULE 3: COLORFUL SENSORY SPECTRUM &amp; INTENSITY GAUGE BARS -->
       <section class="section-card" style="margin-top: 14px;">
         <div class="section-title">
-          <span>Roast &amp; Fermentation Spectrum</span>
-          <span class="section-subtitle">Craft Chemistry</span>
+          <span>🌈 Side-by-Side Sensory Spectrum</span>
+          <span class="section-subtitle">Intensity Metrics</span>
         </div>
         <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
-          We curate precision roast profiles tailored for pour-over extraction, optimizing bean density and preserving volatile enzymatic acids without roasting into heavy bitterness:
+          Direct side-by-side comparison across flavor dimensions. Top bar = <strong>Ratnagiri Estate</strong> (Berry/Coral), bottom bar = <strong>Banana Banger</strong> (Teal/Cyan):
         </p>
-  
-        <!-- Spectrum Visual Component -->
-        <div style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 12px;">
-          
-          <!-- Bar 1: Roast Degree Spectrum -->
-          <div>
-            <div style="display: flex; justify-content: space-between; font-size: 0.74rem; font-weight: 700; color: var(--text); margin-bottom: 6px;">
-              <span>Roast Level Spectrum</span>
-              <span style="color: var(--accent);">Light-to-Medium Focus (206°C – 212°C)</span>
+        <div class="spectrum-comparison-card">
+          <!-- Metric 1: Body &amp; Mouthfeel -->
+            <div class="spectrum-header-row">
+              <span>🍷 Body &amp; Viscosity (Mouthfeel)</span>
+              <span style="font-size: 0.7rem; color: var(--text-muted);">85% vs 40%</span>
             </div>
-            <div style="height: 12px; background: linear-gradient(90deg, #e9c46a 0%, #d4a373 45%, #a47148 75%, #3d2b1f 100%); border-radius: 6px; position: relative;">
-              <!-- Marker 1 -->
-              <div style="position: absolute; left: 42%; top: -3px; bottom: -3px; width: 3px; background: #ffffff; border-radius: 2px; box-shadow: 0 0 6px #fff;"></div>
-              <!-- Marker 2 -->
-              <div style="position: absolute; left: 62%; top: -3px; bottom: -3px; width: 3px; background: #ffffff; border-radius: 2px; box-shadow: 0 0 6px #fff;"></div>
+            <div class="spectrum-double-track">
+              <div class="bar-track-single">
+                <div class="bar-fill-lot1" style="width: 85%;"></div>
+              </div>
+              <div class="bar-track-single">
+                <div class="bar-fill-lot2" style="width: 40%;"></div>
+              </div>
             </div>
-            <div style="display: flex; justify-content: space-between; font-size: 0.64rem; color: var(--text-muted); margin-top: 4px;">
-              <span>Light Filter (Floral)</span>
-              <span style="color: var(--accent); font-weight: 700;">★ Curated Specialty Roasts</span>
-              <span>Dark / Italian (Burnt)</span>
+            <div class="spectrum-metric-labels">
+              <span style="color: #e76f51;">Ratnagiri: Heavy, Syrupy &amp; Winey</span>
+              <span style="color: #2a9d8f;">Banana Banger: Light, Silky &amp; Tea-Like</span>
             </div>
-          </div>
-  
-          <!-- Bar 2: Fermentation Depth Spectrum -->
-          <div>
-            <div style="display: flex; justify-content: space-between; font-size: 0.74rem; font-weight: 700; color: var(--text); margin-bottom: 6px;">
-              <span>Fermentation Technique</span>
-              <span style="color: #95d5b2;">Anaerobic Naturals &amp; Fruit Maceration</span>
+          <!-- Metric 2: Fruit Acidity -->
+          <div class="spectrum-bar-item">
+            <div class="spectrum-header-row">
+              <span>🍋 Fruit Acidity &amp; Brightness</span>
+              <span style="font-size: 0.7rem; color: var(--text-muted);">85% vs 75%</span>
             </div>
-            <div style="height: 12px; background: linear-gradient(90deg, #52b788 0%, #2a9d8f 50%, #e76f51 100%); border-radius: 6px; position: relative;">
-              <!-- Marker -->
-              <div style="position: absolute; left: 78%; top: -3px; bottom: -3px; width: 3px; background: #ffffff; border-radius: 2px; box-shadow: 0 0 6px #fff;"></div>
+            <div class="spectrum-double-track">
+              <div class="bar-track-single">
+                <div class="bar-fill-lot1" style="width: 85%;"></div>
+              </div>
+              <div class="bar-track-single">
+                <div class="bar-fill-lot2" style="width: 75%;"></div>
+              </div>
             </div>
-            <div style="display: flex; justify-content: space-between; font-size: 0.64rem; color: var(--text-muted); margin-top: 4px;">
-              <span>Traditional Washed (Clean)</span>
-              <span>Honey Process</span>
-              <span style="color: #e76f51; font-weight: 700;">★ 72h Anaerobic Natural</span>
+            <div class="spectrum-metric-labels">
+              <span style="color: #e76f51;">Ratnagiri: Malic Wild Berry &amp; Stone Fruit</span>
+              <span style="color: #2a9d8f;">Banana Banger: Crisp Green Apple &amp; Citrus</span>
             </div>
           </div>
-  
-        </div>
-      </section>
-  
-      <!-- Mix & Match Feature -->
+ 
+          <!-- Metric 3: Sweetness &amp; Finish -->
+          <div class="spectrum-bar-item">
+            <div class="spectrum-header-row">
+              <span>🍫 Sweetness &amp; Aftertaste</span>
+              <span style="font-size: 0.7rem; color: var(--text-muted);">80% vs 70%</span>
+            </div>
+            <div class="spectrum-double-track">
+              <div class="bar-track-single">
+                <div class="bar-fill-lot1" style="width: 80%;"></div>
+              </div>
+              <div class="bar-track-single">
+                <div class="bar-fill-lot2" style="width: 70%;"></div>
+              </div>
+            </div>
+            <div class="spectrum-metric-labels">
+              <span style="color: #e76f51;">Ratnagiri: Dark Cacao &amp; Molasses</span>
+              <span style="color: #2a9d8f;">Banana Banger: Orange Blossom Honey</span>
+            </div>
+          </div>
+ 
+          <!-- Metric 4: Aromatic Complexity -->
+          <div class="spectrum-bar-item">
+            <div class="spectrum-header-row">
+              <span>✨ Aromatic Volatiles &amp; Clarity</span>
+              <span style="font-size: 0.7rem; color: var(--text-muted);">75% vs 95%</span>
+            </div>
+            <div class="spectrum-double-track">
+              <div class="bar-track-single">
+                <div class="bar-fill-lot1" style="width: 75%;"></div>
+              </div>
+              <div class="bar-track-single">
+                <div class="bar-fill-lot2" style="width: 95%;"></div>
+              </div>
+            </div>
+            <div class="spectrum-metric-labels">
+              <span style="color: #e76f51;">Ratnagiri: Deep Fermented Jam</span>
+              <span style="color: #2a9d8f;">Banana Banger: High Jasmine &amp; Floral Oils</span>
+            </div>
+          </div>
+      <!-- MODULE 4: PROCESS &amp; FERMENTATION ANATOMY -->
       <section class="section-card" style="margin-top: 14px;">
         <div class="section-title">
-          <span>Mix &amp; Match Custom Split</span>
+          <span>🔬 Process &amp; Fermentation Science</span>
+          <span class="section-subtitle">Why They Differ</span>
         </div>
-        <p class="story-p">
-Curious about trying both single-estate harvests? Our <strong>Mix &amp; Match</strong> option gives you a balanced split or allows you to customize your exact personal bottle distribution at checkout.
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
+          The origin story and farm-level chemistry behind each micro-lot:
         </p>
-      </section>
+ 
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- Ratnagiri Process Card -->
+          <div style="background: linear-gradient(165deg, rgba(231,111,81,0.08) 0%, #151413 100%); border: 1px solid rgba(231,111,81,0.35); border-radius: 10px; padding: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <strong style="color: #e76f51; font-size: 0.92rem;">Ratnagiri Estate (LOT-01)</strong>
+              <span class="pairing-badge-lot1">72h Anaerobic Natural</span>
+            </div>
+            <div style="font-size: 0.72rem; color: var(--accent); margin-bottom: 6px;">Chikmagalur, Karnataka • 1,350m MASL</div>
+            <p style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; margin: 0 0 10px;">
+              Whole ripe cherries are sealed inside airtight stainless steel tanks for 72 hours under anaerobic pressure. This oxygen-deprived fermentation forces the coffee seed to absorb dense fruit sugars from the cherry mucilage, creating intense wild raspberry notes and a rich, winey finish.
+            </p>
+            <a href="/order?bean=LOT-01" class="btn" style="background: linear-gradient(135deg, #e76f51, #d4a373); color: #141312; font-weight: 800; font-size: 0.76rem; padding: 8px 12px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 100%;">
+              <span>Configure Ratnagiri Drop &amp;rarr;</span>
+            </a>
+          </div>
+ 
+          <!-- Banana Banger Process Card -->
+          <div style="background: linear-gradient(165deg, rgba(42,157,143,0.08) 0%, #151413 100%); border: 1px solid rgba(42,157,143,0.35); border-radius: 10px; padding: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <strong style="color: #2a9d8f; font-size: 0.92rem;">Banana Banger (LOT-02)</strong>
+              <span class="pairing-badge-lot2">Extended Yeast Inoculation</span>
+            </div>
+            <div style="font-size: 0.72rem; color: #2a9d8f; margin-bottom: 6px;">Specialty Fermented Micro-Lot Selection</div>
+            <p style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; margin: 0 0 10px;">
+              Inoculated with isolated wine-yeast cultures during fermentation. The specific yeast strain metabolizes organic acids into bright malic esters and floral terpenes, stripping away heavy astringency to yield sparkling green apple acidity and crystalline jasmine clarity.
+            </p>
+            <a href="/order?bean=LOT-02" class="btn" style="background: linear-gradient(135deg, #2a9d8f, #00b4d8); color: #141312; font-weight: 800; font-size: 0.76rem; padding: 8px 12px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 100%;">
+              <span>Configure Banana Banger Drop &amp;rarr;</span>
+            </a>
+          </div>
+        </div>
+      <!-- MODULE 5: OCCASION &amp; FOOD PAIRING MATRIX -->
+<section class="section-card" style="margin-top: 14px;">
+  <div class="section-title">
+    <span>🥐 Daypart &amp; Food Pairing Guide</span>
+    <span class="section-subtitle">Best Occasions</span>
+  </div>
+  <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
+    How to integrate our single-estate brews into your daily routine and meals:
+  </p>
+ 
+  <div class="pairing-cards-grid">
+    <!-- Pairing Card 1: Ratnagiri -->
+    <div class="pairing-card card-ratnagiri">
+      <div class="pairing-header">
+        <span style="font-weight: 800; color: #e76f51; font-size: 0.86rem;">🍇 Ratnagiri Estate Rituals</span>
+        <span class="pairing-badge-lot1">Morning Focus</span>
+      </div>
+      <div class="pairing-list">
+        <div class="pairing-list-item">
+          <span>⏱️</span>
+          <span><strong>Best Time:</strong> 8:00 AM – 11:00 AM kickoff, deep work blocks, and rainy mornings.</span>
+        </div>
+        <div class="pairing-list-item">
+          <span>🥐</span>
+          <span><strong>Food Pairings:</strong> Sourdough toast, almond croissants, dark chocolate brownies, mature cheeses.</span>
+        </div>
+        <div class="pairing-list-item">
+          <span>🥛</span>
+          <span><strong>Milk Friendly:</strong> Exceptional black over ice; also takes a splash of cold oat/dairy milk smoothly.</span>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Pairing Card 2: Banana Banger -->
+    <div class="pairing-card card-banana">
+      <div class="pairing-header">
+        <span style="font-weight: 800; color: #2a9d8f; font-size: 0.86rem;">🌸 Banana Banger Rituals</span>
+        <span class="pairing-badge-lot2">Afternoon Refresh</span>
+      </div>
+      <div class="pairing-list">
+        <div class="pairing-list-item">
+          <span>⏱️</span>
+          <span><strong>Best Time:</strong> 1:00 PM – 4:00 PM recharge, post-lunch slump, and warm sunny afternoons.</span>
+        </div>
+        <div class="pairing-list-item">
+          <span>🍋</span>
+          <span><strong>Food Pairings:</strong> Lemon tea cakes, fruit tarts, light salads, shortbread biscuits.</span>
+        </div>
+        <div class="pairing-list-item">
+          <span>🧊</span>
+          <span><strong>Serving Style:</strong> Best enjoyed strictly black over clear ice or as a sparkling coffee tonic.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- MODULE 6: "STILL CAN'T DECIDE?" DUO FLIGHT CALLOUT -->
+<section class="section-card" style="margin-top: 14px; background: linear-gradient(165deg, #25221e 0%, #161513 100%); border: 1.5px solid rgba(212, 163, 115, 0.4); text-align: center; padding: 20px 16px;">
+  <div style="font-size: 1.6rem; margin-bottom: 6px;">✨☕✨</div>
+  <div class="section-title" style="justify-content: center; margin-bottom: 6px; font-size: 1.05rem;">
+    <span>Can't Decide? Try the Mix &amp; Match Flight!</span>
+  </div>
+  <p style="font-size: 0.82rem; color: var(--text-muted); max-width: 440px; margin: 0 auto 12px; line-height: 1.45;">
+    You don't have to choose just one. Our <strong>Mix &amp; Match</strong> option lets you blend both single-estate micro-lots in equal parts (or custom ratios) in any personal pack (2, 4, 6 bottles) or office batch.
+  </p>
   
-      <!-- CTA to Order -->
+  <!-- Animated Ratio Bar -->
+  <div class="splitter-ratio-bar" style="max-width: 320px; margin: 0 auto 14px;">
+    <div class="ratio-segment ratio-ratnagiri" style="width: 50%;"></div>
+    <div class="ratio-segment ratio-thogarihunkal" style="width: 50%;"></div>
+  </div>
+ 
+  <div style="display: flex; flex-direction: column; gap: 8px; max-width: 360px; margin: 0 auto;">
+    <a href="/order?bean=MIX" class="btn btn-pay" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+      <span>☕ Order Personal Duo Flight (1–6 Bottles) &amp;rarr;</span>
+    </a>
+    <a href="/office?bean=MIX" class="btn btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+      <span>🏢 Order Corporate Office Split (10–60+ Bottles) &amp;rarr;</span>
+    </a>
+  </div>
+</section>
+ 
+<!-- MODULE 7: BOTTOM GATEWAY CTA -->
 <section class="section-card" style="margin-top: 14px; text-align: center;">
-  <h3 style="font-size: 1.1rem; color: var(--accent); margin-bottom: 6px;">Ready to Taste?</h3>
-  <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">Pre-order this week's drop with fast delivery across Delhi NCR.</p>
-  <a href="/orders" class="btn btn-pay" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
-    <span>🎯 Choose Harvest &amp; Order &rarr;</span>
+  <h3 style="font-size: 1.05rem; color: var(--accent); margin-bottom: 6px;">Ready to Explore Harvests?</h3>
+  <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">Visit our visual Order Gateway to inspect batch availability and schedule your drop.</p>
+  <a href="/orders" class="btn btn-pay" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 340px; margin: 0 auto;">
+    <span>🎯 Go to Order Gateway &amp;rarr;</span>
   </a>
 </section>
+ 
     </main>
-  
-  </div>
-  
-  <script src="app.js"></script>
-</body>
-</html>
-
-
 
