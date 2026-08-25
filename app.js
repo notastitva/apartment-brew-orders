@@ -682,7 +682,7 @@ function applyStoreStatus(status) {
   
   if (currentStoreStatus === 'PAUSED') {
     if (banner) {
-      banner.textContent = '⚠️ Pre-orders are currently paused by the roastery. Batch in preparation.';
+      banner.textContent = '⚠️ Pre-orders are currently paused by the brewery. Batch in preparation.';
       banner.style.display = 'block';
     }
     if (payBtn) payBtn.disabled = true;
@@ -1432,7 +1432,7 @@ function handleCustomInquirySubmit() {
   
   if (btnSubmit) btnSubmit.disabled = true;
   if (statusMsg) {
-    statusMsg.textContent = '⏳ Dispatching requirement to roastery team...';
+    statusMsg.textContent = '⏳ Dispatching requirement to brewing team...';
     statusMsg.className = 'track-status-msg msg-info';
     statusMsg.style.display = 'block';
   }
@@ -1537,7 +1537,7 @@ function submitTrackOrder() {
   }
   
   if (statusMsg) {
-    statusMsg.textContent = '⏳ Querying roastery fulfillment log...';
+    statusMsg.textContent = '⏳ Querying brewing fulfillment log...';
     statusMsg.className = 'track-status-msg msg-info';
     statusMsg.style.display = 'block';
   }
@@ -1669,7 +1669,7 @@ function renderTrackingDetails(order) {
     if (sTitle2) sTitle2.textContent = 'Proposal & Curation';
     if (sDesc2) sDesc2.textContent = 'Tasting menu, batch scale & pricing discussion';
     if (sTitle3) sTitle3.textContent = 'Event Confirmed';
-    if (sDesc3) sDesc3.textContent = 'Date locked & roastery extraction scheduled';
+    if (sDesc3) sDesc3.textContent = 'Date locked & brew extraction scheduled';
     if (sTitle4) sTitle4.textContent = 'Event Completed';
     if (sDesc4) sDesc4.textContent = 'Coffee bar served & fulfilled';
   } else {
@@ -1702,7 +1702,7 @@ function renderTrackingDetails(order) {
     if (lblPack) lblPack.textContent = 'Scale / Headcount:';
     if (lblPayment) lblPayment.textContent = 'Status Stage:';
     if (lblDropNote) lblDropNote.textContent = 'Special Notes:';
-    if (tFreshnessNote) tFreshnessNote.innerHTML = '☕ <strong>Custom Event Protocol:</strong> Our coffee team will reach out directly to coordinate roast profiles and ice stations tailored to your venue.';
+    if (tFreshnessNote) tFreshnessNote.innerHTML = '☕ <strong>Custom Event Protocol:</strong> Our coffee team will reach out directly to coordinate brew profiles and ice stations tailored to your venue.';
   } else {
     if (lblCustomer) lblCustomer.textContent = 'Customer:';
     if (lblCompany) lblCompany.textContent = 'Company:';
@@ -1835,7 +1835,7 @@ function renderTrackingDetails(order) {
         tBadge.textContent = 'DELIVERED';
         tBadge.className = 'tracker-badge status-delivered';
       }
-    } else if (status.includes('brew') || status.includes('roast') || status.includes('extract') || status.includes('prep') || status.includes('chill')) {
+    } else if (status.includes('brew') || status.includes('extract') || status.includes('prep') || status.includes('chill')) {
       if (sPre) sPre.classList.add('step-completed');
       if (l1) l1.classList.add('line-completed');
       if (sBrew) sBrew.classList.add('step-active');
@@ -1978,3 +1978,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 });
+
+
