@@ -348,9 +348,6 @@
     </div>
   </section>
 </main>
-      
-        </div>
-  
   
     <!-- Confirmation View -->
     <section id="confirmationView" style="display: none;">
@@ -360,7 +357,7 @@
         <p style="font-size: 0.82rem; color: var(--text-muted);">Your office drop is scheduled for fresh brew &amp; chilled delivery.</p>
   
         <div class="freshness-alert">
-          ❄️ <strong>Hand-Brewed Fresh to Order:</strong> Each coffee is brewed separately by hand with zero preservatives. Because every batch is handcrafted, enjoy subtle artisanal nuances in every bottle. Please transfer to your office refrigerator upon delivery and consume within 48 hours for peak flavor!
+          <span>❄️</span> <strong>Hand-Brewed Fresh to Order:</strong> Each coffee is brewed separately by hand with zero preservatives. Because every batch is handcrafted, enjoy subtle artisanal nuances in every bottle. Please transfer to your office refrigerator upon delivery and consume within 48 hours for peak flavor!
         </div>
   
         <div class="receipt-details">
@@ -368,7 +365,7 @@
             <span class="receipt-label">Order ID</span>
             <span class="receipt-val" id="rOrderId" style="font-family: monospace;">-</span>
           </div>
-          <div class="receipt-row">
+          <div class="receipt-row" id="rCompanyRow">
             <span class="receipt-label">Company</span>
             <span class="receipt-val" id="rCompany">-</span>
           </div>
@@ -380,7 +377,7 @@
             <span class="receipt-label">Delivery Date</span>
             <span class="receipt-val" id="rDropDate" style="color: var(--accent);">-</span>
           </div>
-          <div class="receipt-row">
+          <div class="receipt-row" id="rWindowRow">
             <span class="receipt-label">Delivery Slot</span>
             <span class="receipt-val" id="rWindow">-</span>
           </div>

@@ -1976,7 +1976,12 @@ input:focus, select:focus, textarea:focus {
 }
   
 /* Post-Purchase Confirmation */
-#confirmationView { display: none; }
+#confirmationView {
+  display: none;
+  width: 100%;
+  max-width: 540px;
+  margin: 0 auto;
+}
   
 .success-badge {
   background: rgba(45, 106, 79, 0.25);
