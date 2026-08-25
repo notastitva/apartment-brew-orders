@@ -267,13 +267,8 @@ function setRadarFocus(mode) {
   }
 
 // --------------------------------------------------------------------
-// Multi-Step Ordering Wizard Engine (Step Navigation & Validation)
-// --------------------------------------------------------------------
 function validateWizardStep(stepNum) {
   if (stepNum === 1) {
-    return true; // Lot 1, Lot 2, or Mix & Match is always selected
-  }
-  if (stepNum === 2) {
     const qtyInput = document.getElementById('packQty');
     const qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
     const errQty = document.getElementById('errQty');
@@ -293,7 +288,7 @@ function validateWizardStep(stepNum) {
     }
     return isValid && isUnderCapacity;
   }
-  if (stepNum === 3) {
+  if (stepNum === 2) {
     const isNameValid = validateField('custName');
     const isEmailValid = validateEmailField();
     const isPhoneValid = validatePhoneField();
@@ -339,26 +334,26 @@ function nextWizardStep(targetStep) {
 }
 
 function goToWizardStep(stepNum) {
-  if (stepNum < 1 || stepNum > 4) return;
+  if (stepNum < 1 || stepNum > 3) return;
   if (stepNum > currentWizardStep && !validateWizardStep(currentWizardStep)) {
     return;
   }
   
   currentWizardStep = stepNum;
   
-  // When entering Step 2, ensure splitter UI matches selected pack size
-  if (stepNum === 2 && isCustomSplit) {
+  // When entering Step 1, ensure splitter UI matches selected pack size
+  if (stepNum === 1 && isCustomSplit) {
     rebalanceSplitter();
   }
   
   // Show / Hide Step Panels
-  for (let i = 1; i <= 4; i++) {
+  for (let i = 1; i <= 3; i++) {
     const panel = document.getElementById(`stepPanel${i}`);
     if (panel) panel.style.display = (i === stepNum) ? 'block' : 'none';
   }
   
   // Update Progress Nodes & Connecting Lines
-  for (let i = 1; i <= 4; i++) {
+  for (let i = 1; i <= 3; i++) {
     const node = document.getElementById(`wNode${i}`);
     const line = document.getElementById(`wLine${i}`);
     
@@ -376,12 +371,14 @@ function goToWizardStep(stepNum) {
     }
   }
   
-  if (stepNum === 4) {
+  if (stepNum === 3) {
     populateOrderReview();
   }
   
   window.scrollTo({ top: 120, behavior: 'smooth' });
 }
+// Multi-Step Ordering Wizard Engine (Step Navigation & Validation)
+// --------------------------------------------------------------------
 
 function populateOrderReview() {
   const isB2b = (PAGE === 'OFFICE');
@@ -1024,7 +1021,7 @@ function updateTotal() {
   const subtotal = calculateSubtotal();
   const totalBottles = getTotalBottles();
   const errCap = document.getElementById('errCapacityLimit');
-  const btnStep2Next = document.getElementById('btnStep2Next');
+  const btnStep1Next = document.getElementById('btnStep1Next') || document.getElementById('btnStep2Next');
   const payBtn = document.getElementById('payNowBtn');
   
   if (totalBottles > liveRemainingBatchBottles) {
@@ -1032,11 +1029,11 @@ function updateTotal() {
       errCap.textContent = `⚠️ Selected order (${totalBottles} bottles) exceeds remaining batch capacity (${liveRemainingBatchBottles} bottles left). Please reduce quantity or select a smaller pack.`;
       errCap.style.display = 'block';
     }
-    if (btnStep2Next) btnStep2Next.disabled = true;
+    if (btnStep1Next) btnStep1Next.disabled = true;
     if (payBtn) payBtn.disabled = true;
   } else {
     if (errCap) errCap.style.display = 'none';
-    if (btnStep2Next) btnStep2Next.disabled = false;
+    if (btnStep1Next) btnStep1Next.disabled = false;
     if (payBtn && currentStoreStatus === 'OPEN') payBtn.disabled = false;
   }
   
@@ -1268,7 +1265,7 @@ function handlePayClick() {
     return;
   }
   
-  if (!validateWizardStep(1) || !validateWizardStep(2) || !validateWizardStep(3)) {
+  if (!validateWizardStep(1) || !validateWizardStep(2)) {
     alert('Please correct the highlighted fields before placing your order.');
     return;
   }
@@ -2020,7 +2017,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const beanParam = urlParams.get('bean') || urlParams.get('lot');
   
   if (PAGE === 'ORDER' || PAGE === 'HOME') {
-    renderLots(availableLots);
     renderPacks(availableB2cPacks, []);
     startCutoffCountdown();
     checkSavedProfile();
@@ -2029,21 +2025,30 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (beanParam) {
       if (beanParam === 'LOT-01' || beanParam.toLowerCase().includes('ratnagiri')) {
-        const targetName = availableLots[0] ? `${availableLots[0].name} (${availableLots[0].process})` : "Ratnagiri Estate (Anaerobic Naturals)";
-        selectLot(targetName);
-        goToWizardStep(2);
+        selectedBean = availableLots[0] ? `${availableLots[0].name} (${availableLots[0].process})` : "Ratnagiri Estate (Anaerobic Naturals)";
+        isCustomSplit = false;
       } else if (beanParam === 'LOT-02' || beanParam.toLowerCase().includes('banana')) {
-        const targetName = availableLots[1] ? `${availableLots[1].name} (${availableLots[1].process})` : "Banana Banger (Fermented Lot)";
-        selectLot(targetName);
-        goToWizardStep(2);
+        selectedBean = availableLots[1] ? `${availableLots[1].name} (${availableLots[1].process})` : "Banana Banger (Fermented Lot)";
+        isCustomSplit = false;
       } else if (beanParam === 'MIX' || beanParam.toLowerCase().includes('mix')) {
-        selectLot('Mix & Match');
-        goToWizardStep(2);
+        selectedBean = "Mix & Match";
+        isCustomSplit = true;
       }
+    } else {
+      selectedBean = availableLots[0] ? `${availableLots[0].name} (${availableLots[0].process})` : "Ratnagiri Estate (Anaerobic Naturals)";
+      isCustomSplit = false;
     }
     
+    const customSplitter = document.getElementById('customSplitter');
+    if (customSplitter) {
+      customSplitter.style.display = isCustomSplit ? 'block' : 'none';
+    }
+    if (isCustomSplit) {
+      rebalanceSplitter();
+    }
+    goToWizardStep(1);
+    
   } else if (PAGE === 'OFFICE') {
-    renderLots(availableLots);
     renderPacks([], availableB2bPacks);
     startCutoffCountdown();
     renderClusterOptions();
@@ -2053,19 +2058,28 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (beanParam) {
       if (beanParam === 'LOT-01' || beanParam.toLowerCase().includes('ratnagiri')) {
-        const targetName = availableLots[0] ? `${availableLots[0].name} (${availableLots[0].process})` : "Ratnagiri Estate (Anaerobic Naturals)";
-        selectLot(targetName);
-        goToWizardStep(2);
+        selectedBean = availableLots[0] ? `${availableLots[0].name} (${availableLots[0].process})` : "Ratnagiri Estate (Anaerobic Naturals)";
+        isCustomSplit = false;
       } else if (beanParam === 'LOT-02' || beanParam.toLowerCase().includes('banana')) {
-        const targetName = availableLots[1] ? `${availableLots[1].name} (${availableLots[1].process})` : "Banana Banger (Fermented Lot)";
-        selectLot(targetName);
-        goToWizardStep(2);
+        selectedBean = availableLots[1] ? `${availableLots[1].name} (${availableLots[1].process})` : "Banana Banger (Fermented Lot)";
+        isCustomSplit = false;
       } else if (beanParam === 'MIX' || beanParam.toLowerCase().includes('mix')) {
-        selectLot('Mix & Match');
-        goToWizardStep(2);
+        selectedBean = "Mix & Match";
+        isCustomSplit = true;
       }
+    } else {
+      selectedBean = availableLots[0] ? `${availableLots[0].name} (${availableLots[0].process})` : "Ratnagiri Estate (Anaerobic Naturals)";
+      isCustomSplit = false;
     }
     
+    const customSplitter = document.getElementById('customSplitter');
+    if (customSplitter) {
+      customSplitter.style.display = isCustomSplit ? 'block' : 'none';
+    }
+    if (isCustomSplit) {
+      rebalanceSplitter();
+    }
+    goToWizardStep(1);
   } else if (PAGE === 'ORDERS') {
     startCutoffCountdown();
     fetchLiveConfig();
