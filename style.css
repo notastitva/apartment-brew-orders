@@ -496,27 +496,19 @@ body::before {
 }
 
 /* ==================================================================== */
-/* SENSORY EXTRACTION COMPARISON CHART STYLES                           */
+/* SENSORY EXTRACTION BOLD REDESIGN STYLES                              */
 /* ==================================================================== */
-
-.sensory-chart-card {
+.sensory-legend-bar {
+  display: flex;
+  justify-content: space-between;
   background: var(--card-inner);
   border: 1px solid var(--card-border);
-  border-radius: 12px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
-
-.chart-header {
-  display: flex;
-  justify-content: flex-start;
-  gap: 18px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  padding-bottom: 10px;
-}
-
 .chart-legend-item {
   display: flex;
   align-items: center;
@@ -541,38 +533,145 @@ body::before {
   background: #55504a;
 }
 
-.chart-bars-list {
-  display: flex;
-  flex-direction: column;
+.sensory-grid-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
-.chart-metric-row {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+@media (max-width: 460px) {
+  .sensory-grid-cards {
+    grid-template-columns: 1fr;
+  }
 }
 
-.metric-label-group {
+.sensory-stat-card {
+  background: var(--card-inner);
+  border: 1.5px solid var(--card-border);
+  border-radius: 14px;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.sensory-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.sensory-stat-card.card-aroma {
+  border-color: rgba(246, 145, 179, 0.25);
+  background: linear-gradient(170deg, rgba(246, 145, 179, 0.06) 0%, rgba(31, 29, 26, 0.95) 100%);
+}
+.sensory-stat-card.card-aroma:hover {
+  border-color: #f691b3;
+  box-shadow: 0 4px 20px rgba(246, 145, 179, 0.15);
+}
+
+.sensory-stat-card.card-acidity {
+  border-color: rgba(244, 162, 97, 0.25);
+  background: linear-gradient(170deg, rgba(244, 162, 97, 0.06) 0%, rgba(31, 29, 26, 0.95) 100%);
+}
+.sensory-stat-card.card-acidity:hover {
+  border-color: #f4a261;
+  box-shadow: 0 4px 20px rgba(244, 162, 97, 0.15);
+}
+
+.sensory-stat-card.card-sweetness {
+  border-color: rgba(212, 163, 115, 0.25);
+  background: linear-gradient(170deg, rgba(212, 163, 115, 0.06) 0%, rgba(31, 29, 26, 0.95) 100%);
+}
+.sensory-stat-card.card-sweetness:hover {
+  border-color: #d4a373;
+  box-shadow: 0 4px 20px rgba(212, 163, 115, 0.15);
+}
+
+.sensory-stat-card.card-clarity {
+  border-color: rgba(144, 224, 239, 0.25);
+  background: linear-gradient(170deg, rgba(144, 224, 239, 0.06) 0%, rgba(31, 29, 26, 0.95) 100%);
+}
+.sensory-stat-card.card-clarity:hover {
+  border-color: #90e0ef;
+  box-shadow: 0 4px 20px rgba(144, 224, 239, 0.15);
+}
+
+.stat-card-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.76rem;
-  color: var(--text);
-  font-weight: 600;
 }
 
-.metric-val.highlight {
-  color: var(--accent);
+.stat-icon-badge {
+  font-size: 1.25rem;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.stat-huge-multiplier {
+  font-size: 1.85rem;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+.text-gradient-berry {
+  background: linear-gradient(135deg, #ff8fa3 0%, #f691b3 50%, #c97bb7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 8px rgba(246, 145, 179, 0.35));
+}
+
+.text-gradient-citrus {
+  background: linear-gradient(135deg, #ffd166 0%, #f4a261 60%, #e76f51 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 8px rgba(244, 162, 97, 0.35));
+}
+
+.text-gradient-amber {
+  background: linear-gradient(135deg, #faedcd 0%, #d4a373 50%, #b08968 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 8px rgba(212, 163, 115, 0.35));
+}
+
+.text-gradient-cyan {
+  background: linear-gradient(135deg, #caf0f8 0%, #90e0ef 50%, #00b4d8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 8px rgba(144, 224, 239, 0.35));
+}
+
+.stat-card-label {
+  font-size: 0.86rem;
   font-weight: 800;
-  font-size: 0.74rem;
+  color: var(--text);
+  margin-top: 2px;
+  line-height: 1.25;
 }
 
-.dual-bar-track {
-  height: 14px;
-  background: #23201d;
-  border-radius: 7px;
-  position: relative;
+.stat-card-desc {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+  margin-bottom: 4px;
+}
+
+.stat-mini-bar-track {
+  height: 12px;
+  background: #141312;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -580,22 +679,38 @@ body::before {
   padding: 0 2px;
 }
 
-.bar-fill {
-  height: 5px;
-  border-radius: 3px;
-  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.bar-fill.bar-flash {
-  background: linear-gradient(90deg, #d4a373 0%, #faedcd 100%);
+.stat-bar-flash {
+  height: 4px;
+  border-radius: 2px;
   margin-bottom: 2px;
-  box-shadow: 0 0 8px rgba(212, 163, 115, 0.4);
 }
 
-.bar-fill.bar-cold {
-  background: #55504a;
+.bg-gradient-berry { background: linear-gradient(90deg, #ff8fa3, #f691b3); box-shadow: 0 0 6px rgba(246, 145, 179, 0.5); }
+.bg-gradient-citrus { background: linear-gradient(90deg, #ffd166, #e76f51); box-shadow: 0 0 6px rgba(244, 162, 97, 0.5); }
+.bg-gradient-amber { background: linear-gradient(90deg, #faedcd, #d4a373); box-shadow: 0 0 6px rgba(212, 163, 115, 0.5); }
+.bg-gradient-cyan { background: linear-gradient(90deg, #caf0f8, #00b4d8); box-shadow: 0 0 6px rgba(144, 224, 239, 0.5); }
+
+.stat-bar-cold {
+  height: 3px;
+  background: #44403c;
+  border-radius: 2px;
 }
 
+.stat-comparison-note {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.64rem;
+  margin-top: 2px;
+}
+
+.note-flash {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.note-cold {
+  color: #7d766b;
+}
 /* ==================================================================== */
 /* 48-HOUR FRESHNESS CURVE & TIMELINE STYLES                           */
 /* ==================================================================== */
@@ -2072,4 +2187,5 @@ input:focus, select:focus, textarea:focus {
   max-width: 65%;
   word-break: break-word;
 }
+
 

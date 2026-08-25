@@ -11,7 +11,7 @@
   <!-- Sticky Top Header & Hamburger Navigation (Topmost Component) -->
   <header class="site-header-sticky">
     <div class="header-inner">
-<a href="/" class="nav-logo">
+      <a href="/" class="nav-logo">
         <span class="logo-text">The Apartment Brew Co.</span>
         <span class="logo-sub">Specialty Coffee &bull; Gurugram</span>
       </a>
@@ -47,33 +47,33 @@
   
   <div class="container">
     
-
+  
     <!-- HERO SECTION: Clean, High-Impact Value Proposition -->
     <section class="hero-visual-card">
       <div class="hero-tag-badge">
         <span>⚡</span> Micro-Batch Specialty Brewery &bull; Gurugram
       </div>
-
+  
       <h1 class="hero-main-title">
         Specialty Pour-Over.<br />
         <span class="hero-gradient-text">Precision Brewed. Flash-Chilled.</span><br />
         Delivered Fresh to Order.
       </h1>
-
+  
       <p class="hero-lead-text">
         We hand-brew single-estate Indian harvests to dissolve delicate floral aromatics and fruit acids, instantly shock-chill over ice to lock in peak freshness, and deliver across Delhi NCR with <strong>zero preservatives</strong>.
       </p>
-
+  
       <!-- Action Button Cluster -->
       <div class="hero-cta-cluster">
-<a href="order" class="btn-hero-primary">
+        <a href="order.html" class="btn-hero-primary">
           <span>☕ Pre-Order Weekend Drop (Sat &amp; Sun) &rarr;</span>
         </a>
-<a href="office" class="btn-hero-secondary">
+        <a href="office.html" class="btn-hero-secondary">
           <span>🏢 Friday Corporate Office Drops (Net-7 Invoicing) &rarr;</span>
         </a>
       </div>
-
+  
       <!-- 4-Stat Micro Highlights Grid -->
       <div class="hero-stats-row">
         <div class="stat-box">
@@ -94,8 +94,8 @@
         </div>
       </div>
     </section>
-
-    <!-- SENSORY EXTRACTION SCIENCE & GRAPH COMPARISON -->
+  
+    <!-- SENSORY EXTRACTION SCIENCE & GRAPH COMPARISON (REDESIGNED BOLD & COLORFUL) -->
     <section class="section-card">
       <div class="section-title">
         <span>Sensory Profile &amp; Extraction</span>
@@ -104,72 +104,97 @@
       <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4;">
         Why flash-chilling unlocks richer flavor than traditional 18-hour cold immersion: Heat dissolves complex fruit acids and aromatic oils, while rapid thermal shock traps them before oxidation.
       </p>
-
-      <!-- SVG Sensory Graph Comparison Matrix -->
-      <div class="sensory-chart-card">
-        <div class="chart-header">
-          <div class="chart-legend-item">
-            <span class="legend-dot dot-flash"></span>
-            <span class="legend-text">Flash-Chilled Pour-Over</span>
-          </div>
-          <div class="chart-legend-item">
-            <span class="legend-dot dot-cold"></span>
-            <span class="legend-text">Standard Cold Brew</span>
-          </div>
+  
+      <!-- Comparison Legend Bar -->
+      <div class="sensory-legend-bar">
+        <div class="chart-legend-item">
+          <span class="legend-dot dot-flash"></span>
+          <span class="legend-text" style="color: var(--accent); font-weight: 700;">Flash-Chilled Pour-Over (94&deg;C &rarr; 4&deg;C)</span>
         </div>
-
-        <div class="chart-bars-list">
-          <!-- Metric 1 -->
-          <div class="chart-metric-row">
-            <div class="metric-label-group">
-              <span class="metric-name">Floral &amp; Berry Aromatics</span>
-<span class="metric-val highlight">~3x More Aromatics</span>
-            </div>
-            <div class="dual-bar-track">
-              <div class="bar-fill bar-flash" style="width: 94%;"></div>
-              <div class="bar-fill bar-cold" style="width: 32%;"></div>
-            </div>
-          </div>
-
-          <!-- Metric 2 -->
-          <div class="chart-metric-row">
-            <div class="metric-label-group">
-              <span class="metric-name">Bright Fruit Acidity</span>
-<span class="metric-val highlight">~3x Brighter Acidity</span>
-            </div>
-            <div class="dual-bar-track">
-              <div class="bar-fill bar-flash" style="width: 90%;"></div>
-              <div class="bar-fill bar-cold" style="width: 28%;"></div>
-            </div>
-          </div>
-
-          <!-- Metric 3 -->
-          <div class="chart-metric-row">
-            <div class="metric-label-group">
-              <span class="metric-name">Natural Cane Sweetness</span>
-<span class="metric-val highlight">~1.5x Sweeter Finish</span>
-            </div>
-            <div class="dual-bar-track">
-              <div class="bar-fill bar-flash" style="width: 88%;"></div>
-              <div class="bar-fill bar-cold" style="width: 65%;"></div>
-            </div>
-          </div>
-
-          <!-- Metric 4 -->
-          <div class="chart-metric-row">
-            <div class="metric-label-group">
-              <span class="metric-name">Cup Clarity &amp; Clean Finish</span>
-<span class="metric-val highlight">~2.5x Cleaner Clarity</span>
-            </div>
-            <div class="dual-bar-track">
-              <div class="bar-fill bar-flash" style="width: 96%;"></div>
-              <div class="bar-fill bar-cold" style="width: 40%;"></div>
-            </div>
-          </div>
+        <div class="chart-legend-item">
+          <span class="legend-dot dot-cold"></span>
+          <span class="legend-text">Standard Cold Brew (18h Immersion)</span>
         </div>
       </div>
+  
+      <!-- 2x2 Bold Metric Cards Grid -->
+      <div class="sensory-grid-cards">
+        
+        <!-- Metric 1: Floral &amp; Berry Aromatics -->
+        <div class="sensory-stat-card card-aroma">
+          <div class="stat-card-top">
+            <div class="stat-icon-badge">🌸</div>
+            <div class="stat-huge-multiplier text-gradient-berry">~3.0x</div>
+          </div>
+          <div class="stat-card-label">Floral &amp; Berry Aromatics</div>
+          <div class="stat-card-desc">Volatile aromatic oils permanently locked in before evaporation.</div>
+          <div class="stat-mini-bar-track">
+            <div class="stat-bar-flash bg-gradient-berry" style="width: 94%;"></div>
+            <div class="stat-bar-cold" style="width: 32%;"></div>
+          </div>
+          <div class="stat-comparison-note">
+            <span class="note-flash">94% Captured</span>
+            <span class="note-cold">32% in Cold Brew</span>
+          </div>
+        </div>
+  
+        <!-- Metric 2: Bright Fruit Acidity -->
+        <div class="sensory-stat-card card-acidity">
+          <div class="stat-card-top">
+            <div class="stat-icon-badge">🍋</div>
+            <div class="stat-huge-multiplier text-gradient-citrus">~3.0x</div>
+          </div>
+          <div class="stat-card-label">Bright Fruit Acidity</div>
+          <div class="stat-card-desc">Dissolves vibrant enzymatic acids that cold water leaves behind.</div>
+          <div class="stat-mini-bar-track">
+            <div class="stat-bar-flash bg-gradient-citrus" style="width: 90%;"></div>
+            <div class="stat-bar-cold" style="width: 28%;"></div>
+          </div>
+          <div class="stat-comparison-note">
+            <span class="note-flash">90% Extracted</span>
+            <span class="note-cold">28% in Cold Brew</span>
+          </div>
+        </div>
+  
+        <!-- Metric 3: Natural Cane Sweetness -->
+        <div class="sensory-stat-card card-sweetness">
+          <div class="stat-card-top">
+            <div class="stat-icon-badge">🍯</div>
+            <div class="stat-huge-multiplier text-gradient-amber">~1.5x</div>
+          </div>
+          <div class="stat-card-label">Natural Cane Sweetness</div>
+          <div class="stat-card-desc">Thermal extraction hydrolyzes complex sucrose into clean sweetness.</div>
+          <div class="stat-mini-bar-track">
+            <div class="stat-bar-flash bg-gradient-amber" style="width: 88%;"></div>
+            <div class="stat-bar-cold" style="width: 65%;"></div>
+          </div>
+          <div class="stat-comparison-note">
+            <span class="note-flash">88% Sweetness</span>
+            <span class="note-cold">65% in Cold Brew</span>
+          </div>
+        </div>
+  
+        <!-- Metric 4: Cup Clarity &amp; Clean Finish -->
+        <div class="sensory-stat-card card-clarity">
+          <div class="stat-card-top">
+            <div class="stat-icon-badge">✨</div>
+            <div class="stat-huge-multiplier text-gradient-cyan">~2.5x</div>
+          </div>
+          <div class="stat-card-label">Cup Clarity &amp; Clean Finish</div>
+          <div class="stat-card-desc">Zero muddy silt or over-steeped bitterness for sparkling clarity.</div>
+          <div class="stat-mini-bar-track">
+            <div class="stat-bar-flash bg-gradient-cyan" style="width: 96%;"></div>
+            <div class="stat-bar-cold" style="width: 40%;"></div>
+          </div>
+          <div class="stat-comparison-note">
+            <span class="note-flash">96% Cup Clarity</span>
+            <span class="note-cold">40% in Cold Brew</span>
+          </div>
+        </div>
+  
+      </div>
     </section>
-
+  
     <!-- 48-HOUR FRESHNESS CURVE & TIMELINE GRAPH -->
     <section class="section-card">
       <div class="section-title">
@@ -179,7 +204,7 @@
       <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
         With zero stabilizers or artificial pasteurization, our coffee is crafted for a vibrant 48-hour taste window:
       </p>
-
+  
       <!-- SVG Freshness Curve Graph -->
       <div class="freshness-graph-wrapper">
         <svg class="freshness-curve-svg" viewBox="0 0 460 140" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -197,27 +222,27 @@
               <stop offset="100%" stop-color="#e63946" />
             </linearGradient>
           </defs>
-
+  
           <!-- Grid Lines -->
           <line x1="20" y1="20" x2="440" y2="20" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3 3" />
           <line x1="20" y1="65" x2="440" y2="65" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3 3" />
           <line x1="20" y1="110" x2="440" y2="110" stroke="rgba(255,255,255,0.12)" />
-
+  
           <!-- Curve Area Fill -->
           <path d="M 20 110 L 20 40 Q 90 22 160 25 Q 260 30 330 55 Q 380 78 440 108 L 440 110 Z" fill="url(#curveFillGrad)" />
           
           <!-- Main Curve Line -->
           <path d="M 20 40 Q 90 22 160 25 Q 260 30 330 55 Q 380 78 440 108" stroke="url(#curveStrokeGrad)" stroke-width="3" stroke-linecap="round" />
-
+  
           <!-- Key Points on Curve -->
           <!-- Point 1 (Drop Morning - Hour 0) -->
           <circle cx="35" cy="36" r="4.5" fill="#faedcd" stroke="#141312" stroke-width="2" />
           <text x="35" y="18" fill="#faedcd" font-size="8.5" font-weight="700" text-anchor="middle">Hour 0 (Drop)</text>
-
+  
           <!-- Point 2 (Peak Balance - Hour 24) -->
           <circle cx="190" cy="27" r="4.5" fill="#d4a373" stroke="#141312" stroke-width="2" />
           <text x="190" y="16" fill="#d4a373" font-size="8.5" font-weight="800" text-anchor="middle">Hour 24 (Peak Balance)</text>
-
+  
           <!-- Point 3 (Mellow Finish - Hour 48) -->
           <circle cx="300" cy="46" r="4.5" fill="#b08968" stroke="#141312" stroke-width="2" />
           <text x="320" y="36" fill="#b08968" font-size="8.5" font-weight="700" text-anchor="middle">Hour 48 (Mellow)</text>
@@ -229,7 +254,7 @@
           <text x="440" y="126" fill="#e63946" font-size="8" font-weight="600" text-anchor="end">72h+ Oxidation</text>
         </svg>
       </div>
-
+  
       <div class="timeline-summary-grid">
         <div class="timeline-point-card">
           <div class="tp-time">Hours 0–12</div>
@@ -248,14 +273,14 @@
         </div>
       </div>
     </section>
-
+  
     <!-- 3-STEP CRAFT BREW PROCESS -->
     <section class="section-card">
       <div class="section-title">
         <span>The Craft Process</span>
         <span class="section-subtitle">How We Brew</span>
       </div>
-
+  
       <div class="craft-flow-grid">
         <!-- Step 1 -->
         <div class="craft-flow-step">
@@ -268,7 +293,7 @@
           </div>
           <div class="flow-step-tag">☕ Specialty Single-Estate Sourcing</div>
         </div>
-
+  
         <!-- Step 2 -->
         <div class="craft-flow-step">
           <div class="flow-step-header">
@@ -280,7 +305,7 @@
           </div>
           <div class="flow-step-tag">❄️ Shock-Chilled to 4&deg;C</div>
         </div>
-
+  
         <!-- Step 3 -->
         <div class="craft-flow-step">
           <div class="flow-step-header">
@@ -294,8 +319,8 @@
         </div>
       </div>
     </section>
-
-<!-- ACTIVE HARVESTS PREVIEW CARDS -->
+  
+    <!-- ACTIVE HARVESTS PREVIEW CARDS -->
     <section class="section-card">
       <div class="section-title">
           <span>Sensory Radar Comparison</span>
@@ -399,14 +424,14 @@
           <span>📖 View Complete Sensory Notes &amp; Tasting Profiles &rarr;</span>
       </a>
     </section>
-
+  
     <!-- VISUAL COMPARISON MATRIX CARDS -->
     <section class="section-card">
       <div class="section-title">
         <span>The Comparison</span>
         <span class="section-subtitle">How We Differ</span>
       </div>
-
+  
       <div class="comparison-cards-grid">
         <!-- Card 1: The Apartment Brew Co. -->
         <div class="comp-card highlighted-comp">
@@ -433,7 +458,7 @@
             </div>
           </div>
         </div>
-
+  
         <!-- Card 2: Standard Cold Brew -->
         <div class="comp-card">
           <div class="comp-card-header" style="color: var(--text-muted);">
@@ -454,7 +479,7 @@
             </div>
           </div>
         </div>
-
+  
         <!-- Card 3: Traditional Instant -->
         <div class="comp-card">
           <div class="comp-card-header" style="color: var(--text-dim);">
@@ -477,25 +502,25 @@
         </div>
       </div>
     </section>
-
+  
     <!-- COMMUNITY REVIEWS & SOCIAL PROOF -->
     <section class="section-card">
       <div class="section-title">
         <span>What Coffee Lovers Say</span>
         <span class="section-subtitle">Gurugram Community</span>
       </div>
-
+  
       <div class="review-grid">
         <div class="review-card">
           <div class="review-stars">★★★★★</div>
           <div class="review-quote">
-&ldquo;Finally, cold coffee in Gurugram that doesn't taste like muddy chocolate water. The Ratnagiri batch tasted exactly like a pour-over over ice with explosive berry notes.&rdquo;
+            &ldquo;Finally, cold coffee in Gurugram that doesn't taste like muddy chocolate water. The Ratnagiri batch tasted exactly like a pour-over over ice with explosive berry notes.&rdquo;
           </div>
           <div class="review-author">
             <strong>Sarthak G.</strong> <span>DLF Phase 5</span>
           </div>
         </div>
-
+  
         <div class="review-card">
           <div class="review-stars">★★★★★</div>
           <div class="review-quote">
@@ -507,17 +532,17 @@
         </div>
       </div>
     </section>
-
+  
     <!-- STREAMLINED ORDERING & SERVICES HUB -->
     <section class="section-card">
       <div class="section-title">
         <span>Order &amp; Inquire</span>
         <span class="section-subtitle">Choose Portal</span>
       </div>
-
+  
       <div class="streamlined-hub-grid">
         <!-- Option 1: Weekend Pre-Order -->
-<a href="order" class="streamlined-hub-card">
+        <a href="order" class="streamlined-hub-card">
           <div class="sh-card-header">
             <span class="sh-icon">☕</span>
             <span class="sh-title">Weekend Individual Drops</span>
@@ -525,9 +550,9 @@
           <p class="sh-desc">Pre-order single or multi-bottle packs delivered Saturday &amp; Sunday morning.</p>
           <div class="sh-cta">Pre-Order Weekend Drop &rarr;</div>
         </a>
-
+  
         <!-- Option 2: Corporate Office Drops -->
-<a href="office" class="streamlined-hub-card">
+        <a href="office" class="streamlined-hub-card">
           <div class="sh-card-header">
             <span class="sh-icon">🏢</span>
             <span class="sh-title">Friday Team Brew Drops</span>
@@ -536,20 +561,20 @@
           <div class="sh-cta">Order Office Batch &rarr;</div>
         </a>
       </div>
-
+  
       <!-- Quick Utility Links Bar -->
       <div class="streamlined-sub-links">
-<a href="events" class="sub-link-pill">
+        <a href="events" class="sub-link-pill">
           <span>🎉 Custom Event Catering &amp; Offsites &rarr;</span>
         </a>
-<a href="track" class="sub-link-pill">
+        <a href="track" class="sub-link-pill">
           <span>🔍 Track Existing Order Status &rarr;</span>
         </a>
       </div>
     </section>
-
+  
   </div>
-
+  
   <!-- Service Worker Registration -->
   <script>
     if ('serviceWorker' in navigator) {
