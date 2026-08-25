@@ -228,8 +228,8 @@ function selectHarvestOption(lotId) {
   const btnPersonal = document.getElementById('btnGoPersonal');
   const btnCorporate = document.getElementById('btnGoCorporate');
 
-  if (btnPersonal) btnPersonal.href = `order.html?bean=${encodeURIComponent(lotId)}`;
-  if (btnCorporate) btnCorporate.href = `office.html?bean=${encodeURIComponent(lotId)}`;
+  if (btnPersonal) btnPersonal.href = `/order?bean=${encodeURIComponent(lotId)}`;
+  if (btnCorporate) btnCorporate.href = `/office?bean=${encodeURIComponent(lotId)}`;
   if (typeof setRadarFocus === 'function') {
     setRadarFocus(lotId === 'MIX' ? 'OVERLAY' : lotId);
   }
@@ -1435,7 +1435,7 @@ async function handleOrderSuccess(paymentId, statusText) {
   }
   
   if (linkTrackOrder) {
-    linkTrackOrder.href = `track.html?orderId=${encodeURIComponent(orderId)}`;
+    linkTrackOrder.href = `/track?orderId=${encodeURIComponent(orderId)}`;
   }
   
   const orderFormView = document.getElementById('orderFormView');
@@ -1575,7 +1575,7 @@ function renderInquirySuccess(inqId, name, comp, reqType, waUrl) {
         <a href="${waUrl}" target="_blank" style="display: inline-block; background: #25d366; color: #141312; font-size: 0.78rem; font-weight: 800; padding: 8px 14px; border-radius: 6px; text-decoration: none;">
           💬 Chat on WhatsApp Now
         </a>
-        <a href="track.html?orderId=${encodeURIComponent(inqId)}" style="display: inline-block; background: rgba(212, 163, 115, 0.15); border: 1px solid var(--accent); color: var(--accent); font-size: 0.78rem; font-weight: 800; padding: 8px 14px; border-radius: 6px; text-decoration: none;">
+        <a href="/track?orderId=${encodeURIComponent(inqId)}" style="display: inline-block; background: rgba(212, 163, 115, 0.15); border: 1px solid var(--accent); color: var(--accent); font-size: 0.78rem; font-weight: 800; padding: 8px 14px; border-radius: 6px; text-decoration: none;">
           🔍 Track Inquiry Status
         </a>
       </div>

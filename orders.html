@@ -8,12 +8,12 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body data-page="ORDERS">
-  <!-- Sticky Top Header & Hamburger Navigation (Topmost Component) -->
+  <!-- Sticky Top Header &amp; Hamburger Navigation (Topmost Component) -->
   <header class="site-header-sticky">
     <div class="header-inner">
-      <a href="index.html" class="nav-logo">
+      <a href="/" class="nav-logo">
         <span class="logo-text">The Apartment Brew Co.</span>
-        <span class="logo-sub">Specialty Coffee &bull; Gurugram</span>
+        <span class="logo-sub">Specialty Coffee &amp;bull; Gurugram</span>
       </a>
       <button type="button" class="nav-hamburger-btn" id="navHamburgerBtn" aria-label="Toggle navigation menu" onclick="toggleNavDrawer()">
         <span class="hamburger-bar"></span>
@@ -22,23 +22,21 @@
       </button>
     </div>
   </header>
-  <!-- Navigation Drawer Backdrop & Overlay Menu -->
+  <!-- Navigation Drawer Backdrop &amp; Overlay Menu -->
   <div class="nav-backdrop" id="navBackdrop" onclick="closeNavDrawer()"></div>
   <aside class="nav-drawer" id="navDrawer">
     <div class="drawer-header">
       <span class="drawer-title">Navigation Menu</span>
-      <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&times;</button>
+      <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&amp;times;</button>
     </div>
     <nav class="drawer-nav">
-      <a href="index.html" class="drawer-link" data-page-link="INDEX">Home</a>
-      <a href="orders.html" class="drawer-link active" data-page-link="ORDERS">Harvests &amp; Order Gateway</a>
-      <a href="order.html" class="drawer-link" data-page-link="ORDER">Personal Order</a>
-      <a href="office.html" class="drawer-link" data-page-link="OFFICE">Corporate Order</a>
-      <a href="menu.html" class="drawer-link" data-page-link="MENU">Harvests &amp; Sensory Menu</a>
-      <a href="guide.html" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
-      <a href="about.html" class="drawer-link" data-page-link="ABOUT">Craft &amp; Philosophy</a>
-      <a href="events.html" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
-      <a href="track.html" class="drawer-link" data-page-link="TRACK">Enquiry/Order Tracker</a>
+      <a href="/" class="drawer-link" data-page-link="INDEX">Home</a>
+      <a href="/orders" class="drawer-link active" data-page-link="ORDERS">Order Now</a>
+      <a href="/menu" class="drawer-link" data-page-link="MENU">Harvests &amp; Sensory Menu</a>
+      <a href="/guide" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
+      <a href="/about" class="drawer-link" data-page-link="ABOUT">Craft &amp; Philosophy</a>
+      <a href="/events" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
+      <a href="/track" class="drawer-link" data-page-link="TRACK">Enquiry/Order Tracker</a>
     </nav>
     <div class="drawer-footer">
       <div class="drawer-footer-text">☕ Hand-Brewed Fresh to Order in Gurugram</div>
@@ -166,7 +164,7 @@
           <div class="flavor-swatches-grid">
             <div class="flavor-swatch swatch-blossom">
               <span class="swatch-icon">🌸</span>
-              <span class="swatch-text">Orange Blossom</span>
+<span class="swatch-text">Orange Blossom</span>
             </div>
             <div class="flavor-swatch swatch-apple">
               <span class="swatch-icon">🍏</span>
@@ -252,62 +250,62 @@
         </div>
       </div>
     </section>
-    <!-- SECTION: BRANCHING ORDER PATHWAYS -->
-    <section class="section-card">
-      <div class="section-title">
-        <span>Proceed to Checkout</span>
-        <span class="section-subtitle">Choose Fulfillment Scale</span>
-      </div>
-      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; line-height: 1.4;">
-        Select your fulfillment scale below to configure bottle count, delivery window, and secure checkout:
-      </p>
-      <div class="destination-cards-grid">
-        <!-- Option 1: Personal Order -->
-        <a href="order.html?bean=LOT-01" id="btnGoPersonal" class="destination-order-card card-personal">
-          <div>
-            <div class="dest-card-header">
-              <span class="dest-card-title">☕ Personal Order</span>
-              <span class="dest-card-badge badge-personal">1–6 Bottles</span>
-            </div>
-            <p class="dest-card-desc" style="margin-top: 8px;">
-              Pre-order glass bottles delivered cold to your home Saturday &amp; Sunday morning across Delhi NCR.
-            </p>
-          </div>
-          <div class="dest-card-cta cta-personal">
-            Configure Personal Order &rarr;
-          </div>
-        </a>
-        <!-- Option 2: Corporate Order -->
-        <a href="office.html?bean=LOT-01" id="btnGoCorporate" class="destination-order-card card-corporate">
-          <div>
-            <div class="dest-card-header">
-              <span class="dest-card-title">🏢 Corporate Order</span>
-              <span class="dest-card-badge badge-corporate">10–60+ Bottles</span>
-            </div>
-            <p class="dest-card-desc" style="margin-top: 8px;">
-              Friday Tech Park delivery with Net-7 corporate invoicing, GSTIN input credit, and team tasting notes.
-            </p>
-          </div>
-          <div class="dest-card-cta cta-corporate">
-            Configure Office Batch &rarr;
-          </div>
-        </a>
-      </div>
-      <!-- Large Event Catering Sub-link -->
-      <div class="order-mode-subtext" style="margin-top: 14px; margin-bottom: 0;">
-        Planning a 100+ bottle townhall, hackathon, or offsite? <a href="events.html">Custom Event Catering &rarr;</a>
-      </div>
-    </section>
+<!-- SECTION: BRANCHING ORDER PATHWAYS -->
+<section class="section-card">
+  <div class="section-title">
+    <span>Proceed to Checkout</span>
+    <span class="section-subtitle">Choose Fulfillment Scale</span>
   </div>
-  <!-- Service Worker Registration -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW error:', err));
-      });
-    }
-  </script>
-  <script src="app.js"></script>
+  <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; line-height: 1.4;">
+    Select your fulfillment scale below to configure bottle count, delivery window, and secure checkout:
+  </p>
+  <div class="destination-cards-grid">
+    <!-- Option 1: Personal Order -->
+    <a href="/order?bean=LOT-01" id="btnGoPersonal" class="destination-order-card card-personal">
+      <div>
+        <div class="dest-card-header">
+          <span class="dest-card-title">☕ Personal Order</span>
+          <span class="dest-card-badge badge-personal">1–6 Bottles</span>
+        </div>
+        <p class="dest-card-desc" style="margin-top: 8px;">
+          Pre-order glass bottles delivered cold to your home Saturday &amp; Sunday morning across Delhi NCR.
+        </p>
+      </div>
+      <div class="dest-card-cta cta-personal">
+        Configure Personal Order &rarr;
+      </div>
+    </a>
+    <!-- Option 2: Corporate Order -->
+    <a href="/office?bean=LOT-01" id="btnGoCorporate" class="destination-order-card card-corporate">
+      <div>
+        <div class="dest-card-header">
+          <span class="dest-card-title">🏢 Corporate Order</span>
+          <span class="dest-card-badge badge-corporate">10–60+ Bottles</span>
+        </div>
+        <p class="dest-card-desc" style="margin-top: 8px;">
+          Friday Tech Park delivery with Net-7 corporate invoicing, GSTIN input credit, and team tasting notes.
+        </p>
+      </div>
+      <div class="dest-card-cta cta-corporate">
+        Configure Office Batch &rarr;
+      </div>
+    </a>
+  </div>
+  <!-- Large Event Catering Sub-link -->
+  <div class="order-mode-subtext" style="margin-top: 14px; margin-bottom: 0;">
+    Planning a 100+ bottle townhall, hackathon, or offsite? <a href="/events">Custom Event Catering &amp;rarr;</a>
+  </div>
+</section>
+</div>
+<!-- Service Worker Registration -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW error:', err));
+    });
+  }
+</script>
+<script src="app.js"></script>
 </body>
 </html>
 

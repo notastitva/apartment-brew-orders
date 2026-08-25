@@ -40,13 +40,12 @@
     </div>
     <nav class="drawer-nav">
       <a href="/" class="drawer-link" data-page-link="INDEX">Home</a>
-      <a href="order" class="drawer-link" data-page-link="ORDER">Individual Brew</a>
-      <a href="office" class="drawer-link active" data-page-link="OFFICE">Team Brew</a>
-      <a href="menu" class="drawer-link" data-page-link="MENU">Harvests &amp; Sensory Menu</a>
-      <a href="guide" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
-      <a href="about" class="drawer-link" data-page-link="ABOUT">Craft &amp; Philosophy</a>
-      <a href="events" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
-      <a href="track" class="drawer-link" data-page-link="TRACK">Enquiry/Order Tracker</a>
+      <a href="/orders" class="drawer-link" data-page-link="ORDERS">Order Now</a>
+      <a href="/menu" class="drawer-link" data-page-link="MENU">Harvests &amp; Sensory Menu</a>
+      <a href="/guide" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
+      <a href="/about" class="drawer-link" data-page-link="ABOUT">Craft &amp; Philosophy</a>
+      <a href="/events" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
+      <a href="/track" class="drawer-link" data-page-link="TRACK">Enquiry/Order Tracker</a>
     </nav>
     <div class="drawer-footer">
       <div class="drawer-footer-text">☕ Hand-Brewed Fresh to Order in Gurugram</div>
@@ -88,14 +87,14 @@
       
 <!-- Order Mode Switcher (Individual vs Office) -->
 <div class="order-mode-switcher">
-  <a href="order.html" class="mode-switch-tab">
+  <a href="/order" class="mode-switch-tab">
     <span class="mode-tab-icon">☕</span>
     <div class="mode-tab-text">
 <span>Personal Order</span>
       <small>1–6 Bottles &bull; Weekend Drops</small>
     </div>
   </a>
-  <a href="office.html" class="mode-switch-tab active">
+  <a href="/office" class="mode-switch-tab active">
     <span class="mode-tab-icon">🏢</span>
     <div class="mode-tab-text">
 <span>Corporate Order</span>
@@ -104,7 +103,7 @@
   </a>
 </div>
 <div class="order-mode-subtext">
-  Need 100+ bottles for a hackathon or all-hands? <a href="events.html">Custom Event Catering &rarr;</a>
+  Need 100+ bottles for a hackathon or all-hands? <a href="/events">Custom Event Catering &rarr;</a>
 </div>
 
       <!-- Wizard Progress Header (Uniform Across Pages) -->
@@ -472,7 +471,7 @@
           <span>&#128241; Send Receipt / Updates to WhatsApp</span>
         </button>
   
-        <a href="track" id="linkTrackOrder" class="btn" style="background: rgba(212, 163, 115, 0.15); color: var(--accent); border: 1px solid var(--accent); margin-top: 10px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+        <a href="/track" id="linkTrackOrder" class="btn" style="background: rgba(212, 163, 115, 0.15); color: var(--accent); border: 1px solid var(--accent); margin-top: 10px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
           <span>&#128269; View Live Order Status</span>
         </a>
   
@@ -495,4 +494,5 @@
   <script src="app.js"></script>
 </body>
 </html>
+
 
