@@ -106,50 +106,37 @@
 <div class="order-mode-subtext">
   Need 100+ bottles for a hackathon or all-hands? <a href="events.html">Custom Event Catering &rarr;</a>
 </div>
+<!-- Selected Harvest Summary Bar -->
+<div class="selected-harvest-banner" id="selectedHarvestBanner">
+  <div class="chosen-lot-info">
+    <span class="chosen-lot-label">🏢 Selected Harvest for Team</span>
+    <span class="chosen-lot-name" id="chosenLotNameDisplay">Ratnagiri Estate (Anaerobic Naturals)</span>
+  </div>
+  <a href="orders" class="btn-change-lot">Change Harvest &rarr;</a>
+</div>
 
-      <!-- Wizard Progress Header (Uniform Across Pages) -->
+<!-- 3-Step Wizard Progress Header -->
       <div class="wizard-progress-bar">
         <div class="wizard-step-node node-active" id="wNode1" onclick="goToWizardStep(1)">
           <div class="node-circle" id="wCircle1">1</div>
-          <div class="node-label" id="wLabel1">Harvest</div>
+<div class="node-label" id="wLabel1">Batch Size</div>
         </div>
         <div class="wizard-node-line" id="wLine1"></div>
         <div class="wizard-step-node" id="wNode2" onclick="goToWizardStep(2)">
           <div class="node-circle" id="wCircle2">2</div>
-          <div class="node-label" id="wLabel2">Batch Size</div>
+<div class="node-label" id="wLabel2">Delivery</div>
         </div>
         <div class="wizard-node-line" id="wLine2"></div>
         <div class="wizard-step-node" id="wNode3" onclick="goToWizardStep(3)">
-          <div class="node-circle" id="wCircle3">3</div>
+<div class="node-circle" id="wCircle3">3</div>
           <div class="node-label" id="wLabel3">Delivery</div>
         </div>
-        <div class="wizard-node-line" id="wLine3"></div>
-        <div class="wizard-step-node" id="wNode4" onclick="goToWizardStep(4)">
-          <div class="node-circle" id="wCircle4">4</div>
-          <div class="node-label" id="wLabel4">Review</div>
+<div class="node-label" id="wLabel3">Review &amp; Pay</div>
         </div>
       </div>
   
-      <!-- STEP 1: Select Coffee Harvest -->
-      <section class="section-card wizard-step-panel" id="stepPanel1">
-        <div class="section-title">
-          <span>Step 1: Select Coffee Harvest</span>
-          <span class="section-subtitle">Single-Estate Harvests</span>
-        </div>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
-          Select a single-estate harvest for your office, or choose Mix &amp; Match to build a split batch ratio across your team.
-        </p>
-  
-        <!-- Dynamic Coffee Lot Grid (3 Options: Lot 1, Lot 2, Mix &amp; Match) -->
-        <div class="lot-grid" id="lotGrid"></div>
-  
-        <button type="button" class="btn btn-pay" style="margin-top: 14px;" onclick="nextWizardStep(2)">
-<span>Continue to Batch Size &rarr;</span>
-        </button>
-      </section>
-  
-      <!-- STEP 2: Choose Corporate Batch Tier &amp; Fine-Tune Split -->
-      <section class="section-card wizard-step-panel" id="stepPanel2" style="display: none;">
+<!-- STEP 1: Choose Corporate Batch Tier &amp; Fine-Tune Split -->
+<section class="section-card wizard-step-panel" id="stepPanel1">
         <div class="section-title">
           <span>Step 2: Choose Batch Size &amp; Quantity</span>
           <span class="section-subtitle">Friday Drop (Cutoff: Thu 6 PM &bull; 200ml Bottles)</span>
@@ -232,15 +219,14 @@
         </div>
   
         <div class="wizard-nav-btns">
-<button type="button" class="btn-secondary" onclick="goToWizardStep(1)">&larr; Back to Harvest</button>
-          <button type="button" id="btnStep2Next" class="btn btn-pay" onclick="nextWizardStep(3)">
+<button type="button" id="btnStep1Next" class="btn btn-pay" onclick="nextWizardStep(2)">
 <span>Continue to Delivery &rarr;</span>
           </button>
         </div>
       </section>
   
       <!-- STEP 3: Office Delivery &amp; Tech Park Cluster Window -->
-      <section class="section-card wizard-step-panel" id="stepPanel3" style="display: none;">
+<section class="section-card wizard-step-panel" id="stepPanel2" style="display: none;">
         <div class="section-title">
           <span>Step 3: Office Delivery &amp; Invoicing Details</span>
         </div>
@@ -326,17 +312,17 @@
         </div>
   
         <div class="wizard-nav-btns">
-<button type="button" class="btn-secondary" onclick="goToWizardStep(2)">&larr; Back to Batch Size</button>
-          <button type="button" class="btn btn-pay" onclick="nextWizardStep(4)">
+<button type="button" class="btn-secondary" onclick="goToWizardStep(1)">&larr; Back to Batch Size</button>
+<button type="button" class="btn btn-pay" onclick="nextWizardStep(3)">
 <span>Review &amp; Pay / Invoice &rarr;</span>
           </button>
         </div>
       </section>
   
-      <!-- STEP 4: Review &amp; Payment / Corporate Invoice -->
-      <section class="section-card wizard-step-panel" id="stepPanel4" style="display: none;">
+<!-- STEP 3: Review &amp; Payment / Corporate Invoice -->
+<section class="section-card wizard-step-panel" id="stepPanel3" style="display: none;">
         <div class="section-title">
-          <span>Step 4: Corporate Order Review &amp; Payment</span>
+<span>Step 3: Corporate Order Review &amp; Payment</span>
         </div>
   
         <!-- Order Summary Card -->
@@ -393,7 +379,7 @@
         </div>
   
         <div class="wizard-nav-btns">
-<button type="button" class="btn-secondary" onclick="goToWizardStep(3)">&larr; Edit Details</button>
+<button type="button" class="btn-secondary" onclick="goToWizardStep(2)">&larr; Edit Details</button>
           <button id="payNowBtn" class="btn btn-pay" onclick="handlePayClick()">
             <span id="btnText">&#128179; Pay &amp; Confirm Office Batch (<span id="btnAmount">₹1,800</span>)</span>
           </button>

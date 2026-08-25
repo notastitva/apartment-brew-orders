@@ -63,6 +63,7 @@ let cachedProfile = null;
 const PAGE = document.body.dataset.page || (
   window.location.pathname.includes('orders') ? 'ORDERS' :
   window.location.pathname.includes('order') ? 'ORDER' :
+  window.location.pathname.includes('order') ? 'ORDER' :
   window.location.pathname.includes('office') ? 'OFFICE' :
   window.location.pathname.includes('events') ? 'EVENTS' :
   window.location.pathname.includes('track') ? 'TRACK' :
@@ -218,26 +219,50 @@ function renderSplitterUI() {
 function selectHarvestOption(lotId) {
   selectedGatewayLot = lotId;
   
-  // Highlight cards
+  const q1 = document.getElementById('quizBtnLot1');
+  const q2 = document.getElementById('quizBtnLot2');
+  const qMix = document.getElementById('quizBtnMix');
+  if (q1) q1.classList.toggle('active', lotId === 'LOT-01');
+  if (q2) q2.classList.toggle('active', lotId === 'LOT-02');
+  if (qMix) qMix.classList.toggle('active', lotId === 'MIX');
+  
   const c1 = document.getElementById('cardLot1');
   const c2 = document.getElementById('cardLot2');
   const cMix = document.getElementById('cardLotMix');
-  
   if (c1) c1.classList.toggle('active', lotId === 'LOT-01');
   if (c2) c2.classList.toggle('active', lotId === 'LOT-02');
   if (cMix) cMix.classList.toggle('active', lotId === 'MIX');
   
-  // Update destination links
+  const b1 = document.getElementById('btnSelectLot1');
+  const b2 = document.getElementById('btnSelectLot2');
+  const bMix = document.getElementById('btnSelectLotMix');
+  if (b1) {
+    b1.classList.toggle('active', lotId === 'LOT-01');
+    b1.textContent = lotId === 'LOT-01' ? '✓ Selected Harvest (Ratnagiri Estate)' : 'Select Ratnagiri Estate';
+  }
+  if (b2) {
+    b2.classList.toggle('active', lotId === 'LOT-02');
+    b2.textContent = lotId === 'LOT-02' ? '✓ Selected Harvest (Banana Banger)' : 'Select Banana Banger';
+  }
+  if (bMix) {
+    bMix.classList.toggle('active', lotId === 'MIX');
+    bMix.textContent = lotId === 'MIX' ? '✓ Selected Harvest (Mix & Match)' : 'Select Mix & Match';
+  }
+  
+  const destLabel = document.getElementById('destChosenLabel');
+  const lotLabelMap = {
+    'LOT-01': 'Ratnagiri Estate (Anaerobic Naturals)',
+    'LOT-02': 'Banana Banger (Fermented Lot)',
+    'MIX': 'Mix & Match Custom Split (Duo Sampler)'
+  };
+  if (destLabel) destLabel.textContent = lotLabelMap[lotId] || lotLabelMap['LOT-01'];
+  
   const btnPersonal = document.getElementById('btnGoPersonal');
   const btnCorporate = document.getElementById('btnGoCorporate');
-  
   if (btnPersonal) btnPersonal.href = `order.html?bean=${encodeURIComponent(lotId)}`;
   if (btnCorporate) btnCorporate.href = `office.html?bean=${encodeURIComponent(lotId)}`;
   
-  // Update Radar focus
   setRadarFocus(lotId === 'MIX' ? 'OVERLAY' : lotId);
-}
-  
 function setRadarFocus(mode) {
   const tabOverlay = document.getElementById('radarTabOverlay');
   const tabLot1 = document.getElementById('radarTabLot1');
@@ -272,12 +297,8 @@ function setRadarFocus(mode) {
 
 // --------------------------------------------------------------------
 // Multi-Step Ordering Wizard Engine (Step Navigation & Validation)
-// --------------------------------------------------------------------
 function validateWizardStep(stepNum) {
   if (stepNum === 1) {
-    return true; // Lot 1, Lot 2, or Mix & Match is always selected
-  }
-  if (stepNum === 2) {
     const qtyInput = document.getElementById('packQty');
     const qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
     const errQty = document.getElementById('errQty');
@@ -297,7 +318,7 @@ function validateWizardStep(stepNum) {
     }
     return isValid && isUnderCapacity;
   }
-  if (stepNum === 3) {
+  if (stepNum === 2) {
     const isNameValid = validateField('custName');
     const isEmailValid = validateEmailField();
     const isPhoneValid = validatePhoneField();
@@ -329,6 +350,7 @@ function validateWizardStep(stepNum) {
   }
   return true;
 }
+// --------------------------------------------------------------------
 
 function nextWizardStep(targetStep) {
   if (targetStep > currentWizardStep) {
@@ -341,28 +363,20 @@ function nextWizardStep(targetStep) {
   }
   goToWizardStep(targetStep);
 }
-
 function goToWizardStep(stepNum) {
-  if (stepNum < 1 || stepNum > 4) return;
+  if (stepNum < 1 || stepNum > 3) return;
   if (stepNum > currentWizardStep && !validateWizardStep(currentWizardStep)) {
     return;
   }
   
   currentWizardStep = stepNum;
   
-  // When entering Step 2, ensure splitter UI matches selected pack size
-  if (stepNum === 2 && isCustomSplit) {
-    rebalanceSplitter();
-  }
-  
-  // Show / Hide Step Panels
-  for (let i = 1; i <= 4; i++) {
+  for (let i = 1; i <= 3; i++) {
     const panel = document.getElementById(`stepPanel${i}`);
     if (panel) panel.style.display = (i === stepNum) ? 'block' : 'none';
   }
   
-  // Update Progress Nodes & Connecting Lines
-  for (let i = 1; i <= 4; i++) {
+  for (let i = 1; i <= 3; i++) {
     const node = document.getElementById(`wNode${i}`);
     const line = document.getElementById(`wLine${i}`);
     
@@ -380,12 +394,13 @@ function goToWizardStep(stepNum) {
     }
   }
   
-  if (stepNum === 4) {
+  if (stepNum === 3) {
     populateOrderReview();
   }
   
-  window.scrollTo({ top: 120, behavior: 'smooth' });
+  window.scrollTo({ top: 100, behavior: 'smooth' });
 }
+
 
 function populateOrderReview() {
   const isB2b = (PAGE === 'OFFICE');
@@ -713,6 +728,8 @@ function selectLot(lotName, element) {
     isCustomSplit = false;
     selectedBean = lotName;
     renderSplitterUI();
+  const chosenDisplay = document.getElementById('chosenLotNameDisplay');
+  if (chosenDisplay) chosenDisplay.textContent = lotName;
   }
 }
 
@@ -2006,46 +2023,42 @@ document.addEventListener('DOMContentLoaded', () => {
   const beanParam = urlParams.get('bean') || urlParams.get('lot');
   
   if (PAGE === 'ORDER' || PAGE === 'HOME') {
-    renderLots(availableLots);
     renderPacks(availableB2cPacks, []);
     startCutoffCountdown();
     checkSavedProfile();
     fetchLiveConfig();
     setInterval(fetchLiveConfig, 30000);
-    
     if (beanParam) {
       if (beanParam === 'LOT-01' || beanParam.toLowerCase().includes('ratnagiri')) {
-        const targetName = availableLots[0] ? `${availableLots[0].name} (${availableLots[0].process})` : "Ratnagiri Estate (Anaerobic Naturals)";
-        selectLot(targetName);
+        selectLot('Ratnagiri Estate (Anaerobic Naturals)');
       } else if (beanParam === 'LOT-02' || beanParam.toLowerCase().includes('banana')) {
-        const targetName = availableLots[1] ? `${availableLots[1].name} (${availableLots[1].process})` : "Banana Banger (Fermented Lot)";
-        selectLot(targetName);
+        selectLot('Banana Banger (Fermented Lot)');
       } else if (beanParam === 'MIX' || beanParam.toLowerCase().includes('mix')) {
         selectLot('Mix & Match');
       }
+    } else {
+      selectLot('Ratnagiri Estate (Anaerobic Naturals)');
     }
-    
+    goToWizardStep(1);
   } else if (PAGE === 'OFFICE') {
-    renderLots(availableLots);
     renderPacks([], availableB2bPacks);
     startCutoffCountdown();
     renderClusterOptions();
     checkSavedProfile();
     fetchLiveConfig();
     setInterval(fetchLiveConfig, 30000);
-    
     if (beanParam) {
       if (beanParam === 'LOT-01' || beanParam.toLowerCase().includes('ratnagiri')) {
-        const targetName = availableLots[0] ? `${availableLots[0].name} (${availableLots[0].process})` : "Ratnagiri Estate (Anaerobic Naturals)";
-        selectLot(targetName);
+        selectLot('Ratnagiri Estate (Anaerobic Naturals)');
       } else if (beanParam === 'LOT-02' || beanParam.toLowerCase().includes('banana')) {
-        const targetName = availableLots[1] ? `${availableLots[1].name} (${availableLots[1].process})` : "Banana Banger (Fermented Lot)";
-        selectLot(targetName);
+        selectLot('Banana Banger (Fermented Lot)');
       } else if (beanParam === 'MIX' || beanParam.toLowerCase().includes('mix')) {
         selectLot('Mix & Match');
       }
+    } else {
+      selectLot('Ratnagiri Estate (Anaerobic Naturals)');
     }
-    
+    goToWizardStep(1);
   } else if (PAGE === 'ORDERS') {
     startCutoffCountdown();
     fetchLiveConfig();

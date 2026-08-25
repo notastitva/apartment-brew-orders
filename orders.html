@@ -24,7 +24,7 @@
 
     <div class="header-inner">
 
-      <a href="index" class="nav-logo">
+      <a href="/" class="nav-logo">
 
         <span class="logo-text">The Apartment Brew Co.</span>
 
@@ -62,7 +62,7 @@
 
     </div>
 
-    <nav class="drawer-nav">
+    <<nav class="drawer-nav">
 
       <a href="index" class="drawer-link" data-page-link="INDEX">Home</a>
 
@@ -146,7 +146,29 @@
 
     <!-- SECTION 1: INTERACTIVE TASTE MATCHER QUIZ -->
 
-    <section class="quiz-matcher-card">
+✨ Find Your Ideal Single-Estate Brew
+What flavor profile fits your palate today? Tap to auto-select:
+<button type="button" class="quiz-pill-btn active" id="quizBtnLot1" onclick="selectHarvestOption('LOT-01')">
+  <span style="font-size: 1.2rem;">🍇</span>
+  <div>
+    <div>Fruity, Wild &amp; Complex</div>
+    <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: 500;">Ratnagiri Estate • Wild Raspberry &amp; Dark Cacao</div>
+  </div>
+</button>
+<button type="button" class="quiz-pill-btn" id="quizBtnLot2" onclick="selectHarvestOption('LOT-02')">
+  <span style="font-size: 1.2rem;">🌸</span>
+  <div>
+    <div>Floral, Crisp &amp; Tea-Like</div>
+    <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: 500;">Banana Banger • Jasmine &amp; Green Apple</div>
+  </div>
+</button>
+<button type="button" class="quiz-pill-btn" id="quizBtnMix" onclick="selectHarvestOption('MIX')">
+  <span style="font-size: 1.2rem;">🎯</span>
+  <div>
+    <div>Best of Both Worlds (Duo Sampler)</div>
+    <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: 500;">Mix &amp; Match Custom Split Ratio</div>
+  </div>
+</button>
 
       <div class="quiz-title">✨ Find Your Ideal Single-Estate Brew</div>
 
@@ -198,7 +220,6 @@
 
       </div>
 
-    </section>
 
     <!-- SECTION 2: INTERACTIVE SENSORY RADAR CHART WITH GLOW -->
 
@@ -326,7 +347,46 @@
 
     <!-- SECTION 3: HARVEST SELECTION CARDS WITH SWATCHES & SPECTRUM METERS -->
 
-    <section class="section-card">
+Active Single-Estate Harvests
+Select Your Lot
+Precision-brewed from curated specialty micro-lots. Tap any harvest to select:
+Ratnagiri Estate
+Chikmagalur, Karnataka • 1,350m MASL
+Anaerobic Naturals
+Wild Raspberry, Ripe Stone Fruit & Dark Cacao Finish
+🍇 Wild Raspberry
+🍑 Stone Fruit
+🍫 Dark Cacao
+Roast Degree: Medium-Light (45%)
+Fermentation Depth: 72h Anaerobic (80%)
+🍷 Body & Texture: Syrupy & Winey (75%)
+Medium-Full Body • Lingering cocoa finish
+✨ Recommended Pairings & Moments:
+🥐 Dark Chocolate Croissant
+🍞 Sourdough Toast
+☕ Morning Deep Work
+<button type="button" class="btn-select-lot active" id="btnSelectLot1">✓ Selected Harvest (Ratnagiri Estate)</button>
+Banana Banger
+Special Yeast Fermentation Micro-Lot
+Fermented Lot
+Orange Blossom, Crisp Green Apple & Sparkling Jasmine Clarity
+🌸 Orange Blossom
+🍏 Green Apple
+✨ Jasmine Clarity
+Roast Degree: Light-Medium (40%)
+Fermentation Depth: Extended Yeast Inoculation (85%)
+🍵 Body & Texture: Silky & Tea-Like (55%)
+Light & Crisp • Refreshing clean finish
+✨ Recommended Pairings & Moments:
+🍰 Lemon Tea Cake
+🥗 Light Brunch
+☀️ Afternoon Recharge
+<button type="button" class="btn-select-lot" id="btnSelectLot2">Select Banana Banger</button>
+Mix & Match Custom Split
+Duo Discovery Flight Sampler
+Your Choice
+Curious about trying both harvests? Customize your exact split ratio (e.g. 50% Ratnagiri + 50% Banana Banger) during bottle selection.
+<button type="button" class="btn-select-lot" id="btnSelectLotMix">Select Mix & Match</button>
 
       <div class="section-title">
 
@@ -642,11 +702,21 @@
 
       </div>
 
-    </section>
 
     <!-- SECTION 4: BRANCHING ORDER PATHWAYS -->
 
-    <section class="section-card">
+Proceed to Checkout
+Choose Fulfillment Scale
+Selected: Ratnagiri Estate (Anaerobic Naturals). Choose fulfillment:
+☕ Personal Order
+1–6 Bottles
+Pre-order 200ml glass bottles delivered cold to your home Saturday & Sunday morning across Delhi NCR.
+Configure Personal Order &rarr;
+🏢 Corporate Order
+10–60+ Bottles
+Friday Tech Park delivery with Net-7 corporate invoicing, GSTIN input credit, and team tasting notes.
+Configure Office Batch &rarr;
+Planning a 100+ bottle townhall, hackathon, or offsite? Custom Event Catering &rarr;
 
       <div class="section-title">
 
@@ -734,7 +804,6 @@
 
       </div>
 
-    </section>
 
   </div>
 
