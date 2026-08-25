@@ -1,814 +1,357 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8" />
-
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-
   <title>Harvests &amp; Order Gateway | The Apartment Brew Co.</title>
-
   <link rel="stylesheet" href="style.css" />
-
 </head>
-
 <body data-page="ORDERS">
-
-  <!-- Sticky Top Header & Hamburger Navigation (Topmost Component) -->
-
+  <!-- Sticky Top Header &amp; Hamburger Navigation (Topmost Component) -->
   <header class="site-header-sticky">
-
     <div class="header-inner">
-
       <a href="/" class="nav-logo">
-
         <span class="logo-text">The Apartment Brew Co.</span>
-
-        <span class="logo-sub">Specialty Coffee &bull; Gurugram</span>
-
+        <span class="logo-sub">Specialty Coffee &amp;bull; Gurugram</span>
       </a>
-
       <button type="button" class="nav-hamburger-btn" id="navHamburgerBtn" aria-label="Toggle navigation menu" onclick="toggleNavDrawer()">
-
         <span class="hamburger-bar"></span>
-
         <span class="hamburger-bar"></span>
-
         <span class="hamburger-bar"></span>
-
       </button>
-
     </div>
-
   </header>
-
   
-
-  <!-- Navigation Drawer Backdrop & Overlay Menu -->
-
+  <!-- Navigation Drawer Backdrop &amp; Overlay Menu -->
   <div class="nav-backdrop" id="navBackdrop" onclick="closeNavDrawer()"></div>
-
   <aside class="nav-drawer" id="navDrawer">
-
     <div class="drawer-header">
-
       <span class="drawer-title">Navigation Menu</span>
-
-      <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&times;</button>
-
+      <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&amp;times;</button>
     </div>
-
-    <<nav class="drawer-nav">
-
+    <nav class="drawer-nav">
       <a href="index" class="drawer-link" data-page-link="INDEX">Home</a>
-
-      <a href="orders" class="drawer-link active" data-page-link="ORDERS">Harvests &amp; Order Gateway</a>
-
+      <a href="orders" class="drawer-link active" data-page-link="ORDERS">Harvests &amp;amp; Order Gateway</a>
       <a href="order" class="drawer-link" data-page-link="ORDER">Personal Order</a>
-
       <a href="office" class="drawer-link" data-page-link="OFFICE">Corporate Order</a>
-
-      <a href="menu" class="drawer-link" data-page-link="MENU">Harvests &amp; Sensory Menu</a>
-
+      <a href="menu" class="drawer-link" data-page-link="MENU">Harvests &amp;amp; Sensory Menu</a>
       <a href="guide" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
-
-      <a href="about" class="drawer-link" data-page-link="ABOUT">Craft &amp; Philosophy</a>
-
+      <a href="about" class="drawer-link" data-page-link="ABOUT">Craft &amp;amp; Philosophy</a>
       <a href="events" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
-
       <a href="track" class="drawer-link" data-page-link="TRACK">Enquiry/Order Tracker</a>
-
     </nav>
-
     <div class="drawer-footer">
-
       <div class="drawer-footer-text">☕ Hand-Brewed Fresh to Order in Gurugram</div>
-
     </div>
-
   </aside>
-
   
-
   <div class="container">
-
     
-
-    <!-- Live Drop & Batch Scarcity Header Card -->
-
+    <!-- Live Drop &amp; Batch Scarcity Header Card -->
     <header class="header-card">
-
       <div class="drop-banner" id="dropBanner">
-
-        <span>⚡</span> Next Drops: Friday (Office) &bull; Saturday &amp; Sunday (Personal)
-
-      </div>
-
-      <div class="countdown-timer" id="countdownTimer">Weekend Drop Cutoff closes in: Loading...</div>
-
+        <span>⚡</span> Next Drops: Friday (Office) &amp;bull; Saturday &amp;amp; Sunday (Personal)
+      </div>  
+      
   
-
-      <!-- Scarcity Bar -->
-
-      <div class="scarcity-bar-container">
-
-        <div class="scarcity-label">
-
-          <span>🔥 Limited Batch Brew Capacity</span>
-
-          <span id="scarcityText">Loading batch availability...</span>
-
-        </div>
-
-        <div class="scarcity-progress-track">
-
-          <div class="scarcity-progress-fill" id="scarcityFill"></div>
-
-        </div>
-
-      </div>
-
-  
-
       <div class="geo-badge">
-
-        📍 Cold-Chain Deliveries Across DLF Cyber City, Golf Course Rd, Candor TechSpace &amp; Delhi NCR
-
+        📍 Cold-Chain Deliveries Across DLF Cyber City, Golf Course Rd, Candor TechSpace &amp;amp; Delhi NCR
       </div>
-
     </header>
-
   
-
-    <!-- SECTION 1: INTERACTIVE TASTE MATCHER QUIZ -->
-
-✨ Find Your Ideal Single-Estate Brew
-What flavor profile fits your palate today? Tap to auto-select:
-<button type="button" class="quiz-pill-btn active" id="quizBtnLot1" onclick="selectHarvestOption('LOT-01')">
-  <span style="font-size: 1.2rem;">🍇</span>
-  <div>
-    <div>Fruity, Wild &amp; Complex</div>
-    <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: 500;">Ratnagiri Estate • Wild Raspberry &amp; Dark Cacao</div>
-  </div>
-</button>
-<button type="button" class="quiz-pill-btn" id="quizBtnLot2" onclick="selectHarvestOption('LOT-02')">
-  <span style="font-size: 1.2rem;">🌸</span>
-  <div>
-    <div>Floral, Crisp &amp; Tea-Like</div>
-    <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: 500;">Banana Banger • Jasmine &amp; Green Apple</div>
-  </div>
-</button>
-<button type="button" class="quiz-pill-btn" id="quizBtnMix" onclick="selectHarvestOption('MIX')">
-  <span style="font-size: 1.2rem;">🎯</span>
-  <div>
-    <div>Best of Both Worlds (Duo Sampler)</div>
-    <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: 500;">Mix &amp; Match Custom Split Ratio</div>
-  </div>
-</button>
-
-      <div class="quiz-title">✨ Find Your Ideal Single-Estate Brew</div>
-
-      <div class="quiz-subtitle">What flavor profile fits your palate today? Tap to auto-select:</div>
-
-      <div class="quiz-options-grid">
-
-        <button type="button" class="quiz-pill-btn" onclick="selectHarvestOption('LOT-01')">
-
-          <span style="font-size: 1.2rem;">🍇</span>
-
-          <div>
-
-            <div>Fruity, Wild &amp; Complex</div>
-
-            <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: 500;">Ratnagiri Estate • Wild Raspberry &amp; Dark Cacao</div>
-
-          </div>
-
-        </button>
-
-        <button type="button" class="quiz-pill-btn" onclick="selectHarvestOption('LOT-02')">
-
-          <span style="font-size: 1.2rem;">🌸</span>
-
-          <div>
-
-            <div>Floral, Crisp &amp; Tea-Like</div>
-
-            <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: 500;">Banana Banger • Jasmine &amp; Green Apple</div>
-
-          </div>
-
-        </button>
-
-        <button type="button" class="quiz-pill-btn" onclick="selectHarvestOption('MIX')">
-
-          <span style="font-size: 1.2rem;">🎯</span>
-
-          <div>
-
-            <div>Best of Both Worlds (Duo Sampler)</div>
-
-            <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: 500;">Mix &amp; Match Custom Split Ratio</div>
-
-          </div>
-
-        </button>
-
-      </div>
-
-
-    <!-- SECTION 2: INTERACTIVE SENSORY RADAR CHART WITH GLOW -->
-
+    <!-- SECTION 1: FIND YOUR IDEAL SINGLE-ESTATE BREW (EXPANDABLE CARDS) -->
     <section class="section-card">
-
       <div class="section-title">
-
-        <span>Sensory Radar Comparison</span>
-
-        <span class="section-subtitle">5-Axis Tasting Matrix</span>
-
+        <span>Find Your Ideal Single-Estate Brew</span>
+        <span class="section-subtitle">Select Coffee Lot</span>
       </div>
-
-      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
-
-        Comparative 5-axis sensory mapping across our active single-estate micro-lots. Tap tabs to focus:
-
+      <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4;">
+        Tap any harvest below to explore its origin, roast depth, flavor spectrum, and recommended food pairings:
       </p>
-
-      <!-- Radar Filter Tabs -->
-
-      <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
-
-        <button type="button" class="mode-tab active" id="radarTabOverlay" style="padding: 6px 12px; font-size: 0.72rem;" onclick="setRadarFocus('OVERLAY')">✨ Dual Overlay</button>
-
-        <button type="button" class="mode-tab" id="radarTabLot1" style="padding: 6px 12px; font-size: 0.72rem;" onclick="setRadarFocus('LOT-01')">🍇 Ratnagiri Estate</button>
-
-        <button type="button" class="mode-tab" id="radarTabLot2" style="padding: 6px 12px; font-size: 0.72rem;" onclick="setRadarFocus('LOT-02')">🌸 Banana Banger</button>
-
-      </div>
-
-      <!-- Radar SVG Container -->
-
-      <div style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px 10px; text-align: center;">
-
-        <svg viewBox="0 0 400 250" style="width: 100%; max-width: 380px; height: auto; margin: 0 auto; display: block;" fill="none" xmlns="http://www.w3.org/2000/svg">
-
-          <defs>
-
-            <linearGradient id="ratnagiriRadarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-
-              <stop offset="0%" stop-color="#e76f51" stop-opacity="0.6" />
-
-              <stop offset="100%" stop-color="#d4a373" stop-opacity="0.25" />
-
-            </linearGradient>
-
-            <linearGradient id="bananaRadarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-
-              <stop offset="0%" stop-color="#2a9d8f" stop-opacity="0.6" />
-
-              <stop offset="100%" stop-color="#00b4d8" stop-opacity="0.25" />
-
-            </linearGradient>
-
-          </defs>
-
-          <!-- Concentric Grid Polygons -->
-
-          <polygon points="200,100 219.0,113.8 211.8,136.2 188.2,136.2 181.0,113.8" stroke="rgba(255,255,255,0.06)" stroke-width="1" fill="none" />
-
-          <polygon points="200,80 238.0,107.6 223.5,152.4 176.5,152.4 162.0,107.6" stroke="rgba(255,255,255,0.08)" stroke-width="1" fill="none" />
-
-          <polygon points="200,60 257.1,101.5 235.3,168.5 164.7,168.5 142.9,101.5" stroke="rgba(255,255,255,0.1)" stroke-width="1" fill="none" />
-
-          <polygon points="200,40 276.1,95.3 247.0,184.7 153.0,184.7 123.9,95.3" stroke="rgba(212,163,115,0.25)" stroke-width="1.2" fill="none" />
-
-          <!-- Axis Spokes -->
-
-          <line x1="200" y1="120" x2="200" y2="40" stroke="rgba(255,255,255,0.12)" stroke-dasharray="2 2" />
-
-          <line x1="200" y1="120" x2="276.1" y2="95.3" stroke="rgba(255,255,255,0.12)" stroke-dasharray="2 2" />
-
-          <line x1="200" y1="120" x2="247.0" y2="184.7" stroke="rgba(255,255,255,0.12)" stroke-dasharray="2 2" />
-
-          <line x1="200" y1="120" x2="153.0" y2="184.7" stroke="rgba(255,255,255,0.12)" stroke-dasharray="2 2" />
-
-          <line x1="200" y1="120" x2="123.9" y2="95.3" stroke="rgba(255,255,255,0.12)" stroke-dasharray="2 2" />
-
-          <!-- Lot 2: Banana Banger Radar Area -->
-
-          <polygon id="radarPolyBanana" points="200,60 272.3,96.5 237.6,171.8 174.1,155.6 129.6,97.1" fill="url(#bananaRadarGrad)" stroke="#2a9d8f" stroke-width="2.2" style="transition: all 0.3s ease;" />
-
-          <circle cx="200" cy="60" r="3" fill="#2a9d8f" />
-
-          <circle cx="272.3" cy="96.5" r="3" fill="#2a9d8f" />
-
-          <circle cx="237.6" cy="171.8" r="3" fill="#2a9d8f" />
-
-          <circle cx="174.1" cy="155.6" r="3" fill="#2a9d8f" />
-
-          <circle cx="129.6" cy="97.1" r="3" fill="#2a9d8f" />
-
-          <!-- Lot 1: Ratnagiri Estate Radar Area -->
-
-          <polygon id="radarPolyRatnagiri" points="200,52 253.3,102.7 242.3,178.2 164.7,168.5 139.1,100.2" fill="url(#ratnagiriRadarGrad)" stroke="#e76f51" stroke-width="2.2" style="transition: all 0.3s ease;" />
-
-          <circle cx="200" cy="52" r="3.5" fill="#e76f51" />
-
-          <circle cx="253.3" cy="102.7" r="3.5" fill="#e76f51" />
-
-          <circle cx="242.3" cy="178.2" r="3.5" fill="#e76f51" />
-
-          <circle cx="164.7" cy="168.5" r="3.5" fill="#e76f51" />
-
-          <circle cx="139.1" cy="100.2" r="3.5" fill="#e76f51" />
-
-          <!-- Axis Labels -->
-
-          <text x="200" y="28" fill="#fefae0" font-size="9" font-weight="800" text-anchor="middle">Bright Acidity</text>
-
-          <text x="290" y="93" fill="#fefae0" font-size="9" font-weight="800" text-anchor="start">Floral Aromatics</text>
-
-          <text x="256" y="202" fill="#fefae0" font-size="9" font-weight="800" text-anchor="start">Cane Sweetness</text>
-
-          <text x="144" y="202" fill="#fefae0" font-size="9" font-weight="800" text-anchor="end">Body &amp; Texture</text>
-
-          <text x="110" y="93" fill="#fefae0" font-size="9" font-weight="800" text-anchor="end">Cup Clarity</text>
-
-        </svg>
-
-      </div>
-
-    </section>
-
-    <!-- SECTION 3: HARVEST SELECTION CARDS WITH SWATCHES & SPECTRUM METERS -->
-
-Active Single-Estate Harvests
-Select Your Lot
-Precision-brewed from curated specialty micro-lots. Tap any harvest to select:
-Ratnagiri Estate
-Chikmagalur, Karnataka • 1,350m MASL
-Anaerobic Naturals
-Wild Raspberry, Ripe Stone Fruit & Dark Cacao Finish
-🍇 Wild Raspberry
-🍑 Stone Fruit
-🍫 Dark Cacao
-Roast Degree: Medium-Light (45%)
-Fermentation Depth: 72h Anaerobic (80%)
-🍷 Body & Texture: Syrupy & Winey (75%)
-Medium-Full Body • Lingering cocoa finish
-✨ Recommended Pairings & Moments:
-🥐 Dark Chocolate Croissant
-🍞 Sourdough Toast
-☕ Morning Deep Work
-<button type="button" class="btn-select-lot active" id="btnSelectLot1">✓ Selected Harvest (Ratnagiri Estate)</button>
-Banana Banger
-Special Yeast Fermentation Micro-Lot
-Fermented Lot
-Orange Blossom, Crisp Green Apple & Sparkling Jasmine Clarity
-🌸 Orange Blossom
-🍏 Green Apple
-✨ Jasmine Clarity
-Roast Degree: Light-Medium (40%)
-Fermentation Depth: Extended Yeast Inoculation (85%)
-🍵 Body & Texture: Silky & Tea-Like (55%)
-Light & Crisp • Refreshing clean finish
-✨ Recommended Pairings & Moments:
-🍰 Lemon Tea Cake
-🥗 Light Brunch
-☀️ Afternoon Recharge
-<button type="button" class="btn-select-lot" id="btnSelectLot2">Select Banana Banger</button>
-Mix & Match Custom Split
-Duo Discovery Flight Sampler
-Your Choice
-Curious about trying both harvests? Customize your exact split ratio (e.g. 50% Ratnagiri + 50% Banana Banger) during bottle selection.
-<button type="button" class="btn-select-lot" id="btnSelectLotMix">Select Mix & Match</button>
-
-      <div class="section-title">
-
-        <span>Active Single-Estate Harvests</span>
-
-        <span class="section-subtitle">Select Your Lot</span>
-
-      </div>
-
-      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
-
-        Precision-brewed from curated specialty micro-lots. Select a harvest to configure your order:
-
-      </p>
-
-      <!-- HARVEST CARD 1: Ratnagiri Estate -->
-
-      <div class="harvest-preview-card active" id="cardLot1" style="cursor: pointer;" onclick="selectHarvestOption('LOT-01')">
-
-        <div class="harvest-card-top">
-
-          <div>
-
-            <div class="harvest-title" style="color: var(--text);">Ratnagiri Estate</div>
-
-            <div style="font-size: 0.68rem; color: var(--accent); font-weight: 700; margin-top: 2px;">Chikmagalur, Karnataka • 1,350m MASL</div>
-
-          </div>
-
-          <div class="harvest-tag" style="background: rgba(231,111,81,0.15); border-color: #e76f51; color: #e76f51;">Anaerobic Naturals</div>
-
-        </div>
-
-        <div class="harvest-notes">Wild Raspberry, Ripe Stone Fruit &amp; Dark Cacao Finish</div>
-
-        <!-- Color-Coded Flavor Swatch Palette -->
-
-        <div class="flavor-swatches-grid">
-
-          <div class="flavor-swatch swatch-berry">
-
-            <span class="swatch-icon">🍇</span>
-
-            <span class="swatch-text">Wild Raspberry</span>
-
-          </div>
-
-          <div class="flavor-swatch swatch-stonefruit">
-
-            <span class="swatch-icon">🍑</span>
-
-            <span class="swatch-text">Stone Fruit</span>
-
-          </div>
-
-          <div class="flavor-swatch swatch-cacao">
-
-            <span class="swatch-icon">🍫</span>
-
-            <span class="swatch-text">Dark Cacao</span>
-
-          </div>
-
-        </div>
-
-        <!-- Roast & Fermentation Spectrum Meters -->
-
-        <div class="spectrum-meter-group">
-
-          <div class="spectrum-meter">
-
-            <div class="spectrum-header">
-
-              <span>Roast Degree</span>
-
-              <strong>Medium-Light (45%)</strong>
-
-            </div>
-
-            <div class="spectrum-track">
-
-              <div class="spectrum-fill fill-roast" style="width: 45%;"></div>
-
-            </div>
-
-            <div class="spectrum-labels">
-
-              <span>Light</span>
-
-              <span>Medium</span>
-
-              <span>Dark</span>
-
-            </div>
-
-          </div>
-
-          <div class="spectrum-meter">
-
-            <div class="spectrum-header">
-
-              <span>Fermentation Depth</span>
-
-              <strong>72h Anaerobic (80%)</strong>
-
-            </div>
-
-            <div class="spectrum-track">
-
-              <div class="spectrum-fill fill-ferment-lot1" style="width: 80%;"></div>
-
-            </div>
-
-            <div class="spectrum-labels">
-
-              <span>Washed</span>
-
-              <span>Naturals</span>
-
-              <span>Anaerobic</span>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        <!-- Mouthfeel & Viscosity Gauge -->
-
-        <div class="viscosity-meter-card">
-
-          <div class="viscosity-info">
-
-            <span class="viscosity-title">🍷 Body &amp; Texture: Syrupy &amp; Winey</span>
-
-            <span class="viscosity-desc">Medium-Full Body • Best paired with dark pastries &amp; morning focus</span>
-
-          </div>
-
-          <div class="viscosity-bar">
-
-            <div class="viscosity-fill viscosity-lot1"></div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      <!-- HARVEST CARD 2: Banana Banger -->
-
-      <div class="harvest-preview-card" id="cardLot2" style="cursor: pointer;" onclick="selectHarvestOption('LOT-02')">
-
-        <div class="harvest-card-top">
-
-          <div>
-
-            <div class="harvest-title" style="color: var(--text);">Banana Banger</div>
-
-            <div style="font-size: 0.68rem; color: #2a9d8f; font-weight: 700; margin-top: 2px;">Special Yeast Fermentation Micro-Lot</div>
-
-          </div>
-
-          <div class="harvest-tag" style="background: rgba(42,157,143,0.15); border-color: #2a9d8f; color: #2a9d8f;">Fermented Lot</div>
-
-        </div>
-
-        <div class="harvest-notes">Orange Blossom, Crisp Green Apple &amp; Sparkling Jasmine Clarity</div>
-
-        <!-- Color-Coded Flavor Swatch Palette -->
-
-        <div class="flavor-swatches-grid">
-
-          <div class="flavor-swatch swatch-blossom">
-
-            <span class="swatch-icon">🌸</span>
-
-            <span class="swatch-text">Orange Blossom</span>
-
-          </div>
-
-          <div class="flavor-swatch swatch-apple">
-
-            <span class="swatch-icon">🍏</span>
-
-            <span class="swatch-text">Green Apple</span>
-
-          </div>
-
-          <div class="flavor-swatch swatch-jasmine">
-
-            <span class="swatch-icon">✨</span>
-
-            <span class="swatch-text">Jasmine Clarity</span>
-
-          </div>
-
-        </div>
-
-        <!-- Roast & Fermentation Spectrum Meters -->
-
-        <div class="spectrum-meter-group">
-
-          <div class="spectrum-meter">
-
-            <div class="spectrum-header">
-
-              <span>Roast Degree</span>
-
-              <strong>Light-Medium (40%)</strong>
-
-            </div>
-
-            <div class="spectrum-track">
-
-              <div class="spectrum-fill fill-roast" style="width: 40%;"></div>
-
-            </div>
-
-            <div class="spectrum-labels">
-
-              <span>Light</span>
-
-              <span>Medium</span>
-
-              <span>Dark</span>
-
-            </div>
-
-          </div>
-
-          <div class="spectrum-meter">
-
-            <div class="spectrum-header">
-
-              <span>Fermentation Depth</span>
-
-              <strong>Extended Yeast Inoculation (85%)</strong>
-
-            </div>
-
-            <div class="spectrum-track">
-
-              <div class="spectrum-fill fill-ferment-lot2" style="width: 85%;"></div>
-
-            </div>
-
-            <div class="spectrum-labels">
-
-              <span>Washed</span>
-
-              <span>Naturals</span>
-
-              <span>Experimental</span>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        <!-- Mouthfeel & Viscosity Gauge -->
-
-        <div class="viscosity-meter-card">
-
-          <div class="viscosity-info">
-
-            <span class="viscosity-title">🍵 Body &amp; Texture: Silky &amp; Tea-Like</span>
-
-            <span class="viscosity-desc">Light &amp; Crisp • Best paired with lemon cakes &amp; afternoon recharge</span>
-
-          </div>
-
-          <div class="viscosity-bar">
-
-            <div class="viscosity-fill viscosity-lot2"></div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      <!-- HARVEST CARD 3: Mix & Match Custom Split -->
-
-      <div class="harvest-preview-card" id="cardLotMix" style="cursor: pointer; border-style: dashed; border-color: var(--accent);" onclick="selectHarvestOption('MIX')">
-
-        <div class="harvest-card-top">
-
-          <div>
-
-            <div class="harvest-title" style="color: var(--text);">Mix &amp; Match Custom Split</div>
-
-            <div style="font-size: 0.68rem; color: var(--accent); font-weight: 700; margin-top: 2px;">Duo Discovery Flight Sampler</div>
-
-          </div>
-
-          <div class="harvest-tag">Your Choice</div>
-
-        </div>
-
-        <div class="harvest-notes">Curious about trying both harvests? Customize your exact split ratio (e.g. 50% Ratnagiri + 50% Banana Banger) during bottle selection.</div>
-
-        
-
-        <div class="splitter-ratio-bar" style="margin-top: 10px;">
-
-          <div class="ratio-segment ratio-ratnagiri" style="width: 50%;"></div>
-
-          <div class="ratio-segment ratio-thogarihunkal" style="width: 50%;"></div>
-
-        </div>
-
-      </div>
-
-
-    <!-- SECTION 4: BRANCHING ORDER PATHWAYS -->
-
-Proceed to Checkout
-Choose Fulfillment Scale
-Selected: Ratnagiri Estate (Anaerobic Naturals). Choose fulfillment:
-☕ Personal Order
-1–6 Bottles
-Pre-order 200ml glass bottles delivered cold to your home Saturday & Sunday morning across Delhi NCR.
-Configure Personal Order &rarr;
-🏢 Corporate Order
-10–60+ Bottles
-Friday Tech Park delivery with Net-7 corporate invoicing, GSTIN input credit, and team tasting notes.
-Configure Office Batch &rarr;
-Planning a 100+ bottle townhall, hackathon, or offsite? Custom Event Catering &rarr;
-
-      <div class="section-title">
-
-        <span>Proceed to Checkout</span>
-
-        <span class="section-subtitle">Choose Fulfillment Scale</span>
-
-      </div>
-
-      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; line-height: 1.4;">
-
-        Select your fulfillment scale below to configure bottle count, delivery window, and secure checkout:
-
-      </p>
-
-      <div class="destination-cards-grid">
-
-        <!-- Option 1: Personal Order -->
-
-        <a href="order.html?bean=LOT-01" id="btnGoPersonal" class="destination-order-card card-personal">
-
-          <div>
-
-            <div class="dest-card-header">
-
-              <span class="dest-card-title">☕ Personal Order</span>
-
-              <span class="dest-card-badge badge-personal">1–6 Bottles</span>
-
-            </div>
-
-            <p class="dest-card-desc" style="margin-top: 8px;">
-
-              Pre-order glass bottles delivered cold to your home Saturday &amp; Sunday morning across Delhi NCR.
-
-            </p>
-
-          </div>
-
-          <div class="dest-card-cta cta-personal">
-
-            Configure Personal Order &rarr;
-
-          </div>
-
-        </a>
-
-        <!-- Option 2: Corporate Order -->
-
-        <a href="office.html?bean=LOT-01" id="btnGoCorporate" class="destination-order-card card-corporate">
-
-          <div>
-
-            <div class="dest-card-header">
-
-              <span class="dest-card-title">🏢 Corporate Order</span>
-
-              <span class="dest-card-badge badge-corporate">10–60+ Bottles</span>
-
-            </div>
-
-            <p class="dest-card-desc" style="margin-top: 8px;">
-
-              Friday Tech Park delivery with Net-7 corporate invoicing, GSTIN input credit, and team tasting notes.
-
-            </p>
-
-          </div>
-
-          <div class="dest-card-cta cta-corporate">
-
-            Configure Office Batch &rarr;
-
-          </div>
-
-        </a>
-
-      </div>
-
-      <!-- Large Event Catering Sub-link -->
-
-      <div class="order-mode-subtext" style="margin-top: 14px; margin-bottom: 0;">
-
-        Planning a 100+ bottle townhall, hackathon, or offsite? <a href="events">Custom Event Catering &rarr;</a>
-
-      </div>
-
-
-  </div>
-
   
-
+      <!-- CARD 1: RATNAGIRI ESTATE -->
+      <div class="estate-select-card active" id="cardLot1" onclick="selectHarvestOption('LOT-01')">
+        <div class="estate-header-row">
+          <div class="estate-title-group">
+            <span class="estate-name-huge">
+              <span>🍇</span> Ratnagiri Estate
+            </span>
+            <span class="estate-notes-small">
+              Anaerobic Naturals &amp;bull; Wild Raspberry, Stone Fruit &amp;amp; Dark Cacao Finish
+            </span>
+          </div>
+          <div class="estate-radio-indicator">
+            <div class="estate-radio-dot"></div>
+          </div>
+        </div>
+  
+        <!-- Expanded Sensory Details -->
+        <div class="estate-expanded-details">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 0.7rem; color: var(--accent); font-weight: 700;">Chikmagalur, Karnataka &amp;bull; 1,350m MASL</span>
+            <span class="harvest-tag" style="background: rgba(231,111,81,0.15); border-color: #e76f51; color: #e76f51;">Anaerobic Naturals</span>
+          </div>
+  
+          <!-- Color-Coded Flavor Swatch Palette -->
+          <div class="flavor-swatches-grid">
+            <div class="flavor-swatch swatch-berry">
+              <span class="swatch-icon">🍇</span>
+              <span class="swatch-text">Wild Raspberry</span>
+            </div>
+            <div class="flavor-swatch swatch-stonefruit">
+              <span class="swatch-icon">🍑</span>
+              <span class="swatch-text">Stone Fruit</span>
+            </div>
+            <div class="flavor-swatch swatch-cacao">
+              <span class="swatch-icon">🍫</span>
+              <span class="swatch-text">Dark Cacao</span>
+            </div>
+          </div>
+  
+          <!-- Roast &amp; Fermentation Spectrum Meters -->
+          <div class="spectrum-meter-group">
+            <div class="spectrum-meter">
+              <div class="spectrum-header">
+                <span>Roast Level Spectrum</span>
+                <strong>Medium-Light (45%)</strong>
+              </div>
+              <div class="spectrum-track">
+                <div class="spectrum-fill fill-roast" style="width: 45%;"></div>
+              </div>
+              <div class="spectrum-labels">
+                <span>Light</span>
+                <span>Medium</span>
+                <span>Dark</span>
+              </div>
+            </div>
+  
+            <div class="spectrum-meter">
+              <div class="spectrum-header">
+                <span>Fermentation Technique</span>
+                <strong>72h Anaerobic (80%)</strong>
+              </div>
+              <div class="spectrum-track">
+                <div class="spectrum-fill fill-ferment-lot1" style="width: 80%;"></div>
+              </div>
+              <div class="spectrum-labels">
+                <span>Washed</span>
+                <span>Naturals</span>
+                <span>Anaerobic</span>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Mouthfeel &amp; Viscosity Gauge -->
+          <div class="viscosity-meter-card">
+            <div class="viscosity-info">
+              <span class="viscosity-title">🍷 Body &amp; Texture: Syrupy &amp; Winey (75%)</span>
+              <span class="viscosity-desc">Medium-Full Body &amp;bull; Lingering cacao finish</span>
+            </div>
+            <div class="viscosity-bar">
+              <div class="viscosity-fill viscosity-lot1"></div>
+            </div>
+          </div>
+  
+          <!-- Food Pairing &amp; Moments Box -->
+          <div class="pairing-box">
+            <div class="pairing-title">✨ Recommended Pairings &amp; Moments:</div>
+            <div class="pairing-pills">
+              <span class="pairing-pill">🥐 Dark Chocolate Croissant</span>
+              <span class="pairing-pill">🍞 Sourdough Toast</span>
+              <span class="pairing-pill">☕ Morning Focus</span>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- CARD 2: BANANA BANGER -->
+      <div class="estate-select-card" id="cardLot2" onclick="selectHarvestOption('LOT-02')">
+        <div class="estate-header-row">
+          <div class="estate-title-group">
+            <span class="estate-name-huge">
+              <span>🌸</span> Banana Banger
+            </span>
+            <span class="estate-notes-small">
+              Yeast Fermented &amp; bull; Orange Blossom, Jasmine &amp;amp; Crisp Green Apple
+            </span>
+          </div>
+          <div class="estate-radio-indicator">
+            <div class="estate-radio-dot"></div>
+          </div>
+        </div>
+  
+        <!-- Expanded Sensory Details -->
+        <div class="estate-expanded-details">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 0.7rem; color: #2a9d8f; font-weight: 700;">Special Fermentation Micro-Lot &amp; bull; High Elevation</span>
+            <span class="harvest-tag" style="background: rgba(42,157,143,0.15); border-color: #2a9d8f; color: #2a9d8f;">Fermented Lot</span>
+          </div>
+  
+          <!-- Color-Coded Flavor Swatch Palette -->
+          <div class="flavor-swatches-grid">
+            <div class="flavor-swatch swatch-blossom">
+              <span class="swatch-icon">🌸</span>
+              <span class="swatch-text">Orange Blossom</span>
+            </div>
+            <div class="flavor-swatch swatch-apple">
+              <span class="swatch-icon">🍏</span>
+              <span class="swatch-text">Green Apple</span>
+            </div>
+            <div class="flavor-swatch swatch-jasmine">
+              <span class="swatch-icon">✨</span>
+              <span class="swatch-text">Jasmine Clarity</span>
+            </div>
+          </div>
+  
+          <!-- Roast &amp; Fermentation Spectrum Meters -->
+          <div class="spectrum-meter-group">
+            <div class="spectrum-meter">
+              <div class="spectrum-header">
+                <span>Roast Level Spectrum</span>
+                <strong>Light-Medium (40%)</strong>
+              </div>
+              <div class="spectrum-track">
+                <div class="spectrum-fill fill-roast" style="width: 40%;"></div>
+              </div>
+              <div class="spectrum-labels">
+                <span>Light</span>
+                <span>Medium</span>
+                <span>Dark</span>
+              </div>
+            </div>
+  
+            <div class="spectrum-meter">
+              <div class="spectrum-header">
+                <span>Fermentation Technique</span>
+                <strong>Extended Yeast Inoculation (85%)</strong>
+              </div>
+              <div class="spectrum-track">
+                <div class="spectrum-fill fill-ferment-lot2" style="width: 85%;"></div>
+              </div>
+              <div class="spectrum-labels">
+                <span>Washed</span>
+                <span>Naturals</span>
+                <span>Experimental</span>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Mouthfeel &amp; Viscosity Gauge -->
+          <div class="viscosity-meter-card">
+            <div class="viscosity-info">
+              <span class="viscosity-title">🍵 Body &amp; Texture: Silky &amp; Tea-Like (55%)</span>
+              <span class="viscosity-desc">Light &amp; Crisp &amp; bull; Sparkling clean finish</span>
+            </div>
+            <div class="viscosity-bar">
+              <div class="viscosity-fill viscosity-lot2"></div>
+            </div>
+          </div>
+  
+          <!-- Food Pairing &amp; Moments Box -->
+          <div class="pairing-box">
+            <div class="pairing-title">✨ Recommended Pairings &amp; Moments:</div>
+            <div class="pairing-pills">
+              <span class="pairing-pill">🍰 Lemon Tea Cake</span>
+              <span class="pairing-pill">🥗 Light Brunch</span>
+              <span class="pairing-pill">☀️ Afternoon Recharge</span>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- CARD 3: MIX &amp; MATCH CUSTOM SPLIT -->
+      <div class="estate-select-card" id="cardLotMix" style="border-style: dashed; border-color: var(--accent);" onclick="selectHarvestOption('MIX')">
+        <div class="estate-header-row">
+          <div class="estate-title-group">
+            <span class="estate-name-huge">
+              <span>🎯</span> Mix &amp; Match Custom Split
+            </span>
+            <span class="estate-notes-small">
+              Duo Discovery Flight &amp; bull; Taste both single-estate harvests in your batch
+            </span>
+          </div>
+          <div class="estate-radio-indicator">
+            <div class="estate-radio-dot"></div>
+          </div>
+        </div>
+  
+        <!-- Expanded Sensory Details for Mix &amp; Match -->
+        <div class="estate-expanded-details">
+          <p style="font-size: 0.78rem; color: var(--text); line-height: 1.45; margin-bottom: 10px;">
+            Can't decide between rich berries and crisp floral jasmine? Our <strong>Mix &amp; Match</strong> option unlocks a custom bottle ratio splitter at checkout so you can divide your batch exactly as you like (e.g. 50% Ratnagiri + 50% Banana Banger).
+          </p>
+  
+          <div class="splitter-ratio-bar" style="margin-bottom: 10px;">
+            <div class="ratio-segment ratio-ratnagiri" style="width: 50%;"></div>
+            <div class="ratio-segment ratio-thogarihunkal" style="width: 50%;"></div>
+          </div>
+  
+          <div class="pairing-box">
+            <div class="pairing-title">✨ Flight Highlights:</div>
+            <div class="pairing-pills">
+              <span class="pairing-pill">🔥 2 Estate Profiles</span>
+              <span class="pairing-pill">🎯 Custom Ratio Splitter</span>
+              <span class="pairing-pill">✨ Perfect for Gifting &amp; Discovery</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+    <!-- SECTION 2: PROCEED TO CHECKOUT (BRANCHING PATHWAYS) -->
+    <section class="section-card">
+      <div class="section-title">
+        <span>Proceed to Checkout</span>
+        <span class="section-subtitle">Choose Fulfillment Scale</span>
+      </div>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 10px; line-height: 1.4;">
+        Selected: <strong id="destChosenLabel" style="color: var(--accent);">Ratnagiri Estate (Anaerobic Naturals)</strong>. Select your order scale:
+      </p>
+  
+      <div class="destination-cards-grid">
+        <!-- Option 1: Personal Order -->
+        <a href="order.html?bean=LOT-01" id="btnGoPersonal" class="destination-order-card card-personal">
+          <div>
+            <div class="dest-card-header">
+              <span class="dest-card-title">☕ Personal Order</span>
+              <span class="dest-card-badge badge-personal">1–6 Bottles</span>
+            </div>
+            <p class="dest-card-desc" style="margin-top: 8px;">
+              Pre-order 200ml glass bottles delivered cold to your home Saturday &amp;amp; Sunday morning across Delhi NCR.
+            </p>
+          </div>
+          <div class="dest-card-cta cta-personal" id="ctaPersonalText">
+            Configure Personal Order &amp;rarr;
+          </div>
+        </a>
+  
+        <!-- Option 2: Corporate Order -->
+        <a href="office.html?bean=LOT-01" id="btnGoCorporate" class="destination-order-card card-corporate">
+          <div>
+            <div class="dest-card-header">
+              <span class="dest-card-title">🏢 Corporate Order</span>
+              <span class="dest-card-badge badge-corporate">10–60+ Bottles</span>
+            </div>
+            <p class="dest-card-desc" style="margin-top: 8px;">
+              Friday Tech Park delivery with Net-7 corporate invoicing, GSTIN input credit, and team tasting notes.
+            </p>
+          </div>
+          <div class="dest-card-cta cta-corporate" id="ctaCorporateText">
+            Configure Office Batch &amp;rarr;
+          </div>
+        </a>
+      </div>
+  
+      <!-- Large Event Catering Sub-link -->
+      <div class="order-mode-subtext" style="margin-top: 14px; margin-bottom: 0;">
+        Planning a 100+ bottle townhall, hackathon, or offsite? <a href="events.html">Custom Event Catering &amp;rarr;</a>
+      </div>
+    </section>
+  
+  </div>
+  
+  <!-- Service Worker Registration -->
   <!-- Service Worker Registration -->
 
   <script>
@@ -825,9 +368,8 @@ Planning a 100+ bottle townhall, hackathon, or offsite? Custom Event Catering &r
 
   </script>
 
-  <script src="app.js"></script>
+<script src="app.js"></script>
 
 </body>
 
 </html>
-

@@ -219,35 +219,12 @@ function renderSplitterUI() {
 function selectHarvestOption(lotId) {
   selectedGatewayLot = lotId;
   
-  const q1 = document.getElementById('quizBtnLot1');
-  const q2 = document.getElementById('quizBtnLot2');
-  const qMix = document.getElementById('quizBtnMix');
-  if (q1) q1.classList.toggle('active', lotId === 'LOT-01');
-  if (q2) q2.classList.toggle('active', lotId === 'LOT-02');
-  if (qMix) qMix.classList.toggle('active', lotId === 'MIX');
-  
   const c1 = document.getElementById('cardLot1');
   const c2 = document.getElementById('cardLot2');
   const cMix = document.getElementById('cardLotMix');
   if (c1) c1.classList.toggle('active', lotId === 'LOT-01');
   if (c2) c2.classList.toggle('active', lotId === 'LOT-02');
   if (cMix) cMix.classList.toggle('active', lotId === 'MIX');
-  
-  const b1 = document.getElementById('btnSelectLot1');
-  const b2 = document.getElementById('btnSelectLot2');
-  const bMix = document.getElementById('btnSelectLotMix');
-  if (b1) {
-    b1.classList.toggle('active', lotId === 'LOT-01');
-    b1.textContent = lotId === 'LOT-01' ? '✓ Selected Harvest (Ratnagiri Estate)' : 'Select Ratnagiri Estate';
-  }
-  if (b2) {
-    b2.classList.toggle('active', lotId === 'LOT-02');
-    b2.textContent = lotId === 'LOT-02' ? '✓ Selected Harvest (Banana Banger)' : 'Select Banana Banger';
-  }
-  if (bMix) {
-    bMix.classList.toggle('active', lotId === 'MIX');
-    bMix.textContent = lotId === 'MIX' ? '✓ Selected Harvest (Mix & Match)' : 'Select Mix & Match';
-  }
   
   const destLabel = document.getElementById('destChosenLabel');
   const lotLabelMap = {
@@ -261,8 +238,6 @@ function selectHarvestOption(lotId) {
   const btnCorporate = document.getElementById('btnGoCorporate');
   if (btnPersonal) btnPersonal.href = `order.html?bean=${encodeURIComponent(lotId)}`;
   if (btnCorporate) btnCorporate.href = `office.html?bean=${encodeURIComponent(lotId)}`;
-  
-  setRadarFocus(lotId === 'MIX' ? 'OVERLAY' : lotId);
 function setRadarFocus(mode) {
   const tabOverlay = document.getElementById('radarTabOverlay');
   const tabLot1 = document.getElementById('radarTabLot1');
@@ -718,19 +693,22 @@ function renderPacks(b2cPacks, b2bPacks) {
 }
 
 function selectLot(lotName, element) {
-  document.querySelectorAll('#lotGrid .lot-card').forEach(el => el.classList.remove('active'));
-  if (element) element.classList.add('active');
-  
   if (lotName && (lotName.includes('Mix & Match') || lotName.includes('Custom Ratio Split') || lotName.includes('Discovery Flight') || lotName.includes('Custom Split') || lotName.includes('Build Your Own Batch'))) {
     isCustomSplit = true;
+    selectedBean = 'Mix & Match';
     rebalanceSplitter();
   } else {
     isCustomSplit = false;
     selectedBean = lotName;
-    renderSplitterUI();
-  const chosenDisplay = document.getElementById('chosenLotNameDisplay');
-  if (chosenDisplay) chosenDisplay.textContent = lotName;
   }
+  
+  const customSplitter = document.getElementById('customSplitter');
+  if (customSplitter) {
+    customSplitter.style.display = isCustomSplit ? 'block' : 'none';
+  }
+  
+  const chosenDisplay = document.getElementById('chosenLotNameDisplay');
+  if (chosenDisplay) chosenDisplay.textContent = selectedBean;
 }
 
 function selectB2cPack(name, bottles, price, el) {
