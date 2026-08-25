@@ -19,7 +19,7 @@
   <!-- Sticky Top Header & Hamburger Navigation (Topmost Component) -->
   <header class="site-header-sticky">
     <div class="header-inner">
-      <a href="/" class="nav-logo">
+      <a href="index.html" class="nav-logo">
         <span class="logo-text">The Apartment Brew Co.</span>
         <span class="logo-sub">Specialty Coffee &bull; Gurugram</span>
       </a>
@@ -39,14 +39,14 @@
       <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&times;</button>
     </div>
     <nav class="drawer-nav">
-      <a href="/" class="drawer-link" data-page-link="INDEX">Home</a>
-      <a href="order" class="drawer-link" data-page-link="ORDER">Individual Brew</a>
-      <a href="office" class="drawer-link" data-page-link="OFFICE">Team Brew</a>
-      <a href="menu" class="drawer-link" data-page-link="MENU">Harvests &amp; Sensory Menu</a>
-      <a href="guide" class="drawer-link active" data-page-link="GUIDE">Freshness Guide</a>
-      <a href="about" class="drawer-link" data-page-link="ABOUT">Craft &amp; Philosophy</a>
-      <a href="events" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
-      <a href="track" class="drawer-link" data-page-link="TRACK">Enquiry/Order Tracker</a>
+      <a href="index.html" class="drawer-link" data-page-link="INDEX">Home</a>
+      <a href="order.html" class="drawer-link" data-page-link="ORDER">Individual Brew</a>
+      <a href="office.html" class="drawer-link active" data-page-link="OFFICE">Team Brew</a>
+      <a href="menu.html" class="drawer-link" data-page-link="MENU">Harvests &amp; Sensory Menu</a>
+      <a href="guide.html" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
+      <a href="about.html" class="drawer-link" data-page-link="ABOUT">Craft &amp; Philosophy</a>
+      <a href="events.html" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
+      <a href="track.html" class="drawer-link" data-page-link="TRACK">Enquiry/Order Tracker</a>
     </nav>
     <div class="drawer-footer">
       <div class="drawer-footer-text">☕ Hand-Brewed Fresh to Order in Gurugram</div>
@@ -86,11 +86,28 @@
     <!-- Office Drop Multi-Step Form View -->
     <main id="orderFormView">
       
+      <!-- Scale &amp; Audience Intent Switcher Banner -->
+      <div class="scale-intent-card">
+        <div class="intent-active-badge">
+          <span>&#127986;</span> <span><strong>Corporate &amp; Team Drops</strong> &bull; 10&ndash;60+ bottles (200ml) delivered Friday with Net-7 Invoicing</span>
+        </div>
+        <div class="intent-switch-links-row">
+          <a href="order.html" class="intent-switch-link">
+            <span>☕ Ordering for personal weekend home delivery?</span>
+            <strong>Switch to Individual Brew &amp;rarr;</strong>
+          </a>
+          <a href="events.html" class="intent-switch-link-alt">
+            <span>&#127881; Need 100+ bottles for a hackathon or townhall?</span>
+            <strong>Custom Event Catering &amp;rarr;</strong>
+          </a>
+        </div>
+      </div>
+
       <!-- Wizard Progress Header (Uniform Across Pages) -->
       <div class="wizard-progress-bar">
         <div class="wizard-step-node node-active" id="wNode1" onclick="goToWizardStep(1)">
           <div class="node-circle" id="wCircle1">1</div>
-          <div class="node-label" id="wLabel1">Coffee</div>
+          <div class="node-label" id="wLabel1">Harvest</div>
         </div>
         <div class="wizard-node-line" id="wLine1"></div>
         <div class="wizard-step-node" id="wNode2" onclick="goToWizardStep(2)">
@@ -451,7 +468,7 @@
           <span>&#128241; Send Receipt / Updates to WhatsApp</span>
         </button>
   
-        <a href="track" id="linkTrackOrder" class="btn" style="background: rgba(212, 163, 115, 0.15); color: var(--accent); border: 1px solid var(--accent); margin-top: 10px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+        <a href="track.html" id="linkTrackOrder" class="btn" style="background: rgba(212, 163, 115, 0.15); color: var(--accent); border: 1px solid var(--accent); margin-top: 10px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
           <span>&#128269; View Live Order Status</span>
         </a>
   
@@ -474,3 +491,5 @@
   <script src="app.js"></script>
 </body>
 </html>
+
+

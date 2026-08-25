@@ -395,9 +395,9 @@ body::before {
 }
   
 .hero-gradient-text {
+  background-clip: text;
   background: var(--gradient-gold);
   -webkit-background-clip: text;
-  background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
 }
@@ -626,33 +626,33 @@ body::before {
 }
 
 .text-gradient-berry {
+  background-clip: text;
   background: linear-gradient(135deg, #ff8fa3 0%, #f691b3 50%, #c97bb7 100%);
   -webkit-background-clip: text;
-  background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 8px rgba(246, 145, 179, 0.35));
 }
 
 .text-gradient-citrus {
+  background-clip: text;
   background: linear-gradient(135deg, #ffd166 0%, #f4a261 60%, #e76f51 100%);
   -webkit-background-clip: text;
-  background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 8px rgba(244, 162, 97, 0.35));
 }
 
 .text-gradient-amber {
+  background-clip: text;
   background: linear-gradient(135deg, #faedcd 0%, #d4a373 50%, #b08968 100%);
   -webkit-background-clip: text;
-  background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 8px rgba(212, 163, 115, 0.35));
 }
 
 .text-gradient-cyan {
+  background-clip: text;
   background: linear-gradient(135deg, #caf0f8 0%, #90e0ef 50%, #00b4d8 100%);
   -webkit-background-clip: text;
-  background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 8px rgba(144, 224, 239, 0.35));
 }
@@ -2194,3 +2194,82 @@ input:focus, select:focus, textarea:focus {
 }
 
 
+/* ==================================================================== */
+/* SCALE INTENT SWITCHER STYLES (Individual vs Corporate Routing)       */
+/* ==================================================================== */
+
+.scale-intent-card {
+  background: var(--card-inner);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.intent-active-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.intent-switch-link {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed var(--card-border);
+  padding: 8px 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+  line-height: 1.3;
+}
+
+.intent-switch-link:hover {
+  border-color: var(--accent);
+  color: var(--text);
+  background: rgba(212, 163, 115, 0.06);
+}
+
+.intent-switch-link strong {
+  color: var(--accent);
+}
+
+.intent-switch-link-alt {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed var(--card-border);
+  padding: 8px 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+  line-height: 1.3;
+}
+
+.intent-switch-link-alt:hover {
+  border-color: var(--success-light);
+  color: var(--text);
+  background: rgba(149, 213, 178, 0.06);
+}
+
+.intent-switch-link-alt strong {
+  color: var(--success-light);
+}
+
+.intent-switch-links-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}

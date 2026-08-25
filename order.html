@@ -88,10 +88,21 @@
     <main id="orderFormView">
       
       <!-- Wizard Progress Header (Uniform Across Pages) -->
+      <!-- Scale &amp; Audience Intent Switcher Banner -->
+      <div class="scale-intent-card">
+        <div class="intent-active-badge">
+          <span>☕</span> <span><strong>Individual Pre-Order</strong> &bull; 1–6 bottles (200ml) delivered Saturday &amp; Sunday morning</span>
+        </div>
+        <a href="office.html" class="intent-switch-link">
+          <span>🏢 Ordering for your office, team, or Friday perks?</span>
+          <strong>Switch to Team Brew (10–60+ Bottles) &rarr;</strong>
+        </a>
+      </div>
+
       <div class="wizard-progress-bar">
         <div class="wizard-step-node node-active" id="wNode1" onclick="goToWizardStep(1)">
           <div class="node-circle" id="wCircle1">1</div>
-          <div class="node-label" id="wLabel1">Coffee</div>
+          <div class="node-label" id="wLabel1">Harvest</div>
         </div>
         <div class="wizard-node-line" id="wLine1"></div>
         <div class="wizard-step-node" id="wNode2" onclick="goToWizardStep(2)">
@@ -439,3 +450,5 @@
   <script src="app.js"></script>
 </body>
 </html>
+
+
