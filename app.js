@@ -63,7 +63,6 @@ let cachedProfile = null;
 const PAGE = document.body.dataset.page || (
   window.location.pathname.includes('orders') ? 'ORDERS' :
   window.location.pathname.includes('order') ? 'ORDER' :
-  window.location.pathname.includes('order') ? 'ORDER' :
   window.location.pathname.includes('office') ? 'OFFICE' :
   window.location.pathname.includes('events') ? 'EVENTS' :
   window.location.pathname.includes('track') ? 'TRACK' :
@@ -1182,7 +1181,7 @@ function validateEmailField() {
   const errEl = document.getElementById('errEmail');
   if (!el) return true;
   const val = el.value.trim();
-  const emailRegex = /^[a-zA-Z0-9._%+-\\\]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-\\]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return setFieldState(el, errEl, emailRegex.test(val));
 }
 
@@ -1443,18 +1442,8 @@ function validateInqEmail() {
   const errEl = document.getElementById('errInqEmail');
   if (!el) return true;
   const val = el.value.trim();
-  const emailRegex = /^[a-zA-Z0-9._%+-\\\]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-\\]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return setFieldState(el, errEl, emailRegex.test(val));
-}
-
-function validatePhoneField() {
-  const el = document.getElementById('custPhone');
-  const errEl = document.getElementById('errPhone');
-  if (!el) return true;
-  let val = el.value.replace(/[^0-9]/g, '');
-  el.value = val;
-  const phoneRegex = /^[6-9]\d{9}$/;
-  return setFieldState(el, errEl, phoneRegex.test(val));
 }
 
 function handleCustomInquirySubmit() {
