@@ -3,10 +3,10 @@
 ### **Micro-Batch Flash-Chilled Specialty Coffee • Gurugram & Delhi NCR**
 
 ```
-  ┌──────────────────────────────────────────────────────────────────────────────────┐
-  │  ⚡ Asset-Light Craft Brewery  │  ❄️ 94°C → 4°C Flash-Chilled  │  🌿 0 Preservatives  │
+  ┌───────────────────────────────────────────────────────────────────────────────────────┐
+  │  ⚡ Asset-Light Craft Brewery   │  ❄️ 94°C → 4°C Flash-Chilled  │  🌿 0 Preservatives.  │
   │  📦 Standard 200ml Glass       │  💳 Razorpay Gateway + Net-7  │  📊 Google Sheets CMS │
-  └──────────────────────────────────────────────────────────────────────────────────┘
+  └───────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 A lightweight, serverless e-commerce and order intake platform built for scheduled micro-batch craft coffee drops, headless Google Sheets CMS synchronization, Razorpay payment processing, real-time self-service order tracking, and automated transactional customer communications. All coffee across retail, corporate, and catering tiers is standardized into premium 200ml glass bottles.  
@@ -104,15 +104,15 @@ The platform uses extensionless, clean URLs across all navigation links, action 
 
 | Clean Route | Source Document | Primary Purpose & Functional Scope |
 | :---- | :---- | :---- |
-| / | index.html | Brand Manifesto & Science: Origin story, 4 craft pillars, flash-chilling thermodynamic comparison, 48-hour flavor curve, and community reviews |
-| /orders | orders.html | Harvests & Order Gateway: Discovery portal to compare flavor swatches, roast meters, and body gauges before configuring personal or corporate fulfillment |
-| /order | order.html | Personal Pre-Order Wizard: Streamlined 3-step checkout (1. Batch Size & Splitter → 2\. Delivery & PIN Validation → 3\. Review & Payment) for 1–6 bottles |
-| /office | office.html | Corporate Office Drops: Streamlined 3-step B2B checkout (1. Batch Tier & Splitter → 2\. Tech Park Window, GSTIN & Role → 3\. Razorpay or Net-7 Invoice) for 10–60+ bottles |
-| /menu | menu.html | Harvests & Sensory Menu: Micro-lot showcase with interactive 5-axis Sensory Radar Comparison graph |
+| / | index.html | **Home & Craft Manifesto**: Origin story, 4 craft pillars, flash-chilling thermodynamic comparison, 48-hour flavor curve, and community reviews |
+| /orders | orders.html | **Order Now (Harvests & Order Gateway)**: Discovery portal to compare flavor swatches, roast meters, and body gauges before configuring personal or corporate fulfillment |
+| /personal | personal.html | Personal Pre-Order Wizard: Streamlined 3-step checkout (1. Batch Size & Splitter → 2\. Delivery & PIN Validation → 3\. Review & Payment) for 1–6 bottles |
+| /corporate | corporate.html | Corporate Office Drops: Streamlined 3-step B2B checkout (1. Batch Tier & Splitter → 2\. Tech Park Window, GSTIN & Role → 3\. Razorpay or Net-7 Invoice) for 10–60+ bottles |
+| /flavor | flavor.html | **flavor matcher (Harvests & Sensory Menu)**: Micro-lot showcase with interactive 2-question quiz matcher, 5-axis Sensory Radar, and intensity gauges |
 | /guide | guide.html | Freshness Guide: Science of flash-chilling, temperature stability graph, and 48-hour cold storage/serving rituals |
-| /about | about.html | Craft & Philosophy: Hand-brewing philosophy, direct trade sourcing, and micro-roastery vs mass-retail comparative matrix |
-| /events | events.html | Event Runs & Catering: Tailored package intake for startup hackathons, townhalls, pop-up coffee bars, and offsites |
-| /track | track.html | Live Order Tracker: Real-time customer self-service status lookup with dynamic 4-stage visual timeline stepper |
+| /about | about.html | **Story so far (Craft & Philosophy)**: Hand-brewing philosophy, direct trade sourcing, and micro-roastery vs mass-retail comparative matrix |
+| /events | events.html | **Event Runs**: Tailored package intake for startup hackathons, townhalls, pop-up coffee bars, and offsites |
+| /track | track.html | **Inquiry/Order tracking**: Real-time customer self-service status lookup with dynamic 4-stage visual timeline stepper |
 
 ---
 
@@ -125,7 +125,8 @@ The platform uses extensionless, clean URLs across all navigation links, action 
                                        │
                  ┌─────────────────────┴─────────────────────┐
                  ▼                                           ▼
-       [ ☕ /order Personal ]                     [ 🏢 /office Corporate ]
+
+       [ ☕ /personal Personal ]                  [ 🏢 /corporate Corporate ]
      (1–6 Bottles • Weekend)                   (10–60+ Bottles • Friday)
                  │                                           │
   ┌──────────────┴──────────────┐             ┌──────────────┴──────────────┐
@@ -144,10 +145,10 @@ The platform uses extensionless, clean URLs across all navigation links, action 
 
 ### 4.1 Discovery Gateway (/orders)
 
-* Interactive harvest selector cards highlight estate details (LOT-01, LOT-02, or MIX) and pass the selection via URL query parameters (/order?bean=LOT-01 or /office?bean=LOT-02).  
+* Interactive harvest selector cards highlight estate details (LOT-01, LOT-02, or MIX) and pass the selection via URL query parameters (/personal?bean=LOT-01 or /corporate?bean=LOT-02).  
 * Interactive sensory palettes display color-coded flavor swatches, roast degrees, and anaerobic fermentation meters.
 
-### 4.2 3-Step Checkout Wizards (/order & /office)
+### **4.2 3-Step Checkout Wizards (/personal & /corporate)**
 
 1. Step 1: Batch Size & Fine-Tune Split:  
    1. Select bottle pack tiers, adjust quantity, and use the custom stepper controls to fine-tune Mix & Match bottle distributions (e.g. 3x Ratnagiri \+ 3x Banana Banger).  
@@ -163,7 +164,7 @@ The platform uses extensionless, clean URLs across all navigation links, action 
 
 ---
 
-## 5\. Headless CMS Schema ("Menu & Config")
+## **5\. Headless CMS Schema ("flavor matcher")**
 
 The frontend dynamically hydrates and updates from the Menu & Config tab in Google Sheets via doGet:
 

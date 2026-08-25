@@ -36,7 +36,12 @@ function closeNavDrawer() {
 function highlightActiveDrawerLink() {
   document.querySelectorAll('.drawer-link').forEach(link => {
     const targetPage = link.dataset.pageLink;
-    if (targetPage === PAGE || (PAGE === 'INDEX' && targetPage === 'INDEX') || (PAGE === 'HOME' && targetPage === 'INDEX')) {
+    const isMatch = (targetPage === PAGE) ||
+      ((PAGE === 'INDEX' || PAGE === 'HOME') &amp;&amp; (targetPage === 'INDEX' || targetPage === 'HOME')) ||
+      ((PAGE === 'PERSONAL' || PAGE === 'ORDER') &amp;&amp; (targetPage === 'PERSONAL' || targetPage === 'ORDER')) ||
+      ((PAGE === 'CORPORATE' || PAGE === 'OFFICE') &amp;&amp; (targetPage === 'CORPORATE' || targetPage === 'OFFICE')) ||
+      ((PAGE === 'FLAVOR' || PAGE === 'MENU') &amp;&amp; (targetPage === 'FLAVOR' || targetPage === 'MENU'));
+    if (isMatch) {
       link.classList.add('active');
     } else {
       link.classList.remove('active');
@@ -62,16 +67,16 @@ let cachedProfile = null;
 // Determine current page from body dataset or pathname
 const PAGE = document.body.dataset.page || (
   window.location.pathname.includes('orders') ? 'ORDERS' :
-  window.location.pathname.includes('order') ? 'ORDER' :
-  window.location.pathname.includes('office') ? 'OFFICE' :
+  (window.location.pathname.includes('personal') || window.location.pathname.includes('order')) ? 'PERSONAL' :
+  (window.location.pathname.includes('corporate') || window.location.pathname.includes('office')) ? 'CORPORATE' :
   window.location.pathname.includes('events') ? 'EVENTS' :
   window.location.pathname.includes('track') ? 'TRACK' :
   window.location.pathname.includes('about') ? 'ABOUT' :
   window.location.pathname.includes('guide') ? 'GUIDE' :
-  window.location.pathname.includes('menu') ? 'MENU' : 'INDEX'
+  (window.location.pathname.includes('flavor') || window.location.pathname.includes('menu')) ? 'FLAVOR' : 'INDEX'
 );
 
-let currentMode = (PAGE === 'OFFICE') ? "B2B" : "B2C";
+let currentMode = (PAGE === 'CORPORATE' || PAGE === 'OFFICE') ? "B2B" : "B2C";
 let currentWizardStep = 1;
 let currentB2bPayOption = "GATEWAY";
 let currentStoreStatus = "OPEN";
@@ -248,22 +253,22 @@ function updateQuizRecommendation() {
     if (resultBadge) resultBadge.textContent = '✨ RECOMMENDED: DUO DISCOVERY FLIGHT';
     if (resultTitle) resultTitle.textContent = 'Mix & Match Custom Split';
     if (resultDesc) resultDesc.textContent = 'Experience both single-estate micro-lots in equal parts (or custom ratios) in a single pack! Enjoy wild berry richness in the morning and sparkling jasmine clarity in the afternoon.';
-    if (btnPersonal) btnPersonal.href = '/order?bean=MIX';
-    if (btnCorporate) btnCorporate.href = '/office?bean=MIX';
+    if (btnPersonal) btnPersonal.href = '/personal?bean=MIX';
+    if (btnCorporate) btnCorporate.href = '/corporate?bean=MIX';
   } else if (flavor === 'berry' || time === 'morning') {
     resultCard.className = 'quiz-result-box result-ratnagiri';
     if (resultBadge) resultBadge.textContent = '🍇 RECOMMENDED: SINGLE-ESTATE HARVEST';
     if (resultTitle) resultTitle.textContent = 'Ratnagiri Estate (Anaerobic Naturals)';
     if (resultDesc) resultDesc.textContent = 'Rich, winey, syrupy body with explosive wild raspberry, stone fruit, and dark cacao notes. Tailored for morning focus and deep work.';
-    if (btnPersonal) btnPersonal.href = '/order?bean=LOT-01';
-    if (btnCorporate) btnCorporate.href = '/office?bean=LOT-01';
+    if (btnPersonal) btnPersonal.href = '/personal?bean=LOT-01';
+    if (btnCorporate) btnCorporate.href = '/corporate?bean=LOT-01';
   } else {
     resultCard.className = 'quiz-result-box result-banana';
     if (resultBadge) resultBadge.textContent = '🌸 RECOMMENDED: SPECIAL FERMENTATION LOT';
     if (resultTitle) resultTitle.textContent = 'Banana Banger (Special Yeast Micro-Lot)';
     if (resultDesc) resultDesc.textContent = 'Clean, floral, sparkling jasmine clarity with crisp green apple and orange blossom notes. Light, tea-like mouthfeel ideal for afternoon recharge.';
-    if (btnPersonal) btnPersonal.href = '/order?bean=LOT-02';
-    if (btnCorporate) btnCorporate.href = '/office?bean=LOT-02';
+    if (btnPersonal) btnPersonal.href = '/personal?bean=LOT-02';
+    if (btnCorporate) btnCorporate.href = '/corporate?bean=LOT-02';
   }
 }
 
@@ -282,8 +287,8 @@ function selectHarvestOption(lotId) {
   const btnPersonal = document.getElementById('btnGoPersonal');
   const btnCorporate = document.getElementById('btnGoCorporate');
 
-  if (btnPersonal) btnPersonal.href = `/order?bean=${encodeURIComponent(lotId)}`;
-  if (btnCorporate) btnCorporate.href = `/office?bean=${encodeURIComponent(lotId)}`;
+  if (btnPersonal) btnPersonal.href = `/personal?bean=${encodeURIComponent(lotId)}`;
+  if (btnCorporate) btnCorporate.href = `/corporate?bean=${encodeURIComponent(lotId)}`;
   if (typeof setRadarFocus === 'function') {
     setRadarFocus(lotId === 'MIX' ? 'OVERLAY' : lotId);
   }
@@ -2069,7 +2074,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const beanParam = urlParams.get('bean') || urlParams.get('lot');
   
-  if (PAGE === 'ORDER' || PAGE === 'HOME') {
+  if (PAGE === 'PERSONAL' || PAGE === 'ORDER' || PAGE === 'HOME') {
     renderPacks(availableB2cPacks, []);
     startCutoffCountdown();
     checkSavedProfile();
@@ -2101,7 +2106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     goToWizardStep(1);
     
-  } else if (PAGE === 'OFFICE') {
+  } else if (PAGE === 'CORPORATE' || PAGE === 'OFFICE') {
     renderPacks([], availableB2bPacks);
     startCutoffCountdown();
     renderClusterOptions();
@@ -2141,7 +2146,7 @@ document.addEventListener('DOMContentLoaded', () => {
     startCutoffCountdown();
     fetchLiveConfig();
     setInterval(fetchLiveConfig, 30000);
-  } else if (PAGE === 'MENU') {
+  } else if (PAGE === 'FLAVOR' || PAGE === 'MENU') {
     renderLots(availableLots);
     fetchLiveConfig();
     updateQuizRecommendation();

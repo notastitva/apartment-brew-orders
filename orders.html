@@ -32,11 +32,11 @@
     <nav class="drawer-nav">
       <a href="/" class="drawer-link" data-page-link="INDEX">Home</a>
       <a href="/orders" class="drawer-link active" data-page-link="ORDERS">Order Now</a>
-      <a href="/menu" class="drawer-link" data-page-link="MENU">Harvests &amp; Sensory Menu</a>
+      <a href="/flavor" class="drawer-link" data-page-link="FLAVOR">flavor matcher</a>
       <a href="/guide" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
-      <a href="/about" class="drawer-link" data-page-link="ABOUT">Craft &amp; Philosophy</a>
+      <a href="/about" class="drawer-link" data-page-link="ABOUT">Story so far</a>
       <a href="/events" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
-      <a href="/track" class="drawer-link" data-page-link="TRACK">Enquiry/Order Tracker</a>
+      <a href="/track" class="drawer-link" data-page-link="TRACK">Inquiry/Order tracking</a>
     </nav>
     <div class="drawer-footer">
       <div class="drawer-footer-text">☕ Hand-Brewed Fresh to Order in Gurugram</div>
@@ -241,7 +241,7 @@
   </p>
   <div class="destination-cards-grid">
     <!-- Option 1: Personal Order -->
-    <a href="/order?bean=LOT-01" id="btnGoPersonal" class="destination-order-card card-personal">
+    <a href="/personal?bean=LOT-01" id="btnGoPersonal" class="destination-order-card card-personal">
       <div>
         <div class="dest-card-header">
           <span class="dest-card-title">☕ Personal Order</span>
@@ -256,7 +256,7 @@
       </div>
     </a>
     <!-- Option 2: Corporate Order -->
-    <a href="/office?bean=LOT-01" id="btnGoCorporate" class="destination-order-card card-corporate">
+    <a href="/corporate?bean=LOT-01" id="btnGoCorporate" class="destination-order-card card-corporate">
       <div>
         <div class="dest-card-header">
           <span class="dest-card-title">🏢 Corporate Order</span>
@@ -277,15 +277,15 @@
   </div>
 </section>
 </div>
-<!-- Service Worker Registration -->
-<script>
+  <!-- Service Worker Registration -->
+  <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW error:', err));
     });
   }
 </script>
-<script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
 

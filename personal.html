@@ -14,7 +14,7 @@
   <!-- Razorpay Standard Checkout SDK -->
   <script defer src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
-<body data-page="ORDER">
+<body data-page="PERSONAL">
   <!-- Sticky Top Header & Hamburger Navigation (Topmost Component) -->
   <header class="site-header-sticky">
     <div class="header-inner">
@@ -40,11 +40,11 @@
     <nav class="drawer-nav">
       <a href="/" class="drawer-link" data-page-link="INDEX">Home</a>
       <a href="/orders" class="drawer-link" data-page-link="ORDERS">Order Now</a>
-      <a href="/menu" class="drawer-link" data-page-link="MENU">Harvests &amp; Sensory Menu</a>
-      <a href="/guide" class="drawer-link active" data-page-link="GUIDE">Freshness Guide</a>
-      <a href="/about" class="drawer-link" data-page-link="ABOUT">Craft &amp; Philosophy</a>
+      <a href="/flavor" class="drawer-link" data-page-link="FLAVOR">flavor matcher</a>
+      <a href="/guide" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
+      <a href="/about" class="drawer-link" data-page-link="ABOUT">Story so far</a>
       <a href="/events" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
-      <a href="/track" class="drawer-link" data-page-link="TRACK">Enquiry/Order Tracker</a>
+      <a href="/track" class="drawer-link" data-page-link="TRACK">Inquiry/Order tracking</a>
     </nav>
     <div class="drawer-footer">
       <div class="drawer-footer-text">☕ Hand-Brewed Fresh to Order in Gurugram</div>
@@ -88,24 +88,8 @@
       
       <!-- Wizard Progress Header (Uniform Across Pages) -->
       <!-- Order Mode Switcher (Individual vs Office) -->
-      <div class="order-mode-switcher">
-        <a href="/order" class="mode-switch-tab active">
-          <span class="mode-tab-icon">☕</span>
-          <div class="mode-tab-text">
-            <span>Personal Order</span>
-            <small>1–6 Bottles &bull; Weekend Drops</small>
-          </div>
-        </a>
-        <a href="/office" class="mode-switch-tab">
-          <span class="mode-tab-icon">🏢</span>
-          <div class="mode-tab-text">
-            <span>Corporate Order</span>
-            <small>10–60+ Bottles &bull; Net-7 Invoices</small>
-          </div>
-        </a>
-      </div>
       <div class="order-mode-subtext">
-        Ordering for your startup or tech team? <a href="/office">Explore Friday Office Drops &rarr;</a>
+        Need 100+ bottles for a hackathon or all-hands? <a href="/events">Custom Event Catering &rarr;</a>
       </div>
 
       <div class="wizard-progress-bar">

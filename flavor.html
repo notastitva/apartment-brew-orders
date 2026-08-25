@@ -7,13 +7,13 @@
   <title>Harvest Comparison &amp; Sensory Menu | The Apartment Brew Co.</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body data-page="MENU">
+<body data-page="FLAVOR">
   <!-- Sticky Top Header &amp; Hamburger Navigation (Topmost Component) -->
   <header class="site-header-sticky">
     <div class="header-inner">
       <a href="/" class="nav-logo">
         <span class="logo-text">The Apartment Brew Co.</span>
-        <span class="logo-sub">Specialty Coffee &bull; Gurugram</span>
+        <span class="logo-sub">Specialty Coffee &amp;bull; Gurugram</span>
       </a>
       <button type="button" class="nav-hamburger-btn" id="navHamburgerBtn" aria-label="Toggle navigation menu" onclick="toggleNavDrawer()">
 <span class="hamburger-bar"></span><span class="hamburger-bar"></span><span class="hamburger-bar"></span>
@@ -26,16 +26,16 @@
   <aside class="nav-drawer" id="navDrawer">
     <div class="drawer-header">
       <span class="drawer-title">Navigation Menu</span>
-<button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&times;</button>
+<button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&amp;times;</button>
     </div>
     <nav class="drawer-nav">
       <a href="/" class="drawer-link" data-page-link="INDEX">Home</a>
       <a href="/orders" class="drawer-link" data-page-link="ORDERS">Order Now</a>
-      <a href="/menu" class="drawer-link active" data-page-link="MENU">Harvests &amp; Sensory Menu</a>
+      <a href="/flavor" class="drawer-link active" data-page-link="FLAVOR">flavor matcher</a>
       <a href="/guide" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
-      <a href="/about" class="drawer-link" data-page-link="ABOUT">Craft &amp; Philosophy</a>
+      <a href="/about" class="drawer-link" data-page-link="ABOUT">Story so far</a>
       <a href="/events" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
-      <a href="/track" class="drawer-link" data-page-link="TRACK">Enquiry/Order Tracker</a>
+      <a href="/track" class="drawer-link" data-page-link="TRACK">Inquiry/Order tracking</a>
     </nav>
     <div class="drawer-footer">
       <div class="drawer-footer-text">☕ Hand-Brewed Fresh to Order in Gurugram</div>
@@ -119,11 +119,11 @@
         Rich, winey, syrupy body with explosive wild raspberry, stone fruit, and dark cacao notes. Tailored for morning focus and deep work.
       </p>
       <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <a href="/order?bean=LOT-01" id="quizBtnPersonal" class="btn btn-pay" style="flex: 1; padding: 9px 12px; font-size: 0.76rem; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
-          <span>☕ Personal Drop &rarr;</span>
+        <a href="/personal?bean=LOT-01" id="quizBtnPersonal" class="btn btn-pay" style="flex: 1; padding: 9px 12px; font-size: 0.76rem; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
+          <span>☕ Configure Personal Drop &rarr;</span>
         </a>
-        <a href="/office?bean=LOT-01" id="quizBtnCorporate" class="btn btn-pay" style="flex: 1; padding: 9px 12px; font-size: 0.76rem; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
-          <span>🏢 Office Batch &rarr;</span>
+        <a href="/corporate?bean=LOT-01" id="quizBtnCorporate" class="btn btn-secondary" style="flex: 1; padding: 9px 12px; font-size: 0.76rem; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
+          <span>🏢 Configure Office Batch &rarr;</span>
         </a>
       </div>
     </div>
@@ -327,7 +327,7 @@
       <p style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; margin: 0 0 10px;">
         Whole ripe cherries are sealed inside airtight stainless steel tanks for 72 hours under anaerobic pressure. This oxygen-deprived fermentation forces the coffee seed to absorb dense fruit sugars from the cherry mucilage, creating intense wild raspberry notes and a rich, winey finish.
       </p>
-      <a href="/order?bean=LOT-01" class="btn" style="background: linear-gradient(135deg, #e76f51, #d4a373); color: #141312; font-weight: 800; font-size: 0.76rem; padding: 8px 12px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 100%;">
+      <a href="/personal?bean=LOT-01" class="btn" style="background: linear-gradient(135deg, #e76f51, #d4a373); color: #141312; font-weight: 800; font-size: 0.76rem; padding: 8px 12px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 100%;">
         <span>Configure Ratnagiri Drop &rarr;</span>
       </a>
     </div>
@@ -342,7 +342,7 @@
       <p style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; margin: 0 0 10px;">
         Inoculated with isolated wine-yeast cultures during fermentation. The specific yeast strain metabolizes organic acids into bright malic esters and floral terpenes, stripping away heavy astringency to yield sparkling green apple acidity and crystalline jasmine clarity.
       </p>
-      <a href="/order?bean=LOT-02" class="btn" style="background: linear-gradient(135deg, #2a9d8f, #00b4d8); color: #141312; font-weight: 800; font-size: 0.76rem; padding: 8px 12px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 100%;">
+      <a href="/personal?bean=LOT-02" class="btn" style="background: linear-gradient(135deg, #2a9d8f, #00b4d8); color: #141312; font-weight: 800; font-size: 0.76rem; padding: 8px 12px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 100%;">
         <span>Configure Banana Banger Drop &rarr;</span>
       </a>
     </div>
@@ -398,13 +398,13 @@
 </section>
  
 <!-- MODULE 7: BOTTOM GATEWAY CTA -->
-<section class="section-card" style="margin-top: 14px; text-align: center;">
-  <h3 style="font-size: 1.05rem; color: var(--accent); margin-bottom: 6px;">Ready to Explore Harvests?</h3>
-  <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">Visit our visual Order Gateway to inspect batch availability and schedule your drop.</p>
-  <a href="/orders" class="btn btn-pay" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 340px; margin: 0 auto;">
-    <span>🎯 Go to Order Gateway &rarr;</span>
-  </a>
-</section>
+      <section class="section-card" style="margin-top: 14px; text-align: center;">
+        <h3 style="font-size: 1.05rem; color: var(--accent); margin-bottom: 6px;">Ready to Explore Harvests?</h3>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">Visit our visual Order Gateway to inspect batch availability and schedule your drop.</p>
+        <a href="/orders" class="btn btn-pay" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 340px; margin: 0 auto;">
+          <span>🎯 Go to Order Gateway &rarr;</span>
+        </a>
+      </section>
  
     </main>
   
