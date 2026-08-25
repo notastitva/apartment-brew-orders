@@ -222,20 +222,17 @@ function selectHarvestOption(lotId) {
   const c1 = document.getElementById('cardLot1');
   const c2 = document.getElementById('cardLot2');
   const cMix = document.getElementById('cardLotMix');
-  
   if (c1) c1.classList.toggle('active', lotId === 'LOT-01');
   if (c2) c2.classList.toggle('active', lotId === 'LOT-02');
   if (cMix) cMix.classList.toggle('active', lotId === 'MIX');
-  
-  // Update destination links
   const btnPersonal = document.getElementById('btnGoPersonal');
   const btnCorporate = document.getElementById('btnGoCorporate');
-  
+
   if (btnPersonal) btnPersonal.href = `order.html?bean=${encodeURIComponent(lotId)}`;
   if (btnCorporate) btnCorporate.href = `office.html?bean=${encodeURIComponent(lotId)}`;
-  
-  // Update Radar focus
-  setRadarFocus(lotId === 'MIX' ? 'OVERLAY' : lotId);
+  if (typeof setRadarFocus === 'function') {
+    setRadarFocus(lotId === 'MIX' ? 'OVERLAY' : lotId);
+  }
 }
   
 function setRadarFocus(mode) {
@@ -250,10 +247,10 @@ function setRadarFocus(mode) {
   const polyRatnagiri = document.getElementById('radarPolyRatnagiri');
   const polyBanana = document.getElementById('radarPolyBanana');
   
-  if (polyRatnagiri && polyBanana) {
-    if (mode === 'LOT-01') {
-      polyRatnagiri.style.opacity = '1';
-      polyRatnagiri.style.filter = 'drop-shadow(0 0 10px rgba(231, 111, 81, 0.7))';
+  if (!polyRatnagiri || !polyBanana) return;
+  if (mode === 'LOT-01') {
+    polyRatnagiri.style.opacity = '1';
+    polyRatnagiri.style.filter = 'drop-shadow(0 0 10px rgba(231, 111, 81, 0.7))';
       polyBanana.style.opacity = '0.2';
       polyBanana.style.filter = 'none';
     } else if (mode === 'LOT-02') {
@@ -268,7 +265,6 @@ function setRadarFocus(mode) {
       polyBanana.style.filter = 'none';
     }
   }
-}
 
 // --------------------------------------------------------------------
 // Multi-Step Ordering Wizard Engine (Step Navigation & Validation)
@@ -704,17 +700,19 @@ function renderPacks(b2cPacks, b2bPacks) {
 
 function selectLot(lotName, element) {
   document.querySelectorAll('#lotGrid .lot-card').forEach(el => el.classList.remove('active'));
-  if (element) element.classList.add('active');
-  
-  if (lotName && (lotName.includes('Mix & Match') || lotName.includes('Custom Ratio Split') || lotName.includes('Discovery Flight') || lotName.includes('Custom Split') || lotName.includes('Build Your Own Batch'))) {
-    isCustomSplit = true;
-    rebalanceSplitter();
-  } else {
-    isCustomSplit = false;
-    selectedBean = lotName;
-    renderSplitterUI();
+  if (element) {
+    element.classList.add('active');
+  } else if (lotName) {
+    document.querySelectorAll('#lotGrid .lot-card').forEach(card => {
+      const nameEl = card.querySelector('.lot-name');
+      const cardText = (nameEl ? nameEl.textContent : card.textContent) || '';
+      if (lotName.includes('Mix & Match') && cardText.includes('Mix & Match')) {
+        card.classList.add('active');
+      } else if (normalizeStr(cardText).includes(normalizeStr(lotName.split('(')[0]))) {
+        card.classList.add('active');
+      }
+    });
   }
-}
 
 function selectB2cPack(name, bottles, price, el) {
   document.querySelectorAll('#b2cPacks .pack-option').forEach(e => e.classList.remove('active'));
@@ -2017,11 +2015,14 @@ document.addEventListener('DOMContentLoaded', () => {
       if (beanParam === 'LOT-01' || beanParam.toLowerCase().includes('ratnagiri')) {
         const targetName = availableLots[0] ? `${availableLots[0].name} (${availableLots[0].process})` : "Ratnagiri Estate (Anaerobic Naturals)";
         selectLot(targetName);
+        goToWizardStep(2);
       } else if (beanParam === 'LOT-02' || beanParam.toLowerCase().includes('banana')) {
         const targetName = availableLots[1] ? `${availableLots[1].name} (${availableLots[1].process})` : "Banana Banger (Fermented Lot)";
         selectLot(targetName);
+        goToWizardStep(2);
       } else if (beanParam === 'MIX' || beanParam.toLowerCase().includes('mix')) {
         selectLot('Mix & Match');
+        goToWizardStep(2);
       }
     }
     
@@ -2038,11 +2039,14 @@ document.addEventListener('DOMContentLoaded', () => {
       if (beanParam === 'LOT-01' || beanParam.toLowerCase().includes('ratnagiri')) {
         const targetName = availableLots[0] ? `${availableLots[0].name} (${availableLots[0].process})` : "Ratnagiri Estate (Anaerobic Naturals)";
         selectLot(targetName);
+        goToWizardStep(2);
       } else if (beanParam === 'LOT-02' || beanParam.toLowerCase().includes('banana')) {
         const targetName = availableLots[1] ? `${availableLots[1].name} (${availableLots[1].process})` : "Banana Banger (Fermented Lot)";
         selectLot(targetName);
+        goToWizardStep(2);
       } else if (beanParam === 'MIX' || beanParam.toLowerCase().includes('mix')) {
         selectLot('Mix & Match');
+        goToWizardStep(2);
       }
     }
     

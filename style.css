@@ -849,9 +849,10 @@ body::before {
 }
   
 /* ==================================================================== */
-/* VISUAL ACTIVE HARVESTS CARDS                                         */
 /* ==================================================================== */
-  
+/* ==================================================================== */
+/* VISUAL ACTIVE HARVESTS CARDS & EXPANDABLE ACCORDION SYSTEM          */
+/* ==================================================================== */
 .harvest-preview-card {
   background: var(--card-inner);
   border: 1.5px solid var(--card-border);
@@ -859,32 +860,70 @@ body::before {
   padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0;
   transition: all 0.25s ease;
   text-decoration: none;
   color: inherit;
   margin-top: 10px;
+  cursor: pointer;
+  position: relative;
 }
-  
+
 .harvest-preview-card:hover {
   border-color: var(--accent);
   transform: translateY(-2px);
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
   background: rgba(212, 163, 115, 0.04);
 }
-  
+
+.harvest-preview-card.active {
+  border-color: var(--accent);
+  background: rgba(212, 163, 115, 0.08);
+  box-shadow: 0 4px 20px rgba(212, 163, 115, 0.2);
+}
+
 .harvest-card-top {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 12px;
 }
-  
+
+.harvest-info-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
 .harvest-title {
-  font-size: 0.95rem;
-  font-weight: 800;
+  font-size: 1.05rem;
+  font-weight: 900;
   color: var(--text);
+  letter-spacing: 0.3px;
 }
-  
+
+.harvest-origin {
+  font-size: 0.7rem;
+  color: var(--accent);
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+.harvest-notes {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+  margin-top: 4px;
+}
+
+.harvest-top-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
 .harvest-tag {
   font-size: 0.68rem;
   font-weight: 700;
@@ -893,12 +932,96 @@ body::before {
   border: 1px solid var(--accent);
   padding: 3px 8px;
   border-radius: 12px;
+  white-space: nowrap;
 }
-  
-.harvest-notes {
-  font-size: 0.8rem;
+
+.harvest-tag.tag-ratnagiri {
+  background: rgba(231, 111, 81, 0.15);
+  border-color: #e76f51;
+  color: #e76f51;
+}
+
+.harvest-tag.tag-banana {
+  background: rgba(42, 157, 143, 0.15);
+  border-color: #2a9d8f;
+  color: #2a9d8f;
+}
+
+.harvest-tag.tag-mix {
+  background: rgba(212, 163, 115, 0.15);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.harvest-radio-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--card-border);
+  background: #141312;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.harvest-preview-card.active .harvest-radio-dot {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(212, 163, 115, 0.6);
+}
+
+.harvest-preview-card.active .harvest-radio-dot::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #141312;
+}
+
+/* Accordion Expansion */
+.harvest-expanded-content {
+  display: none;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  animation: fadeIn 0.3s ease;
+}
+
+.harvest-preview-card.active .harvest-expanded-content {
+  display: block;
+}
+
+/* Mix & Match Split Details */
+.mix-split-box {
+  background: var(--card-inner);
+  border: 1px solid rgba(212, 163, 115, 0.25);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.mix-split-desc {
+  font-size: 0.78rem;
   color: #dfd8c8;
   line-height: 1.4;
+}
+
+.mix-badges-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.mix-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: rgba(212, 163, 115, 0.12);
+  border: 1px solid rgba(212, 163, 115, 0.3);
+  padding: 3px 8px;
+  border-radius: 6px;
 }
   
 /* ==================================================================== */
@@ -2632,3 +2755,4 @@ input:focus, select:focus, textarea:focus {
   background: var(--info-blue);
   color: #141312;
 }
+
