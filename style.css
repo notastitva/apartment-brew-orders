@@ -2273,3 +2273,362 @@ input:focus, select:focus, textarea:focus {
 .order-mode-subtext a:hover {
   text-decoration: underline;
 }
+/* ==================================================================== */
+/* ORDERS GATEWAY & SENSORY SELECTION COMPONENTS (orders.html)          */
+/* ==================================================================== */
+
+.quiz-matcher-card {
+  background: linear-gradient(160deg, #24201c 0%, #151413 100%);
+  border: 1.5px solid rgba(212, 163, 115, 0.3);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.quiz-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.quiz-subtitle {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.quiz-options-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.quiz-pill-btn {
+  background: var(--card-inner);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.quiz-pill-btn:hover {
+  border-color: var(--accent);
+  background: rgba(212, 163, 115, 0.08);
+  transform: translateX(3px);
+}
+
+.quiz-pill-btn.active {
+  border-color: var(--accent);
+  background: rgba(212, 163, 115, 0.15);
+  box-shadow: 0 0 12px rgba(212, 163, 115, 0.25);
+}
+
+/* Flavor Swatches & Aroma Rings */
+.flavor-swatches-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin: 10px 0;
+}
+
+.flavor-swatch {
+  border-radius: 8px;
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.flavor-swatch:hover {
+  transform: translateY(-2px);
+}
+
+.swatch-berry {
+  background: linear-gradient(145deg, rgba(230, 57, 70, 0.15) 0%, rgba(31, 29, 26, 0.9) 100%);
+  border-color: rgba(230, 57, 70, 0.35);
+}
+
+.swatch-stonefruit {
+  background: linear-gradient(145deg, rgba(244, 162, 97, 0.15) 0%, rgba(31, 29, 26, 0.9) 100%);
+  border-color: rgba(244, 162, 97, 0.35);
+}
+
+.swatch-cacao {
+  background: linear-gradient(145deg, rgba(212, 163, 115, 0.15) 0%, rgba(31, 29, 26, 0.9) 100%);
+  border-color: rgba(212, 163, 115, 0.35);
+}
+
+.swatch-blossom {
+  background: linear-gradient(145deg, rgba(255, 209, 102, 0.15) 0%, rgba(31, 29, 26, 0.9) 100%);
+  border-color: rgba(255, 209, 102, 0.35);
+}
+
+.swatch-apple {
+  background: linear-gradient(145deg, rgba(149, 213, 178, 0.15) 0%, rgba(31, 29, 26, 0.9) 100%);
+  border-color: rgba(149, 213, 178, 0.35);
+}
+
+.swatch-jasmine {
+  background: linear-gradient(145deg, rgba(144, 224, 239, 0.15) 0%, rgba(31, 29, 26, 0.9) 100%);
+  border-color: rgba(144, 224, 239, 0.35);
+}
+
+.swatch-icon {
+  font-size: 1.15rem;
+}
+
+.swatch-text {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+/* Roast & Fermentation Spectrum Meters */
+.spectrum-meter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #141312;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin: 10px 0;
+}
+
+.spectrum-meter {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.spectrum-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.spectrum-header strong {
+  color: var(--accent);
+}
+
+.spectrum-track {
+  height: 6px;
+  background: #25221e;
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.spectrum-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.fill-roast {
+  background: linear-gradient(90deg, #ffd166 0%, #d4a373 50%, #b08968 100%);
+}
+
+.fill-ferment-lot1 {
+  background: linear-gradient(90deg, #d4a373 0%, #e76f51 60%, #b5179e 100%);
+}
+
+.fill-ferment-lot2 {
+  background: linear-gradient(90deg, #ffd166 0%, #2a9d8f 60%, #00b4d8 100%);
+}
+
+.spectrum-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.6rem;
+  color: #7d766b;
+}
+
+/* Mouthfeel & Viscosity Gauge */
+.viscosity-meter-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed var(--card-border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.viscosity-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viscosity-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.viscosity-desc {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.viscosity-bar {
+  width: 90px;
+  height: 6px;
+  background: #25221e;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.viscosity-fill {
+  height: 100%;
+  border-radius: 3px;
+}
+
+.viscosity-lot1 {
+  background: linear-gradient(90deg, #d4a373, #e76f51);
+  width: 75%;
+}
+
+.viscosity-lot2 {
+  background: linear-gradient(90deg, #2a9d8f, #00b4d8);
+  width: 55%;
+}
+
+/* Destination Order Branching Cards */
+.destination-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+@media (max-width: 480px) {
+  .destination-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.destination-order-card {
+  background: linear-gradient(165deg, #25221e 0%, #171513 100%);
+  border: 1.5px solid var(--card-border);
+  border-radius: 14px;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.destination-order-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.destination-order-card.card-personal {
+  border-color: rgba(212, 163, 115, 0.35);
+}
+
+.destination-order-card.card-personal:hover {
+  box-shadow: 0 8px 24px rgba(212, 163, 115, 0.2);
+}
+
+.destination-order-card.card-corporate {
+  border-color: rgba(144, 224, 239, 0.35);
+}
+
+.destination-order-card.card-corporate:hover {
+  border-color: var(--info-blue);
+  box-shadow: 0 8px 24px rgba(144, 224, 239, 0.2);
+}
+
+.dest-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.dest-card-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.25;
+}
+
+.dest-card-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+}
+
+.badge-personal {
+  background: rgba(212, 163, 115, 0.18);
+  color: var(--accent);
+  border: 1px solid rgba(212, 163, 115, 0.4);
+}
+
+.badge-corporate {
+  background: rgba(144, 224, 239, 0.18);
+  color: var(--info-blue);
+  border: 1px solid rgba(144, 224, 239, 0.4);
+}
+
+.dest-card-desc {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.dest-card-cta {
+  font-size: 0.78rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.cta-personal {
+  background: var(--gradient-gold);
+  color: #141312;
+}
+
+.cta-corporate {
+  background: rgba(144, 224, 239, 0.15);
+  color: var(--info-blue);
+  border: 1px solid var(--info-blue);
+}
+
+.cta-corporate:hover {
+  background: var(--info-blue);
+  color: #141312;
+}
