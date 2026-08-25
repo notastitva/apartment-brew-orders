@@ -19,7 +19,7 @@
   <!-- Sticky Top Header & Hamburger Navigation (Topmost Component) -->
   <header class="site-header-sticky">
     <div class="header-inner">
-      <a href="index.html" class="nav-logo">
+      <a href="index" class="nav-logo">
         <span class="logo-text">The Apartment Brew Co.</span>
         <span class="logo-sub">Specialty Coffee &bull; Gurugram</span>
       </a>
@@ -87,21 +87,25 @@
     <main id="orderFormView">
       
       <!-- Scale &amp; Audience Intent Switcher Banner -->
-      <div class="scale-intent-card">
-        <div class="intent-active-badge">
-          <span>&#127986;</span> <span><strong>Corporate &amp; Team Drops</strong> &bull; 10&ndash;60+ bottles (200ml) delivered Friday with Net-7 Invoicing</span>
-        </div>
-        <div class="intent-switch-links-row">
-          <a href="order.html" class="intent-switch-link">
-            <span>☕ Ordering for personal weekend home delivery?</span>
-            <strong>Switch to Individual Brew &amp;rarr;</strong>
-          </a>
-          <a href="events.html" class="intent-switch-link-alt">
-            <span>&#127881; Need 100+ bottles for a hackathon or townhall?</span>
-            <strong>Custom Event Catering &amp;rarr;</strong>
-          </a>
-        </div>
-      </div>
+<div class="order-mode-switcher">
+  <a href="order.html" class="mode-switch-tab">
+    <span class="mode-tab-icon">☕</span>
+    <div class="mode-tab-text">
+      <span>Individual Pre-Order</span>
+      <small>1–6 Bottles &bull; Weekend Drops</small>
+    </div>
+  </a>
+  <a href="office.html" class="mode-switch-tab active">
+    <span class="mode-tab-icon">🏢</span>
+    <div class="mode-tab-text">
+      <span>Team &amp; Corporate Drops</span>
+      <small>10–60+ Bottles &bull; Net-7 Invoices</small>
+    </div>
+  </a>
+</div>
+<div class="order-mode-subtext">
+  Need 100+ bottles for a hackathon or all-hands? <a href="events.html">Custom Event Catering &rarr;</a>
+</div>
 
       <!-- Wizard Progress Header (Uniform Across Pages) -->
       <div class="wizard-progress-bar">
@@ -140,7 +144,7 @@
         <div class="lot-grid" id="lotGrid"></div>
   
         <button type="button" class="btn btn-pay" style="margin-top: 14px;" onclick="nextWizardStep(2)">
-          <span>Continue to Batch Size &amp;rarr;</span>
+<span>Continue to Batch Size &rarr;</span>
         </button>
       </section>
   
@@ -228,9 +232,9 @@
         </div>
   
         <div class="wizard-nav-btns">
-          <button type="button" class="btn-secondary" onclick="goToWizardStep(1)">&larr; Back to Harvest</button>
+<button type="button" class="btn-secondary" onclick="goToWizardStep(1)">&larr; Back to Harvest</button>
           <button type="button" id="btnStep2Next" class="btn btn-pay" onclick="nextWizardStep(3)">
-            <span>Continue to Delivery &amp;rarr;</span>
+<span>Continue to Delivery &rarr;</span>
           </button>
         </div>
       </section>
@@ -322,9 +326,9 @@
         </div>
   
         <div class="wizard-nav-btns">
-          <button type="button" class="btn-secondary" onclick="goToWizardStep(2)">&larr; Back to Batch Size</button>
+<button type="button" class="btn-secondary" onclick="goToWizardStep(2)">&larr; Back to Batch Size</button>
           <button type="button" class="btn btn-pay" onclick="nextWizardStep(4)">
-            <span>Review &amp; Pay / Invoice &amp; rarr;</span>
+<span>Review &amp; Pay / Invoice &rarr;</span>
           </button>
         </div>
       </section>
@@ -389,7 +393,7 @@
         </div>
   
         <div class="wizard-nav-btns">
-          <button type="button" class="btn-secondary" onclick="goToWizardStep(3)">&larr; Edit Details</button>
+<button type="button" class="btn-secondary" onclick="goToWizardStep(3)">&larr; Edit Details</button>
           <button id="payNowBtn" class="btn btn-pay" onclick="handlePayClick()">
             <span id="btnText">&#128179; Pay &amp; Confirm Office Batch (<span id="btnAmount">₹1,800</span>)</span>
           </button>

@@ -88,15 +88,25 @@
     <main id="orderFormView">
       
       <!-- Wizard Progress Header (Uniform Across Pages) -->
-      <!-- Scale &amp; Audience Intent Switcher Banner -->
-      <div class="scale-intent-card">
-        <div class="intent-active-badge">
-          <span>☕</span> <span><strong>Individual Pre-Order</strong> &bull; 1–6 bottles (200ml) delivered Saturday &amp; Sunday morning</span>
-        </div>
-        <a href="office.html" class="intent-switch-link">
-          <span>🏢 Ordering for your office, team, or Friday perks?</span>
-          <strong>Switch to Team Brew (10–60+ Bottles) &rarr;</strong>
+      <!-- Order Mode Switcher (Individual vs Office) -->
+      <div class="order-mode-switcher">
+        <a href="order.html" class="mode-switch-tab active">
+          <span class="mode-tab-icon">☕</span>
+          <div class="mode-tab-text">
+            <span>Individual Pre-Order</span>
+            <small>1–6 Bottles &bull; Weekend Drops</small>
+          </div>
         </a>
+        <a href="office.html" class="mode-switch-tab">
+          <span class="mode-tab-icon">🏢</span>
+          <div class="mode-tab-text">
+            <span>Team &amp; Corporate Drops</span>
+            <small>10–60+ Bottles &bull; Net-7 Invoices</small>
+          </div>
+        </a>
+      </div>
+      <div class="order-mode-subtext">
+        Ordering for your startup or tech team? <a href="office">Explore Friday Office Drops &rarr;</a>
       </div>
 
       <div class="wizard-progress-bar">
