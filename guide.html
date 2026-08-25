@@ -8,12 +8,12 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body data-page="GUIDE">
-  <!-- Sticky Top Header & Hamburger Navigation (Topmost Component) -->
+  <!-- Sticky Top Header &amp; Hamburger Navigation (Topmost Component) -->
   <header class="site-header-sticky">
     <div class="header-inner">
       <a href="index.html" class="nav-logo">
         <span class="logo-text">The Apartment Brew Co.</span>
-        <span class="logo-sub">Specialty Coffee &bull; Gurugram</span>
+<span class="logo-sub">Specialty Coffee &bull; Gurugram</span>
       </a>
       <button type="button" class="nav-hamburger-btn" id="navHamburgerBtn" aria-label="Toggle navigation menu" onclick="toggleNavDrawer()">
         <span class="hamburger-bar"></span>
@@ -22,100 +22,237 @@
       </button>
     </div>
   </header>
-  
-  <!-- Navigation Drawer Backdrop & Overlay Menu -->
+ 
+  <!-- Navigation Drawer Backdrop &amp; Overlay Menu -->
   <div class="nav-backdrop" id="navBackdrop" onclick="closeNavDrawer()"></div>
   <aside class="nav-drawer" id="navDrawer">
     <div class="drawer-header">
       <span class="drawer-title">Navigation Menu</span>
-      <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&times;</button>
+<button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&times;</button>
     </div>
     <nav class="drawer-nav">
-      <a href="/" class="drawer-link" data-page-link="INDEX">Home</a>
-      <a href="order" class="drawer-link" data-page-link="ORDER">Individual Brew</a>
-      <a href="office" class="drawer-link" data-page-link="OFFICE">Team Brew</a>
-      <a href="menu" class="drawer-link" data-page-link="MENU">Harvests &amp; Sensory Menu</a>
-      <a href="guide" class="drawer-link active" data-page-link="GUIDE">Freshness Guide</a>
-      <a href="about" class="drawer-link" data-page-link="ABOUT">Craft &amp; Philosophy</a>
-      <a href="events" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
-      <a href="track" class="drawer-link" data-page-link="TRACK">Enquiry/Order Tracker</a>
+      <a href="index.html" class="drawer-link" data-page-link="INDEX">Home</a>
+      <a href="order.html" class="drawer-link" data-page-link="ORDER">Individual Brew</a>
+      <a href="office.html" class="drawer-link" data-page-link="OFFICE">Team Brew</a>
+<a href="menu.html" class="drawer-link" data-page-link="MENU">Harvests &amp; Sensory Menu</a>
+      <a href="guide.html" class="drawer-link active" data-page-link="GUIDE">Freshness Guide</a>
+      <a href="about.html" class="drawer-link" data-page-link="ABOUT">Craft &amp; Philosophy</a>
+      <a href="events.html" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
+      <a href="track.html" class="drawer-link" data-page-link="TRACK">Enquiry/Order Tracker</a>
     </nav>
     <div class="drawer-footer">
       <div class="drawer-footer-text">☕ Hand-Brewed Fresh to Order in Gurugram</div>
     </div>
   </aside>
-  
+ 
   <div class="container">
-    
+ 
     <!-- Branding Header -->
     <header class="header-card">
       <div class="drop-banner">
-        <span>❄️</span> 48-Hour Peak Freshness &amp; Serving Guide
+<span>❄️</span> 48-Hour Freshness &amp; Serving Guide
+      </div>
+      <div class="geo-badge" style="margin-top: 12px;">
+📍 Pure Flash-Chilled Pour-Over &bull; Zero Stabilizers &bull; 48-Hour Peak
       </div>
     </header>
-  
-    <!-- Freshness & Brewing Guide -->
+ 
+    <!-- Freshness &amp; Brewing Guide Content -->
     <main class="story-content">
+      <!-- Section 1: The Flash-Chilling Science -->
       <article class="section-card">
         <div class="section-title">
           <span>The Flash-Chilling Science</span>
+          <span class="section-subtitle">Thermodynamics</span>
         </div>
         <p class="story-p">
-          Most ready-to-drink bottled coffees are standard 18-hour cold brew immersion or pasteurized supermarket concentrates. While smooth, cold immersion fails to extract the volatile fruity acids and floral aromatics inherent in light-to-medium specialty roasts.
+          Most ready-to-drink bottled coffees rely on 18-hour cold water steeping or high-heat pasteurization. While smooth, cold immersion cannot dissolve the delicate floral esters and bright fruit acids inherent in specialty Arabica beans.
         </p>
-        <p class="story-p">
-          We extract hot (92&ndash;94&deg;C) to capture the complete sensory spectrum of single-estate beans, and then immediately flash-chill the coffee over ice, rapidly dropping its temperature to 4&deg;C. This thermal shock permanently traps volatile flavor molecules before they escape into the air.
+        <p class="story-p" style="margin-top: 8px;">
+We brew hot at precise pour-over extraction temperatures (<strong>92&ndash;94&deg;C</strong>) to dissolve the complete spectrum of volatile aromatic compounds, and instantly thermal-shock the brew over clean ice directly to <strong>4C</strong>. This rapid temperature drop traps volatile flavor molecules before they can escape into the atmosphere.
         </p>
       </article>
-  
+ 
+      <!-- Section 2: Temperature Stability &amp; Oxidation Rate Graph (SVG) -->
+      <section class="section-card" style="margin-top: 14px;">
+        <div class="section-title">
+          <span>Cold-Chain vs Ambient Stability</span>
+          <span class="section-subtitle">Volatile Retention</span>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
+Why keeping your bottle refrigerated (sub-4&deg;C) is essential: Heat and oxygen accelerate aromatic degradation by over 400%:
+        </p>
+        <!-- SVG Temperature Stability Graph -->
+        <div style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px 10px; margin-bottom: 10px; overflow: hidden;">
+ 
+          <!-- Graph Legend -->
+          <div style="display: flex; justify-content: flex-start; gap: 16px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 700; color: #95d5b2;">
+              <span style="width: 8px; height: 8px; border-radius: 50%; background: #95d5b2; box-shadow: 0 0 6px #95d5b2;"></span>
+Refrigerated (&le; 4&deg;C Cold-Chain)
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 700; color: #e63946;">
+              <span style="width: 8px; height: 8px; border-radius: 50%; background: #e63946;"></span>
+Ambient Exposure (25&deg;C+ Room Temp)
+            </div>
+          </div>
+          <svg viewBox="0 0 460 160" style="width: 100%; height: auto; display: block;" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="coldAreaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#2d6a4f" stop-opacity="0.35" />
+                <stop offset="100%" stop-color="#2d6a4f" stop-opacity="0.02" />
+              </linearGradient>
+              <linearGradient id="warmAreaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#e63946" stop-opacity="0.25" />
+                <stop offset="100%" stop-color="#e63946" stop-opacity="0.0" />
+              </linearGradient>
+            </defs>
+            <!-- Horizontal Grid Lines -->
+            <line x1="30" y1="25" x2="440" y2="25" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3 3" />
+            <line x1="30" y1="65" x2="440" y2="65" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3 3" />
+            <line x1="30" y1="105" x2="440" y2="105" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3 3" />
+            <line x1="30" y1="125" x2="440" y2="125" stroke="rgba(255,255,255,0.15)" />
+            <!-- Area Shading for Cold Chain Stability -->
+            <path d="M 30 125 L 30 32 Q 150 35 270 42 Q 370 50 440 62 L 440 125 Z" fill="url(#coldAreaGrad)" />
+            <!-- Curve 1: Refrigerated Curve (Green / Gold Gradient) -->
+            <path d="M 30 32 Q 150 35 270 42 Q 370 50 440 62" stroke="#95d5b2" stroke-width="3" stroke-linecap="round" />
+            <!-- Curve 2: Ambient / Warm Curve (Red) -->
+            <path d="M 30 32 Q 100 80 170 106 Q 270 118 440 122" stroke="#e63946" stroke-width="2.5" stroke-dasharray="4 3" stroke-linecap="round" />
+            <!-- Key Points &amp; Annotation Badges -->
+            <!-- Point Cold Drop -->
+            <circle cx="30" cy="32" r="4" fill="#95d5b2" stroke="#141312" stroke-width="1.5" />
+            <text x="35" y="20" fill="#95d5b2" font-size="8.5" font-weight="800">0h: 96% Volatiles</text>
+            <!-- Point Cold 24h -->
+            <circle cx="235" cy="40" r="4" fill="#95d5b2" stroke="#141312" stroke-width="1.5" />
+            <text x="235" y="28" fill="#95d5b2" font-size="8.5" font-weight="700" text-anchor="middle">24h: 90% Stable</text>
+            <!-- Point Cold 48h Cutoff -->
+            <circle cx="430" cy="60" r="4" fill="#d4a373" stroke="#141312" stroke-width="1.5" />
+            <text x="435" y="50" fill="#d4a373" font-size="8.5" font-weight="800" text-anchor="end">48h: 84% (Peak Window)</text>
+            <!-- Point Ambient Decay -->
+            <circle cx="170" cy="106" r="4" fill="#e63946" stroke="#141312" stroke-width="1.5" />
+<text x="175" y="96" fill="#ff8fa3" font-size="8" font-weight="700">6h Ambient: Fast Oxidation (&lt;30%)</text>
+            <!-- Axis Labels -->
+            <text x="30" y="142" fill="#9c9589" font-size="8" font-weight="600">0h (Dispatch)</text>
+            <text x="130" y="142" fill="#9c9589" font-size="8" font-weight="600">12h</text>
+            <text x="235" y="142" fill="#9c9589" font-size="8" font-weight="600">24h</text>
+            <text x="340" y="142" fill="#9c9589" font-size="8" font-weight="600">36h</text>
+            <text x="440" y="142" fill="#d4a373" font-size="8" font-weight="700" text-anchor="end">48h Cutoff</text>
+          </svg>
+        </div>
+      </section>
+      <!-- Section 3: Process-Based Flavor Evolution (Lot-Agnostic) -->
+      <section class="section-card" style="margin-top: 14px;">
+        <div class="section-title">
+<span>Processing Style &amp; Freshness</span>
+          <span class="section-subtitle">Universal Guide</span>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
+          Different single-estate processing methods express unique sensory nuances as they settle in your refrigerator:
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+ 
+          <!-- Card 1: Anaerobics &amp; Naturals -->
+          <div style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 10px; padding: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+<span style="font-size: 0.82rem; font-weight: 800; color: #e76f51;">🍓 Naturals &amp; Anaerobics</span>
+<span style="font-size: 0.65rem; background: rgba(231,111,81,0.15); color: #e76f51; padding: 2px 8px; border-radius: 10px; font-weight: 700;">Peak: Hours 0&ndash;24</span>
+            </div>
+            <p style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.4; margin: 0;">
+              High fruit ester concentrations produce explosive wild berry, stone fruit, and winey acidity. Drink within the first 24 hours for maximum aromatic punch.
+            </p>
+          </div>
+          <!-- Card 2: Washed Harvests -->
+          <div style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 10px; padding: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-size: 0.82rem; font-weight: 800; color: #90e0ef;">🌿 Washed Arabica Lots</span>
+<span style="font-size: 0.65rem; background: rgba(144,224,239,0.15); color: #90e0ef; padding: 2px 8px; border-radius: 10px; font-weight: 700;">Peak: Hours 12&ndash;36</span>
+            </div>
+            <p style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.4; margin: 0;">
+              Exhibits supreme cup clarity, clean citrus acidity, and delicate jasmine florality. Highly stable throughout the 48-hour refrigerated window.
+            </p>
+          </div>
+          <!-- Card 3: Experimental &amp; Fermented Lots -->
+          <div style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 10px; padding: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+<span style="font-size: 0.82rem; font-weight: 800; color: #2a9d8f;">🍍 Experimental &amp; Fruit-Fermented</span>
+<span style="font-size: 0.65rem; background: rgba(42,157,143,0.15); color: #2a9d8f; padding: 2px 8px; border-radius: 10px; font-weight: 700;">Peak: Hours 12&ndash;40</span>
+            </div>
+            <p style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.4; margin: 0;">
+              Complex enzymatic sugars integrate with chilled aromatics to deliver sparkling green apple and tropical candy sweetness.
+            </p>
+          </div>
+        </div>
+      </section>
+      <!-- Section 4: 3-Step Serving &amp; Aeration Protocol -->
       <article class="section-card" style="margin-top: 14px;">
         <div class="section-title">
-          <span>The 48-Hour Peak Window</span>
+<span>Serving &amp; Aeration Protocol</span>
+          <span class="section-subtitle">Tasting Ritual</span>
         </div>
-        <p class="story-p">
-          Because our coffee has <strong>zero preservatives, zero stabilizers, and zero pasteurization</strong>, its delicate flavor peak is active for 48 hours from dispatch:
-        </p>
-        <div class="story-feature-list">
-          <div class="feature-item">
-            <strong>Hours 0–12 (Drop Day):</strong> Bright, punchy aromatics, vibrant berry and citrus acidity, and crisp finish.
+        <div class="craft-flow-grid" style="margin-top: 6px;">
+ 
+          <div class="craft-flow-step">
+            <div class="flow-step-header">
+              <div class="flow-step-num">1</div>
+<div class="flow-step-title">Immediate Cold Storage (&le; 4&deg;C)</div>
+            </div>
+            <div class="flow-step-desc">
+              Transfer your glass bottles directly to your refrigerator upon doorstep delivery. Avoid keeping in room temperature environments.
+            </div>
+            <div class="flow-step-tag">❄️ Cold-Chain Maintained</div>
           </div>
-          <div class="feature-item" style="margin-top: 8px;">
-            <strong>Hours 12–36 (Peak Roundness):</strong> Acidity integrates smoothly with chocolate and stone fruit undertones.
+          <div class="craft-flow-step">
+            <div class="flow-step-header">
+              <div class="flow-step-num">2</div>
+              <div class="flow-step-title">Pour Over High-Density Ice</div>
+            </div>
+            <div class="flow-step-desc">
+Pour 150&ndash;200ml over solid, clear ice cubes in a short rocks glass. Dense ice chills the beverage without rapid melt-water dilution.
+            </div>
+            <div class="flow-step-tag">🧊 Clean Melt Density</div>
           </div>
-          <div class="feature-item" style="margin-top: 8px;">
-            <strong>Hours 36–48 (Mellow Finish):</strong> Deeper body and rounded cacao sweetness. Consume within 48 hours!
+          <div class="craft-flow-step">
+            <div class="flow-step-header">
+              <div class="flow-step-num">3</div>
+              <div class="flow-step-title">30-Second Aeration Swirl</div>
+            </div>
+            <div class="flow-step-desc">
+Gently swirl the glass for 30 seconds. Aeration allows trapped aromatics to bloom as temperature elevates slightly from 4&deg;C to ~8&deg;C.
+            </div>
+<div class="flow-step-tag">☕ Drink Pure Black &bull; 0 Sugar</div>
           </div>
         </div>
       </article>
-  
-      <article class="section-card" style="margin-top: 14px;">
+      <!-- Section 5: Golden Rules of Micro-Batch Coffee -->
+      <section class="section-card" style="margin-top: 14px;">
         <div class="section-title">
-          <span>Storage &amp; Serving Ritual</span>
+<span>Freshness FAQs &amp; Best Practices</span>
         </div>
-        <div class="story-feature-list">
-          <div class="feature-item">
-            <strong>1. Immediate Cold Storage:</strong> Transfer your glass bottles to your refrigerator (below 4&deg;C) as soon as delivered.
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+          <div style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 8px; padding: 10px 12px; font-size: 0.76rem; color: var(--text-muted); line-height: 1.4;">
+            <strong style="color: var(--text); display: block; margin-bottom: 2px;">Why is our shelf life strictly 48 hours?</strong>
+            Because we use zero potassium sorbate, sodium benzoate, or thermal pasteurization. Our coffee is live, fresh pour-over designed for peak flavor.
           </div>
-          <div class="feature-item" style="margin-top: 8px;">
-            <strong>2. Serve Over Clean Ice:</strong> Pour chilled coffee over dense, clear ice cubes in a short rocks glass.
-          </div>
-          <div class="feature-item" style="margin-top: 8px;">
-            <strong>3. Swirl &amp; Savor:</strong> Let the coffee aerate for 30 seconds to allow the floral bouquet to bloom. Enjoy pure black with zero sugar.
+          <div style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 8px; padding: 10px 12px; font-size: 0.76rem; color: var(--text-muted); line-height: 1.4;">
+            <strong style="color: var(--text); display: block; margin-bottom: 2px;">Should I freeze the bottles to store longer?</strong>
+            We advise against freezing. Freezing expands water crystal lattices, which breaks down delicate aromatic oils and causes cloudiness upon thawing.
           </div>
         </div>
-      </article>
-  
+      </section>
+      <!-- CTA to Order -->
       <section class="section-card" style="margin-top: 14px; text-align: center;">
         <h3 style="font-size: 1.1rem; color: var(--accent); margin-bottom: 6px;">Experience Fresh Pour-Over in a Bottle</h3>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">Pre-orders open for Saturday &amp; Sunday morning drops.</p>
+<p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">Pre-orders open for Saturday &amp; Sunday morning drops across Gurugram &amp; Delhi NCR.</p>
         <a href="order.html" class="btn btn-pay" style="text-decoration: none; display: inline-block;">
           <span>☕ Pre-Order Fresh Weekend Bottle</span>
         </a>
       </section>
     </main>
-  
+ 
   </div>
-  
+ 
   <script src="app.js"></script>
 </body>
 </html>
+
+
