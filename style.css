@@ -397,6 +397,7 @@ body::before {
 .hero-gradient-text {
   background: var(--gradient-gold);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
 }
@@ -627,6 +628,7 @@ body::before {
 .text-gradient-berry {
   background: linear-gradient(135deg, #ff8fa3 0%, #f691b3 50%, #c97bb7 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 8px rgba(246, 145, 179, 0.35));
 }
@@ -634,6 +636,7 @@ body::before {
 .text-gradient-citrus {
   background: linear-gradient(135deg, #ffd166 0%, #f4a261 60%, #e76f51 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 8px rgba(244, 162, 97, 0.35));
 }
@@ -641,6 +644,7 @@ body::before {
 .text-gradient-amber {
   background: linear-gradient(135deg, #faedcd 0%, #d4a373 50%, #b08968 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 8px rgba(212, 163, 115, 0.35));
 }
@@ -648,6 +652,7 @@ body::before {
 .text-gradient-cyan {
   background: linear-gradient(135deg, #caf0f8 0%, #90e0ef 50%, #00b4d8 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 8px rgba(144, 224, 239, 0.35));
 }
