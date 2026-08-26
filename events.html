@@ -73,12 +73,12 @@
 <div class="node-label" id="wLabel1">Scope &amp; Scale</div>
 </div>
 <div class="wizard-node-line" id="wLine1"></div>
-<div class="wizard-step-node" id="wNode2" onclick="goToInqStep(2)">
+<div class="wizard-step-node" id="wNode2" onclick="nextInqStep(2)">
 <div class="node-circle" id="wCircle2">2</div>
 <div class="node-label" id="wLabel2">Logistics</div>
 </div>
 <div class="wizard-node-line" id="wLine2"></div>
-<div class="wizard-step-node" id="wNode3" onclick="goToInqStep(3)">
+<div class="wizard-step-node" id="wNode3" onclick="nextInqStep(3)">
 <div class="node-circle" id="wCircle3">3</div>
 <div class="node-label" id="wLabel3">Review</div>
 </div>
@@ -102,6 +102,12 @@ Planning a company townhall, hackathon, product launch, pop-up booth, or a dedic
   
 <div class="form-group">
 <label for="inqType">Requirement Type *</label>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;">
+            <button type="button" class="mode-tab active" style="font-size: 0.7rem; padding: 5px 10px;" onclick="document.getElementById('inqType').value='Event Catering / Pop-Up Specialty Coffee Bar'">🎉 Pop-Up Bar</button>
+            <button type="button" class="mode-tab" style="font-size: 0.7rem; padding: 5px 10px;" onclick="document.getElementById('inqType').value='Townhall / Hackathon Bulk Drop (100+ bottles)'">💻 Townhall / Hackathon</button>
+            <button type="button" class="mode-tab" style="font-size: 0.7rem; padding: 5px 10px;" onclick="document.getElementById('inqType').value='Office Coffee Run / Team Outing Batch'">☕ Office Coffee Run</button>
+            <button type="button" class="mode-tab" style="font-size: 0.7rem; padding: 5px 10px;" onclick="document.getElementById('inqType').value='Custom Single-Estate Curation & Co-Branded Labeling'">✨ Co-Branded Custom</button>
+          </div>
 <select id="inqType">
 <option value="Event Catering / Pop-Up Specialty Coffee Bar">Event Catering / Pop-Up Specialty Coffee Bar</option>
 <option value="Office Coffee Run / Team Outing Batch">Office Coffee Run / Team Outing Batch</option>
@@ -173,8 +179,8 @@ Planning a company townhall, hackathon, product launch, pop-up booth, or a dedic
   
 <div class="form-group">
 <label for="inqPhone">WhatsApp / Mobile Number (For Coordination) *</label>
-<input type="tel" id="inqPhone" placeholder="e.g. 9876543210" maxlength="15" oninput="validateInqPhone()" />
-<div class="field-error" id="errInqPhone">Please enter a valid 10-digit mobile number.</div>
+<input type="tel" id="inqPhone" placeholder="e.g. 9876543210 / +91 9876543210" maxlength="15" oninput="validateInqPhone()" />
+<div class="field-error" id="errInqPhone">Please enter a valid mobile number (at least 8 digits).</div>
 </div>
   
 <div class="form-group">
@@ -306,6 +312,8 @@ Planning a company townhall, hackathon, product launch, pop-up booth, or a dedic
 </button>
 </div>
 </section>
+  
+  </div>
   
   <!-- Service Worker Registration -->
   <script>

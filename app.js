@@ -1512,16 +1512,22 @@ function validateInqField(fieldId) {
   return setFieldState(el, errEl, val.length >= 2);
 }
 
+function validateInqEmail() {
+  const el = document.getElementById('inqEmail');
+  const errEl = document.getElementById('errInqEmail');
+  if (!el) return true;
+  const val = el.value.trim();
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return setFieldState(el, errEl, emailRegex.test(val));
+}
+
 function validateInqPhone() {
   const el = document.getElementById('inqPhone');
   const errEl = document.getElementById('errInqPhone');
   if (!el) return true;
   let raw = el.value.replace(/[^0-9]/g, '');
-  if (raw.length > 10 && (raw.startsWith('91') || raw.startsWith('0'))) {
-    raw = raw.slice(-10);
-  }
-  const phoneRegex = /^[6-9]\d{9}$/;
-  return setFieldState(el, errEl, phoneRegex.test(raw));
+  const isValid = raw.length >= 8 && raw.length <= 15;
+  return setFieldState(el, errEl, isValid);
 }
 
 // --------------------------------------------------------------------
@@ -1547,7 +1553,7 @@ function nextInqStep(targetStep) {
   if (targetStep > currentInqStep) {
     for (let s = currentInqStep; s < targetStep; s++) {
       if (!validateInqStep(s)) {
-        alert('Please complete all required fields (* marked) before continuing.');
+        alert('Please fill in all required fields (* marked) before continuing.');
         return;
       }
     }
@@ -1596,6 +1602,7 @@ function goToInqStep(stepNum) {
 
   window.scrollTo({ top: 120, behavior: 'smooth' });
 }
+
 function populateInqReview() {
   const comp = (document.getElementById('inqCompany')?.value || '').trim();
   const reqType = document.getElementById('inqType')?.value || 'Event Catering';
@@ -1640,7 +1647,7 @@ function populateInqReview() {
 
 function handleCustomInquirySubmit() {
   if (!validateInqStep(1) || !validateInqStep(2)) {
-    alert('Please fill in the required fields before submitting your custom request.');
+    alert('Please fill in all required fields (* marked) before submitting your custom request.');
     return;
   }
 
@@ -1650,6 +1657,7 @@ function handleCustomInquirySubmit() {
   const phone = (document.getElementById('inqPhone')?.value || '').trim();
   const reqType = document.getElementById('inqType')?.value || 'Event Catering';
   const headcount = document.getElementById('inqHeadcount')?.value || '20–50 people';
+  const blend = document.getElementById('inqBlend')?.value || 'Dual Discovery Flight';
   const date = (document.getElementById('inqDate')?.value || '').trim();
   const loc = (document.getElementById('inqLocation')?.value || '').trim() || 'Gurugram / NCR';
   const notes = (document.getElementById('inqNotes')?.value || '').trim();
@@ -1658,7 +1666,10 @@ function handleCustomInquirySubmit() {
   const btnSubmit = document.getElementById('btnSubmitCustom');
   const statusMsg = document.getElementById('inqStatusMsg');
 
-  if (btnSubmit) btnSubmit.disabled = true;
+  if (btnSubmit) {
+    btnSubmit.disabled = true;
+    btnSubmit.innerHTML = '<span>⏳ Submitting Inquiry...</span>';
+  }
   if (statusMsg) {
     statusMsg.textContent = '⏳ Dispatching requirement to curation team...';
     statusMsg.className = 'track-status-msg msg-info';
@@ -1677,12 +1688,13 @@ function handleCustomInquirySubmit() {
     phone: phone,
     requirementType: reqType,
     headcount: headcount,
+    coffeeBlend: blend,
     eventDate: date,
     location: loc,
     notes: notes
   };
 
-  const whatsappMsg = `Hi Apartment Brew Co., I just submitted a custom event inquiry on your website!\n\n*Inquiry ID:* ${inqId}\n*Company / Event:* ${comp}\n*Requirement:* ${reqType}\n*Scale:* ${headcount}\n*Target Date:* ${date}\n*Contact:* ${name} (${phone})\n\nLooking forward to your proposal!`;
+  const whatsappMsg = `Hi Apartment Brew Co., I just submitted a custom event inquiry on your website!\n\n*Inquiry ID:* ${inqId}\n*Company / Event:* ${comp}\n*Requirement:* ${reqType}\n*Scale:* ${headcount}\n*Coffee Blend:* ${blend}\n*Target Date:* ${date}\n*Contact:* ${name} (${phone})\n\nLooking forward to your proposal!`;
   const directWaUrl = `https://wa.me/919719510654?text=${encodeURIComponent(whatsappMsg)}`;
 
   if (CONFIG.googleSheetEndpoint && CONFIG.googleSheetEndpoint.startsWith('http')) {
@@ -1690,7 +1702,7 @@ function handleCustomInquirySubmit() {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(inqPayload)
-    }).then(res => res.json()).then(() => {
+    }).then(res => res.text()).then(() => {
       renderInquirySuccess(inqId, name, comp, reqType, headcount, date, directWaUrl);
     }).catch(() => {
       renderInquirySuccess(inqId, name, comp, reqType, headcount, date, directWaUrl);
@@ -1729,18 +1741,28 @@ function renderInquirySuccess(inqId, name, comp, reqType, headcount, date, waUrl
     confSection.style.display = 'block';
   }
 
-  window.scrollTo({ top: 100, behavior: 'smooth' });
+  window.scrollTo({ top: 80, behavior: 'smooth' });
 }
 
 function resetInqForm() {
   const formSection = document.getElementById('customInquirySection');
   const confSection = document.getElementById('confirmationView');
+  const btnSubmit = document.getElementById('btnSubmitCustom');
+
   if (formSection) formSection.style.display = 'block';
   if (confSection) confSection.style.display = 'none';
+  if (btnSubmit) {
+    btnSubmit.disabled = false;
+    btnSubmit.innerHTML = '<span id="btnCustomText">&#128233; Submit Custom Request</span>';
+  }
 
   ['inqCompany', 'inqName', 'inqEmail', 'inqPhone', 'inqDate', 'inqLocation', 'inqNotes'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
+    const errId = 'err' + id.charAt(0).toUpperCase() + id.slice(1);
+    const errEl = document.getElementById(errId);
+    if (el) el.classList.remove('input-error');
+    if (errEl) errEl.style.display = 'none';
   });
 
   const statusMsg = document.getElementById('inqStatusMsg');
@@ -1748,8 +1770,6 @@ function resetInqForm() {
 
   goToInqStep(1);
 }
-  const isCompValid = validateInqField('inqCompany');
-
 // --------------------------------------------------------------------
 // Customer Self-Service Live Order Tracker Controller
 // --------------------------------------------------------------------
