@@ -37,10 +37,10 @@ function highlightActiveDrawerLink() {
   document.querySelectorAll('.drawer-link').forEach(link => {
     const targetPage = link.dataset.pageLink;
     const isMatch = (targetPage === PAGE) ||
-      ((PAGE === 'INDEX' || PAGE === 'HOME') &amp;&amp; (targetPage === 'INDEX' || targetPage === 'HOME')) ||
-      ((PAGE === 'PERSONAL' || PAGE === 'ORDER') &amp;&amp; (targetPage === 'PERSONAL' || targetPage === 'ORDER')) ||
-      ((PAGE === 'CORPORATE' || PAGE === 'OFFICE') &amp;&amp; (targetPage === 'CORPORATE' || targetPage === 'OFFICE')) ||
-      ((PAGE === 'FLAVOR' || PAGE === 'MENU') &amp;&amp; (targetPage === 'FLAVOR' || targetPage === 'MENU'));
+      ((PAGE === 'INDEX' || PAGE === 'HOME') && (targetPage === 'INDEX' || targetPage === 'HOME')) ||
+      ((PAGE === 'PERSONAL' || PAGE === 'ORDER') && (targetPage === 'PERSONAL' || targetPage === 'ORDER')) ||
+      ((PAGE === 'CORPORATE' || PAGE === 'OFFICE') && (targetPage === 'CORPORATE' || targetPage === 'OFFICE')) ||
+      ((PAGE === 'FLAVOR' || PAGE === 'MENU') && (targetPage === 'FLAVOR' || targetPage === 'MENU'));
     if (isMatch) {
       link.classList.add('active');
     } else {
@@ -119,7 +119,7 @@ let availableCoupons = [
 let appliedCoupon = null;
 let selectedBean = "Ratnagiri Estate (Anaerobic Naturals)";
 let isCustomSplit = false;
-let customSplit = { lot1: (PAGE === 'OFFICE' ? 5 : 2), lot2: (PAGE === 'OFFICE' ? 5 : 2) };
+let customSplit = { lot1: ((PAGE === 'CORPORATE' || PAGE === 'OFFICE') ? 5 : 2), lot2: ((PAGE === 'CORPORATE' || PAGE === 'OFFICE') ? 5 : 2) };
 let selectedB2cPack = { name: "Weekend Pack", bottles: 4, unitPrice: 899 };
 let selectedB2bPack = { name: "Team Pack", bottles: 10, unitPrice: 1800 };
 let currentOrderDetails = null;
@@ -135,7 +135,7 @@ function getTotalBottles() {
   const qtyInput = document.getElementById('packQty');
   let qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
   if (isNaN(qty) || qty < 1) qty = 1;
-  const active = (PAGE === 'OFFICE' || currentMode === 'B2B') ? selectedB2bPack : selectedB2cPack;
+  const active = (PAGE === 'CORPORATE' || PAGE === 'OFFICE' || currentMode === 'B2B') ? selectedB2bPack : selectedB2cPack;
   return (active && active.bottles ? active.bottles : 1) * qty;
 }
 
@@ -181,7 +181,7 @@ function renderSplitterUI() {
   const alloc = (customSplit.lot1 || 0) + (customSplit.lot2 || 0);
   const qtyInput = document.getElementById('packQty');
   const qty = qtyInput ? parseInt(qtyInput.value, 10) || 1 : 1;
-  const activePack = (PAGE === 'OFFICE' || currentMode === 'B2B') ? selectedB2bPack : selectedB2cPack;
+  const activePack = (PAGE === 'CORPORATE' || PAGE === 'OFFICE' || currentMode === 'B2B') ? selectedB2bPack : selectedB2cPack;
   const lot1Name = availableLots[0] ? availableLots[0].name : "Lot 1";
   const lot2Name = availableLots[1] ? availableLots[1].name : "Lot 2";
   
@@ -353,11 +353,11 @@ function validateWizardStep(stepNum) {
     const isPhoneValid = validatePhoneField();
     const isAddressValid = validateField('custAddress');
     const isPinValid = validatePincodeField();
-    const isCompanyValid = (PAGE === 'OFFICE') ? validateField('custCompany') : true;
-    const isGstinValid = (PAGE === 'OFFICE') ? validateGstinField() : true;
+    const isCompanyValid = (PAGE === 'CORPORATE' || PAGE === 'OFFICE') ? validateField('custCompany') : true;
+    const isGstinValid = (PAGE === 'CORPORATE' || PAGE === 'OFFICE') ? validateGstinField() : true;
     
     let isSlotValid = true;
-    if (PAGE === 'OFFICE') {
+    if (PAGE === 'CORPORATE' || PAGE === 'OFFICE') {
       const parkSelect = document.getElementById('b2bTechPark');
       const windowSelect = document.getElementById('b2bDeliveryWindow');
       if (parkSelect && windowSelect) {
@@ -440,7 +440,7 @@ function goToWizardStep(stepNum) {
 // --------------------------------------------------------------------
 
 function populateOrderReview() {
-  const isB2b = (PAGE === 'OFFICE');
+  const isB2b = (PAGE === 'CORPORATE' || PAGE === 'OFFICE');
   const activePack = isB2b ? selectedB2bPack : selectedB2cPack;
   const qty = parseInt(document.getElementById('packQty')?.value, 10) || 1;
   const subtotal = calculateSubtotal();
@@ -683,7 +683,7 @@ if (PAGE !== 'MENU' && PAGE !== 'ORDERS') {
 }
 
 function renderPacks(b2cPacks, b2bPacks) {
-  if ((PAGE === 'ORDER' || PAGE === 'HOME') && Array.isArray(b2cPacks) && b2cPacks.length > 0) {
+  if ((PAGE === 'PERSONAL' || PAGE === 'ORDER' || PAGE === 'HOME') && Array.isArray(b2cPacks) && b2cPacks.length > 0) {
     availableB2cPacks = b2cPacks;
     const b2cGrid = document.getElementById('b2cPacks');
     if (b2cGrid) {
@@ -719,7 +719,7 @@ function renderPacks(b2cPacks, b2bPacks) {
     }
   }
   
-  if (PAGE === 'OFFICE' && Array.isArray(b2bPacks) && b2bPacks.length > 0) {
+  if ((PAGE === 'CORPORATE' || PAGE === 'OFFICE') && Array.isArray(b2bPacks) && b2bPacks.length > 0) {
     availableB2bPacks = b2bPacks;
     const b2bGrid = document.getElementById('b2bPacks');
     if (b2bGrid) {
@@ -832,7 +832,7 @@ function applyStoreStatus(status) {
 function applyConfigToUI(data) {
   if (!data || data.action === 'track') return;
   
-  const isB2b = (PAGE === 'OFFICE' || currentMode === 'B2B');
+  const isB2b = (PAGE === 'CORPORATE' || PAGE === 'OFFICE' || currentMode === 'B2B');
   const cap = isB2b ? (data.b2bBatchCapacity || 200) : (data.b2cBatchCapacity || 150);
   const resCount = isB2b ? (data.b2bReservedBottles || 0) : (data.b2cReservedBottles || 0);
   const remBottles = isB2b ? data.b2bRemainingBatchBottles : data.b2cRemainingBatchBottles;
@@ -855,7 +855,7 @@ function applyConfigToUI(data) {
   if (Array.isArray(data.coupons) && data.coupons.length > 0) {
     availableCoupons = data.coupons;
   }
-  if (PAGE === 'OFFICE' && Array.isArray(data.clusters) && data.clusters.length > 0) {
+  if ((PAGE === 'CORPORATE' || PAGE === 'OFFICE') && Array.isArray(data.clusters) && data.clusters.length > 0) {
     availableClusters = data.clusters;
     renderClusterOptions();
   }
@@ -899,7 +899,7 @@ function startCutoffCountdown() {
     if (!timerEl) return;
   
     const now = new Date();
-const isB2c = (PAGE === 'ORDER' || PAGE === 'ORDERS' || currentMode === "B2C" || PAGE === 'INDEX');
+    const isB2c = (PAGE === 'PERSONAL' || PAGE === 'ORDER' || PAGE === 'ORDERS' || currentMode === "B2C" || PAGE === 'INDEX');
     const target = new Date();
   
     if (isB2c) {
@@ -946,7 +946,7 @@ function calculateSubtotal() {
   const qtyInput = document.getElementById('packQty');
   let qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
   if (isNaN(qty) || qty < 1) qty = 1;
-  const active = (PAGE === 'OFFICE' || currentMode === 'B2B') ? selectedB2bPack : selectedB2cPack;
+  const active = (PAGE === 'CORPORATE' || PAGE === 'OFFICE' || currentMode === 'B2B') ? selectedB2bPack : selectedB2cPack;
   return (active && active.unitPrice ? active.unitPrice : 0) * qty;
 }
 
@@ -1005,7 +1005,7 @@ function applyCoupon() {
   }
   
   const couponMode = (coupon.mode || 'ALL').toUpperCase();
-  const targetCheck = (PAGE === 'OFFICE' || currentMode === 'B2B') ? 'B2B' : 'B2C';
+  const targetCheck = (PAGE === 'CORPORATE' || PAGE === 'OFFICE' || currentMode === 'B2B') ? 'B2B' : 'B2C';
   if (couponMode !== 'ALL' && couponMode !== targetCheck) {
     const targetMode = couponMode === 'B2C' ? 'individual pre-orders (B2C)' : 'corporate office drops (B2B)';
     if (statusEl) {
@@ -1141,9 +1141,9 @@ function updateTotal() {
   if (btnAmount) btnAmount.textContent = formattedTotal;
   
   if (btnText && currentStoreStatus === 'OPEN') {
-    if (PAGE === 'OFFICE' && currentB2bPayOption === 'INVOICE') {
+    if ((PAGE === 'CORPORATE' || PAGE === 'OFFICE') && currentB2bPayOption === 'INVOICE') {
       btnText.innerHTML = `📄 Request Corporate Invoice (<span id="btnAmount">${formattedTotal}</span>)`;
-    } else if (PAGE === 'OFFICE') {
+    } else if (PAGE === 'CORPORATE' || PAGE === 'OFFICE') {
       btnText.innerHTML = `💳 Pay & Confirm Office Batch (<span id="btnAmount">${formattedTotal}</span>)`;
     } else {
       btnText.innerHTML = `💳 Pay & Confirm Pre-Order (<span id="btnAmount">${formattedTotal}</span>)`;
@@ -1244,7 +1244,7 @@ function validateField(fieldId) {
     return setFieldState(el, errEl, val.length >= 2);
   } else if (fieldId === 'custCompany') {
     errEl = document.getElementById('errCompany');
-    return setFieldState(el, errEl, PAGE !== 'OFFICE' || val.length >= 2);
+    return setFieldState(el, errEl, (PAGE !== 'CORPORATE' && PAGE !== 'OFFICE') || val.length >= 2);
   } else if (fieldId === 'custAddress') {
     errEl = document.getElementById('errAddress');
     return setFieldState(el, errEl, val.length >= 5);
@@ -1328,7 +1328,7 @@ function handlePayClick() {
     return;
   }
   
-  if (PAGE === 'OFFICE' && currentB2bPayOption === 'INVOICE') {
+  if ((PAGE === 'CORPORATE' || PAGE === 'OFFICE') && currentB2bPayOption === 'INVOICE') {
     const invId = "INV-REQ-" + Math.floor(100000 + Math.random() * 900000);
     handleOrderSuccess(invId, 'Corporate Invoice Requested (Net Terms)');
     return;
@@ -1338,7 +1338,7 @@ function handlePayClick() {
   const name = (document.getElementById('custName')?.value || '').trim();
   const email = (document.getElementById('custEmail')?.value || '').trim();
   const phone = (document.getElementById('custPhone')?.value || '').trim();
-  const activePack = PAGE === 'OFFICE' ? selectedB2bPack : selectedB2cPack;
+  const activePack = (PAGE === 'CORPORATE' || PAGE === 'OFFICE') ? selectedB2bPack : selectedB2cPack;
   
   if (CONFIG.razorpayKeyId && !CONFIG.razorpayKeyId.includes("YOUR_RAZORPAY")) {
     const options = {
@@ -1346,7 +1346,7 @@ function handlePayClick() {
       amount: total * 100,
       currency: "INR",
       name: "The Apartment Brew Co.",
-      description: `${PAGE === 'OFFICE' ? 'Office Drop' : 'Pre-Order'}: ${activePack.name}`,
+      description: `${(PAGE === 'CORPORATE' || PAGE === 'OFFICE') ? 'Office Drop' : 'Pre-Order'}: ${activePack.name}`,
       prefill: { name: name, email: email, contact: phone },
       theme: { color: "#d4a373" },
       handler: function (response) { handleOrderSuccess(response.razorpay_payment_id, "Paid via Gateway"); }
@@ -1373,7 +1373,7 @@ async function handleOrderSuccess(paymentId, statusText) {
   const discount = appliedCoupon ? appliedCoupon.discount : 0;
   const couponCode = appliedCoupon ? appliedCoupon.code : 'NONE';
   const total = calculateTotal();
-  const isB2b = (PAGE === 'OFFICE');
+  const isB2b = (PAGE === 'CORPORATE' || PAGE === 'OFFICE');
   const activePack = isB2b ? selectedB2bPack : selectedB2cPack;
   const dropInstructions = document.getElementById('dropInstructions')?.value || 'Deliver directly to door / desk';
   
