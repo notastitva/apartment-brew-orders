@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+    <rect width="500" height="500" fill="none"/>
+    <circle cx="250" cy="250" r="230" fill="#FAF6EE" stroke="#181311" stroke-width="8"/>
+    <circle cx="250" cy="250" r="212" fill="none" stroke="#C4884D" stroke-width="3" stroke-dasharray="8,8"/>
+    <circle cx="250" cy="250" r="140" fill="none" stroke="#181311" stroke-width="4"/>
+    
+    <path d="M 192.5 327.5 L 307.5 327.5 L 307.5 227.5 L 250.0 152.5 L 192.5 227.5 Z" fill="none" stroke="#181311" stroke-width="4.0" stroke-linecap="round" stroke-linejoin="round"/>
+    <g transform="rotate(-3 250 277.5)">
+        <ellipse cx="250.0" cy="277.5" rx="23.0" ry="31.0" fill="none" stroke="#181311" stroke-width="3.8" stroke-linecap="round"/>
+        <path d="M 250.0 251.2 C 255.5 266.6, 244.5 293.0, 250.0 303.9" fill="none" stroke="#181311" stroke-width="3.6" stroke-linecap="round"/>
+    </g>
+    
+    <path id="topArc" d="M 75 250 A 175 175 0 0 1 425 250" fill="none"/>
+    <text font-family="'DejaVu Sans', sans-serif" font-size="19" font-weight="bold" fill="#181311" letter-spacing="3">
+        <textPath href="#topArc" startOffset="50%" text-anchor="middle">• THE APARTMENT BREW CO. •</textPath>
+    </text>
+    
+    <path id="botArc" d="M 425 250 A 175 175 0 0 1 75 250" fill="none"/>
+    <text font-family="'DejaVu Sans', sans-serif" font-size="16" font-weight="bold" fill="#9E472A" letter-spacing="3">
+        <textPath href="#botArc" startOffset="50%" text-anchor="middle">GURUGRAM • EST. 2026</textPath>
+    </text>
+</svg>
