@@ -110,7 +110,7 @@ The platform uses extensionless, clean URLs across all navigation links, action 
 | /corporate | corporate.html | Corporate Office Drops: Streamlined 3-step B2B checkout (1. Batch Tier & Splitter → 2\. Tech Park Window, GSTIN & Role → 3\. Razorpay or Net-7 Invoice) for 10–60+ bottles |
 | /flavor | flavor.html | **flavor matcher (Harvests & Sensory Menu)**: Micro-lot showcase with interactive 2-question quiz matcher, 5-axis Sensory Radar, and intensity gauges |
 | /guide | guide.html | Freshness Guide: Science of flash-chilling, temperature stability graph, and 48-hour cold storage/serving rituals |
-| /about | about.html | **Story so far (Craft & Philosophy)**: Hand-brewing philosophy, direct trade sourcing, and micro-roastery vs mass-retail comparative matrix |
+| /about | about.html | **Story so far (Craft & Philosophy)**: Hand-brewing journey, milestone statistics (2,480+ bottles brewed, 18+ single-estate harvests, 1,250+ brewing hours, 35+ events served), live drop batch capacity dashboard, and farm-direct supply chain. |
 | /events | events.html | **Event Runs Wizard**: Streamlined 3-step catering intake (1. Scope & Scale → 2\. Logistics & Contact → 3\. Review & Submit) for hackathons, townhalls, pop-up coffee bars, and team offsites with 24-hour custom proposal SLA |
 | /track | track.html | **Inquiry/Order tracking**: Real-time customer self-service status lookup with dynamic 4-stage visual timeline stepper |
 

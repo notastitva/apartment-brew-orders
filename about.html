@@ -70,64 +70,90 @@ We operate as an asset-light, pre-order only specialty coffee brewery based in G
         </p>
       </article>
   
-      <!-- COMPARATIVE GRAPH: MICRO-ROASTERY VS MASS RETAIL -->
+      <!-- BIG BOLD BREWING STATS SHOWCASE -->
       <section class="section-card" style="margin-top: 14px;">
         <div class="section-title">
-          <span>Micro-Batch vs Mass-Market</span>
-          <span class="section-subtitle">The Distinction</span>
+          <span>📊 Brewing Milestones So Far</span>
+          <span class="section-subtitle">By the Numbers</span>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
+          A glance at our handcrafted micro-batch brewing volume across Delhi NCR:
+        </p>
+        <div class="stats-showcase-grid">
+          <!-- Stat 1: Total Bottles Brewed -->
+          <div class="stat-showcase-card">
+            <div class="stat-icon-badge">📦</div>
+            <span class="stat-big-num grad-coral" id="statBottles">2,480+</span>
+            <div class="stat-card-title">Bottles Hand-Brewed</div>
+            <div class="stat-card-sub">Glass bottles extracted fresh &amp; flash-chilled to 4°C</div>
+          </div>
+          <!-- Stat 2: Different Coffees Brewed -->
+          <div class="stat-showcase-card">
+            <div class="stat-icon-badge">☕</div>
+            <span class="stat-big-num grad-gold" id="statCoffees">18+</span>
+            <div class="stat-card-title">Distinct Harvests</div>
+            <div class="stat-card-sub">Single-estate micro-lots sourced across the Western Ghats</div>
+          </div>
+          <!-- Stat 3: Hours Spent Brewing in the Apartment -->
+          <div class="stat-showcase-card">
+            <div class="stat-icon-badge">⏱️</div>
+            <span class="stat-big-num grad-amber" id="statHours">1,250+</span>
+            <div class="stat-card-title">Hours Hand-Brewing</div>
+            <div class="stat-card-sub">Poured manually in our Gurugram apartment kitchen</div>
+          </div>
+          <!-- Stat 4: Events Served -->
+          <div class="stat-showcase-card">
+            <div class="stat-icon-badge">🎉</div>
+            <span class="stat-big-num grad-teal" id="statEvents">35+</span>
+            <div class="stat-card-title">Events &amp; Team Runs</div>
+            <div class="stat-card-sub">Hackathons, startup offsites &amp; live specialty pop-up bars</div>
+          </div>
+        </div>
+      </section>
+      <!-- LIVE CAPACITY DASHBOARD (Personal + Corporate) -->
+      <section class="section-card" style="margin-top: 14px;">
+        <div class="section-title">
+          <span>⚡ Live Drop Batch Capacity</span>
+          <span class="section-subtitle">Real-Time Availability</span>
         </div>
         <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4;">
-          How our pre-order craft drop model fundamentally outperforms mass-market bottled coffee:
+          Because every single bottle is brewed by hand over ice, each weekly drop is capped to guarantee 48-hour peak flavor. Current capacity for upcoming drops:
         </p>
-        <div style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 14px;">
-          <!-- Metric 1: Aromatic Volatiles Retained -->
-          <div style="display: flex; flex-direction: column; gap: 5px;">
-            <div style="display: flex; justify-content: space-between; font-size: 0.76rem; font-weight: 600; color: var(--text);">
-              <span>Aromatic Volatiles &amp; Fruit Acids Retained</span>
-              <span style="color: var(--accent); font-weight: 800;">94% vs 32%</span>
+        <div class="capacity-dashboard-card">
+          <!-- Capacity Stream 1: Personal Weekend Drop -->
+          <div class="capacity-stream-box">
+            <div class="capacity-stream-header">
+              <span>☕ Personal Weekend Drop (Sat &amp; Sun)</span>
+              <span id="aboutB2cCapText" style="color: #e76f51; font-weight: 800; font-size: 0.72rem;">112 / 150 Bottles Available</span>
             </div>
-            <div style="height: 14px; background: #23201d; border-radius: 7px; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 0 2px;">
-              <div style="height: 5px; width: 94%; background: linear-gradient(90deg, #d4a373 0%, #faedcd 100%); border-radius: 3px; margin-bottom: 2px; box-shadow: 0 0 8px rgba(212, 163, 115, 0.4);"></div>
-              <div style="height: 5px; width: 32%; background: #55504a; border-radius: 3px;"></div>
+            <div style="height: 10px; background: #23201d; border-radius: 5px; overflow: hidden; position: relative;">
+              <div id="aboutB2cBar" style="height: 100%; width: 75%; background: linear-gradient(90deg, #e76f51 0%, #f4a261 100%); border-radius: 5px; box-shadow: 0 0 10px rgba(231, 111, 81, 0.4); transition: width 0.6s ease;"></div>
             </div>
-            <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text-muted);">
-              <span style="color: var(--accent);">■ Flash-Chilled (Hot Extract 94°C)</span>
-              <span>■ Cold Immersion / RTD Concentrate</span>
-            </div>
-          </div>
-          <!-- Metric 2: Freshness Window &amp; Shelf Latency -->
-          <div style="display: flex; flex-direction: column; gap: 5px;">
-            <div style="display: flex; justify-content: space-between; font-size: 0.76rem; font-weight: 600; color: var(--text);">
-              <span>Delivery Turnaround / Freshness Cycle</span>
-              <span style="color: var(--success-light); font-weight: 800;">48h Peak vs 45 Days</span>
-            </div>
-            <div style="height: 14px; background: #23201d; border-radius: 7px; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 0 2px;">
-              <div style="height: 5px; width: 96%; background: linear-gradient(90deg, #52b788 0%, #95d5b2 100%); border-radius: 3px; margin-bottom: 2px; box-shadow: 0 0 8px rgba(149, 213, 178, 0.4);"></div>
-              <div style="height: 5px; width: 20%; background: #e63946; border-radius: 3px;"></div>
-            </div>
-            <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text-muted);">
-              <span style="color: var(--success-light);">■ 0 Preservatives (Brewed Fresh Fri/Sat)</span>
-              <span style="color: var(--error-light);">■ Pasteurization &amp; Warehousing</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+              <span style="font-size: 0.65rem; color: var(--text-muted);">Cutoffs: Fri 10 PM (Sat) &bull; Sat 10 PM (Sun)</span>
+              <a href="/personal" class="btn btn-pay" style="padding: 6px 10px; font-size: 0.7rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                <span>Personal Order (1–6) &rarr;</span>
+              </a>
             </div>
           </div>
-          <!-- Metric 3: Single-Estate Purity -->
-          <div style="display: flex; flex-direction: column; gap: 5px;">
-            <div style="display: flex; justify-content: space-between; font-size: 0.76rem; font-weight: 600; color: var(--text);">
-              <span>Arabica Micro-Lot Traceability</span>
-              <span style="color: var(--info-blue); font-weight: 800;">100% Single-Estate vs 0% (Blend)</span>
+          <!-- Capacity Stream 2: Corporate Friday Drop -->
+          <div class="capacity-stream-box">
+            <div class="capacity-stream-header">
+              <span>🏢 Corporate Friday Drop (Tech Parks)</span>
+              <span id="aboutB2bCapText" style="color: #2a9d8f; font-weight: 800; font-size: 0.72rem;">140 / 200 Bottles Available</span>
             </div>
-            <div style="height: 14px; background: #23201d; border-radius: 7px; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 0 2px;">
-              <div style="height: 5px; width: 100%; background: linear-gradient(90deg, #90e0ef 0%, #48cae4 100%); border-radius: 3px; margin-bottom: 2px; box-shadow: 0 0 8px rgba(144, 224, 239, 0.4);"></div>
-              <div style="height: 5px; width: 25%; background: #55504a; border-radius: 3px;"></div>
+            <div style="height: 10px; background: #23201d; border-radius: 5px; overflow: hidden; position: relative;">
+              <div id="aboutB2bBar" style="height: 100%; width: 70%; background: linear-gradient(90deg, #2a9d8f 0%, #00b4d8 100%); border-radius: 5px; box-shadow: 0 0 10px rgba(42, 157, 143, 0.4); transition: width 0.6s ease;"></div>
             </div>
-            <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text-muted);">
-              <span style="color: var(--info-blue);">■ Award-Winning Farms (Ratnagiri, etc.)</span>
-              <span>■ Anonymous Commercial Robusta Blends</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+              <span style="font-size: 0.65rem; color: var(--text-muted);">Commercial Hubs &bull; Cutoff: Thu 6 PM</span>
+              <a href="/corporate" class="btn btn-secondary" style="padding: 6px 10px; font-size: 0.7rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                <span>Office Batch (10–60+) &rarr;</span>
+              </a>
             </div>
           </div>
         </div>
       </section>
-  
       <article class="section-card" style="margin-top: 14px;">
         <div class="section-title">
           <span>Manual Extraction &amp; Craft Philosophy</span>

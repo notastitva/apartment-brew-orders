@@ -869,6 +869,27 @@ function applyConfigToUI(data) {
   
   updateTotal();
   if (isCustomSplit) rebalanceSplitter();
+  // Update Live Capacity on about.html (Story So Far)
+  const aboutB2cCapText = document.getElementById("aboutB2cCapText");
+  const aboutB2cBar = document.getElementById("aboutB2cBar");
+  const aboutB2bCapText = document.getElementById("aboutB2bCapText");
+  const aboutB2bBar = document.getElementById("aboutB2bBar");
+
+  if (aboutB2cCapText && typeof data.b2cRemainingBottles === "number") {
+    const total = data.b2cBatchCapacity || 150;
+    const remaining = data.b2cRemainingBottles;
+    const pct = Math.max(5, Math.min(100, (remaining / total) * 100));
+    aboutB2cCapText.textContent = `${remaining} / ${total} Bottles Available`;
+    if (aboutB2cBar) aboutB2cBar.style.width = `${pct}%`;
+  }
+
+  if (aboutB2bCapText && typeof data.b2bRemainingBottles === "number") {
+    const total = data.b2bBatchCapacity || 200;
+    const remaining = data.b2bRemainingBottles;
+    const pct = Math.max(5, Math.min(100, (remaining / total) * 100));
+    aboutB2bCapText.textContent = `${remaining} / ${total} Bottles Available`;
+    if (aboutB2bBar) aboutB2bBar.style.width = `${pct}%`;
+  }
 }
 
 function fetchLiveConfig() {
@@ -2280,6 +2301,9 @@ document.addEventListener('DOMContentLoaded', () => {
     renderLots(availableLots);
     fetchLiveConfig();
     updateQuizRecommendation();
+  } else if (PAGE === "ABOUT") {
+    fetchLiveConfig();
+    setInterval(fetchLiveConfig, 30000);
   } else if (PAGE === 'TRACK') {
     goToInqStep(1);
     const urlParams = new URLSearchParams(window.location.search);

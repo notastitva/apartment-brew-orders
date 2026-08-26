@@ -2975,3 +2975,122 @@ input:focus, select:focus, textarea:focus {
 .pairing-list-item strong {
   color: var(--text);
 }
+
+/* ==================================================================== */
+/* STORY SO FAR — BIG BOLD STATS & LIVE CAPACITY SHOWCASE */
+/* ==================================================================== */
+
+.stats-showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+@media (max-width: 420px) {
+  .stats-showcase-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat-showcase-card {
+  background: var(--card-inner);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.stat-showcase-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+
+.stat-icon-badge {
+  font-size: 1.3rem;
+  margin-bottom: 2px;
+}
+
+.stat-big-num {
+  font-size: 1.9rem;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  display: block;
+}
+
+.grad-coral {
+  background: linear-gradient(135deg, #e76f51 0%, #f4a261 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 10px rgba(231, 111, 81, 0.35));
+}
+
+.grad-gold {
+  background: linear-gradient(135deg, #d4a373 0%, #faedcd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 10px rgba(212, 163, 115, 0.35));
+}
+
+.grad-amber {
+  background: linear-gradient(135deg, #ffb703 0%, #fb8500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 10px rgba(255, 183, 3, 0.35));
+}
+
+.grad-teal {
+  background: linear-gradient(135deg, #2a9d8f 0%, #00b4d8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 10px rgba(42, 157, 143, 0.35));
+}
+
+.stat-card-title {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-top: 2px;
+}
+
+.stat-card-sub {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.capacity-dashboard-card {
+  background: var(--card-inner);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.capacity-stream-box {
+  background: #191715;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.capacity-stream-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
