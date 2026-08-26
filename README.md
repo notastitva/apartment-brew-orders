@@ -3,16 +3,16 @@
 ### **Micro-Batch Flash-Chilled Specialty Coffee • Gurugram & Delhi NCR**
 
 ```
-  ┌──────────────────────────────────────────────────────────────────────────────────┐
-  │  ⚡ Asset-Light Craft Brewery  │  ❄️ 94°C → 4°C Flash-Chilled  │  🌿 0 Preservatives  │
-  │  📦 Standard 200ml Glass       │  💳 Razorpay Gateway + Net-7  │  📊 Google Sheets CMS │
-  └──────────────────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│  ⚡ Asset-Light Craft Brewery  │  ❄️ 94°C → 4°C Flash-Chilled  │  🌿 0 Preservatives  │
+│  📦 Standard 200ml Glass       │  💳 Razorpay Gateway + Net-7  │  📊 Google Sheets CMS │
+└──────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 A lightweight, serverless e-commerce and order intake platform built for scheduled micro-batch craft coffee drops, headless Google Sheets CMS synchronization, Razorpay payment processing, real-time self-service order tracking, and automated transactional customer communications. All coffee across retail, corporate, and catering tiers is standardized into premium 200ml glass bottles.  
 ---
 
-## **📑 Table of Contents**
+### **📑 Table of Contents**
 
 1. [1\. Craft Philosophy & Operations](#1-craft-philosophy--operations)  
 2. [2\. Platform Architecture & Data Flow](#2-platform-architecture--data-flow)  
@@ -29,40 +29,42 @@ A lightweight, serverless e-commerce and order intake platform built for schedul
 
 ---
 
-## **1\. Craft Philosophy & Operations**
+### **1\. Craft Philosophy & Operations**
 
-### **1.1 The Micro-Batch Manifesto**
+#### **1.1 The Micro-Batch Manifesto**
 
 * Hot Extraction & Rapid Thermal Shock: Coffee is hand-extracted hot at 92–94°C to dissolve delicate volatile floral aromatics, organic fruit acids, and natural sucrose, then instantly flash-chilled over ice directly to 4°C. This locks in complex aroma compounds before oxidation occurs.  
 * 100% Preservative-Free: Zero artificial stabilizers, chemical additives, or high-heat industrial pasteurization.  
 * 48-Hour Peak Flavor Window: Formulated strictly for peak enjoyment within 48 hours of brewing when kept refrigerated (≤4°C).  
 * Artisanal Micro-Lot Nuances: Handcrafted separately to order in small batches to celebrate the natural nuances of specialty Indian terroir.
 
-### **1.2 Dual Delivery Model & Scheduled Cutoffs**
+#### **1.2 Dual Delivery Model & Scheduled Cutoffs**
+
+### 
 
 ```
-┌────────────────────────────────────────────────────────────────────────────────────┐
-│                              WEEKLY BREW DROP CYCLES                               │
-├────────────────────────┬─────────────────────────┬─────────────────────────────────┤
-│ Fulfillment Stream     │ Delivery Windows        │ Order Cutoff Timing             │
-├────────────────────────┼─────────────────────────┼─────────────────────────────────┤
-│ 🏢 Friday Office Drops │ Friday (9:30–11:30 AM / │ Thursday at 6:00 PM             │
-│    (Corporate B2B)     │         2:00–4:00 PM)   │ (Strict roster finalization)    │
-├────────────────────────┼─────────────────────────┼─────────────────────────────────┤
-│ ☕ Saturday Drop       │ Saturday Morning        │ Friday at 10:00 PM              │
-│    (Personal B2C)      │ (8:00 AM – 11:00 AM)    │ (Night batch brew & chill)      │
-├────────────────────────┼─────────────────────────┼─────────────────────────────────┤
-│ ☕ Sunday Drop         │ Sunday Morning          │ Saturday at 10:00 PM            │
-│    (Personal B2C)      │ (8:00 AM – 11:00 AM)    │ (Night batch brew & chill)      │
-├────────────────────────┼─────────────────────────┼─────────────────────────────────┤
-│ 🎉 Event Catering      │ Scheduled Custom Target │ On-Demand (24-Hour SLA)         │
-│    (Townhalls/Offsites)│ Dates across NCR        │                                 │
-└────────────────────────┴─────────────────────────┴─────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                                WEEKLY BREW DROP CYCLES                                 │
+├────────────────────────┬─────────────────────────────┬─────────────────────────────────┤
+│ Fulfillment Stream     │ Delivery Windows            │ Order Cutoff Timing             │
+├────────────────────────┼─────────────────────────────┼─────────────────────────────────┤
+│ 🏢 Friday Office Drops │ Friday (9:30–11:30 AM /     │ Thursday at 6:00 PM             │
+│    (Corporate B2B)     │         2:00–4:00 PM)       │ (Strict roster finalization)    │
+├────────────────────────┼─────────────────────────────┼─────────────────────────────────┤
+│ ☕ Saturday Drop       │ Saturday Morning            │ Friday at 10:00 PM              │
+│    (Personal B2C)      │ (8:00 AM – 11:00 AM)        │ (Night batch brew & chill)      │
+├────────────────────────┼─────────────────────────────┼─────────────────────────────────┤
+│ ☕ Sunday Drop         │ Sunday Morning              │ Saturday at 10:00 PM            │
+│    (Personal B2C)      │ (8:00 AM – 11:00 AM)        │ (Night batch brew & chill)      │
+├────────────────────────┼─────────────────────────────┼─────────────────────────────────┤
+│ 🎉 Event Catering      │ Scheduled Custom Target     │ On-Demand (24-Hour SLA)         │
+│    (Townhalls/Offsite) │ Dates across Delhi NCR      │                                 │
+└────────────────────────┴─────────────────────────────┴─────────────────────────────────┘
 ```
 
 ---
 
-## **2\. Platform Architecture & Data Flow**
+### **2\. Platform Architecture & Data Flow**
 
 ```
 ┌───────────────────────────────────────────────────────────────────────────────────────┐
@@ -98,27 +100,48 @@ A lightweight, serverless e-commerce and order intake platform built for schedul
 
 ---
 
-## 3\. Portal Directory & Clean-URL Routing
+### **3\. Portal Directory & Clean-URL Routing**
 
 The platform uses extensionless, clean URLs across all navigation links, action buttons, and internal scripts:
 
-| Clean Route | Source Document | Primary Purpose & Functional Scope |
-| :---- | :---- | :---- |
-| / | index.html | **Home & Craft Manifesto**: Origin story, 4 craft pillars, flash-chilling thermodynamic comparison, 48-hour flavor curve, and community reviews |
-| /orders | orders.html | **Order Now (Harvests & Order Gateway)**: Discovery portal to compare flavor swatches, roast meters, and body gauges before configuring personal or corporate fulfillment |
-| /personal | personal.html | Personal Pre-Order Wizard: Streamlined 3-step checkout (1. Batch Size & Splitter → 2\. Delivery & PIN Validation → 3\. Review & Payment) for 1–6 bottles |
-| /corporate | corporate.html | Corporate Office Drops: Streamlined 3-step B2B checkout (1. Batch Tier & Splitter → 2\. Tech Park Window, GSTIN & Role → 3\. Razorpay or Net-7 Invoice) for 10–60+ bottles |
-| /flavor | flavor.html | **flavor matcher (Harvests & Sensory Menu)**: Micro-lot showcase with interactive 2-question quiz matcher, 5-axis Sensory Radar, and intensity gauges |
-| /guide | guide.html | Freshness Guide: Science of flash-chilling, temperature stability graph, and 48-hour cold storage/serving rituals |
-| /about | about.html | **Story so far (Craft & Philosophy)**: Hand-brewing journey, milestone statistics (2,480+ bottles brewed, 18+ single-estate harvests, 1,250+ brewing hours, 35+ events served), live drop batch capacity dashboard, and farm-direct supply chain. |
-| /events | events.html | **Event Runs Wizard**: Streamlined 3-step catering intake (1. Scope & Scale → 2\. Logistics & Contact → 3\. Review & Submit) for hackathons, townhalls, pop-up coffee bars, and team offsites with 24-hour custom proposal SLA |
-| /track | track.html | **Inquiry/Order tracking**: Real-time customer self-service status lookup with dynamic 4-stage visual timeline stepper |
+```
+┌───────────────┬──────────────────┬─────────────────────────────────────────────────────────┐
+│ Clean Route   │ Source Document  │ Primary Purpose & Functional Scope                      │
+├───────────────┼──────────────────┼─────────────────────────────────────────────────────────┤
+│ /             │ index.html       │ Home & Craft Manifesto: Origin story, 4 pillars,        │
+│               │                  │ thermodynamic extraction science, flavor curve, FAQs    │
+├───────────────┼──────────────────┼─────────────────────────────────────────────────────────┤
+│ /orders       │ orders.html      │ Order Now Gateway: Side-by-side estate cards to compare │
+│               │                  │ tasting notes, roast meters, and body gauges            │
+├───────────────┼──────────────────┼─────────────────────────────────────────────────────────┤
+│ /personal     │ personal.html    │ Personal Pre-Order Wizard: 3-step checkout for 1–6      │
+│               │                  │ bottles with custom mix & match splitters               │
+├───────────────┼──────────────────┼─────────────────────────────────────────────────────────┤
+│ /corporate    │ corporate.html   │ Corporate Office Drops: 3-step B2B checkout for 10–60+  │
+│               │                  │ bottles with Tech Park delivery windows and Net-7       │
+├───────────────┼──────────────────┼─────────────────────────────────────────────────────────┤
+│ /flavor       │ flavor.html      │ flavor matcher: Interactive 2-question quiz matcher,    │
+│               │                  │ 5-axis Sensory Radar, and side-by-side spectrum gauges  │
+├───────────────┼──────────────────┼─────────────────────────────────────────────────────────┤
+│ /guide        │ guide.html       │ Freshness Guide: Science of flash-chilling, temperature │
+│               │                  │ stability graphs, and 48-hour storage rituals           │
+├───────────────┼──────────────────┼─────────────────────────────────────────────────────────┤
+│ /about        │ about.html       │ Story so far: Hand-brewing journey, milestone stats     │
+│               │                  │ (2,480+ bottles), and live batch capacity dashboard     │
+├───────────────┼──────────────────┼─────────────────────────────────────────────────────────┤
+│ /events       │ events.html      │ Event Runs Wizard: 3-step catering intake for startup   │
+│               │                  │ hackathons, townhalls, pop-up bars (24-Hour SLA)        │
+├───────────────┼──────────────────┼─────────────────────────────────────────────────────────┤
+│ /track        │ track.html       │ Inquiry/Order tracking: Real-time self-service lookup   │
+│               │                  │ with 4-stage visual timeline stepper and FAQ accordion  │
+└───────────────┴──────────────────┴─────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## 4\. User Journey & Ordering Engine
+### **4\. User Journey & Ordering Engine**
 
-*
+* 
 
 ```
                              [ 🌐 /orders Gateway ]
@@ -143,12 +166,12 @@ The platform uses extensionless, clean URLs across all navigation links, action 
                            • Real-Time Tracker Link
 ```
 
-### 4.1 Discovery Gateway (/orders)
+#### **4.1 Discovery Gateway (/orders)**
 
 * Interactive harvest selector cards highlight estate details (LOT-01, LOT-02, or MIX) and pass the selection via URL query parameters (/personal?bean=LOT-01 or /corporate?bean=LOT-02).  
 * Interactive sensory palettes display color-coded flavor swatches, roast degrees, and anaerobic fermentation meters.
 
-### **4.2 3-Step Checkout Wizards (/personal & /corporate)**
+#### **4.2 3-Step Checkout Wizards (/personal & /corporate)**
 
 1. Step 1: Batch Size & Fine-Tune Split:  
    1. Select bottle pack tiers, adjust quantity, and use the custom stepper controls to fine-tune Mix & Match bottle distributions (e.g. 3x Ratnagiri \+ 3x Banana Banger).  
@@ -162,7 +185,7 @@ The platform uses extensionless, clean URLs across all navigation links, action 
    1. Comprehensive breakdown of coffee selections, batch sizes, promo discounts, delivery schedules, and tax credits.  
    2. Personal orders check out via Razorpay (UPI, Credit/Debit Cards, NetBanking); Corporate orders can select Razorpay or Net-7 Invoice.
 
-### **4.3 3-Step Event Runs Wizard (/events)**
+#### **4.3 3-Step Event Runs Wizard (/events)**
 
 1. Step 1: Event Scope & Scale: Organization name, requirement type, bottle volume / headcount, and preferred single-estate coffee selection.  
 2. Step 2: Logistics & Contact Details: Target delivery date, event venue, contact person name, corporate work email, WhatsApp number, and setup preferences.  
@@ -170,30 +193,34 @@ The platform uses extensionless, clean URLs across all navigation links, action 
 
 ---
 
-## **5\. Headless CMS Schema ("flavor matcher")**
+### **5\. Headless CMS Schema ("Menu & Config")**
 
 The frontend dynamically hydrates and updates from the Menu & Config tab in Google Sheets via doGet:
 
 ### 5.1 General Store Settings & Batch Capacities
 
 * Store Status: OPEN (active ordering), PAUSED (maintenance/prep), or SOLD\_OUT (capacity reached).  
-* Batch Limits:  
+* **Batch Limits**:  
   * B2C Batch Capacity: 150 bottles (200ml) per weekend drop.  
   * B2B Batch Capacity: 200 bottles (200ml) per Friday office drop.  
 * Banner Text: Real-time announcement bar rendered across all headers.
 
 ### 5.2 Single-Estate Harvest Lots
 
-| Field | Type | Description / Example |
-| :---- | :---- | :---- |
-| Lot ID | String | LOT-01, LOT-02, MIX |
-| Estate Name | String | Ratnagiri Estate, Banana Banger |
-| Process Method | String | Anaerobic Naturals, Special Yeast Fermentation |
-| Tasting Notes | String | Wild Raspberry, Ripe Stone Fruit & Dark Cacao Finish |
-| Flavor Pills | JSON / Array | \["Fruity", "High Acidity", "Medium Roast"\] |
-| Acidity % | Integer | 85 (Drives SVG progress bars) |
-| Body % | Integer | 70 (Drives viscosity gauge) |
-| Active | Boolean | TRUE / FALSE |
+```
+┌──────────────┬──────────────┬──────────────────────────────────────────────────────────┐
+│ Field Name   │ Data Type    │ Description & Live Example                               │
+├──────────────┼──────────────┼──────────────────────────────────────────────────────────┤
+│ Lot ID       │ String       │ LOT-01, LOT-02, MIX                                      │
+│ Estate Name  │ String       │ Ratnagiri Estate, Banana Banger                          │
+│ Process      │ String       │ Anaerobic Naturals, Special Yeast Fermentation           │
+│ Notes        │ String       │ Wild Raspberry, Ripe Stone Fruit & Dark Cacao Finish     │
+│ Flavor Pills │ JSON Array   │ ["Fruity", "High Acidity", "Medium Roast"]               │
+│ Acidity %    │ Integer      │ 85 (Drives SVG progress bars)                            │
+│ Body %       │ Integer      │ 70 (Drives viscosity gauge)                              │
+│ Active       │ Boolean      │ TRUE / FALSE                                             │
+└──────────────┴──────────────┴──────────────────────────────────────────────────────────┘
+```
 
 ### 5.3 Package Tiers (Standardized 200ml Glass Bottles)
 
@@ -255,7 +282,25 @@ Protects Friday delivery routes by capping orders per tech park and window (e.g.
 
 The self-service lookup engine on /track queries the active Google Sheets database via ?action=track\&orderId=... and updates a 4-stage visual timeline stepper:
 
-*
+* 
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                           ORDER FULFILLMENT STATE MACHINE                              │
+├─────────┬────────────────────────────┬─────────────────────────────────────────────────┤
+│ Stage   │ Stepper Label & Badge      │ Matching Trigger Keywords in Database           │
+├─────────┼────────────────────────────┼─────────────────────────────────────────────────┤
+│ Step 1  │ 📦 PRE-ORDERED             │ Pre-Ordered, Pending, Received, New, Confirmed  │
+├─────────┼────────────────────────────┼─────────────────────────────────────────────────┤
+│ Step 2  │ ☕ BREWING & CHILLING       │ Brewing, Extracting, Chilling, Prep, Roasted    │
+├─────────┼────────────────────────────┼─────────────────────────────────────────────────┤
+│ Step 3  │ 🚚 OUT FOR DELIVERY        │ Dispatched, Out for Delivery, Transit, En Route │
+├─────────┼────────────────────────────┼─────────────────────────────────────────────────┤
+│ Step 4  │ ✅ DELIVERED               │ Delivered, Completed, Fulfilled                 │
+└─────────┴────────────────────────────┴─────────────────────────────────────────────────┘
+```
+
+* 
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────┐
@@ -273,7 +318,25 @@ The self-service lookup engine on /track queries the active Google Sheets databa
 └─────────┴────────────────────────────┴─────────────────────────────────────────────┘
 ```
 
-*
+* 
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                        EVENT INQUIRY STATUS STATE MACHINE                              │
+├─────────┬────────────────────────────┬─────────────────────────────────────────────────┤
+│ Stage   │ Stepper Label & Badge      │ Matching Trigger Keywords in Database           │
+├─────────┼────────────────────────────┼─────────────────────────────────────────────────┤
+│ Step 1  │ 📨 INQUIRY RECEIVED        │ New Lead, Received, Logged, In Review           │
+├─────────┼────────────────────────────┼─────────────────────────────────────────────────┤
+│ Step 2  │ 📋 PROPOSAL PREPARED       │ Proposal Sent, Quoted, Custom Batch Evaluated   │
+├─────────┼────────────────────────────┼─────────────────────────────────────────────────┤
+│ Step 3  │ ☕ SETUP & BREW STAGING    │ Confirmed, Barista Assigned, Pre-Brew Staging   │
+├─────────┼────────────────────────────┼─────────────────────────────────────────────────┤
+│ Step 4  │ 🎉 EVENT SERVED            │ Event Completed, Served, Closed                 │
+└─────────┴────────────────────────────┴─────────────────────────────────────────────────┘
+```
+
+* 
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────┐
@@ -293,58 +356,66 @@ The self-service lookup engine on /track queries the active Google Sheets databa
 
 ---
 
-## 8\. Brewery Operational SOP & Drop Cycles
+### **8\. Brewery Operational SOP & Drop Cycles**
 
-*
+*   
+1. 
 
 ```
-   THURSDAY              FRIDAY                  SATURDAY                SUNDAY
- ┌──────────┐      ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
- │ 06:00 PM │ ───► │ Morning/Afternoon│───► │ Morning         │───► │ Morning         │
- │ B2B Cutoff│     │ Corporate Drops │     │ Residential Drop│     │ Residential Drop│
- └──────────┘      │ 10:00 PM B2C Cut│     │ 10:00 PM B2C Cut│     │ Enjoy within 48h│
-                   └─────────────────┘     └─────────────────┘     └─────────────────┘
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                              WEEKLY BREWING CADENCE (SOP)                              │
+├───────────┬──────────────┬─────────────────────────────────────────────────────────────┤
+│ Day       │ Time (IST)   │ Operational Focus & Task Checklist                          │
+├───────────┼──────────────┼─────────────────────────────────────────────────────────────┤
+│ Wednesday │ 10:00 AM     │ Inventory Check: Verify bean stock and 200ml glass bottles  │
+├───────────┼──────────────┼─────────────────────────────────────────────────────────────┤
+│ Thursday  │ 6:00 PM      │ B2B Cutoff: Finalize corporate delivery roster & print logs │
+├───────────┼──────────────┼─────────────────────────────────────────────────────────────┤
+│ Thursday  │ Night        │ B2B Extraction: 94°C hot pour-overs & 4°C flash-chilling    │
+├───────────┼──────────────┼─────────────────────────────────────────────────────────────┤
+│ Friday    │ 8:30 AM      │ B2B Dispatch: Morning Kickoff & Afternoon Recharge drops    │
+├───────────┼──────────────┼─────────────────────────────────────────────────────────────┤
+│ Friday    │ 10:00 PM     │ Saturday B2C Cutoff: Lock roster, brew & chill night batch  │
+├───────────┼──────────────┼─────────────────────────────────────────────────────────────┤
+│ Saturday  │ 8:00 AM      │ Saturday Morning Drop: 8:00 AM – 11:00 AM cold-chain drops  │
+├───────────┼──────────────┼─────────────────────────────────────────────────────────────┤
+│ Saturday  │ 10:00 PM     │ Sunday B2C Cutoff: Lock roster, brew & chill night batch    │
+├───────────┼──────────────┼─────────────────────────────────────────────────────────────┤
+│ Sunday    │ 8:00 AM      │ Sunday Morning Drop: 8:00 AM – 11:00 AM cold-chain drops    │
+└───────────┴──────────────┴─────────────────────────────────────────────────────────────┘
 ```
 
-1. 1\. Daily Fulfillment Cadence:  
+2. 1\. Daily Fulfillment Cadence:  
    * Thursday 6:00 PM: Corporate cutoff. Lock Friday rosters and calculate batch volumes.  
    * Friday 8:00 AM – 4:00 PM: Brew, flash-chill, and dispatch Friday office batches.  
    * Friday 10:00 PM: Saturday residential cutoff. Hand-brew and bottle Saturday drops.  
    * Saturday 8:00 AM – 11:00 AM: Cold-chain delivery to residential societies.  
    * Saturday 10:00 PM: Sunday residential cutoff. Hand-brew and bottle Sunday drops.  
    * Sunday 8:00 AM – 11:00 AM: Cold-chain delivery to residential societies.  
-2. 2\. Order Lifecycle Status Updates:  
+3. 2\. Order Lifecycle Status Updates:  
    * Operators update Column P in Sheet1, Column U in B2B Orders, or Column L in Custom & Event Inquiries.  
    * Marking an order as Delivered or Cancelled automatically resets batch reservations for upcoming cycles while retaining financial and tracking records.
 
 ---
 
-## 9\. Deployment & Environment Configuration
+### **9\. Deployment & Environment Configuration**
 
-### 9.1 Google Apps Script (Code.gs)
+#### **9.1 Google Apps Script Deployment (Code.gs)**
 
 1. Open Google Sheets \> Extensions \> Apps Script.  
 2. Paste the latest Code.gs script.  
 3. Click Deploy \> New Deployment (Type: Web App, Execute as: Me, Access: Anyone).  
-4. Save the generated Web App URL (<https://script.google.com/macros/s/.../exec>).  
+4. Save the generated Web App URL (https://script.google.com/macros/s/.../exec).  
 5. Note: When updating Code.gs, always deploy as a New Version via Manage Deployments.
 
-### 9.2 Frontend Configuration (app.js)
-
-Update the CONFIG object in app.js:
-
-```javascript
-const CONFIG = {
-  razorpayKeyId: "rzp_live_xxxxxxxxxxxxxx",  // Replace with live Key ID
-  googleSheetEndpoint: "https://script.google.com/macros/s/.../exec", // Apps Script Web App URL
-  authToken: "TABC_SECURE_TOKEN_2026"        // Shared secret token matching Code.gs
-};
-```
+#### **9.2 Frontend Client Hosting**
 
 ---
 
-## 10\. Performance, Security & Resilience Guardrails
+### **10\. Performance, Security & Resilience Guardrails**
 
-* Responsive Container Constraints: All pages, forms, and confirmation cards (\#confirmationView) are bounded within a centered 540px container (max-width: 540px; margin: 0 auto;), guaranteeing optimal proportions on mobile devices, tablets, and widescreen laptops.  
-* Offline Resilience: PWA Service Worker (sw.js) caches static assets, while an automated localStorage queue preserves orders if network connectivity drops momentarily during checkout.  
-* Security & Concurrency: Apps Script endpoints utilize LockService.getScriptLock() with a 30-second timeout to prevent race conditions during high-volume batch drops, paired with secret auth tokens and honeypot validation to reject bot traffic.
+* Zero Build Overhead: Vanilla HTML5, modern CSS variables, and ES6 JavaScript with zero external frameworks or node dependencies.  
+* Concurrency Locking: Google Apps Script LockService.getScriptLock() prevents race conditions during high-volume drop cutoffs.  
+* Honeypot Bot Trap: Hidden input field (botTrap) silently drops automated spam submissions.  
+* Resilient Offline Cache: Progressive Web App service worker (sw.js) caches static assets for lightning-fast loads.  
+* Secure Token Authentication: All mutating POST calls are signed with CONFIG.authToken matching Code.gs.
