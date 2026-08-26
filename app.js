@@ -1517,13 +1517,13 @@ function validateInqEmail() {
   const errEl = document.getElementById('errInqEmail');
   if (!el) return true;
   const val = el.value.trim();
-  const emailRegex = /^[a-zA-Z0-9._%+-\\\]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return setFieldState(el, errEl, emailRegex.test(val));
 }
 
-function validatePhoneField() {
-  const el = document.getElementById('custPhone');
-  const errEl = document.getElementById('errPhone');
+function validateInqPhone() {
+  const el = document.getElementById('inqPhone');
+  const errEl = document.getElementById('errInqPhone');
   if (!el) return true;
   let val = el.value.replace(/[^0-9]/g, '');
   el.value = val;
