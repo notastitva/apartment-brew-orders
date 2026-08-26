@@ -1512,23 +1512,16 @@ function validateInqField(fieldId) {
   return setFieldState(el, errEl, val.length >= 2);
 }
 
-function validateInqEmail() {
-  const el = document.getElementById('inqEmail');
-  const errEl = document.getElementById('errInqEmail');
-  if (!el) return true;
-  const val = el.value.trim();
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return setFieldState(el, errEl, emailRegex.test(val));
-}
-
 function validateInqPhone() {
   const el = document.getElementById('inqPhone');
   const errEl = document.getElementById('errInqPhone');
   if (!el) return true;
-  let val = el.value.replace(/[^0-9]/g, '');
-  el.value = val;
+  let raw = el.value.replace(/[^0-9]/g, '');
+  if (raw.length > 10 && (raw.startsWith('91') || raw.startsWith('0'))) {
+    raw = raw.slice(-10);
+  }
   const phoneRegex = /^[6-9]\d{9}$/;
-  return setFieldState(el, errEl, phoneRegex.test(val));
+  return setFieldState(el, errEl, phoneRegex.test(raw));
 }
 
 // --------------------------------------------------------------------
@@ -1554,7 +1547,7 @@ function nextInqStep(targetStep) {
   if (targetStep > currentInqStep) {
     for (let s = currentInqStep; s < targetStep; s++) {
       if (!validateInqStep(s)) {
-        alert('Please fill in the required fields before continuing.');
+        alert('Please complete all required fields (* marked) before continuing.');
         return;
       }
     }
@@ -1564,8 +1557,12 @@ function nextInqStep(targetStep) {
 
 function goToInqStep(stepNum) {
   if (stepNum < 1 || stepNum > 3) return;
-  if (stepNum > currentInqStep && !validateInqStep(currentInqStep)) {
-    return;
+  if (stepNum > currentInqStep) {
+    for (let s = currentInqStep; s < stepNum; s++) {
+      if (!validateInqStep(s)) {
+        return;
+      }
+    }
   }
 
   currentInqStep = stepNum;
@@ -1599,7 +1596,6 @@ function goToInqStep(stepNum) {
 
   window.scrollTo({ top: 120, behavior: 'smooth' });
 }
-
 function populateInqReview() {
   const comp = (document.getElementById('inqCompany')?.value || '').trim();
   const reqType = document.getElementById('inqType')?.value || 'Event Catering';
@@ -2265,6 +2261,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchLiveConfig();
     updateQuizRecommendation();
   } else if (PAGE === 'TRACK') {
+    goToInqStep(1);
     const urlParams = new URLSearchParams(window.location.search);
     const qId = urlParams.get('orderId') || urlParams.get('id');
     if (qId) {
