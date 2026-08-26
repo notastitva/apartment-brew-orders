@@ -2973,7 +2973,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .pairing-list-item strong {
-  color: var(--text);
+   color: var(--text);
 }
 
 /* ==================================================================== */
@@ -3027,6 +3027,7 @@ input:focus, select:focus, textarea:focus {
 .grad-coral {
   background: linear-gradient(135deg, #e76f51 0%, #f4a261 100%);
   -webkit-background-clip: text;
+  background-clip:text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 10px rgba(231, 111, 81, 0.35));
 }
@@ -3034,6 +3035,7 @@ input:focus, select:focus, textarea:focus {
 .grad-gold {
   background: linear-gradient(135deg, #d4a373 0%, #faedcd 100%);
   -webkit-background-clip: text;
+  background-clip:text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 10px rgba(212, 163, 115, 0.35));
 }
@@ -3041,6 +3043,7 @@ input:focus, select:focus, textarea:focus {
 .grad-amber {
   background: linear-gradient(135deg, #ffb703 0%, #fb8500 100%);
   -webkit-background-clip: text;
+  background-clip:text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 10px rgba(255, 183, 3, 0.35));
 }
@@ -3048,6 +3051,7 @@ input:focus, select:focus, textarea:focus {
 .grad-teal {
   background: linear-gradient(135deg, #2a9d8f 0%, #00b4d8 100%);
   -webkit-background-clip: text;
+  background-clip:text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 10px rgba(42, 157, 143, 0.35));
 }
@@ -3094,3 +3098,65 @@ input:focus, select:focus, textarea:focus {
   color: var(--text);
 }
 
+
+/* ==================================================================== */
+/* FAQ ACCORDION & HELP SYSTEM (track.html) */
+/* ==================================================================== */
+
+.faq-accordion-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.faq-item {
+  background: var(--card-inner);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.faq-item[open] {
+  border-color: var(--accent);
+  background: rgba(212, 163, 115, 0.04);
+}
+
+.faq-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 13px 14px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+
+.faq-summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-summary::after {
+  content: '▾';
+  font-size: 0.85rem;
+  color: var(--accent);
+  transition: transform 0.25s ease;
+}
+
+.faq-item[open] .faq-summary::after {
+  transform: rotate(-180deg);
+}
+
+.faq-content {
+  padding: 0 14px 14px 14px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  margin-top: 2px;
+  padding-top: 10px;
+}

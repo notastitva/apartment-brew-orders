@@ -31,13 +31,13 @@
       <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&times;</button>
     </div>
     <nav class="drawer-nav">
-      <a href="/" class="drawer-link" data-page-link="INDEX">Home</a>
-      <a href="/orders" class="drawer-link" data-page-link="ORDERS">Order Now</a>
-      <a href="/flavor" class="drawer-link" data-page-link="FLAVOR">flavor matcher</a>
-      <a href="/guide" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
-      <a href="/about" class="drawer-link" data-page-link="ABOUT">Story so far</a>
-      <a href="/events" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
-      <a href="/track" class="drawer-link active" data-page-link="TRACK">Inquiry/Order tracking</a>
+<a href="/" class="drawer-link" data-page-link="INDEX">Home</a>
+<a href="/orders" class="drawer-link" data-page-link="ORDERS">Order Now</a>
+<a href="/flavor" class="drawer-link" data-page-link="FLAVOR">flavor matcher</a>
+<a href="/guide" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
+<a href="/about" class="drawer-link" data-page-link="ABOUT">Story so far</a>
+<a href="/events" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
+<a href="/track" class="drawer-link active" data-page-link="TRACK">Inquiry/Order tracking</a>
     </nav>
     <div class="drawer-footer">
       <div class="drawer-footer-text">☕ Hand-Brewed Fresh to Order in Gurugram</div>
@@ -169,88 +169,105 @@
         </div>
       </section>
       
-      <!-- SECTION 2: ID FORMAT GUIDE & WHERE TO FIND IT -->
+      <!-- FREQUENTLY ASKED QUESTIONS & HELPFUL GUIDES -->
       <section class="section-card" style="margin-top: 14px;">
         <div class="section-title">
-          <span>Tracking ID Reference</span>
-          <span class="section-subtitle">ID Guide</span>
+          <span>Frequently Asked Questions</span>
+          <span class="section-subtitle">Help &amp; Reference</span>
         </div>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
-          Your unique Tracking ID was generated upon order submission and sent via WhatsApp / Email:
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.4;">
+          Quick answers regarding tracking formats, delivery schedules, and direct concierge assistance:
         </p>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <div style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 8px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <div style="font-size: 0.78rem; font-weight: 700; color: var(--text);">Weekend Pre-Orders</div>
-              <div style="font-size: 0.68rem; color: var(--text-muted);">Saturday &amp; Sunday morning deliveries</div>
+        <div class="faq-accordion-group">
+          <!-- FAQ 1: Tracking ID Reference -->
+          <details class="faq-item" open>
+            <summary class="faq-summary">
+              <span>🔍 Tracking ID Reference</span>
+            </summary>
+            <div class="faq-content">
+              <p style="margin-bottom: 8px;">
+                Your unique Tracking ID was generated upon order submission and sent to you via WhatsApp and Email confirmation receipts:
+              </p>
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <div style="background: #191715; border: 1px solid var(--card-border); border-radius: 6px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <div style="font-size: 0.76rem; font-weight: 700; color: var(--text);">Weekend Personal Pre-Orders</div>
+                    <div style="font-size: 0.66rem; color: var(--text-muted);">Saturday &amp; Sunday morning deliveries (1–6 bottles)</div>
+                  </div>
+                  <code style="font-size: 0.74rem; background: rgba(212,163,115,0.15); color: var(--accent); padding: 2px 7px; border-radius: 4px; font-weight: 700;">TABC-XXXXXX</code>
+                </div>
+                <div style="background: #191715; border: 1px solid var(--card-border); border-radius: 6px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <div style="font-size: 0.76rem; font-weight: 700; color: var(--text);">Corporate Office Drops</div>
+                    <div style="font-size: 0.66rem; color: var(--text-muted);">Friday Tech Park deliveries &amp; Net-7 Invoices (10–60+ bottles)</div>
+                  </div>
+                  <code style="font-size: 0.74rem; background: rgba(144,224,239,0.15); color: var(--info-blue); padding: 2px 7px; border-radius: 4px; font-weight: 700;">TABC-B2B-XXXXXX</code>
+                </div>
+                <div style="background: #191715; border: 1px solid var(--card-border); border-radius: 6px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <div style="font-size: 0.76rem; font-weight: 700; color: var(--text);">Custom Events &amp; Catering</div>
+                    <div style="font-size: 0.66rem; color: var(--text-muted);">Pop-up bars, hackathons &amp; offsite requests</div>
+                  </div>
+                  <code style="font-size: 0.74rem; background: rgba(149,213,178,0.15); color: var(--success-light); padding: 2px 7px; border-radius: 4px; font-weight: 700;">TABC-EVT-XXXXXX</code>
+                </div>
+              </div>
             </div>
-            <code style="font-size: 0.75rem; background: rgba(212,163,115,0.15); color: var(--accent); padding: 3px 8px; border-radius: 4px; font-weight: 700;">TABC-XXXXXX</code>
-          </div>
-          <div style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 8px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <div style="font-size: 0.78rem; font-weight: 700; color: var(--text);">Corporate Office Drops</div>
-              <div style="font-size: 0.68rem; color: var(--text-muted);">Friday Tech Park deliveries &amp; Net-7 Invoices</div>
+          </details>
+          <!-- FAQ 2: Weekly Drop Schedule -->
+          <details class="faq-item">
+            <summary class="faq-summary">
+              <span>🗓️ Weekly Drop Schedule &amp; Cutoffs</span>
+            </summary>
+            <div class="faq-content">
+              <p style="margin-bottom: 8px;">
+                All micro-batches are handcrafted hot and flash-chilled to order over clean ice to guarantee 48-hour peak flavor:
+              </p>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="background: #191715; border: 1px solid var(--card-border); border-radius: 8px; padding: 10px 12px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <strong style="color: var(--accent); font-size: 0.78rem;">🏢 Friday Corporate Office Drops</strong>
+                    <span style="font-size: 0.64rem; color: var(--text-muted); background: #2a2724; padding: 2px 6px; border-radius: 4px;">Cutoff: Thu 6 PM</span>
+                  </div>
+                  <div style="font-size: 0.7rem; color: var(--text-muted); line-height: 1.4;">
+                    • <strong>Morning Kickoff</strong>: 9:30 AM – 11:30 AM | <strong>Afternoon Recharge</strong>: 2:00 PM – 4:00 PM<br />
+                    • <strong>Coverage</strong>: DLF Cyber City, One Horizon Center, Candor TechSpace &amp; NCR Commercial Hubs.
+                  </div>
+                </div>
+                <div style="background: #191715; border: 1px solid var(--card-border); border-radius: 8px; padding: 10px 12px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <strong style="color: #95d5b2; font-size: 0.78rem;">☕ Saturday &amp; Sunday Weekend Drops</strong>
+                    <span style="font-size: 0.64rem; color: var(--text-muted); background: #2a2724; padding: 2px 6px; border-radius: 4px;">Cutoff: Fri/Sat 10 PM</span>
+                  </div>
+                  <div style="font-size: 0.7rem; color: var(--text-muted); line-height: 1.4;">
+                    • <strong>Delivery Window</strong>: 8:00 AM – 11:00 AM scheduled morning drop<br />
+                    • <strong>Coverage</strong>: Doorstep residential deliveries across Gurugram, South/Central Delhi &amp; Noida.
+                  </div>
+                </div>
+              </div>
             </div>
-            <code style="font-size: 0.75rem; background: rgba(144,224,239,0.15); color: var(--info-blue); padding: 3px 8px; border-radius: 4px; font-weight: 700;">TABC-B2B-XXXXXX</code>
-          </div>
-          <div style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 8px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <div style="font-size: 0.78rem; font-weight: 700; color: var(--text);">Custom Events &amp; Inquiries</div>
-              <div style="font-size: 0.68rem; color: var(--text-muted);">Pop-up bars, townhalls &amp; hackathons</div>
+          </details>
+          <!-- FAQ 3: Need Assistance? -->
+          <details class="faq-item">
+            <summary class="faq-summary">
+              <span>💬 Need Assistance? Direct Concierge</span>
+            </summary>
+            <div class="faq-content">
+              <p style="margin-bottom: 10px;">
+                Need to update your gate instructions, reschedule delivery, or ask a question about an upcoming batch drop? Reach our team directly:
+              </p>
+              <a href="https://wa.me/919719510654?text=Hi%2C%20I%20have%20a%20question%20regarding%20my%20Apartment%20Brew%20Co.%20order%2Finquiry" target="_blank" class="btn btn-whatsapp" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.78rem; padding: 10px 14px;">
+                <span>💬 Chat with Concierge on WhatsApp</span>
+              </a>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px;">
+                <a href="/orders" class="sub-link-pill" style="margin: 0; padding: 8px; font-size: 0.72rem; text-align: center;">
+                  ☕ Place Order &rarr;
+                </a>
+                <a href="/events" class="sub-link-pill" style="margin: 0; padding: 8px; font-size: 0.72rem; text-align: center;">
+                  Book an event &rarr;
+                </a>
+              </div>
             </div>
-            <code style="font-size: 0.75rem; background: rgba(149,213,178,0.15); color: var(--success-light); padding: 3px 8px; border-radius: 4px; font-weight: 700;">TABC-EVT-XXXXXX</code>
-          </div>
-        </div>
-      </section>
-      <!-- SECTION 3: WEEKLY DROP TIMETABLE & CUTOFF SCHEDULE -->
-      <section class="section-card" style="margin-top: 14px;">
-        <div class="section-title">
-          <span>Weekly Drop Schedule</span>
-          <span class="section-subtitle">Cutoffs &amp; Windows</span>
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 6px;">
-          <div style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 10px; padding: 12px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-              <span style="font-size: 0.82rem; font-weight: 800; color: var(--accent);">🏢 Friday Corporate Office Drops</span>
-              <span style="font-size: 0.65rem; color: var(--text-muted); background: #2a2724; padding: 2px 6px; border-radius: 4px;">Cutoff: Thu 6 PM</span>
-            </div>
-            <div style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.35;">
-              • Morning Kickoff: 9:30 AM – 11:30 AM<br />
-              • Afternoon Recharge: 2:00 PM – 4:00 PM<br />
-              • Coverage: DLF Cyber City, One Horizon, Candor TechSpace &amp; NCR hubs.
-            </div>
-          </div>
-          <div style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 10px; padding: 12px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-              <span style="font-size: 0.82rem; font-weight: 800; color: #95d5b2;">☕ Saturday &amp; Sunday Weekend Drops</span>
-              <span style="font-size: 0.65rem; color: var(--text-muted); background: #2a2724; padding: 2px 6px; border-radius: 4px;">Cutoff: Fri/Sat 10 PM</span>
-            </div>
-            <div style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.35;">
-              • Delivery Window: 8:00 AM – 11:00 AM morning drop<br />
-              • Cold-chain doorstep delivery to residences across Gurugram, Delhi &amp; Noida.
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- SECTION 4: CONCIERGE & SUPPORT ASSISTANCE -->
-      <section class="section-card" style="margin-top: 14px;">
-        <div class="section-title">
-          <span>Need Assistance?</span>
-          <span class="section-subtitle">Direct Concierge</span>
-        </div>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
-          Need to update your gate instructions, reschedule delivery, or have a question about an upcoming drop? Contact our brewery team directly:
-        </p>
-        <a href="https://wa.me/919719510654?text=Hi%2C%20I%20have%20a%20question%20regarding%20my%20Apartment%20Brew%20Co.%20order%2Finquiry" target="_blank" class="btn btn-whatsapp" style="text-decoration: none;">
-          <span>💬 Chat with Concierge on WhatsApp</span>
-        </a>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px;">
-<a href="/orders" class="sub-link-pill" style="margin: 0; padding: 10px 8px; font-size: 0.74rem;">
-            ☕ Place Order &rarr;
-          </a>
-<a href="/events" class="sub-link-pill" style="margin: 0; padding: 10px 8px; font-size: 0.74rem;">
-            Book an event &rarr;
-          </a>
+          </details>
         </div>
       </section>
     </main>
