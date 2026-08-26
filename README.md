@@ -118,7 +118,7 @@ The platform uses extensionless, clean URLs across all navigation links, action 
 
 ## 4\. User Journey & Ordering Engine
 
-* 
+*
 
 ```
                              [ 🌐 /orders Gateway ]
@@ -255,7 +255,7 @@ Protects Friday delivery routes by capping orders per tech park and window (e.g.
 
 The self-service lookup engine on /track queries the active Google Sheets database via ?action=track\&orderId=... and updates a 4-stage visual timeline stepper:
 
-* 
+*
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────┐
@@ -273,7 +273,7 @@ The self-service lookup engine on /track queries the active Google Sheets databa
 └─────────┴────────────────────────────┴─────────────────────────────────────────────┘
 ```
 
-* 
+*
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────┐
@@ -295,7 +295,7 @@ The self-service lookup engine on /track queries the active Google Sheets databa
 
 ## 8\. Brewery Operational SOP & Drop Cycles
 
-* 
+*
 
 ```
    THURSDAY              FRIDAY                  SATURDAY                SUNDAY
@@ -326,7 +326,7 @@ The self-service lookup engine on /track queries the active Google Sheets databa
 1. Open Google Sheets \> Extensions \> Apps Script.  
 2. Paste the latest Code.gs script.  
 3. Click Deploy \> New Deployment (Type: Web App, Execute as: Me, Access: Anyone).  
-4. Save the generated Web App URL (https://script.google.com/macros/s/.../exec).  
+4. Save the generated Web App URL (<https://script.google.com/macros/s/.../exec>).  
 5. Note: When updating Code.gs, always deploy as a New Version via Manage Deployments.
 
 ### 9.2 Frontend Configuration (app.js)
