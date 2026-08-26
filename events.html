@@ -63,86 +63,249 @@
     </header>
   
     <!-- Custom Event Intake Form -->
-    <main id="customInquirySection">
-      <section class="section-card">
-        <div class="section-title">
-          <span>Custom Requirements &amp; Event Catering</span>
-          <span class="section-subtitle">Tailored Specialty Coffee</span>
-        </div>
-        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4;">
-          Planning a company townhall, hackathon, product launch, pop-up booth, or a dedicated team coffee run? Tell us what you need and our brewing team will curate a custom 200ml bottle package for you.
-        </p>
+<!-- Custom Event Multi-Step Intake Form View -->
+<main id="customInquirySection">
   
-        <div class="form-group">
-          <label for="inqCompany">Organization / Startup / Event Name *</label>
-          <input type="text" id="inqCompany" placeholder="e.g. Zomato / Google India / Tech Hackathon 2026" oninput="validateInqField('inqCompany')" />
-          <div class="field-error" id="errInqCompany">Please enter your organization or event name.</div>
-        </div>
+<!-- Wizard Progress Header (Uniform Across Ordering Pages) -->
+<div class="wizard-progress-bar">
+<div class="wizard-step-node node-active" id="wNode1" onclick="goToInqStep(1)">
+<div class="node-circle" id="wCircle1">1</div>
+<div class="node-label" id="wLabel1">Scope &amp; Scale</div>
+</div>
+<div class="wizard-node-line" id="wLine1"></div>
+<div class="wizard-step-node" id="wNode2" onclick="goToInqStep(2)">
+<div class="node-circle" id="wCircle2">2</div>
+<div class="node-label" id="wLabel2">Logistics</div>
+</div>
+<div class="wizard-node-line" id="wLine2"></div>
+<div class="wizard-step-node" id="wNode3" onclick="goToInqStep(3)">
+<div class="node-circle" id="wCircle3">3</div>
+<div class="node-label" id="wLabel3">Review</div>
+</div>
+</div>
   
-        <div class="form-group">
-          <label for="inqName">Contact Person Name *</label>
-          <input type="text" id="inqName" placeholder="e.g. Astitva Gupta" oninput="validateInqField('inqName')" />
-          <div class="field-error" id="errInqName">Please enter your name.</div>
-        </div>
+<!-- STEP 1: Event Scope &amp; Scale -->
+<section class="section-card wizard-step-panel" id="stepPanel1">
+<div class="section-title">
+<span>Step 1: Event Scope &amp; Scale</span>
+<span class="section-subtitle">Tailored Specialty Coffee</span>
+</div>
+<p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4;">
+Planning a company townhall, hackathon, product launch, pop-up booth, or a dedicated team coffee run? Tell us about your event scale:
+</p>
   
-        <div class="form-group">
-          <label for="inqEmail">Work Email Address *</label>
-          <input type="email" id="inqEmail" placeholder="e.g. astitva@company.com" oninput="validateInqEmail()" />
-          <div class="field-error" id="errInqEmail">Please enter a valid work email address.</div>
-        </div>
+<div class="form-group">
+<label for="inqCompany">Organization / Startup / Event Name *</label>
+<input type="text" id="inqCompany" placeholder="e.g. Zomato / Google India / Tech Hackathon 2026" oninput="validateInqField('inqCompany')" />
+<div class="field-error" id="errInqCompany">Please enter your organization or event name.</div>
+</div>
   
-        <div class="form-group">
-          <label for="inqPhone">WhatsApp / Mobile Number *</label>
-          <input type="tel" id="inqPhone" placeholder="e.g. 9876543210" maxlength="10" oninput="validateInqPhone()" />
-          <div class="field-error" id="errInqPhone">Please enter a valid 10-digit mobile number.</div>
-        </div>
+<div class="form-group">
+<label for="inqType">Requirement Type *</label>
+<select id="inqType">
+<option value="Event Catering / Pop-Up Specialty Coffee Bar">Event Catering / Pop-Up Specialty Coffee Bar</option>
+<option value="Office Coffee Run / Team Outing Batch">Office Coffee Run / Team Outing Batch</option>
+<option value="Townhall / Hackathon Bulk Drop (100+ bottles)">Townhall / Hackathon Bulk Drop (100+ bottles @ 200ml)</option>
+<option value="Custom Single-Estate Curation &amp; Co-Branded Labeling">Custom Single-Estate Curation &amp; Co-Branded Labeling</option>
+<option value="Recurring Office Weekly Subscription">Recurring Office Weekly Subscription</option>
+<option value="Other Custom Requirement">Other Custom Requirement</option>
+</select>
+</div>
   
-        <div class="form-group">
-          <label for="inqType">Requirement Type *</label>
-          <select id="inqType">
-            <option value="Event Catering / Pop-Up Specialty Coffee Bar">Event Catering / Pop-Up Specialty Coffee Bar</option>
-            <option value="Office Coffee Run / Team Outing Batch">Office Coffee Run / Team Outing Batch</option>
-            <option value="Townhall / Hackathon Bulk Drop (100+ bottles)">Townhall / Hackathon Bulk Drop (100+ bottles @ 200ml)</option>
-            <option value="Custom Single-Estate Curation &amp; Co-Branded Labeling">Custom Single-Estate Curation &amp; Co-Branded Labeling</option>
-            <option value="Recurring Office Weekly Subscription">Recurring Office Weekly Subscription</option>
-            <option value="Other Custom Requirement">Other Custom Requirement</option>
-          </select>
-        </div>
+<div class="form-group">
+<label for="inqHeadcount">Estimated Headcount / Bottles Needed</label>
+<select id="inqHeadcount">
+<option value="20–50 people (~30-50 bottles @ 200ml)">20–50 people (~30-50 bottles @ 200ml)</option>
+<option value="50–100 people (~75-100 bottles @ 200ml)">50–100 people (~75-100 bottles @ 200ml)</option>
+<option value="100–250 people (~150-250 bottles @ 200ml)">100–250 people (~150-250 bottles @ 200ml)</option>
+<option value="250+ people (Custom Event Scale)">250+ people (Custom Event Scale)</option>
+<option value="Not sure yet / Need Recommendation">Not sure yet / Need Recommendation</option>
+</select>
+</div>
   
-        <div class="form-group">
-          <label for="inqHeadcount">Estimated Headcount / Bottles Needed</label>
-          <select id="inqHeadcount">
-            <option value="20–50 people (~30-50 bottles @ 200ml)">20–50 people (~30-50 bottles @ 200ml)</option>
-            <option value="50–100 people (~75-100 bottles @ 200ml)">50–100 people (~75-100 bottles @ 200ml)</option>
-            <option value="100–250 people (~150-250 bottles @ 200ml)">100–250 people (~150-250 bottles @ 200ml)</option>
-            <option value="250+ people (Custom Event Scale)">250+ people (Custom Event Scale)</option>
-            <option value="Not sure yet / Need Recommendation">Not sure yet / Need Recommendation</option>
-          </select>
-        </div>
+<div class="form-group">
+<label for="inqBlend">Preferred Coffee Profile / Harvests</label>
+<select id="inqBlend">
+<option value="Dual Discovery Flight (Ratnagiri Berry + Banana Banger Jasmine)">Dual Discovery Flight (Ratnagiri Berry + Banana Banger Jasmine)</option>
+<option value="Ratnagiri Estate Only (Anaerobic Naturals • Rich Berry &amp; Dark Cacao)">Ratnagiri Estate Only (Anaerobic Naturals • Rich Berry &amp; Dark Cacao)</option>
+<option value="Banana Banger Only (Special Yeast Lot • Orange Blossom &amp; Green Apple)">Banana Banger Only (Special Yeast Lot • Orange Blossom &amp; Green Apple)</option>
+<option value="Custom Roast / Signature Blend for Event">Custom Roast / Signature Blend for Event</option>
+</select>
+</div>
   
-        <div class="form-group">
-          <label for="inqDate">Target Event / Delivery Date *</label>
-          <input type="text" id="inqDate" placeholder="e.g. 4 Sep 2026 or Next Friday" oninput="validateInqField('inqDate')" />
-          <div class="field-error" id="errInqDate">Please specify your target date or timeline.</div>
-        </div>
+<div class="wizard-nav-btns" style="margin-top: 14px;">
+<a href="/orders" class="btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">&larr; Back to Order Gateway</a>
+<button type="button" class="btn btn-pay" onclick="nextInqStep(2)">
+<span>Continue to Logistics &rarr;</span>
+</button>
+</div>
+</section>
   
-        <div class="form-group">
-          <label for="inqLocation">Venue Location / Tech Park (Delhi NCR)</label>
-          <input type="text" id="inqLocation" placeholder="e.g. DLF Cyber City / Ambience Mall / Office HQ" />
-        </div>
+<!-- STEP 2: Logistics &amp; Contact Details -->
+<section class="section-card wizard-step-panel" id="stepPanel2" style="display: none;">
+<div class="section-title">
+<span>Step 2: Event Logistics &amp; Contact Details</span>
+<span class="section-subtitle">Venue, Timing &amp; Point of Contact</span>
+</div>
   
-        <div class="form-group">
-          <label for="inqNotes">Special Requirements &amp; Preferences</label>
-          <textarea id="inqNotes" rows="3" placeholder="Tell us about specific taste preferences, ice setup, barista station, custom branding labels, or delivery schedule..."></textarea>
-        </div>
+<div class="form-group">
+<label for="inqDate">Target Event / Delivery Date *</label>
+<input type="text" id="inqDate" placeholder="e.g. 4 Sep 2026 or Next Friday" oninput="validateInqField('inqDate')" />
+<div class="field-error" id="errInqDate">Please specify your target date or timeline.</div>
+</div>
   
-        <button id="btnSubmitCustom" class="btn btn-pay" onclick="handleCustomInquirySubmit()">
-          <span id="btnCustomText">&#128233; Submit Request</span>
-        </button>
+<div class="form-group">
+<label for="inqLocation">Venue Location / Tech Park (Delhi NCR)</label>
+<input type="text" id="inqLocation" placeholder="e.g. DLF Cyber City / Ambience Mall / Office HQ" />
+</div>
   
-        <div id="inqStatusMsg" class="track-status-msg" style="display: none; margin-top: 14px;"></div>
-      </section>
-    </main>
+<div class="form-group">
+<label for="inqName">Contact Person Name *</label>
+<input type="text" id="inqName" placeholder="e.g. Astitva Gupta" oninput="validateInqField('inqName')" />
+<div class="field-error" id="errInqName">Please enter your name.</div>
+</div>
+  
+<div class="form-group">
+<label for="inqEmail">Work Email Address (For Custom Proposals &amp; Quotes) *</label>
+<input type="email" id="inqEmail" placeholder="e.g. astitva@company.com" oninput="validateInqEmail()" />
+<div class="field-error" id="errInqEmail">Please enter a valid work email address.</div>
+</div>
+  
+<div class="form-group">
+<label for="inqPhone">WhatsApp / Mobile Number (For Coordination) *</label>
+<input type="tel" id="inqPhone" placeholder="e.g. 9876543210" maxlength="10" oninput="validateInqPhone()" />
+<div class="field-error" id="errInqPhone">Please enter a valid 10-digit mobile number.</div>
+</div>
+  
+<div class="form-group">
+<label for="inqNotes">Special Requirements &amp; Setup Preferences</label>
+<textarea id="inqNotes" rows="3" placeholder="Tell us about specific taste preferences, ice setup, barista station, custom branding labels, or delivery schedule..."></textarea>
+</div>
+  
+<div class="wizard-nav-btns">
+<button type="button" class="btn-secondary" onclick="goToInqStep(1)">&larr; Back to Scope</button>
+<button type="button" class="btn btn-pay" onclick="nextInqStep(3)">
+<span>Review Inquiry &rarr;</span>
+</button>
+</div>
+</section>
+  
+<!-- STEP 3: Review &amp; Submit -->
+<section class="section-card wizard-step-panel" id="stepPanel3" style="display: none;">
+<div class="section-title">
+<span>Step 3: Review &amp; Submit Custom Inquiry</span>
+<span class="section-subtitle">24-Hour Custom Proposal SLA</span>
+</div>
+  
+<!-- Inquiry Summary Card -->
+<div class="order-review-card">
+<div class="review-row">
+<span>Organization / Event:</span>
+<strong id="revInqCompany">-</strong>
+</div>
+<div class="review-row">
+<span>Requirement Type:</span>
+<strong id="revInqType">-</strong>
+</div>
+<div class="review-row">
+<span>Scale / Volume:</span>
+<strong id="revInqHeadcount">-</strong>
+</div>
+<div class="review-row">
+<span>Coffee Blend:</span>
+<strong id="revInqBlend">-</strong>
+</div>
+<div class="review-row">
+<span>Target Date:</span>
+<strong id="revInqDate" style="color: var(--accent);">-</strong>
+</div>
+<div class="review-row">
+<span>Venue / Location:</span>
+<strong id="revInqLocation">-</strong>
+</div>
+<div class="review-row">
+<span>Point of Contact:</span>
+<strong id="revInqContact">-</strong>
+</div>
+<div class="review-row">
+<span>Contact Details:</span>
+<strong id="revInqEmailPhone">-</strong>
+</div>
+<div class="review-row" id="revInqNotesRow">
+<span>Special Notes:</span>
+<strong id="revInqNotes" style="font-size: 0.76rem; color: var(--text-muted);">-</strong>
+</div>
+</div>
+  
+<div class="freshness-alert" style="margin-top: 12px; margin-bottom: 0;">
+⏱️ <strong>24-Hour Proposal Guarantee:</strong> Our curation team evaluates batch sizes, recommends flavor profiles, and prepares a tailored quote within 24 hours.
+</div>
+  
+<div class="wizard-nav-btns" style="margin-top: 14px;">
+<button type="button" class="btn-secondary" onclick="goToInqStep(2)">&larr; Edit Details</button>
+<button id="btnSubmitCustom" class="btn btn-pay" onclick="handleCustomInquirySubmit()">
+<span id="btnCustomText">&#128233; Submit Custom Request</span>
+</button>
+</div>
+  
+<div id="inqStatusMsg" class="track-status-msg" style="display: none; margin-top: 14px;"></div>
+</section>
+</main>
+<!-- Confirmation View (Displayed after successful submission) -->
+<section id="confirmationView" style="display: none;">
+<div class="section-card" style="text-align: center;">
+<div class="success-badge">&#10003; Requirement Received</div>
+<h2 style="font-size: 1.3rem; margin-bottom: 4px;">Thank You for Reaching Out!</h2>
+<p style="font-size: 0.82rem; color: var(--text-muted);">We've logged your event requirement and our team will prepare a custom proposal.</p>
+  
+<div class="freshness-alert">
+❄️ <strong>Hand-Brewed Specialty Extraction:</strong> All 200ml bottles are hot-extracted and flash-chilled to order with zero preservatives for guaranteed 48-hour peak flavor.
+</div>
+  
+<div class="receipt-details">
+<div class="receipt-row">
+<span class="receipt-label">Inquiry ID</span>
+<span class="receipt-val" id="rInqId" style="font-family: monospace;">-</span>
+</div>
+<div class="receipt-row">
+<span class="receipt-label">Organization</span>
+<span class="receipt-val" id="rInqCompany">-</span>
+</div>
+<div class="receipt-row">
+<span class="receipt-label">Requirement</span>
+<span class="receipt-val" id="rInqType">-</span>
+</div>
+<div class="receipt-row">
+<span class="receipt-label">Scale</span>
+<span class="receipt-val" id="rInqScale">-</span>
+</div>
+<div class="receipt-row">
+<span class="receipt-label">Target Date</span>
+<span class="receipt-val" id="rInqDate" style="color: var(--accent);">-</span>
+</div>
+<div class="receipt-row">
+<span class="receipt-label">Contact Person</span>
+<span class="receipt-val" id="rInqName">-</span>
+</div>
+<div class="receipt-row">
+<span class="receipt-label">SLA Timeline</span>
+<span class="receipt-val" style="color: #95d5b2;">Proposal within 24 Hours</span>
+</div>
+</div>
+  
+<a id="linkInqWa" href="#" target="_blank" class="btn btn-whatsapp" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px;">
+<span>💬 Coordinate Directly via WhatsApp</span>
+</a>
+  
+<a id="linkInqTrack" href="/track" class="btn" style="background: rgba(212, 163, 115, 0.15); color: var(--accent); border: 1px solid var(--accent); margin-top: 10px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+<span>🔍 View Live Inquiry Tracking</span>
+</a>
+  
+<button class="btn btn-secondary" onclick="resetInqForm()">
+<span>+ Submit Another Inquiry</span>
+</button>
+</div>
+</section>
   
   </div>
   

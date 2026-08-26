@@ -1531,18 +1531,123 @@ function validatePhoneField() {
   return setFieldState(el, errEl, phoneRegex.test(val));
 }
 
+// --------------------------------------------------------------------
+// Custom Event Intake Wizard Controller (events.html)
+// --------------------------------------------------------------------
+let currentInqStep = 1;
+
+function validateInqStep(stepNum) {
+  if (stepNum === 1) {
+    return validateInqField('inqCompany');
+  }
+  if (stepNum === 2) {
+    const isDateValid = validateInqField('inqDate');
+    const isNameValid = validateInqField('inqName');
+    const isEmailValid = validateInqEmail();
+    const isPhoneValid = validateInqPhone();
+    return isDateValid && isNameValid && isEmailValid && isPhoneValid;
+  }
+  return true;
+}
+
+function nextInqStep(targetStep) {
+  if (targetStep > currentInqStep) {
+    for (let s = currentInqStep; s < targetStep; s++) {
+      if (!validateInqStep(s)) {
+        alert('Please fill in the required fields before continuing.');
+        return;
+      }
+    }
+  }
+  goToInqStep(targetStep);
+}
+
+function goToInqStep(stepNum) {
+  if (stepNum < 1 || stepNum > 3) return;
+  if (stepNum > currentInqStep && !validateInqStep(currentInqStep)) {
+    return;
+  }
+
+  currentInqStep = stepNum;
+
+  for (let i = 1; i <= 3; i++) {
+    const panel = document.getElementById(`stepPanel${i}`);
+    if (panel) panel.style.display = (i === stepNum) ? 'block' : 'none';
+  }
+
+  for (let i = 1; i <= 3; i++) {
+    const node = document.getElementById(`wNode${i}`);
+    const line = document.getElementById(`wLine${i}`);
+
+    if (node) {
+      node.classList.remove('node-active', 'node-completed');
+      if (i === stepNum) {
+        node.classList.add('node-active');
+      } else if (i < stepNum) {
+        node.classList.add('node-completed');
+      }
+    }
+
+    if (line) {
+      line.classList.toggle('line-completed', i < stepNum);
+    }
+  }
+
+  if (stepNum === 3) {
+    populateInqReview();
+  }
+
+  window.scrollTo({ top: 120, behavior: 'smooth' });
+}
+
+function populateInqReview() {
+  const comp = (document.getElementById('inqCompany')?.value || '').trim();
+  const reqType = document.getElementById('inqType')?.value || 'Event Catering';
+  const headcount = document.getElementById('inqHeadcount')?.value || '20–50 people';
+  const blend = document.getElementById('inqBlend')?.value || 'Dual Discovery Flight';
+  const date = (document.getElementById('inqDate')?.value || '').trim();
+  const loc = (document.getElementById('inqLocation')?.value || '').trim() || 'Gurugram / NCR';
+  const name = (document.getElementById('inqName')?.value || '').trim();
+  const email = (document.getElementById('inqEmail')?.value || '').trim();
+  const phone = (document.getElementById('inqPhone')?.value || '').trim();
+  const notes = (document.getElementById('inqNotes')?.value || '').trim();
+
+  const revComp = document.getElementById('revInqCompany');
+  const revType = document.getElementById('revInqType');
+  const revHead = document.getElementById('revInqHeadcount');
+  const revBlend = document.getElementById('revInqBlend');
+  const revDate = document.getElementById('revInqDate');
+  const revLoc = document.getElementById('revInqLocation');
+  const revContact = document.getElementById('revInqContact');
+  const revEmailPhone = document.getElementById('revInqEmailPhone');
+  const revNotes = document.getElementById('revInqNotes');
+  const revNotesRow = document.getElementById('revInqNotesRow');
+
+  if (revComp) revComp.textContent = comp || '-';
+  if (revType) revType.textContent = reqType;
+  if (revHead) revHead.textContent = headcount;
+  if (revBlend) revBlend.textContent = blend;
+  if (revDate) revDate.textContent = date || '-';
+  if (revLoc) revLoc.textContent = loc;
+  if (revContact) revContact.textContent = name || '-';
+  if (revEmailPhone) revEmailPhone.textContent = `${email} • ${phone}`;
+
+  if (revNotes && revNotesRow) {
+    if (notes) {
+      revNotes.textContent = notes;
+      revNotesRow.style.display = 'flex';
+    } else {
+      revNotesRow.style.display = 'none';
+    }
+  }
+}
+
 function handleCustomInquirySubmit() {
-  const isCompValid = validateInqField('inqCompany');
-  const isNameValid = validateInqField('inqName');
-  const isEmailValid = validateInqEmail();
-  const isPhoneValid = validateInqPhone();
-  const isDateValid = validateInqField('inqDate');
-  
-  if (!isCompValid || !isNameValid || !isEmailValid || !isPhoneValid || !isDateValid) {
+  if (!validateInqStep(1) || !validateInqStep(2)) {
     alert('Please fill in the required fields before submitting your custom request.');
     return;
   }
-  
+
   const comp = (document.getElementById('inqCompany')?.value || '').trim();
   const name = (document.getElementById('inqName')?.value || '').trim();
   const email = (document.getElementById('inqEmail')?.value || '').trim();
@@ -1552,18 +1657,18 @@ function handleCustomInquirySubmit() {
   const date = (document.getElementById('inqDate')?.value || '').trim();
   const loc = (document.getElementById('inqLocation')?.value || '').trim() || 'Gurugram / NCR';
   const notes = (document.getElementById('inqNotes')?.value || '').trim();
-  
+
   const inqId = "TABC-EVT-" + Math.floor(100000 + Math.random() * 900000);
   const btnSubmit = document.getElementById('btnSubmitCustom');
   const statusMsg = document.getElementById('inqStatusMsg');
-  
+
   if (btnSubmit) btnSubmit.disabled = true;
   if (statusMsg) {
-    statusMsg.textContent = '⏳ Dispatching requirement to brewing team...';
+    statusMsg.textContent = '⏳ Dispatching requirement to curation team...';
     statusMsg.className = 'track-status-msg msg-info';
     statusMsg.style.display = 'block';
   }
-  
+
   const inqPayload = {
     authToken: CONFIG.authToken,
     botTrap: "",
@@ -1580,65 +1685,74 @@ function handleCustomInquirySubmit() {
     location: loc,
     notes: notes
   };
-  
-  const whatsappMsg = `*☕ NEW CUSTOM COFFEE / EVENT INQUIRY*\n` +
-                      `------------------------------------\n` +
-                      `*Inquiry ID:* ${inqId}\n` +
-                      `*Organization:* ${comp}\n` +
-                      `*Contact:* ${name} (${phone})\n` +
-                      `*Email:* ${email}\n` +
-                      `*Requirement:* ${reqType}\n` +
-                      `*Scale:* ${headcount}\n` +
-                      `*Target Date:* ${date}\n` +
-                      `*Location:* ${loc}\n` +
-                      `*Notes:* ${notes || 'None'}\n` +
-                      `------------------------------------\n` +
-                      `_Submitted via The Apartment Brew Co. Website_`;
-  
+
+  const whatsappMsg = `Hi Apartment Brew Co., I just submitted a custom event inquiry on your website!\n\n*Inquiry ID:* ${inqId}\n*Company / Event:* ${comp}\n*Requirement:* ${reqType}\n*Scale:* ${headcount}\n*Target Date:* ${date}\n*Contact:* ${name} (${phone})\n\nLooking forward to your proposal!`;
   const directWaUrl = `https://wa.me/919719510654?text=${encodeURIComponent(whatsappMsg)}`;
-  
-  if (CONFIG.googleSheetEndpoint && !CONFIG.googleSheetEndpoint.includes("YOUR_GOOGLE_APPS")) {
+
+  if (CONFIG.googleSheetEndpoint && CONFIG.googleSheetEndpoint.startsWith('http')) {
     fetch(CONFIG.googleSheetEndpoint, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(inqPayload)
-    }).then(() => {
-      renderInquirySuccess(inqId, name, comp, reqType, directWaUrl);
+    }).then(res => res.json()).then(() => {
+      renderInquirySuccess(inqId, name, comp, reqType, headcount, date, directWaUrl);
     }).catch(() => {
-      renderInquirySuccess(inqId, name, comp, reqType, directWaUrl);
+      renderInquirySuccess(inqId, name, comp, reqType, headcount, date, directWaUrl);
     });
   } else {
     setTimeout(() => {
-      renderInquirySuccess(inqId, name, comp, reqType, directWaUrl);
+      renderInquirySuccess(inqId, name, comp, reqType, headcount, date, directWaUrl);
     }, 600);
   }
 }
 
-function renderInquirySuccess(inqId, name, comp, reqType, waUrl) {
-  const btnSubmit = document.getElementById('btnSubmitCustom');
-  const statusMsg = document.getElementById('inqStatusMsg');
-  if (btnSubmit) btnSubmit.disabled = false;
-  
-  if (statusMsg) {
-    statusMsg.innerHTML = `
-      <div style="font-size: 0.95rem; font-weight: 800; color: #95d5b2; margin-bottom: 6px;">✓ Requirement Received! (ID: ${inqId})</div>
-      <p style="font-size: 0.8rem; color: #fefae0; margin: 0 0 10px; line-height: 1.4;">
-        Thank you, <strong>${name}</strong>! We've logged your request for <strong>${comp}</strong> (${reqType}). Our curation team will review batch sizes and reach out within 24 hours.
-      </p>
-      <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
-        <a href="${waUrl}" target="_blank" style="display: inline-block; background: #25d366; color: #141312; font-size: 0.78rem; font-weight: 800; padding: 8px 14px; border-radius: 6px; text-decoration: none;">
-          💬 Chat on WhatsApp Now
-        </a>
-        <a href="/track?orderId=${encodeURIComponent(inqId)}" style="display: inline-block; background: rgba(212, 163, 115, 0.15); border: 1px solid var(--accent); color: var(--accent); font-size: 0.78rem; font-weight: 800; padding: 8px 14px; border-radius: 6px; text-decoration: none;">
-          🔍 Track Inquiry Status
-        </a>
-      </div>
-    `;
-    statusMsg.className = 'track-status-msg msg-success';
-    statusMsg.style.display = 'block';
+function renderInquirySuccess(inqId, name, comp, reqType, headcount, date, waUrl) {
+  const formSection = document.getElementById('customInquirySection');
+  const confSection = document.getElementById('confirmationView');
+
+  if (formSection) formSection.style.display = 'none';
+  if (confSection) {
+    const rId = document.getElementById('rInqId');
+    const rComp = document.getElementById('rInqCompany');
+    const rType = document.getElementById('rInqType');
+    const rScale = document.getElementById('rInqScale');
+    const rDate = document.getElementById('rInqDate');
+    const rName = document.getElementById('rInqName');
+    const linkWa = document.getElementById('linkInqWa');
+    const linkTrack = document.getElementById('linkInqTrack');
+
+    if (rId) rId.textContent = inqId;
+    if (rComp) rComp.textContent = comp || '-';
+    if (rType) rType.textContent = reqType;
+    if (rScale) rScale.textContent = headcount || '-';
+    if (rDate) rDate.textContent = date || '-';
+    if (rName) rName.textContent = name || '-';
+    if (linkWa) linkWa.href = waUrl;
+    if (linkTrack) linkTrack.href = `/track?orderId=${encodeURIComponent(inqId)}`;
+
+    confSection.style.display = 'block';
   }
+
+  window.scrollTo({ top: 100, behavior: 'smooth' });
 }
+
+function resetInqForm() {
+  const formSection = document.getElementById('customInquirySection');
+  const confSection = document.getElementById('confirmationView');
+  if (formSection) formSection.style.display = 'block';
+  if (confSection) confSection.style.display = 'none';
+
+  ['inqCompany', 'inqName', 'inqEmail', 'inqPhone', 'inqDate', 'inqLocation', 'inqNotes'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+
+  const statusMsg = document.getElementById('inqStatusMsg');
+  if (statusMsg) statusMsg.style.display = 'none';
+
+  goToInqStep(1);
+}
+  const isCompValid = validateInqField('inqCompany');
 
 // --------------------------------------------------------------------
 // Customer Self-Service Live Order Tracker Controller

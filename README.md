@@ -3,10 +3,10 @@
 ### **Micro-Batch Flash-Chilled Specialty Coffee • Gurugram & Delhi NCR**
 
 ```
-  ┌───────────────────────────────────────────────────────────────────────────────────────┐
-  │  ⚡ Asset-Light Craft Brewery   │  ❄️ 94°C → 4°C Flash-Chilled  │  🌿 0 Preservatives.  │
+  ┌──────────────────────────────────────────────────────────────────────────────────┐
+  │  ⚡ Asset-Light Craft Brewery  │  ❄️ 94°C → 4°C Flash-Chilled  │  🌿 0 Preservatives  │
   │  📦 Standard 200ml Glass       │  💳 Razorpay Gateway + Net-7  │  📊 Google Sheets CMS │
-  └───────────────────────────────────────────────────────────────────────────────────────┘
+  └──────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 A lightweight, serverless e-commerce and order intake platform built for scheduled micro-batch craft coffee drops, headless Google Sheets CMS synchronization, Razorpay payment processing, real-time self-service order tracking, and automated transactional customer communications. All coffee across retail, corporate, and catering tiers is standardized into premium 200ml glass bottles.  
@@ -111,7 +111,7 @@ The platform uses extensionless, clean URLs across all navigation links, action 
 | /flavor | flavor.html | **flavor matcher (Harvests & Sensory Menu)**: Micro-lot showcase with interactive 2-question quiz matcher, 5-axis Sensory Radar, and intensity gauges |
 | /guide | guide.html | Freshness Guide: Science of flash-chilling, temperature stability graph, and 48-hour cold storage/serving rituals |
 | /about | about.html | **Story so far (Craft & Philosophy)**: Hand-brewing philosophy, direct trade sourcing, and micro-roastery vs mass-retail comparative matrix |
-| /events | events.html | **Event Runs**: Tailored package intake for startup hackathons, townhalls, pop-up coffee bars, and offsites |
+| /events | events.html | **Event Runs Wizard**: Streamlined 3-step catering intake (1. Scope & Scale → 2\. Logistics & Contact → 3\. Review & Submit) for hackathons, townhalls, pop-up coffee bars, and team offsites with 24-hour custom proposal SLA |
 | /track | track.html | **Inquiry/Order tracking**: Real-time customer self-service status lookup with dynamic 4-stage visual timeline stepper |
 
 ---
@@ -161,6 +161,12 @@ The platform uses extensionless, clean URLs across all navigation links, action 
 3. Step 3: Review & Confirmation:  
    1. Comprehensive breakdown of coffee selections, batch sizes, promo discounts, delivery schedules, and tax credits.  
    2. Personal orders check out via Razorpay (UPI, Credit/Debit Cards, NetBanking); Corporate orders can select Razorpay or Net-7 Invoice.
+
+### **4.3 3-Step Event Runs Wizard (/events)**
+
+1. Step 1: Event Scope & Scale: Organization name, requirement type, bottle volume / headcount, and preferred single-estate coffee selection.  
+2. Step 2: Logistics & Contact Details: Target delivery date, event venue, contact person name, corporate work email, WhatsApp number, and setup preferences.  
+3. Step 3: Review & Submit: Comprehensive inquiry summary card, 24-hour SLA guarantee, instant WhatsApp deep-link dispatch, and live status tracker link.
 
 ---
 
