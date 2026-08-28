@@ -276,6 +276,10 @@ function updateQuizRecommendation() {
 // --------------------------------------------------------------------
 function selectHarvestOption(lotId) {
   selectedGatewayLot = lotId;
+
+  // Toggle: If clicking the currently open card, collapse it; otherwise expand the new one
+  const isAlreadyActive = selectedGatewayLot === lotId;
+  selectedGatewayLot = isAlreadyActive ? null : lotId;
   
   // Highlight cards
   const c1 = document.getElementById('cardLot1');
