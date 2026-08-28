@@ -218,6 +218,7 @@ body::before {
   /* Brushed Gold Metallic Text Gradient */
   background: linear-gradient(135deg, #cd9a3a 0%, #e5c068 35%, #fcf29b 70%, #b08968 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
