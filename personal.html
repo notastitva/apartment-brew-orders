@@ -6,6 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>Weekend Pre-Order (Sat &amp; Sun Drops) | The Apartment Brew Co.</title>
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Favicons & Mobile Touch Icons -->
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon-180x180.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/android-chrome-192x192.png" />
+
+  <!-- Open Graph & Social Preview Tags -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="The Apartment Brew Co. | Micro-Batch Specialty Coffee" />
+  <meta property="og:description" content="Micro-batch flash-chilled specialty coffee hand-brewed fresh to order in Gurugram." />
+  <meta property="og:image" content="assets/tabc-social-banner-1500x500.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="assets/tabc-social-banner-1500x500.png" />
   
   <!-- Resource Hints for Payment SDK -->
   <link rel="preconnect" href="https://checkout.razorpay.com" />
@@ -16,11 +29,15 @@
 </head>
 <body data-page="PERSONAL">
   <!-- Sticky Top Header & Hamburger Navigation (Topmost Component) -->
-  <header class="site-header-sticky">
+    <header class="site-header-sticky">
     <div class="header-inner">
-      <a href="/" class="nav-logo">
-        <span class="logo-text">The Apartment Brew Co.</span>
-        <span class="logo-sub">Specialty Coffee &bull; Gurugram</span>
+      <a href="/" class="nav-logo" aria-label="The Apartment Brew Co. Home">
+        <img 
+          src="assets/tabc-logo-primary-horizontal-transparent.svg" 
+          alt="The Apartment Brew Co. Logo" 
+          class="nav-logo-img" 
+          style="height: 38px; width: auto; display: block;" 
+        />
       </a>
       <button type="button" class="nav-hamburger-btn" id="navHamburgerBtn" aria-label="Toggle navigation menu" onclick="toggleNavDrawer()">
         <span class="hamburger-bar"></span>
@@ -29,14 +46,23 @@
       </button>
     </div>
   </header>
+
   
   <!-- Navigation Drawer Backdrop & Overlay Menu -->
   <div class="nav-backdrop" id="navBackdrop" onclick="closeNavDrawer()"></div>
   <aside class="nav-drawer" id="navDrawer">
-    <div class="drawer-header">
-      <span class="drawer-title">Navigation Menu</span>
+        <div class="drawer-header">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <img 
+          src="assets/tabc-logo-primary-vertical-transparent.svg" 
+          alt="TABC Emblem" 
+          style="width: 24px; height: 24px; object-fit: contain;" 
+        />
+        <span class="drawer-title">Navigation Menu</span>
+      </div>
       <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&times;</button>
     </div>
+
     <nav class="drawer-nav">
       <a href="/" class="drawer-link" data-page-link="INDEX">Home</a>
       <a href="/orders" class="drawer-link" data-page-link="ORDERS">Order Batch</a>
