@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" width="1200" height="340">
+    <defs>
+    <!-- Linear Brushed Gold Gradient -->
+    <linearGradient id="tabcGoldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#CD9A3A" />
+      <stop offset="22%" stop-color="#DFC06A" />
+      <stop offset="48%" stop-color="#FCF29B" />
+      <stop offset="72%" stop-color="#E5C068" />
+      <stop offset="100%" stop-color="#B08968" />
+    </linearGradient>
+
+    <!-- Horizontal Linear Gold Gradient -->
+    <linearGradient id="tabcGoldH" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#CD9A3A" />
+      <stop offset="28%" stop-color="#FCF29B" />
+      <stop offset="65%" stop-color="#E5C068" />
+      <stop offset="100%" stop-color="#B08968" />
+    </linearGradient>
+
+    <!-- Soft Ambient Radial Glow -->
+    <radialGradient id="tabcBgGlow" cx="50%" cy="38%" r="65%">
+      <stop offset="0%" stop-color="#2D251A" stop-opacity="1.0" />
+      <stop offset="55%" stop-color="#1A1816" stop-opacity="1.0" />
+      <stop offset="100%" stop-color="#141312" stop-opacity="1.0" />
+    </radialGradient>
+
+    <!-- Badge Radial Background -->
+    <radialGradient id="tabcBadgeBg" cx="50%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#24201B" stop-opacity="1.0" />
+      <stop offset="60%" stop-color="#161514" stop-opacity="1.0" />
+      <stop offset="100%" stop-color="#0E0D0C" stop-opacity="1.0" />
+    </radialGradient>
+
+    <!-- Drop Shadow Filter -->
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.65" />
+    </filter>
+
+    <filter id="subtleTextShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.8" />
+    </filter>
+  </defs>
+  <rect width="1200" height="340" fill="url(#tabcBgGlow)" />
+  
+  <!-- Emblem on Left -->
+  <g transform="translate(160, 170) scale(0.65) translate(-250, -250)" filter="url(#goldGlow)">
+    <path fill-rule="evenodd" fill="url(#tabcGoldGradient)" stroke="#CD9A3A" stroke-width="1.5"
+          d="M 250 65 L 385 200 L 385 405 L 115 405 L 115 200 Z 
+             M 250 185 C 282 185 306 220 306 265 C 306 310 282 345 250 345 C 218 345 194 310 194 265 C 194 220 218 185 250 185 Z" />
+    
+    <path d="M 250 192 C 272 230, 228 300, 250 338" 
+          fill="none" stroke="url(#tabcGoldGradient)" stroke-width="9" stroke-linecap="round" />
+  </g>
+  
+  <!-- Vertical Divider Line -->
+  <line x1="300" y1="70" x2="300" y2="270" stroke="#332F2B" stroke-width="2" stroke-linecap="round" />
+  <line x1="300" y1="120" x2="300" y2="220" stroke="#D4A373" stroke-width="2" stroke-linecap="round" opacity="0.6" />
+  
+  <!-- Wordmark and Subtitle on Right -->
+  <g transform="translate(340, 0)">
+    <text x="0" y="150"
+          font-family="-apple-system, BlinkMacSystemFont, 'Montserrat', 'Syne', 'Inter', 'Helvetica Neue', sans-serif"
+          font-weight="800" font-size="46" letter-spacing="7"
+          fill="url(#tabcGoldH)" filter="url(#subtleTextShadow)">
+      APARTMENT BREW CO.
+    </text>
+    
+    <text x="0" y="202"
+          font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Montserrat', sans-serif"
+          font-weight="600" font-size="18" letter-spacing="4.5"
+          fill="#D4A373">
+      MICRO-BATCH SPECIALTY COFFEE
+    </text>
+    
+    <text x="0" y="245"
+          font-family="-apple-system, BlinkMacSystemFont, 'Inter', 'Montserrat', sans-serif"
+          font-weight="500" font-size="14" letter-spacing="3"
+          fill="#9C9589">
+      GURUGRAM • EST. 2026 • FLASH-CHILLED SINGLE ESTATE
+    </text>
+  </g>
+</svg>

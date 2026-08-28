@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+    <defs>
+    <!-- Linear Brushed Gold Gradient -->
+    <linearGradient id="tabcGoldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#CD9A3A" />
+      <stop offset="22%" stop-color="#DFC06A" />
+      <stop offset="48%" stop-color="#FCF29B" />
+      <stop offset="72%" stop-color="#E5C068" />
+      <stop offset="100%" stop-color="#B08968" />
+    </linearGradient>
+
+    <!-- Horizontal Linear Gold Gradient -->
+    <linearGradient id="tabcGoldH" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#CD9A3A" />
+      <stop offset="28%" stop-color="#FCF29B" />
+      <stop offset="65%" stop-color="#E5C068" />
+      <stop offset="100%" stop-color="#B08968" />
+    </linearGradient>
+
+    <!-- Soft Ambient Radial Glow -->
+    <radialGradient id="tabcBgGlow" cx="50%" cy="38%" r="65%">
+      <stop offset="0%" stop-color="#2D251A" stop-opacity="1.0" />
+      <stop offset="55%" stop-color="#1A1816" stop-opacity="1.0" />
+      <stop offset="100%" stop-color="#141312" stop-opacity="1.0" />
+    </radialGradient>
+
+    <!-- Badge Radial Background -->
+    <radialGradient id="tabcBadgeBg" cx="50%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#24201B" stop-opacity="1.0" />
+      <stop offset="60%" stop-color="#161514" stop-opacity="1.0" />
+      <stop offset="100%" stop-color="#0E0D0C" stop-opacity="1.0" />
+    </radialGradient>
+
+    <!-- Drop Shadow Filter -->
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.65" />
+    </filter>
+
+    <filter id="subtleTextShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.8" />
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#141312" />
+  <g transform="translate(32, 32) scale(0.11) translate(-250, -250)">
+    <path fill-rule="evenodd" fill="url(#tabcGoldGradient)"
+          d="M 250 65 L 385 200 L 385 405 L 115 405 L 115 200 Z 
+             M 250 185 C 282 185 306 220 306 265 C 306 310 282 345 250 345 C 218 345 194 310 194 265 C 194 220 218 185 250 185 Z" />
+    <path d="M 250 192 C 272 230, 228 300, 250 338" 
+          fill="none" stroke="url(#tabcGoldGradient)" stroke-width="12" stroke-linecap="round" />
+  </g>
+</svg>

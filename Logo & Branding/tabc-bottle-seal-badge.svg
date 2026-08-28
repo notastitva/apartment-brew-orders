@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+    <defs>
+    <!-- Linear Brushed Gold Gradient -->
+    <linearGradient id="tabcGoldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#CD9A3A" />
+      <stop offset="22%" stop-color="#DFC06A" />
+      <stop offset="48%" stop-color="#FCF29B" />
+      <stop offset="72%" stop-color="#E5C068" />
+      <stop offset="100%" stop-color="#B08968" />
+    </linearGradient>
+
+    <!-- Horizontal Linear Gold Gradient -->
+    <linearGradient id="tabcGoldH" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#CD9A3A" />
+      <stop offset="28%" stop-color="#FCF29B" />
+      <stop offset="65%" stop-color="#E5C068" />
+      <stop offset="100%" stop-color="#B08968" />
+    </linearGradient>
+
+    <!-- Soft Ambient Radial Glow -->
+    <radialGradient id="tabcBgGlow" cx="50%" cy="38%" r="65%">
+      <stop offset="0%" stop-color="#2D251A" stop-opacity="1.0" />
+      <stop offset="55%" stop-color="#1A1816" stop-opacity="1.0" />
+      <stop offset="100%" stop-color="#141312" stop-opacity="1.0" />
+    </radialGradient>
+
+    <!-- Badge Radial Background -->
+    <radialGradient id="tabcBadgeBg" cx="50%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#24201B" stop-opacity="1.0" />
+      <stop offset="60%" stop-color="#161514" stop-opacity="1.0" />
+      <stop offset="100%" stop-color="#0E0D0C" stop-opacity="1.0" />
+    </radialGradient>
+
+    <!-- Drop Shadow Filter -->
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.65" />
+    </filter>
+
+    <filter id="subtleTextShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.8" />
+    </filter>
+  </defs>
+  <defs>
+    <path id="topCurve" d="M 100 300 A 200 200 0 0 1 500 300" fill="none" />
+    <path id="bottomCurve" d="M 500 300 A 200 200 0 0 1 100 300" fill="none" />
+  </defs>
+  
+  <!-- Badge Base -->
+  <circle cx="300" cy="300" r="290" fill="url(#tabcBadgeBg)" />
+  <circle cx="300" cy="300" r="280" fill="none" stroke="#CD9A3A" stroke-width="4" />
+  <circle cx="300" cy="300" r="268" fill="none" stroke="#D4A373" stroke-width="1.5" stroke-dasharray="6, 4" />
+  <circle cx="300" cy="300" r="175" fill="none" stroke="#CD9A3A" stroke-width="1.5" opacity="0.6" />
+  
+  <!-- Curved Top Text -->
+  <text font-family="-apple-system, BlinkMacSystemFont, 'Montserrat', sans-serif"
+        font-size="21" font-weight="700" letter-spacing="4.5" fill="#FCF29B">
+    <textPath href="#topCurve" startOffset="50%" text-anchor="middle">
+      ★ THE APARTMENT BREW CO. ★
+    </textPath>
+  </text>
+  
+  <!-- Curved Bottom Text -->
+  <text font-family="-apple-system, BlinkMacSystemFont, 'Montserrat', sans-serif"
+        font-size="18" font-weight="600" letter-spacing="4" fill="#D4A373">
+    <textPath href="#bottomCurve" startOffset="50%" text-anchor="middle">
+      MICRO-BATCH • GURUGRAM • 2026
+    </textPath>
+  </text>
+  
+  <!-- Center Emblem -->
+  <g transform="translate(300, 300) scale(0.52) translate(-250, -250)" filter="url(#goldGlow)">
+    <path fill-rule="evenodd" fill="url(#tabcGoldGradient)" stroke="#CD9A3A" stroke-width="1.5"
+          d="M 250 65 L 385 200 L 385 405 L 115 405 L 115 200 Z 
+             M 250 185 C 282 185 306 220 306 265 C 306 310 282 345 250 345 C 218 345 194 310 194 265 C 194 220 218 185 250 185 Z" />
+    
+    <path d="M 250 192 C 272 230, 228 300, 250 338" 
+          fill="none" stroke="url(#tabcGoldGradient)" stroke-width="9" stroke-linecap="round" />
+  </g>
+</svg>
