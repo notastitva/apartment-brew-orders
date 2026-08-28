@@ -173,6 +173,50 @@ body::before {
 .nav-hamburger-btn.is-open .hamburger-bar:nth-child(3) {
   transform: translateY(-6.5px) rotate(-45deg);
 }
+
+/* The logo things */
+.nav-logo-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-logo-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.nav-logo-titles {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.logo-text {
+  font-family: var(--tabc-font-display, 'Syne', 'Montserrat', sans-serif);
+  font-size: 1.05rem; /* 16px-17px, bold and highly legible */
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  line-height: 1.15;
+  background: linear-gradient(135deg, #cd9a3a 0%, #e5c068 35%, #fcf29b 70%, #b08968 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logo-sub {
+  font-family: var(--tabc-font-sans, 'Inter', sans-serif);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-muted, #9c9589);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
   
 /* Navigation Drawer & Backdrop */
 .nav-backdrop {

@@ -31,22 +31,30 @@
 <body data-page="INDEX">
   <!-- Sticky Top Header & Hamburger Navigation (Topmost Component) -->
   <header class="site-header-sticky">
-    <div class="header-inner">
-      <a href="/" class="nav-logo" aria-label="The Apartment Brew Co. Home">
+  <div class="header-inner">
+    <a href="/" class="nav-logo" aria-label="The Apartment Brew Co. Home">
+      <div class="nav-logo-brand">
+        <!-- Standalone Emblem SVG -->
         <img 
-          src="assets/tabc-logo-primary-horizontal-transparent.svg" 
-          alt="The Apartment Brew Co. Logo" 
-          class="nav-logo-img" 
-          style="height: 38px; width: auto; display: block;" 
+          src="assets/tabc-logo-primary-vertical-transparent.svg" 
+          alt="The Apartment Brew Co. Emblem" 
+          class="nav-logo-icon" 
         />
-      </a>
-      <button type="button" class="nav-hamburger-btn" id="navHamburgerBtn" aria-label="Toggle navigation menu" onclick="toggleNavDrawer()">
-        <span class="hamburger-bar"></span>
-        <span class="hamburger-bar"></span>
-        <span class="hamburger-bar"></span>
-      </button>
-    </div>
-  </header>
+        <!-- Crisp, High-Resolution DOM Typography -->
+        <div class="nav-logo-titles">
+          <span class="logo-text">The Apartment Brew Co.</span>
+          <span class="logo-sub">Specialty Coffee &bull; Gurugram</span>
+        </div>
+      </div>
+    </a>
+    <button type="button" class="nav-hamburger-btn" id="navHamburgerBtn" aria-label="Toggle navigation menu" onclick="toggleNavDrawer()">
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
+      <span class="hamburger-bar"></span>
+    </button>
+  </div>
+</header>
+
       
 
   
