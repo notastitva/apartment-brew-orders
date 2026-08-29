@@ -276,33 +276,34 @@ function updateQuizRecommendation() {
 
 // Orders Gateway Controller (orders.html)
 // --------------------------------------------------------------------
+
+// --------------------------------------------------------------------
+// Orders Gateway Controller (orders.html)
+// --------------------------------------------------------------------
+let selectedGatewayLot = null;
+
 function selectHarvestOption(lotId) {
-  if (selectedGatewayLot === lotId) {
-    selectedGatewayLot = null;
-  } else {
-    selectedGatewayLot = lotId;
-  }
-  document.querySelectorAll('.harvest-preview-card').forEach(card => {
-    const cardLot = card.dataset.lotId;
-    if (selectedGatewayLot && cardLot === selectedGatewayLot) {
-      card.classList.add('active');
-    } else {
-      card.classList.remove('active');
-    }
-  });
+  // Toggle: If clicking the currently active card, deselect/collapse it; otherwise select it
+  selectedGatewayLot = (selectedGatewayLot === lotId) ? null : lotId;
+
+  // Toggle .active class across all harvest cards (supports both static IDs and dynamic data attributes)
+  const card1 = document.getElementById('cardLot1') || document.querySelector('[data-lot-id="LOT-01"]');
+  const card2 = document.getElementById('cardLot2') || document.querySelector('[data-lot-id="LOT-02"]');
+  const cardMix = document.getElementById('cardLotMix') || document.querySelector('[data-lot-id="MIX"]');
+
+  if (card1) card1.classList.toggle('active', selectedGatewayLot === 'LOT-01');
+  if (card2) card2.classList.toggle('active', selectedGatewayLot === 'LOT-02');
+  if (cardMix) cardMix.classList.toggle('active', selectedGatewayLot === 'MIX');
+
+  // Update checkout buttons with selected bean query param
   const btnPersonal = document.getElementById('btnGoPersonal');
   const btnCorporate = document.getElementById('btnGoCorporate');
   const targetLotParam = selectedGatewayLot || 'LOT-01';
+
   if (btnPersonal) btnPersonal.href = '/personal?bean=' + encodeURIComponent(targetLotParam);
   if (btnCorporate) btnCorporate.href = '/corporate?bean=' + encodeURIComponent(targetLotParam);
 }
-  selectedGatewayLot = lotId;
 
-  // Toggle: If clicking the currently open card, collapse it; otherwise expand the new one
-  const isAlreadyActive = selectedGatewayLot === lotId;
-  selectedGatewayLot = isAlreadyActive ? null : lotId;
-  
-  // Highlight cards
 function renderHarvestGateway(lots) {
   const container = document.getElementById('harvestLotsContainer');
   if (!container) return;
