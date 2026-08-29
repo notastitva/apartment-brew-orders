@@ -120,7 +120,7 @@ let availableCoupons = [
 let appliedCoupon = null;
 let selectedBean = "Ratnagiri Estate (Anaerobic Naturals)";
 let isCustomSplit = false;
-let customSplit = { lot1: ((PAGE === 'CORPORATE' || PAGE === 'OFFICE') ? 5 : 2), lot2: ((PAGE === 'CORPORATE' || PAGE === 'OFFICE') ? 5 : 2) };
+let customSplit = {};
 let selectedB2cPack = { name: "Weekend Pack", bottles: 4, unitPrice: 899 };
 let selectedB2bPack = { name: "Team Pack", bottles: 10, unitPrice: 1800 };
 let currentOrderDetails = null;
@@ -173,95 +173,161 @@ function initHarvestFromUrl() {
   }
 }
 
-// --------------------------------------------------------------------
-// Discovery Flight & Splitter Engine (Step 2 Dynamic Calculation)
-// --------------------------------------------------------------------
 function getTotalBottles() {
-  const qtyInput = document.getElementById('packQty');
-  let qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
-  if (isNaN(qty) || qty < 1) qty = 1;
-  const active = (PAGE === 'CORPORATE' || PAGE === 'OFFICE' || currentMode === 'B2B') ? selectedB2bPack : selectedB2cPack;
-  return (active && active.bottles ? active.bottles : 1) * qty;
+  var qtyInput = document.getElementById('packQty');
+  var qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
+  if (isNaN(qty) || qty <= 0) qty = 1;
+  var isB2b = (PAGE === 'CORPORATE' || PAGE === 'OFFICE' || currentMode === 'B2B');
+  var active = isB2b ? selectedB2bPack : selectedB2cPack;
+  var bottleCount = (active && active.bottles) ? active.bottles : 1;
+  return bottleCount * qty;
+}
+
+function getActiveLots() {
+  return availableLots.filter(function(l) {
+    if (l.isActive === false) return false;
+    if (l.isSoldOut === true) return false;
+    if (typeof l.remainingBottles === 'number' && l.remainingBottles <= 0) return false;
+    return true;
+  });
+}
+
+function getMixSplitSummary() {
+  var activeLots = getActiveLots();
+  var parts = [];
+  activeLots.forEach(function(lot) {
+    var count = customSplit[lot.id] || 0;
+    if (count !== 0) {
+      parts.push(count + 'x ' + lot.name);
+    }
+  });
+  if (parts.length === 0) return 'Mix & Match Discovery Flight';
+  return 'Mix & Match (' + parts.join(' + ') + ')';
 }
 
 function rebalanceSplitter() {
-  const total = getTotalBottles();
-  const prevSum = (customSplit.lot1 || 0) + (customSplit.lot2 || 0);
-  
-  if (prevSum > 0 && prevSum !== total) {
-    const ratio = customSplit.lot1 / prevSum;
-    const newLot1 = Math.round(ratio * total);
-    customSplit.lot1 = newLot1;
-    customSplit.lot2 = total - newLot1;
-  } else {
-    const half = Math.floor(total / 2);
-    customSplit.lot1 = half;
-    customSplit.lot2 = total - half;
+  var activeLots = getActiveLots();
+  var total = getTotalBottles();
+  if (activeLots.length === 0) return;
+
+  var currentSum = 0;
+  activeLots.forEach(function(l) {
+    if (typeof customSplit[l.id] === 'number') {
+      currentSum += customSplit[l.id];
+    }
+  });
+
+  if (currentSum !== total) {
+    customSplit = {};
+    var base = Math.floor(total / activeLots.length);
+    var remainder = total % activeLots.length;
+    activeLots.forEach(function(l, idx) {
+      customSplit[l.id] = base + (idx < remainder ? 1 : 0);
+    });
   }
-  
+
   renderSplitterUI();
 }
 
-function adjustSplit(lotKey, delta) {
-  const total = getTotalBottles();
-  
-  if (lotKey === 'lot1') {
-    let newL1 = customSplit.lot1 + delta;
-    if (newL1 >= 0 && newL1 <= total) {
-      customSplit.lot1 = newL1;
-      customSplit.lot2 = total - newL1;
-    }
-  } else {
-    let newL2 = customSplit.lot2 + delta;
-    if (newL2 >= 0 && newL2 <= total) {
-      customSplit.lot2 = newL2;
-      customSplit.lot1 = total - newL2;
-    }
+function adjustSplit(lotId, delta) {
+  var activeLots = getActiveLots();
+  var total = getTotalBottles();
+  if (activeLots.length <= 1) return;
+
+  var currentVal = customSplit[lotId] || 0;
+
+  if (delta > 0) {
+    var otherLots = activeLots.filter(function(l) {
+      return l.id !== lotId && (customSplit[l.id] || 0) > 0;
+    });
+    if (otherLots.length === 0) return;
+    otherLots.sort(function(a, b) {
+      return (customSplit[b.id] || 0) - (customSplit[a.id] || 0);
+    });
+    var targetToDec = otherLots[0];
+    customSplit[lotId] = currentVal + 1;
+    customSplit[targetToDec.id] = (customSplit[targetToDec.id] || 0) - 1;
+  } else if (delta < 0) {
+    if (currentVal <= 0) return;
+    var otherLots = activeLots.filter(function(l) {
+      return l.id !== lotId;
+    });
+    if (otherLots.length === 0) return;
+    otherLots.sort(function(a, b) {
+      return (customSplit[a.id] || 0) - (customSplit[b.id] || 0);
+    });
+    var targetToInc = otherLots[0];
+    customSplit[lotId] = currentVal - 1;
+    customSplit[targetToInc.id] = (customSplit[targetToInc.id] || 0) + 1;
   }
+
   renderSplitterUI();
 }
 
 function renderSplitterUI() {
-  const total = getTotalBottles();
-  const alloc = (customSplit.lot1 || 0) + (customSplit.lot2 || 0);
-  const qtyInput = document.getElementById('packQty');
-  const qty = qtyInput ? parseInt(qtyInput.value, 10) || 1 : 1;
-  const activePack = (PAGE === 'CORPORATE' || PAGE === 'OFFICE' || currentMode === 'B2B') ? selectedB2bPack : selectedB2cPack;
-  const lot1Name = availableLots[0] ? availableLots[0].name : "Lot 1";
-  const lot2Name = availableLots[1] ? availableLots[1].name : "Lot 2";
-  
-  const allocEl = document.getElementById('allocCount');
-  const targetEl = document.getElementById('targetCount');
-  const l1Count = document.getElementById('splitLot1Count');
-  const l2Count = document.getElementById('splitLot2Count');
-  const bar1 = document.getElementById('ratioBarLot1');
-  const bar2 = document.getElementById('ratioBarLot2');
-  const tallyEl = document.getElementById('tallyStatus');
-  const customSplitter = document.getElementById('customSplitter');
-  
+  var total = getTotalBottles();
+  var activeLots = getActiveLots();
+  var customSplitter = document.getElementById('customSplitter');
   if (customSplitter) {
     customSplitter.style.display = isCustomSplit ? 'block' : 'none';
   }
-  
-  if (allocEl) allocEl.textContent = alloc;
+  if (!isCustomSplit || activeLots.length === 0) return;
+
+  var controlsContainer = document.getElementById('splitterControlsContainer');
+  var ratioBar = document.getElementById('splitterRatioBar');
+  var allocEl = document.getElementById('allocCount');
+  var targetEl = document.getElementById('targetCount');
+  var tallyEl = document.getElementById('tallyStatus');
+
+  var currentAllocated = 0;
+  activeLots.forEach(function(l) {
+    currentAllocated += (customSplit[l.id] || 0);
+  });
+
+  if (allocEl) allocEl.textContent = currentAllocated;
   if (targetEl) targetEl.textContent = total;
-  if (l1Count) l1Count.textContent = customSplit.lot1;
-  if (l2Count) l2Count.textContent = customSplit.lot2;
-  
-  if (tallyEl) {
-    if (customSplit.lot1 === customSplit.lot2) {
-      tallyEl.textContent = `✨ Balanced Mix & Match Split: ${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name} (${qty}x ${activePack.name})`;
-    } else {
-      tallyEl.textContent = `🎯 Custom Split: ${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name} (Total ${total} bottles in batch)`;
-    }
+
+  if (controlsContainer) {
+    var rowsHtml = '';
+    activeLots.forEach(function(lot) {
+      var count = customSplit[lot.id] || 0;
+      var lotColor = lot.color || (lot.id === 'LOT-01' ? '#e76f51' : (lot.id === 'LOT-02' ? '#2a9d8f' : '#d4a373'));
+      rowsHtml += '<div class="splitter-row">' +
+        '<div class="splitter-lot-info">' +
+        '<span class="splitter-lot-name" style="color: ' + lotColor + ';">' + lot.name + '</span>' +
+        '<span class="splitter-lot-sub">' + lot.process + '</span>' +
+        '</div>' +
+        '<div class="qty-stepper">' +
+        '<button type="button" class="stepper-btn" data-lot-id="' + lot.id + '" onclick="adjustSplit(this.dataset.lotId, -1)">&ndash;</button>' +
+        '<span class="stepper-val" id="splitCount_' + lot.id + '">' + count + '</span>' +
+        '<button type="button" class="stepper-btn" data-lot-id="' + lot.id + '" onclick="adjustSplit(this.dataset.lotId, 1)">+</button>' +
+        '</div>' +
+        '</div>';
+    });
+    controlsContainer.innerHTML = rowsHtml;
   }
-  
-  const l1Percent = total > 0 ? (customSplit.lot1 / total) * 100 : 50;
-  const l2Percent = total > 0 ? (customSplit.lot2 / total) * 100 : 50;
-  
-  if (bar1) bar1.style.width = `${l1Percent}%`;
-  if (bar2) bar2.style.width = `${l2Percent}%`;
+
+  if (ratioBar) {
+    var segmentsHtml = '';
+    activeLots.forEach(function(lot) {
+      var count = customSplit[lot.id] || 0;
+      var pct = total > 0 ? (count / total) * 100 : 0;
+      var lotColor = lot.color || (lot.id === 'LOT-01' ? '#e76f51' : (lot.id === 'LOT-02' ? '#2a9d8f' : '#d4a373'));
+      if (pct > 0) {
+        segmentsHtml += '<div class="ratio-segment" style="width: ' + pct + '%; background: ' + lotColor + '; height: 100%; transition: width 0.3s ease;" title="' + lot.name + ': ' + count + ' bottles"></div>';
+      }
+    });
+    ratioBar.innerHTML = segmentsHtml;
+  }
+
+  if (tallyEl) {
+    var summaryStr = getMixSplitSummary();
+    tallyEl.textContent = '✨ ' + summaryStr + ' (Total ' + total + ' bottles)';
+  }
 }
+// --------------------------------------------------------------------
+// Discovery Flight & Splitter Engine (Step 2 Dynamic Calculation)
+// --------------------------------------------------------------------
 // --------------------------------------------------------------------
 // --------------------------------------------------------------------
 // 2-Question Flavor Matcher Engine (menu.html)
@@ -622,9 +688,7 @@ function populateOrderReview() {
   
   const lot1Name = availableLots[0] ? availableLots[0].name : "Lot 1";
   const lot2Name = availableLots[1] ? availableLots[1].name : "Lot 2";
-  const coffeeLotDisplay = isCustomSplit 
-    ? `Mix & Match (${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name})` 
-    : selectedBean;
+  const coffeeLotDisplay = isCustomSplit ? getMixSplitSummary() : selectedBean;
   
   const name = (document.getElementById('custName')?.value || '').trim();
   const address = (document.getElementById('custAddress')?.value || '').trim();
@@ -1594,9 +1658,7 @@ async function handleOrderSuccess(paymentId, statusText) {
   const lot1Name = availableLots[0] ? availableLots[0].name : "Lot 1";
   const lot2Name = availableLots[1] ? availableLots[1].name : "Lot 2";
   
-  const coffeeLotDisplay = isCustomSplit 
-    ? `Mix & Match (${customSplit.lot1}x ${lot1Name} + ${customSplit.lot2}x ${lot2Name})` 
-    : selectedBean;
+  const coffeeLotDisplay = isCustomSplit ? getMixSplitSummary() : selectedBean;
   
   const orderPayload = {
     authToken: CONFIG.authToken,
