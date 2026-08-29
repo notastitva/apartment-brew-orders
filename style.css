@@ -2717,7 +2717,7 @@ input:focus, select:focus, textarea:focus {
 
 .destination-order-card {
   background: linear-gradient(165deg, #25221e 0%, #171513 100%);
-  border: 1.5px solid var(--card-border);
+  border: 1.5px solid rgba(212, 163, 115, 0.35);
   border-radius: 14px;
   padding: 16px 14px;
   display: flex;
@@ -2734,23 +2734,6 @@ input:focus, select:focus, textarea:focus {
 .destination-order-card:hover {
   transform: translateY(-2px);
   border-color: var(--accent);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
-}
-
-.destination-order-card.card-personal {
-  border-color: rgba(212, 163, 115, 0.35);
-}
-
-.destination-order-card.card-personal:hover {
-  box-shadow: 0 8px 24px rgba(212, 163, 115, 0.2);
-}
-
-.destination-order-card.card-corporate {
-  border-color: rgba(212, 163, 115, 0.35);
-
-}
-.destination-order-card.card-corporate:hover {
-  border-color: var(--accent);
   box-shadow: 0 8px 24px rgba(212, 163, 115, 0.25);
 }
 
@@ -2758,6 +2741,7 @@ input:focus, select:focus, textarea:focus {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 8px;
 }
 
 .dest-card-title {
@@ -2773,20 +2757,11 @@ input:focus, select:focus, textarea:focus {
   padding: 3px 8px;
   border-radius: 10px;
   text-transform: uppercase;
-}
-
-.badge-personal {
   background: rgba(212, 163, 115, 0.18);
   color: var(--accent);
   border: 1px solid rgba(212, 163, 115, 0.4);
+  white-space: nowrap;
 }
-
-.badge-corporate {
-  background: rgba(212, 163, 115, 0.18);
-  color: var(--accent);
-  border: 1px solid rgba(212, 163, 115, 0.4);
-}
-
 .dest-card-desc {
   font-size: 0.72rem;
   color: var(--text-muted);
@@ -2803,23 +2778,15 @@ input:focus, select:focus, textarea:focus {
   padding: 10px;
   border-radius: 8px;
   transition: all 0.2s ease;
-}
-
-.cta-personal {
   background: var(--gradient-gold);
   color: #141312;
+  box-shadow: 0 4px 14px rgba(212, 163, 115, 0.2);
 }
-
-.cta-corporate {
-  background: var(--gradient-gold);
-  color: #141312;
+  
+.dest-card-cta:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
 }
-
-.cta-corporate:hover {
-  background: var(--info-blue);
-  color: #141312;
-}
-
 /* ==================================================================== */
 /* SENSORY MENU & COMPARISON HUB DESIGN SYSTEM */
 /* ==================================================================== */
