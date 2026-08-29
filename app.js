@@ -86,8 +86,7 @@ let liveRemainingBatchBottles = 150;
 let availableLots = [
   { id: "LOT-01", name: "Ratnagiri Estate", region: "Chikmagalur, Karnataka • 1,350m MASL", process: "72h Anaerobic Natural", notes: "Wild Raspberry, Ripe Stone Fruit & Dark Cacao Finish", emojis: ["🍇", "🍑", "🍫"], pills: ["Fruity", "High Acidity", "Winey Body", "Morning Focus"], roast: 45, fermentation: 80, acidity: 85, body: 70, sweetness: 80, aromatics: 75, clarity: 65, story: "Whole ripe cherries are sealed inside airtight stainless steel tanks for 72 hours under anaerobic pressure. This oxygen-deprived fermentation forces the coffee seed to absorb dense fruit sugars from the cherry mucilage, creating intense wild raspberry notes and a rich, winey finish.", rituals: "Best Time: 8:00 AM – 11:00 AM (Morning Focus) • Pairings: Sourdough toast, almond croissants, dark chocolate brownies, mature cheeses", maxBottles: 120, remainingBottles: 120, isActive: true, color: "#e76f51" },
   { id: "LOT-02", name: "Banana Banger", region: "Shevaroys Hills, Tamil Nadu • 1,450m MASL", process: "Special Yeast Fermentation", notes: "Orange Blossom, Jasmine & Crisp Green Apple", emojis: ["🌸", "🍏", "✨"], pills: ["Floral", "Crisp Acidity", "Tea-Like Body", "Afternoon Refresh"], roast: 40, fermentation: 85, acidity: 75, body: 45, sweetness: 70, aromatics: 95, clarity: 90, story: "Inoculated with isolated wine-yeast cultures during fermentation. The specific yeast strain metabolizes organic acids into bright malic esters and floral terpenes, stripping away heavy astringency to yield sparkling green apple acidity and crystalline jasmine clarity.", rituals: "Best Time: 1:00 PM – 4:00 PM (Afternoon Refresh) • Pairings: Lemon tea cakes, fruit tarts, light salads, shortbread biscuits", maxBottles: 80, remainingBottles: 80, isActive: true, color: "#2a9d8f" },
-  { id: "LOT-03", name: "Riverdale Estate", region: "Yercaud, Eastern Ghats • 1,500m MASL", process: "Washed Carbonic Maceration", notes: "Blackcurrant, Bergamot & Raw Honeyed Peach", emojis: ["🫐", "🍊", "🍯"], pills: ["Complex", "Silky Texture", "Clean Finish", "All-Day Brew"], roast: 38, fermentation: 70, acidity: 80, body: 55, sweetness: 88, aromatics: 88, clarity: 85, story: "Pulped and fermented in a carbon dioxide rich pressurized environment for 48 hours before clean spring water washing. Elevates delicate bergamot and stone fruit notes with crystalline cup sweetness.", rituals: "Best Time: All-Day Focus • Pairings: Fresh berry scones, citrus Madeleine, poached pears", maxBottles: 100, remainingBottles: 100, isActive: true, color: "#d4a373" },
-  { id: "LOT-04", name: "Thogarihunkal Estate", region: "Bababudangiri • 1,400m MASL", process: "Honey Sun-Dried", notes: "Hazelnut, Toffee & Spiced Plum", emojis: ["🌰", "🍮", "🪵"], pills: ["Nutty", "Balanced", "Sweet"], roast: 55, fermentation: 50, acidity: 60, body: 75, sweetness: 78, aromatics: 65, clarity: 70, story: "Carefully patio-dried with sticky cherry mucilage intact to infuse dense caramel and hazelnut sweetness.", rituals: "Best Time: Late Morning • Pairings: Biscotti, cinnamon rolls", maxBottles: 0, remainingBottles: 0, isActive: false, color: "#b08968" }
+  { id: "LOT-03", name: "Riverdale Estate", region: "Yercaud, Eastern Ghats • 1,500m MASL", process: "Washed Carbonic Maceration", notes: "Blackcurrant, Bergamot & Raw Honeyed Peach", emojis: ["🫐", "🍊", "🍯"], pills: ["Complex", "Silky Texture", "Clean Finish", "All-Day Brew"], roast: 38, fermentation: 70, acidity: 80, body: 55, sweetness: 88, aromatics: 88, clarity: 85, story: "Pulped and fermented in a carbon dioxide rich pressurized environment for 48 hours before clean spring water washing. Elevates delicate bergamot and stone fruit notes with crystalline cup sweetness.", rituals: "Best Time: All-Day Focus • Pairings: Fresh berry scones, citrus Madeleine, poached pears", maxBottles: 100, remainingBottles: 100, isActive: true, color: "#d4a373" }
 ];
 
 let availableB2cPacks = [
@@ -160,22 +159,14 @@ function selectBean(lotId) {
 
 function initHarvestFromUrl() {
   const params = new URLSearchParams(window.location.search);
-  const beanParam = params.get('bean') || params.get('lot');
-  if ((PAGE === 'PERSONAL' || PAGE === 'CORPORATE') && !beanParam) {
+  const beanParam = params.get('bean') || params.get('lot') || params.get('harvest');
+  if ((PAGE === 'PERSONAL' || PAGE === 'CORPORATE' || PAGE === 'OFFICE' || PAGE === 'ORDER') && !beanParam) {
     window.location.href = '/orders';
     return;
   }
   if (beanParam) {
     selectBean(beanParam);
   }
-  const displayBeanEl = document.getElementById('displaySelectedBean');
-  if (displayBeanEl) {
-    displayBeanEl.textContent = selectedBean;
-  }
-}
-  const params = new URLSearchParams(window.location.search);
-  const bean = params.get('bean') || params.get('lot') || params.get('harvest');
-  if (bean) selectBean(bean);
   const displayBeanEl = document.getElementById('displaySelectedBean');
   if (displayBeanEl) {
     displayBeanEl.textContent = selectedBean;
@@ -365,21 +356,6 @@ function selectHarvestOption(lotId) {
     }
   }
 }
-  selectedGatewayLot = (selectedGatewayLot === lotId) ? null : lotId;
-  document.querySelectorAll('.harvest-preview-card, #cardLot1, #cardLot2, #cardLotMix').forEach(card => {
-    const cardLot = card.dataset.lotId;
-    if (selectedGatewayLot && (cardLot === selectedGatewayLot || card.id === `cardLot${selectedGatewayLot.replace('LOT-', '')}` || (selectedGatewayLot === 'MIX' && card.id === 'cardLotMix'))) {
-      card.classList.add('active');
-    } else {
-      card.classList.remove('active');
-    }
-  });
-  const btnPersonal = document.getElementById('btnGoPersonal');
-  const btnCorporate = document.getElementById('btnGoCorporate');
-  const targetLotParam = selectedGatewayLot || 'LOT-01';
-  if (btnPersonal) btnPersonal.href = '/personal?bean=' + encodeURIComponent(targetLotParam);
-  if (btnCorporate) btnCorporate.href = '/corporate?bean=' + encodeURIComponent(targetLotParam);
-}
 function renderHarvestGateway(lots) {
   const container = document.getElementById('harvestLotsContainer');
   if (!container) return;
@@ -400,26 +376,6 @@ function renderHarvestGateway(lots) {
   if (activeCount >= 2) {
     const mixActiveClass = selectedGatewayLot === 'MIX' ? 'active' : '';
     html += '<div class="harvest-preview-card ' + mixActiveClass + '" data-lot-id="MIX" id="cardLotMix" onclick="selectHarvestOption(\'MIX\')">' + '<div class="harvest-card-top">' + '<div class="harvest-info-wrap">' + '<div class="harvest-title">Mix &amp; Match</div>' + '<div class="harvest-origin" style="color: var(--accent);">Custom Multi-Lot Discovery Flight</div> ' + '<div class="harvest-notes">Curious about multiple harvests? Customize your split ratio across all active micro-lots.</div>' + '</div>' + '<div class="harvest-top-right">' + '<div class="harvest-tag tag-mix">Custom Split</div>' + '<div class="harvest-radio-dot"></div>' + '</div>' + '</div>' + '<div class="harvest-expanded-content">' + '<div class="mix-split-box">' + '<div class="mix-split-desc">Blend our single-estate micro-lots in a single order. Fine-tune your bottle split during checkout.</div>' + '<div class="mix-badges-row">' + '<span class="mix-badge">✨ Custom Bottle Split</span>' + '<span class="mix-badge">☕ Multi-Fermentation Styles</span>' + '<span class="mix-badge">⚡ Available Across All Packs</span>' + '</div>' + '</div>' + '</div>' + '</div>';
-  }
-  container.innerHTML = html;
-}
-  const container = document.getElementById('harvestLotsContainer');
-  if (!container) return;
-  const displayLots = Array.isArray(lots) && lots.length > 0 ? lots : availableLots;
-  let html = '';
-  displayLots.forEach((lot) => {
-    const isSoldOut = !lot.isActive || (typeof lot.remainingBottles === 'number' && lot.remainingBottles <= 0);
-    const soldOutTag = isSoldOut ? '<div class="harvest-tag" style="background:#e63946; border-color:#e63946; color:#fff;">SOLD OUT</div>' : '';
-    const clickAttr = isSoldOut ? '' : ('onclick="selectHarvestOption(\'' + lot.id + '\')"');
-    const emojis = (lot.emojis || []).map((e, idx) => {
-      const label = (lot.pills && lot.pills[idx]) || 'Aroma';
-      return '<div class="flavor-swatch"><span class="swatch-icon">' + e + '</span><span class="swatch-text">' + label + '</span></div>';
-    }).join('');
-    html += '<div class="harvest-preview-card ' + (isSoldOut ? 'lot-sold-out' : '') + '" data-lot-id="' + lot.id + '" id="cardLot_' + lot.id + '" style="' + (isSoldOut ? 'opacity:0.5; cursor:not-allowed;' : '') + '" ' + clickAttr + '>' + '<div class="harvest-card-top">' + '<div class="harvest-info-wrap">' + '<div class="harvest-title" style="color:' + (lot.color || 'var(--text)') + ';">' + lot.name + '</div>' + '<div class="harvest-origin">' + (lot.region || 'Western Ghats • Single-Estate') + '</div>' + '<div class="harvest-notes">' + lot.notes + '</div>' + '</div>' + '<div class="harvest-top-right">' + (soldOutTag || ('<div class="harvest-tag" style="border-color:' + (lot.color || 'var(--accent)') + '; color:' + (lot.color || 'var(--accent)') + ';">' + lot.process + '</div>')) + '<div class="harvest-radio-dot"></div>' + '</div>' + '</div>' + '<div class="harvest-expanded-content">' + '<div class="flavor-swatches-grid">' + emojis + '</div>' + '<div class="spectrum-meter-group">' + '<div class="spectrum-meter">' + '<div class="spectrum-header"><span>Roast Degree</span><strong>' + (lot.roast || 45) + '%</strong></div>' + '<div class="spectrum-track"><div class="spectrum-fill fill-roast" style="width:' + (lot.roast || 45) + '%;"></div></div>' + '<div class="spectrum-labels"><span>Light</span><span>Medium</span><span>Dark</span></div>' + '</div>' + '<div class="spectrum-meter">' + '<div class="spectrum-header"><span>Fermentation Depth</span><strong>' + (lot.fermentation || 75) + '%</strong></div>' + '<div class="spectrum-track"><div class="spectrum-fill" style="width:' + (lot.fermentation || 75) + '%; background:' + (lot.color || 'var(--accent)') + ';"></div></div>' + '<div class="spectrum-labels"><span>Washed</span><span>Naturals</span><span>Experimental</span></div>' + '</div>' + '</div>' + '<div class="viscosity-meter-card">' + '<div class="viscosity-info">' + '<span class="viscosity-title">Body & Texture: ' + (lot.body > 60 ? 'Heavy & Syrupy' : 'Light & Silky') + '</span></span>' + '<span class="viscosity-desc">' + (lot.rituals || 'Best paired with morning focus') + '</span></div>' + '<div class="viscosity-bar"><div class="viscosity-fill" style="width:' + (lot.body || 60) + '%; background:' + (lot.color || 'var(--accent)') + ';"></div></div>' + '</div>' + '</div>' + '</div>';
-  });
-  const activeCount = displayLots.filter(l => l.isActive).length;
-  if (activeCount >= 2) {
-    html += '<div class="harvest-preview-card" data-lot-id="MIX" id="cardLotMix" onclick="selectHarvestOption(\'MIX\')">' + '<div class="harvest-card-top">' + '<div class="harvest-info-wrap">' + '<div class="harvest-title">Mix & Match</div>' + '<div class="harvest-origin" style="color: var(--accent);">Custom Multi-Lot Discovery Flight</div> ' + '<div class="harvest-notes">Curious about multiple harvests? Customize your split ratio across all active micro-lots.</div>' + '</div>' + '<div class="harvest-top-right">' + '<div class="harvest-tag tag-mix">Custom Split</div>' + '<div class="harvest-radio-dot"></div>' + '</div>' + '</div>' + '<div class="harvest-expanded-content">' + '<div class="mix-split-box">' + '<div class="mix-split-desc">Blend our single-estate micro-lots in a single order. Fine-tune your bottle split during checkout.</div>' + '<div class="mix-badges-row">' + '<span class="mix-badge">✨ Custom Bottle Split</span>' + '<span class="mix-badge">☕ Multi-Fermentation Styles</span>' + '<span class="mix-badge">⚡ Available Across All Packs</span>' + '</div>' + '</div>' + '</div>' + '</div>';
   }
   container.innerHTML = html;
 }
@@ -2342,13 +2298,8 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTotal();
     goToWizardStep(1);
   } else if (PAGE === 'ORDERS') {
-    renderHarvestGateway(availableLots);
-    startCutoffCountdown();
+    renderHarvestGateway();
     fetchLiveConfig();
-    setInterval(fetchLiveConfig, 30000);
-    startCutoffCountdown();
-    fetchLiveConfig();
-    setInterval(fetchLiveConfig, 30000);
   } else if (PAGE === 'INDEX') {
     startCutoffCountdown();
     fetchLiveConfig();
