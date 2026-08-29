@@ -396,23 +396,24 @@ function renderHarvestGateway(lots) {
   const container = document.getElementById('harvestLotsContainer');
   if (!container) return;
 
-  const displayLots = Array.isArray(lots) &amp;&amp; lots.length > 0 ? lots : availableLots;
+  const displayLots = Array.isArray(lots) && lots.length > 0 ? lots : availableLots;
   let html = '';
 
   displayLots.forEach((lot) => {
-    const isSoldOut = (lot.isActive === false) || (lot.isSoldOut === true) || (typeof lot.remainingBottles === 'number' &amp;&amp; lot.remainingBottles <= 0);
-    const activeClass = selectedGatewayLot === lot.id ? 'active' : '';
+    const isSoldOut = (lot.isActive === false) || (lot.isSoldOut === true) || (typeof lot.remainingBottles === 'number' && lot.remainingBottles <= 0);
+    const activeClass = (selectedGatewayLot === lot.id) ? 'active' : '';
     const soldOutTag = isSoldOut ? '<div class="harvest-tag" style="background:#e63946; border-color:#e63946; color:#fff;">SOLD OUT</div>' : '';
     const clickAttr = isSoldOut ? '' : ('onclick="selectHarvestOption(\'' + lot.id + '\')"');
 
-    // Tag class and accent color
     const lotColor = lot.color || (lot.id === 'LOT-01' ? '#e76f51' : (lot.id === 'LOT-02' ? '#2a9d8f' : '#d4a373'));
-    const tagClass = lot.id === 'LOT-01' ? 'tag-ratnagiri' : (lot.id === 'LOT-02' ? 'tag-banana' : '');
+    const tagClass = (lot.id === 'LOT-01') ? 'tag-ratnagiri' : ((lot.id === 'LOT-02') ? 'tag-banana' : '');
     const tagStyle = tagClass ? '' : ('style="border-color:' + lotColor + '; color:' + lotColor + '; background: rgba(212,163,115,0.12);"');
 
-    // Color-coded swatches
-    const emojis = (lot.emojis &amp;&amp; lot.emojis.length > 0) ? lot.emojis : (lot.id === 'LOT-01' ? ["🍇", "🍑", "🍫"] : (lot.id === 'LOT-02' ? ["🌸", "🍏", "✨"] : ["🫐", "🍊", "🍯"]));
-    const pills = (lot.pills &amp;&amp; lot.pills.length > 0) ? lot.pills : (lot.notes ? lot.notes.split(',').map(s => s.trim()) : ["Specialty Single-Estate", "Micro-Batch"]);
+    const defaultEmojis = (lot.id === 'LOT-01') ? ["🍇", "🍑", "🍫"] : ((lot.id === 'LOT-02') ? ["🌸", "🍏", "✨"] : ["🫐", "🍊", "🍯"]);
+    const emojis = (Array.isArray(lot.emojis) && lot.emojis.length > 0) ? lot.emojis : defaultEmojis;
+
+    const defaultPills = (lot.notes ? lot.notes.split(',').map(s => s.trim()) : ["Specialty Single-Estate", "Micro-Batch"]);
+    const pills = (Array.isArray(lot.pills) && lot.pills.length > 0) ? lot.pills : defaultPills;
 
     const swatchesHtml = emojis.map((e, sIdx) => {
       const label = pills[sIdx] || 'Flavor Note';
@@ -420,35 +421,83 @@ function renderHarvestGateway(lots) {
       return '<div class="flavor-swatch ' + swatchCls + '"><span class="swatch-icon">' + e + '</span><span class="swatch-text">' + label + '</span></div>';
     }).join('');
 
-    // Fermentation meter
-    const fermentClass = lot.id === 'LOT-01' ? 'fill-ferment-lot1' : (lot.id === 'LOT-02' ? 'fill-ferment-lot2' : '');
+    const fermentClass = (lot.id === 'LOT-01') ? 'fill-ferment-lot1' : ((lot.id === 'LOT-02') ? 'fill-ferment-lot2' : '');
     const fermentStyle = fermentClass ? ('style="width:' + (lot.fermentation || 75) + '%;"') : ('style="width:' + (lot.fermentation || 75) + '%; background:' + lotColor + ';"');
     const fermentLabel = lot.process || 'Single-Estate Fermentation';
 
-    // Viscosity
-    const viscClass = lot.id === 'LOT-01' ? 'viscosity-lot1' : (lot.id === 'LOT-02' ? 'viscosity-lot2' : '');
+    const viscClass = (lot.id === 'LOT-01') ? 'viscosity-lot1' : ((lot.id === 'LOT-02') ? 'viscosity-lot2' : '');
     const viscStyle = viscClass ? '' : ('style="width:' + (lot.body || 60) + '%; background:' + lotColor + ';"');
-    const viscTitle = (lot.body &amp;&amp; lot.body > 65) || lot.id === 'LOT-01' ? '🍷 Body &amp; Texture: Syrupy &amp; Winey' : '🍵 Body &amp; Texture: Tea-Like &amp; Silky';
-    const viscDesc = lot.rituals || (lot.id === 'LOT-01' ? 'Medium-Full Body • Best paired with dark pastries &amp; morning focus' : 'Light, Crisp Body • Best paired with light desserts &amp; afternoon refresh');
 
-    html += '<div class="harvest-preview-card ' + activeClass + ' ' + (isSoldOut ? 'lot-sold-out' : '') + '" data-lot-id="' + lot.id + '" id="cardLot_' + lot.id + '" style="' + (isSoldOut ? 'opacity:0.5; cursor:not-allowed;' : '') + '" ' + clickAttr + '>' + '<div class="harvest-card-top">' + '<div class="harvest-info-wrap">' + '<div class="harvest-title" style="color:' + lotColor + ';">' + lot.name + '</div>' + '<div class="harvest-origin">' + (lot.region || 'Western Ghats • Single-Estate') + '</div>' + '<div class="harvest-notes">' + lot.notes + '</div>' + '</div>' + '<div class="harvest-top-right">' + (soldOutTag || ('<div class="harvest-tag ' + tagClass + '" ' + tagStyle + '>' + lot.process + '</div>')) + '<div class="harvest-radio-dot"></div>' + '</div>' + '</div>' + '<div class="harvest-expanded-content">' + '<div class="flavor-swatches-grid">' + swatchesHtml + '</div>' + '<div class="spectrum-meter-group">' + '<div class="spectrum-meter">' + '<div class="spectrum-header"><span>Roast Degree</span><strong>' + (lot.roast ? (lot.roast + '%') : 'Medium-Light (45%)') + '</strong></div>' + '<div class="spectrum-track"><div class="spectrum-fill fill-roast" style="width:' + (lot.roast || 45) + '%;"></div></div>' + '<div class="spectrum-labels"><span>Light</span><span>Medium</span><span>Dark</span></div>' + '</div>' + '<div class="spectrum-meter">' + '<div class="spectrum-header"><span>Fermentation Depth</span><strong>' + fermentLabel + ' (' + (lot.fermentation || 80) + '%)</strong></div>' + '<div class="spectrum-track"><div class="spectrum-fill ' + fermentClass + '" ' + fermentStyle + '></div></div>' + '<div class="spectrum-labels"><span>Washed</span><span>Naturals</span><span>Experimental</span></div>' + '</div>' + '</div>' + '<div class="viscosity-meter-card">' + '<div class="viscosity-info">' + '<span class="viscosity-title">' + viscTitle + '</span>' + '<span class="viscosity-desc">' + viscDesc + '</span></div>' + '<div class="viscosity-bar"><div class="viscosity-fill ' + viscClass + '" ' + viscStyle + '></div></div>' + '</div>' + '</div>' + '</div>';
+    const isHeavyBody = (lot.body && lot.body > 65) || (lot.id === 'LOT-01');
+    const viscTitle = isHeavyBody ? '🍷 Body &amp; Texture: Syrupy &amp; Winey' : '🍵 Body &amp; Texture: Tea-Like &amp; Silky';
+    const viscDesc = lot.rituals || (isHeavyBody ? 'Medium-Full Body • Best paired with dark pastries &amp; morning focus' : 'Light, Crisp Body • Best paired with light desserts &amp; afternoon refresh');
+
+    html += '<div class="harvest-preview-card ' + activeClass + ' ' + (isSoldOut ? 'lot-sold-out' : '') + '" data-lot-id="' + lot.id + '" id="cardLot_' + lot.id + '" style="' + (isSoldOut ? 'opacity:0.5; cursor:not-allowed;' : '') + '" ' + clickAttr + '>' +
+      '<div class="harvest-card-top">' +
+      '<div class="harvest-info-wrap">' +
+      '<div class="harvest-title" style="color:' + lotColor + ';">' + lot.name + '</div>' +
+      '<div class="harvest-origin">' + (lot.region || 'Western Ghats • Single-Estate') + '</div>' +
+      '<div class="harvest-notes">' + lot.notes + '</div>' +
+      '</div>' +
+      '<div class="harvest-top-right">' +
+      (soldOutTag || ('<div class="harvest-tag ' + tagClass + '" ' + tagStyle + '>' + lot.process + '</div>')) +
+      '<div class="harvest-radio-dot"></div>' +
+      '</div>' +
+      '</div>' +
+      '<div class="harvest-expanded-content">' +
+      '<div class="flavor-swatches-grid">' + swatchesHtml + '</div>' +
+      '<div class="spectrum-meter-group">' +
+      '<div class="spectrum-meter">' +
+      '<div class="spectrum-header"><span>Roast Degree</span><strong>' + (lot.roast ? (lot.roast + '%') : 'Medium-Light (45%)') + '</strong></div>' +
+      '<div class="spectrum-track"><div class="spectrum-fill fill-roast" style="width:' + (lot.roast || 45) + '%;"></div></div>' +
+      '<div class="spectrum-labels"><span>Light</span><span>Medium</span><span>Dark</span></div>' +
+      '</div>' +
+      '<div class="spectrum-meter">' +
+      '<div class="spectrum-header"><span>Fermentation Depth</span><strong>' + fermentLabel + ' (' + (lot.fermentation || 80) + '%)</strong></div>' +
+      '<div class="spectrum-track"><div class="spectrum-fill ' + fermentClass + '" ' + fermentStyle + '></div></div>' +
+      '<div class="spectrum-labels"><span>Washed</span><span>Naturals</span><span>Experimental</span></div>' +
+      '</div>' +
+      '</div>' +
+      '<div class="viscosity-meter-card">' +
+      '<div class="viscosity-info">' +
+      '<span class="viscosity-title">' + viscTitle + '</span>' +
+      '<span class="viscosity-desc">' + viscDesc + '</span></div>' +
+      '<div class="viscosity-bar"><div class="viscosity-fill ' + viscClass + '" ' + viscStyle + '></div></div>' +
+      '</div>' +
+      '</div>' +
+      '</div>';
   });
 
-  const activeCount = displayLots.filter(l => l.isActive !== false &amp;&amp; !l.isSoldOut &amp;&amp; (typeof l.remainingBottles !== 'number' || l.remainingBottles > 0)).length;
+  const activeCount = displayLots.filter(l => l.isActive !== false && !l.isSoldOut && (typeof l.remainingBottles !== 'number' || l.remainingBottles > 0)).length;
   if (activeCount >= 2) {
-    const mixActiveClass = selectedGatewayLot === 'MIX' ? 'active' : '';
-    html += '<div class="harvest-preview-card ' + mixActiveClass + '" data-lot-id="MIX" id="cardLotMix" onclick="selectHarvestOption(\'MIX\')">' + '<div class="harvest-card-top">' + '<div class="harvest-info-wrap">' + '<div class="harvest-title">Mix &amp; Match</div>' + '<div class="harvest-origin" style="color: var(--accent);">Custom Multi-Lot Discovery Flight</div>' + '<div class="harvest-notes">Curious about multiple harvests? Customize your split ratio across all active micro-lots.</div>' + '</div>' + '<div class="harvest-top-right">' + '<div class="harvest-tag tag-mix">Custom Split</div>' + '<div class="harvest-radio-dot"></div>' + '</div>' + '</div>' + '<div class="harvest-expanded-content">' + '<div class="mix-split-box">' + '<div class="mix-split-desc">Blend our single-estate micro-lots in a single order. Fine-tune your bottle split during checkout.</div>' + '<div class="mix-badges-row">' + '<span class="mix-badge">✨ Custom Bottle Split</span>' + '<span class="mix-badge">☕ Multi-Fermentation Styles</span>' + '<span class="mix-badge">⚡ Available Across All Packs</span>' + '</div>' + '</div>' + '</div>' + '</div>';
+    const mixActiveClass = (selectedGatewayLot === 'MIX') ? 'active' : '';
+    html += '<div class="harvest-preview-card ' + mixActiveClass + '" data-lot-id="MIX" id="cardLotMix" onclick="selectHarvestOption(\'MIX\')">' +
+      '<div class="harvest-card-top">' +
+      '<div class="harvest-info-wrap">' +
+      '<div class="harvest-title">Mix &amp; Match</div>' +
+      '<div class="harvest-origin" style="color: var(--accent);">Custom Multi-Lot Discovery Flight</div>' +
+      '<div class="harvest-notes">Curious about multiple harvests? Customize your split ratio across all active micro-lots.</div>' +
+      '</div>' +
+      '<div class="harvest-top-right">' +
+      '<div class="harvest-tag tag-mix">Custom Split</div>' +
+      '<div class="harvest-radio-dot"></div>' +
+      '</div>' +
+      '</div>' +
+      '<div class="harvest-expanded-content">' +
+      '<div class="mix-split-box">' +
+      '<div class="mix-split-desc">Blend our single-estate micro-lots in a single order. Fine-tune your bottle split during checkout.</div>' +
+      '<div class="mix-badges-row">' +
+      '<span class="mix-badge">✨ Custom Bottle Split</span>' +
+      '<span class="mix-badge">☕ Multi-Fermentation Styles</span>' +
+      '<span class="mix-badge">⚡ Available Across All Packs</span>' +
+      '</div>' +
+      '</div>' +
+      '</div>' +
+      '</div>';
+  }
 
   container.innerHTML = html;
 }
-
-
-
-
-
-
-
-
 // --------------------------------------------------------------------
 function validateWizardStep(stepNum) {
   if (stepNum === 1) {
