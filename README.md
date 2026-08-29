@@ -142,16 +142,66 @@ The frontend dynamically hydrates and updates from the Menu & Config tab in Goog
 
 ### 5.2 Single-Estate Harvest Lots
 
-| Field Name | Data Type | Description & Live Example |
+
+Field Name
+Data Type
+Description & Purpose
+Lot ID
+String
+Unique identifier (e.g., LOT-01, LOT-02, LOT-03).
+Estate Name
+String
+Single-estate farm title (e.g., Ratnagiri Estate, Riverdale Estate).
+Region & Elevation
+String
+Origin and altitude (e.g., Chikmagalur • 1,350m MASL).
+Process Tag
+String
+Fermentation process (e.g., 72h Anaerobic Natural, Washed Carbonic Maceration).
+Tasting Notes
+String
+Sensory descriptors displayed across harvest cards and receipts.
+Emojis
+String / Array
+Comma-separated emojis driving dynamic visual flavor swatches (e.g., 🍇, 🍑, 🍫).
+Flavor Pills
+String / Array
+Comma-separated tags used for category badges and flavor quiz matching.
+Roast Level %
+Integer (0–100)
+Drives the roast spectrum meter on /orders.
+Fermentation Depth %
+Integer (0–100)
+Drives the fermentation meter on /orders.
+Acidity %
+Integer (0–100)
+Axis 1 of the 5-Axis Sensory Radar & comparative spectrum.
+Body %
+Integer (0–100)
+Axis 4 of the 5-Axis Sensory Radar & viscosity gauge.
+Sweetness %
+Integer (0–100)
+Axis 3 of the 5-Axis Sensory Radar & comparative spectrum.
+Aromatics %
+Integer (0–100)
+Axis 2 of the 5-Axis Sensory Radar & comparative spectrum.
+Clarity %
+Integer (0–100)
+Axis 5 of the 5-Axis Sensory Radar & comparative spectrum.
+Process Story
+String (Paragraph)
+Farm-level processing story rendered dynamically on /flavor.
+Pairing Rituals
+String
+Time of day and food pairing recommendations rendered dynamically on /flavor.
+Max Bottles
+Integer
+Drop capacity allocation. Setting to 0 marks lot as Sold Out.
+Active
+Boolean (TRUE/FALSE)
+Controls whether the lot is active on the website. Inactive lots are automatically disabled across all portals.
+
 | :---- | :---- | :---- |
-| **Lot ID** | String | LOT-01, LOT-02, MIX |
-| **Estate Name** | String | Ratnagiri Estate, Banana Banger |
-| **Process** | String | Anaerobic Naturals, Special Yeast Fermentation |
-| **Notes** | String | Wild Raspberry, Ripe Stone Fruit & Dark Cacao Finish |
-| **Flavor Pills** | JSON Array | \["Fruity", "High Acidity", "Medium Roast"\] |
-| **Acidity %** | Integer | 85 (Drives SVG progress meters) |
-| **Body %** | Integer | 70 (Drives viscosity gauge) |
-| **Active** | Boolean | TRUE / FALSE |
 
 ### 5.3 Package Tiers (Standardized 200ml Glass Bottles)
 
@@ -292,3 +342,5 @@ The self-service lookup engine on /track queries the active Google Sheets databa
 * Honeypot Bot Trap: Hidden input field (botTrap) silently drops automated spam submissions.  
 * Resilient Offline Cache: Progressive Web App service worker (sw.js) caches static assets for lightning-fast loads.  
 * Secure Token Authentication: All mutating POST calls are signed with CONFIG.authToken matching Code.gs.
+
+

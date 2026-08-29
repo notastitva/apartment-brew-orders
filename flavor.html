@@ -175,14 +175,14 @@
   </p>
  
   <!-- Radar Filter Tabs -->
-  <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
+  <div id="radarTabsContainer" style="display: flex; justify-content: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
     <button type="button" class="mode-tab active" id="radarTabOverlay" style="padding: 6px 12px; font-size: 0.72rem;" onclick="setRadarFocus('OVERLAY')">✨ Dual Overlay</button>
     <button type="button" class="mode-tab" id="radarTabLot1" style="padding: 6px 12px; font-size: 0.72rem;" onclick="setRadarFocus('LOT-01')">🍇 Ratnagiri Estate</button>
     <button type="button" class="mode-tab" id="radarTabLot2" style="padding: 6px 12px; font-size: 0.72rem;" onclick="setRadarFocus('LOT-02')">🌸 Banana Banger</button>
   </div>
  
   <!-- Radar SVG Container -->
-  <div style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px 10px; text-align: center;">
+  <div id="radarSvgContainer" style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px 10px; text-align: center;">
     <svg viewBox="0 0 400 250" style="width: 100%; max-width: 380px; height: auto; margin: 0 auto; display: block;" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="ratnagiriRadarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -233,7 +233,7 @@
     </svg>
     
     <!-- Radar Legend -->
-    <div style="display: flex; justify-content: center; gap: 16px; margin-top: 10px; font-size: 0.74rem;">
+    <div id="radarLegendContainer" style="display: flex; justify-content: center; gap: 16px; margin-top: 10px; font-size: 0.74rem;">
       <div style="display: flex; align-items: center; gap: 6px; color: #e76f51; font-weight: 700;">
         <span style="width: 10px; height: 10px; border-radius: 50%; background: #e76f51; display: inline-block;"></span>
         Ratnagiri Estate (Winey &amp; Syrupy)
@@ -256,7 +256,7 @@
     Direct side-by-side comparison across flavor dimensions. Top bar = <strong>Ratnagiri Estate</strong> (Berry/Coral), bottom bar = <strong>Banana Banger</strong> (Teal/Cyan):
   </p>
  
-  <div class="spectrum-comparison-card">
+  <div id="spectrumComparisonContainer" class="spectrum-comparison-card">
     <!-- Metric 1: Body &amp; Mouthfeel -->
     <div class="spectrum-bar-item">
       <div class="spectrum-header-row">
@@ -350,7 +350,7 @@
     The origin story and farm-level chemistry behind each micro-lot:
   </p>
  
-  <div style="display: flex; flex-direction: column; gap: 10px;">
+  <div id="processCardsContainer" style="display: flex; flex-direction: column; gap: 10px;">
     <!-- Ratnagiri Process Card -->
     <div style="background: linear-gradient(165deg, rgba(231,111,81,0.08) 0%, #151413 100%); border: 1px solid rgba(231,111,81,0.35); border-radius: 10px; padding: 14px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
@@ -392,7 +392,7 @@
     How to integrate our single-estate brews into your daily routine and meals:
   </p>
  
-  <div class="pairing-cards-grid">
+  <div id="pairingCardsContainer" class="pairing-cards-grid">
     <!-- Pairing Card 1: Ratnagiri -->
     <div class="pairing-card card-ratnagiri">
       <div class="pairing-header">

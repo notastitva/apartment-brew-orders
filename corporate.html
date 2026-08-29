@@ -144,6 +144,7 @@
       <span class="section-subtitle">Friday Drop (Cutoff: Thu 6 PM &bull; 200ml Bottles)</span>
     </div>
     <!-- Dynamic B2B Packs Grid -->
+    <div class="form-group"><label>Selected Single-Estate Harvest Lot</label><div class="lot-grid" id="lotGrid"></div></div>
     <div class="pack-grid" id="b2bPacks"></div>
     <div class="form-group" style="margin-top: 12px;">
       <label for="packQty">Quantity of Selected Batches</label>
@@ -157,7 +158,7 @@
         <span class="splitter-tally" id="splitterTally">Allocated: <strong><span id="allocCount">10</span> / <span id="targetCount">10</span></strong> bottles</span>
       </div>
       <div id="tallyStatus" class="splitter-tally-note" style="font-size: 0.76rem; color: var(--accent); margin-bottom: 8px; text-align: center;"></div>
-      <div class="splitter-controls">
+      <div class="splitter-controls" id="splitterControlsContainer">
         <div class="splitter-row">
           <div class="splitter-lot-info">
             <span class="splitter-lot-name" id="splitLot1Name">Lot 1</span>
@@ -181,7 +182,7 @@
           </div>
         </div>
       </div>
-      <div class="splitter-ratio-bar">
+      <div class="splitter-ratio-bar" id="splitterRatioBar">
         <div class="ratio-segment ratio-ratnagiri" id="ratioBarLot1" style="width: 50%;"></div>
         <div class="ratio-segment ratio-thogarihunkal" id="ratioBarLot2" style="width: 50%;"></div>
       </div>
@@ -459,5 +460,6 @@
   <script src="app.js"></script>
 </body>
 </html>
+
 
 
