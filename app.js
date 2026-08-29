@@ -130,6 +130,44 @@ function normalizeStr(s) {
   return String(s || '').replace(/[\u2010-\u2015\u2212]/g, '-').replace(/\s+/g, ' ').trim().toLowerCase();
 }
 
+function selectBean(lotId) {
+  const lot = availableLots.find(l => l.id === lotId || l.name === lotId);
+  if (lotId === 'MIX') {
+    isCustomSplit = true;
+    selectedBean = "Mix & Match Custom Split";
+  } else if (lot) {
+    isCustomSplit = false;
+    selectedBean = `${lot.name} (${lot.process})`;
+  }
+  const displayBeanEl = document.getElementById('displaySelectedBean');
+  if (displayBeanEl) {
+    displayBeanEl.textContent = selectedBean;
+  }
+  document.querySelectorAll('.lot-option-btn, .lot-card, [data-lot]').forEach(el => {
+    const target = el.dataset.lot || el.dataset.lotId || (el.querySelector('.lot-name')?.textContent);
+    if (target && (target === lotId || (lot && target.includes(lot.name)))) {
+      el.classList.add('active');
+    } else {
+      el.classList.remove('active');
+    }
+  });
+  const splitter = document.getElementById('customSplitter');
+  if (splitter) splitter.style.display = isCustomSplit ? 'block' : 'none';
+  if (isCustomSplit) rebalanceSplitter();
+  updateTotal();
+  renderSplitterUI();
+}
+
+function initHarvestFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const bean = params.get('bean') || params.get('lot') || params.get('harvest');
+  if (bean) selectBean(bean);
+  const displayBeanEl = document.getElementById('displaySelectedBean');
+  if (displayBeanEl) {
+    displayBeanEl.textContent = selectedBean;
+  }
+}
+
 // --------------------------------------------------------------------
 // Discovery Flight & Splitter Engine (Step 2 Dynamic Calculation)
 // --------------------------------------------------------------------
@@ -276,35 +314,27 @@ function updateQuizRecommendation() {
 
 // Orders Gateway Controller (orders.html)
 // --------------------------------------------------------------------
-
-// --------------------------------------------------------------------
-// Orders Gateway Controller (orders.html)
-// --------------------------------------------------------------------
 let selectedGatewayLot = null;
-
 function selectHarvestOption(lotId) {
-  // Toggle: If clicking the currently active card, deselect/collapse it; otherwise select it
   selectedGatewayLot = (selectedGatewayLot === lotId) ? null : lotId;
-
-  // Toggle .active class across all harvest cards (supports both static IDs and dynamic data attributes)
-  const card1 = document.getElementById('cardLot1') || document.querySelector('[data-lot-id="LOT-01"]');
-  const card2 = document.getElementById('cardLot2') || document.querySelector('[data-lot-id="LOT-02"]');
-  const cardMix = document.getElementById('cardLotMix') || document.querySelector('[data-lot-id="MIX"]');
-
-  if (card1) card1.classList.toggle('active', selectedGatewayLot === 'LOT-01');
-  if (card2) card2.classList.toggle('active', selectedGatewayLot === 'LOT-02');
-  if (cardMix) cardMix.classList.toggle('active', selectedGatewayLot === 'MIX');
-
-  // Update checkout buttons with selected bean query param
+  document.querySelectorAll('.harvest-preview-card, #cardLot1, #cardLot2, #cardLotMix').forEach(card => {
+    const cardLot = card.dataset.lotId;
+    if (selectedGatewayLot && (cardLot === selectedGatewayLot || card.id === `cardLot${selectedGatewayLot.replace('LOT-', '')}` || (selectedGatewayLot === 'MIX' && card.id === 'cardLotMix'))) {
+      card.classList.add('active');
+    } else {
+      card.classList.remove('active');
+    }
+  });
   const btnPersonal = document.getElementById('btnGoPersonal');
   const btnCorporate = document.getElementById('btnGoCorporate');
   const targetLotParam = selectedGatewayLot || 'LOT-01';
-
   if (btnPersonal) btnPersonal.href = '/personal?bean=' + encodeURIComponent(targetLotParam);
   if (btnCorporate) btnCorporate.href = '/corporate?bean=' + encodeURIComponent(targetLotParam);
 }
+  if (btnPersonal) btnPersonal.href = '/personal?bean=' + encodeURIComponent(targetLotParam);
+  if (btnCorporate) btnCorporate.href = '/corporate?bean=' + encodeURIComponent(targetLotParam);
 
-function renderHarvestGateway(lots) {
+  // Highlight cards
   const container = document.getElementById('harvestLotsContainer');
   if (!container) return;
   const displayLots = Array.isArray(lots) && lots.length > 0 ? lots : availableLots;
@@ -2227,68 +2257,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const beanParam = urlParams.get('bean') || urlParams.get('lot');
   
   if (PAGE === 'PERSONAL' || PAGE === 'ORDER' || PAGE === 'HOME') {
+    renderLots(availableLots);
     renderPacks(availableB2cPacks, []);
-    startCutoffCountdown();
-    checkSavedProfile();
-    fetchLiveConfig();
-    setInterval(fetchLiveConfig, 30000);
-    
-    if (beanParam) {
-      if (beanParam === 'LOT-01' || beanParam.toLowerCase().includes('ratnagiri')) {
-        selectedBean = availableLots[0] ? `${availableLots[0].name} (${availableLots[0].process})` : "Ratnagiri Estate (Anaerobic Naturals)";
-        isCustomSplit = false;
-      } else if (beanParam === 'LOT-02' || beanParam.toLowerCase().includes('banana')) {
-        selectedBean = availableLots[1] ? `${availableLots[1].name} (${availableLots[1].process})` : "Banana Banger (Fermented Lot)";
-        isCustomSplit = false;
-      } else if (beanParam === 'MIX' || beanParam.toLowerCase().includes('mix')) {
-        selectedBean = "Mix & Match";
-        isCustomSplit = true;
-      }
-    } else {
-      selectedBean = availableLots[0] ? `${availableLots[0].name} (${availableLots[0].process})` : "Ratnagiri Estate (Anaerobic Naturals)";
-      isCustomSplit = false;
-    }
-    
-    const customSplitter = document.getElementById('customSplitter');
-    if (customSplitter) {
-      customSplitter.style.display = isCustomSplit ? 'block' : 'none';
-    }
-    if (isCustomSplit) {
-      rebalanceSplitter();
-    }
+    initHarvestFromUrl();
+    updateTotal();
     goToWizardStep(1);
     
   } else if (PAGE === 'CORPORATE' || PAGE === 'OFFICE') {
+    renderLots(availableLots);
     renderPacks([], availableB2bPacks);
-    startCutoffCountdown();
     renderClusterOptions();
-    checkSavedProfile();
-    fetchLiveConfig();
-    setInterval(fetchLiveConfig, 30000);
-    
-    if (beanParam) {
-      if (beanParam === 'LOT-01' || beanParam.toLowerCase().includes('ratnagiri')) {
-        selectedBean = availableLots[0] ? `${availableLots[0].name} (${availableLots[0].process})` : "Ratnagiri Estate (Anaerobic Naturals)";
-        isCustomSplit = false;
-      } else if (beanParam === 'LOT-02' || beanParam.toLowerCase().includes('banana')) {
-        selectedBean = availableLots[1] ? `${availableLots[1].name} (${availableLots[1].process})` : "Banana Banger (Fermented Lot)";
-        isCustomSplit = false;
-      } else if (beanParam === 'MIX' || beanParam.toLowerCase().includes('mix')) {
-        selectedBean = "Mix & Match";
-        isCustomSplit = true;
-      }
-    } else {
-      selectedBean = availableLots[0] ? `${availableLots[0].name} (${availableLots[0].process})` : "Ratnagiri Estate (Anaerobic Naturals)";
-      isCustomSplit = false;
-    }
-    
-    const customSplitter = document.getElementById('customSplitter');
-    if (customSplitter) {
-      customSplitter.style.display = isCustomSplit ? 'block' : 'none';
-    }
-    if (isCustomSplit) {
-      rebalanceSplitter();
-    }
+    initHarvestFromUrl();
+    updateTotal();
     goToWizardStep(1);
   } else if (PAGE === 'ORDERS') {
     startCutoffCountdown();

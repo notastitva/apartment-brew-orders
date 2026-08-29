@@ -14,8 +14,8 @@
 
   <!-- Open Graph & Social Preview Tags -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="The Apartment Brew Co. | Micro-Batch Specialty Coffee" />
-  <meta property="og:description" content="Micro-batch flash-chilled specialty coffee hand-brewed fresh to order in Gurugram." />
+<meta property="og:title" content="Corporate Office Drops | The Apartment Brew Co." />
+<meta property="og:description" content="Scheduled Friday corporate flash-brew office drops across Gurugram and Delhi NCR." />
   <meta property="og:image" content="assets/tabc-social-banner-1500x500.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="assets/tabc-social-banner-1500x500.png" />
@@ -32,11 +32,11 @@
   <!-- Sticky Top Header & Hamburger Navigation (Topmost Component) -->
   <header class="site-header-sticky">
   <div class="header-inner">
-    <a href="/" class="nav-logo" aria-label="The Apartment Brew Co. Home">
+<a href="/" class="nav-logo" aria-label="The Apartment Brew Co. Home">
       <div class="nav-logo-brand">
         <!-- Standalone Emblem SVG -->
         <img 
-          src="assets/tabc-emblem-gold-transparent.svg" 
+src="assets/tabc-emblem-gold-transparent.svg"
           alt="The Apartment Brew Co. Emblem" 
           class="nav-logo-icon" 
         />
@@ -61,7 +61,7 @@
         <div class="drawer-header">
       <div style="display: flex; align-items: center; gap: 8px;">
         <img 
-          src="assets/tabc-emblem-gold-transparent.svg" 
+src="assets/tabc-emblem-gold-transparent.svg"
           alt="TABC Emblem" 
           style="width: 24px; height: 24px; object-fit: contain;" 
         />
@@ -70,13 +70,13 @@
       <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&times;</button>
     </div>
     <nav class="drawer-nav">
-      <a href="/" class="drawer-link" data-page-link="INDEX">Home</a>
-      <a href="/orders" class="drawer-link" data-page-link="ORDERS">Order Batch</a>
-      <a href="/flavor" class="drawer-link" data-page-link="FLAVOR">Flavor Matcher</a>
-      <a href="/guide" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
-      <a href="/about" class="drawer-link" data-page-link="ABOUT">Story so far</a>
-      <a href="/events" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
-      <a href="/track" class="drawer-link" data-page-link="TRACK">Inquiry/Order tracking</a>
+<a href="/" class="drawer-link" data-page-link="INDEX">Home</a>
+<a href="/orders" class="drawer-link" data-page-link="ORDERS">Order Batch</a>
+<a href="/flavor" class="drawer-link" data-page-link="FLAVOR">Flavor Matcher</a>
+<a href="/guide" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
+<a href="/about" class="drawer-link" data-page-link="ABOUT">Story so far</a>
+<a href="/events" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
+<a href="/track" class="drawer-link" data-page-link="TRACK">Inquiry/Order tracking</a>
     </nav>
     <div class="drawer-footer">
       <div class="drawer-footer-text">☕ Hand-Brewed Fresh to Order in Gurugram</div>
@@ -118,7 +118,7 @@
   <!-- Order Mode Switcher (Individual vs Office) -->
   
   <div class="order-mode-subtext">
-    Need 100+ bottles for a hackathon or all-hands? <a href="/events">Custom Event Catering &rarr;</a>
+Need 100+ bottles for a hackathon or all-hands? <a href="/events">Custom Event Catering &rarr;</a>
   </div>
   <!-- Wizard Progress Header (Uniform Across Pages) -->
   <div class="wizard-progress-bar">
@@ -143,6 +143,10 @@
       <span>Step 1: Choose Batch Size &amp; Quantity</span>
       <span class="section-subtitle">Friday Drop (Cutoff: Thu 6 PM &bull; 200ml Bottles)</span>
     </div>
+<div class="selected-harvest-summary" id="selectedHarvestSummary">
+  <span>Selected Harvest: <strong id="displaySelectedBean">Ratnagiri Estate (Anaerobic Naturals)</strong></span>
+  <a href="/orders" class="change-harvest-link">Change &rarr;</a>
+</div>
     <!-- Dynamic B2B Packs Grid -->
     <div class="form-group"><label>Selected Single-Estate Harvest Lot</label><div class="lot-grid" id="lotGrid"></div></div>
     <div class="pack-grid" id="b2bPacks"></div>
@@ -215,7 +219,7 @@
       </div>
     </div>
     <div class="wizard-nav-btns">
-      <a href="/orders" class="btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">&larr; Back to Harvest</a>
+<a href="/orders" class="btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">&larr; Back to Harvest</a>
       <button type="button" id="btnStep1Next" class="btn btn-pay" onclick="nextWizardStep(2)">
         <span>Continue to Delivery &rarr;</span>
       </button>
@@ -437,7 +441,7 @@
           <span>&#128241; Send Receipt / Updates to WhatsApp</span>
         </button>
   
-        <a href="/track" id="linkTrackOrder" class="btn" style="background: rgba(212, 163, 115, 0.15); color: var(--accent); border: 1px solid var(--accent); margin-top: 10px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+<a href="/track" id="linkTrackOrder" class="btn" style="background: rgba(212, 163, 115, 0.15); color: var(--accent); border: 1px solid var(--accent); margin-top: 10px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
           <span>&#128269; View Live Order Status</span>
         </a>
   

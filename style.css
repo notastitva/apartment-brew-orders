@@ -3220,3 +3220,47 @@ input:focus, select:focus, textarea:focus {
   margin-top: 2px;
   padding-top: 10px;
 }
+
+
+/* Selected Harvest Summary Badge & Change Link */
+.selected-harvest-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--card-inner, #151413);
+  border: 1px solid var(--card-border, #332f2b);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  font-size: 0.82rem;
+  color: var(--text, #fefae0);
+}
+
+.selected-harvest-summary strong {
+  color: var(--accent, #d4a373);
+  font-weight: 700;
+}
+
+.change-harvest-link {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--accent, #d4a373);
+  text-decoration: none;
+  background: rgba(212, 163, 115, 0.12);
+  border: 1px solid rgba(212, 163, 115, 0.3);
+  border-radius: 6px;
+  padding: 4px 10px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.change-harvest-link:hover {
+  background: var(--accent, #d4a373);
+  color: var(--bg, #141312);
+  border-color: var(--accent, #d4a373);
+  transform: translateY(-1px);
+}

@@ -31,7 +31,7 @@
   <!-- Sticky Top Header & Hamburger Navigation (Topmost Component) -->
   <header class="site-header-sticky">
   <div class="header-inner">
-    <a href="/" class="nav-logo" aria-label="The Apartment Brew Co. Home">
+<a href="/" class="nav-logo" aria-label="The Apartment Brew Co. Home">
       <div class="nav-logo-brand">
         <!-- Standalone Emblem SVG -->
         <img 
@@ -148,13 +148,13 @@
           <span>Step 1: Choose Batch Size &amp; Quantity</span>
           <span class="section-subtitle">200ml Glass Bottles &bull; Saturday &amp; Sunday Drops</span>
         </div>
+<div class="selected-harvest-summary" id="selectedHarvestSummary">
+  <span>Selected Harvest: <strong id="displaySelectedBean">Ratnagiri Estate (Anaerobic Naturals)</strong></span>
+  <a href="/orders" class="change-harvest-link">Change &rarr;</a>
+</div>
 
         <!-- Dynamic B2C Packs Grid -->
-        <div class="selected-harvest-summary">
-          <span>Selected Harvest: <strong id="displaySelectedBean">Ratnagiri Estate</strong></span>
-          <a href="orders.html" class="change-harvest-link">Change &rarr;</a>
-        </div>
-
+<div class="form-group"><label>Selected Single-Estate Harvest Lot</label><div class="lot-grid" id="lotGrid"></div></div>
         <div class="pack-grid" id="b2cPacks"></div>
 
         <div class="form-group" style="margin-top: 12px;">
@@ -458,4 +458,6 @@
   <script src="app.js"></script>
 </body>
 </html>
+
+
 
