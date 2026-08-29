@@ -384,28 +384,201 @@ function updateQuizRecommendation() {
 }
 
 function setRadarFocus(mode) {
-  const polyRatnagiri = document.getElementById('radarPolyRatnagiri');
-  const polyBanana = document.getElementById('radarPolyBanana');
-  const tabOverlay = document.getElementById('radarTabOverlay');
-  const tabLot1 = document.getElementById('radarTabLot1');
-  const tabLot2 = document.getElementById('radarTabLot2');
-
-  [tabOverlay, tabLot1, tabLot2].forEach(tab => {
-    if (tab) tab.classList.remove('active');
+  document.querySelectorAll('#radarTabsContainer .mode-tab').forEach(function(tab) {
+    tab.classList.toggle('active', tab.dataset.lotId === mode);
   });
 
-  if (mode === 'LOT-01') {
-    if (polyRatnagiri) { polyRatnagiri.style.opacity = '1'; polyRatnagiri.style.strokeWidth = '3'; }
-    if (polyBanana) { polyBanana.style.opacity = '0.15'; polyBanana.style.strokeWidth = '1'; }
-    if (tabLot1) tabLot1.classList.add('active');
-  } else if (mode === 'LOT-02') {
-    if (polyRatnagiri) { polyRatnagiri.style.opacity = '0.15'; polyRatnagiri.style.strokeWidth = '1'; }
-    if (polyBanana) { polyBanana.style.opacity = '1'; polyBanana.style.strokeWidth = '3'; }
-    if (tabLot2) tabLot2.classList.add('active');
-  } else {
-    if (polyRatnagiri) { polyRatnagiri.style.opacity = '1'; polyRatnagiri.style.strokeWidth = '2.5'; }
-    if (polyBanana) { polyBanana.style.opacity = '1'; polyBanana.style.strokeWidth = '2.5'; }
-    if (tabOverlay) tabOverlay.classList.add('active');
+  document.querySelectorAll('.radar-lot-poly-group').forEach(function(group) {
+    if (mode === 'OVERLAY' || !mode) {
+      group.style.opacity = '1';
+    } else {
+      var targetId = 'radarGroup_' + mode;
+      group.style.opacity = (group.id === targetId) ? '1' : '0.12';
+    }
+  });
+}
+
+function renderFlavorPage(lots) {
+  var displayLots = (Array.isArray(lots) && lots.length > 0) ? lots.filter(function(l) { return l.isActive !== false; }) : availableLots.filter(function(l) { return l.isActive !== false; });
+  if (displayLots.length === 0) displayLots = availableLots;
+
+  // 1. Render Radar Tabs & Legend
+  var tabsContainer = document.getElementById('radarTabsContainer');
+  var legendContainer = document.getElementById('radarLegendContainer');
+  var svgContainer = document.getElementById('radarSvgContainer');
+
+  if (tabsContainer) {
+    var tabsHtml = '<button type="button" class="mode-tab active" data-lot-id="OVERLAY" style="padding: 6px 12px; font-size: 0.72rem;" onclick="setRadarFocus(this.dataset.lotId)">✨ All Lots Overlay</button>';
+    displayLots.forEach(function(lot) {
+      var emoji = (lot.emojis && lot.emojis[0]) || '☕';
+      tabsHtml += '<button type="button" class="mode-tab" data-lot-id="' + lot.id + '" style="padding: 6px 12px; font-size: 0.72rem;" onclick="setRadarFocus(this.dataset.lotId)">' + emoji + ' ' + lot.name + '</button>';
+    });
+    tabsContainer.innerHTML = tabsHtml;
+  }
+
+  if (legendContainer) {
+    var legendHtml = '';
+    displayLots.forEach(function(lot) {
+      var lotColor = lot.color || (lot.id === 'LOT-01' ? '#e76f51' : (lot.id === 'LOT-02' ? '#2a9d8f' : '#d4a373'));
+      legendHtml += '<div style="display: flex; align-items: center; gap: 6px; color: ' + lotColor + '; font-weight: 700;">' +
+        '<span style="width: 10px; height: 10px; border-radius: 50%; background: ' + lotColor + '; display: inline-block;"></span>' +
+        lot.name + ' (' + (lot.process || 'Specialty') + ')' +
+        '</div>';
+    });
+    legendContainer.innerHTML = legendHtml;
+  }
+
+  // 2. Render Radar SVG
+  if (svgContainer) {
+    var defsHtml = '<defs>';
+    var polysHtml = '';
+
+    var angles = [-Math.PI/2, -18 * Math.PI/180, 54 * Math.PI/180, 126 * Math.PI/180, 198 * Math.PI/180];
+    var cx = 200, cy = 120, maxR = 80;
+
+    displayLots.forEach(function(lot) {
+      var lotColor = lot.color || (lot.id === 'LOT-01' ? '#e76f51' : (lot.id === 'LOT-02' ? '#2a9d8f' : '#d4a373'));
+      var gradId = 'radarGrad_' + lot.id.replace(/[^a-zA-Z0-9]/g, '_');
+      defsHtml += '<linearGradient id="' + gradId + '" x1="0%" y1="0%" x2="100%" y2="100%">' +
+        '<stop offset="0%" stop-color="' + lotColor + '" stop-opacity="0.65" />' +
+        '<stop offset="100%" stop-color="#d4a373" stop-opacity="0.2" />' +
+        '</linearGradient>';
+
+      var vals = [
+        (lot.acidity || 75) / 100,
+        (lot.aromatics || 80) / 100,
+        (lot.sweetness || 75) / 100,
+        (lot.body || 65) / 100,
+        (lot.clarity || 70) / 100
+      ];
+
+      var pointsArr = [];
+      var circlesHtml = '';
+      for (var i = 0; i < 5; i++) {
+        var r = maxR * Math.min(Math.max(vals[i], 0.2), 1.0);
+        var px = (cx + r * Math.cos(angles[i])).toFixed(1);
+        var py = (cy + r * Math.sin(angles[i])).toFixed(1);
+        pointsArr.push(px + ',' + py);
+        circlesHtml += '<circle cx="' + px + '" cy="' + py + '" r="3.5" fill="' + lotColor + '" />';
+      }
+
+      polysHtml += '<g class="radar-lot-poly-group" id="radarGroup_' + lot.id + '" style="transition: all 0.35s ease;">' +
+        '<polygon points="' + pointsArr.join(' ') + '" fill="url(#' + gradId + ')" stroke="' + lotColor + '" stroke-width="2.5" style="filter: drop-shadow(0 0 6px ' + lotColor + '88);" />' +
+        circlesHtml +
+        '</g>';
+    });
+    defsHtml += '</defs>';
+
+    var gridPolys = [
+      '<polygon points="200,100 219.0,113.8 211.8,136.2 188.2,136.2 181.0,113.8" stroke="rgba(255,255,255,0.08)" stroke-width="1" fill="none" />',
+      '<polygon points="200,80 238.0,107.6 223.5,152.4 176.5,152.4 162.0,107.6" stroke="rgba(255,255,255,0.1)" stroke-width="1" fill="none" />',
+      '<polygon points="200,60 257.1,101.5 235.3,168.5 164.7,168.5 142.9,101.5" stroke="rgba(255,255,255,0.12)" stroke-width="1" fill="none" />',
+      '<polygon points="200,40 276.1,95.3 247.0,184.7 153.0,184.7 123.9,95.3" stroke="rgba(212,163,115,0.3)" stroke-width="1.2" fill="none" />'
+    ].join('');
+
+    var spokes = [
+      '<line x1="200" y1="120" x2="200" y2="40" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />',
+      '<line x1="200" y1="120" x2="276.1" y2="95.3" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />',
+      '<line x1="200" y1="120" x2="247.0" y2="184.7" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />',
+      '<line x1="200" y1="120" x2="153.0" y2="184.7" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />',
+      '<line x1="200" y1="120" x2="123.9" y2="95.3" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />'
+    ].join('');
+
+    var labels = [
+      '<text x="200" y="26" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="middle">Bright Acidity</text>',
+      '<text x="292" y="93" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="start">Floral Aromatics</text>',
+      '<text x="258" y="204" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="start">Cane Sweetness</text>',
+      '<text x="142" y="204" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="end">Body &amp; Texture</text>',
+      '<text x="108" y="93" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="end">Cup Clarity</text>'
+    ].join('');
+
+    svgContainer.innerHTML = '<svg viewBox="0 0 400 250" style="width: 100%; max-width: 380px; height: auto; margin: 0 auto; display: block;" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+      defsHtml + gridPolys + spokes + polysHtml + labels +
+      '</svg>';
+  }
+
+  // 3. Render Side-by-Side Sensory Spectrum Bars
+  var specContainer = document.getElementById('spectrumComparisonContainer');
+  if (specContainer) {
+    var metrics = [
+      { label: '🍷 Body & Viscosity (Mouthfeel)', key: 'body', desc: 'Mouthfeel and thickness on palate' },
+      { label: '🍋 Fruit Acidity & Brightness', key: 'acidity', desc: 'Vibrancy, fruit acids and sparkle' },
+      { label: '🍫 Sweetness & Aftertaste', key: 'sweetness', desc: 'Natural cane and fruit sugar depth' },
+      { label: '✨ Aromatic Volatiles & Scent', key: 'aromatics', desc: 'Fragrance, terpenes and florality' },
+      { label: '🔍 Cup Clarity & Cleanliness', key: 'clarity', desc: 'Definition and transparency of cup' }
+    ];
+
+    var specHtml = '';
+    metrics.forEach(function(m) {
+      var trackBars = '';
+      var valLabels = [];
+
+      displayLots.forEach(function(lot) {
+        var val = lot[m.key] || 60;
+        var lotColor = lot.color || (lot.id === 'LOT-01' ? '#e76f51' : (lot.id === 'LOT-02' ? '#2a9d8f' : '#d4a373'));
+        trackBars += '<div class="bar-track-single" style="height: 8px; background: #25221e; border-radius: 4px; overflow: hidden; margin-bottom: 4px;">' +
+          '<div style="width: ' + val + '%; background: ' + lotColor + '; height: 100%; border-radius: 4px; transition: width 0.4s ease;"></div>' +
+          '</div>';
+        valLabels.push('<span style="color: ' + lotColor + '; font-weight: 700; font-size: 0.68rem;">' + lot.name + ': ' + val + '%</span>');
+      });
+
+      specHtml += '<div class="spectrum-bar-item" style="margin-bottom: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--card-border); border-radius: 10px; padding: 10px 12px;">' +
+        '<div class="spectrum-header-row" style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.78rem; font-weight: 800; color: var(--text);">' +
+        '<span>' + m.label + '</span>' +
+        '</div>' +
+        '<div class="spectrum-double-track">' + trackBars + '</div>' +
+        '<div class="spectrum-metric-labels" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-top: 4px;">' +
+        valLabels.join('') +
+        '</div>' +
+        '</div>';
+    });
+    specContainer.innerHTML = specHtml;
+  }
+
+  // 4. Render Farm Process Science Cards
+  var procContainer = document.getElementById('processCardsContainer');
+  if (procContainer) {
+    var procHtml = '';
+    displayLots.forEach(function(lot) {
+      var lotColor = lot.color || (lot.id === 'LOT-01' ? '#e76f51' : (lot.id === 'LOT-02' ? '#2a9d8f' : '#d4a373'));
+      var story = lot.story || lot.notes || 'Hand-harvested and crafted in micro-batches with meticulous fermentation control.';
+      procHtml += '<div style="background: linear-gradient(165deg, rgba(255,255,255,0.03) 0%, #151413 100%); border: 1.5px solid ' + lotColor + '44; border-radius: 12px; padding: 14px; margin-bottom: 10px;">' +
+        '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">' +
+        '<strong style="color: ' + lotColor + '; font-size: 0.95rem;">' + lot.name + ' (' + lot.id + ')</strong>' +
+        '<span style="background: rgba(212,163,115,0.15); color: ' + lotColor + '; border: 1px solid ' + lotColor + '; font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 10px;">' + lot.process + '</span>' +
+        '</div>' +
+        '<div style="font-size: 0.72rem; color: var(--accent); margin-bottom: 6px;">' + (lot.region || 'Western Ghats • Single-Estate') + '</div>' +
+        '<p style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.45; margin: 0 0 12px;">' + story + '</p>' +
+        '<a href="/personal?bean=' + encodeURIComponent(lot.id) + '" class="btn" style="background: var(--gradient-gold); color: #141312; font-weight: 800; font-size: 0.76rem; padding: 9px 12px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; width: 100%; border-radius: 8px;">' +
+        '<span>Configure ' + lot.name + ' Drop &rarr;</span>' +
+        '</a>' +
+        '</div>';
+    });
+    procContainer.innerHTML = procHtml;
+  }
+
+  // 5. Render Daypart & Food Pairing Cards
+  var pairContainer = document.getElementById('pairingCardsContainer');
+  if (pairContainer) {
+    var pairHtml = '';
+    displayLots.forEach(function(lot) {
+      var lotColor = lot.color || (lot.id === 'LOT-01' ? '#e76f51' : (lot.id === 'LOT-02' ? '#2a9d8f' : '#d4a373'));
+      var emoji = (lot.emojis && lot.emojis[0]) || '☕';
+      var ritualsText = lot.rituals || 'Best enjoyed during morning focus or afternoon recharge with artisanal pastries.';
+      pairHtml += '<div class="pairing-card" style="background: var(--card-inner); border: 1.5px solid ' + lotColor + '33; border-radius: 12px; padding: 14px; margin-bottom: 10px;">' +
+        '<div class="pairing-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">' +
+        '<span style="font-weight: 800; color: ' + lotColor + '; font-size: 0.9rem;">' + emoji + ' ' + lot.name + ' Rituals</span>' +
+        '<span style="font-size: 0.68rem; font-weight: 700; color: var(--accent); background: rgba(212,163,115,0.12); padding: 2px 8px; border-radius: 8px;">' + (lot.pills ? lot.pills[0] : 'Specialty') + '</span>' +
+        '</div>' +
+        '<div class="pairing-list" style="display: flex; flex-direction: column; gap: 6px;">' +
+        '<div class="pairing-list-item" style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.74rem; color: var(--text-muted); line-height: 1.35;">' +
+        '<span>⏱️</span>' +
+        '<span>' + ritualsText + '</span>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+    });
+    pairContainer.innerHTML = pairHtml;
   }
 }
 
@@ -1094,6 +1267,7 @@ function applyConfigToUI(data) {
     availableLots = data.lots;
     if (typeof renderLots === 'function') renderLots(data.lots);
     if (PAGE === 'ORDERS') renderHarvestGateway(data.lots);
+    if (PAGE === 'FLAVOR' || PAGE === 'MENU') renderFlavorPage(data.lots);
   }
 
   if (data.b2cPacks || data.b2bPacks) {
@@ -2490,6 +2664,9 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchLiveConfig();
     setInterval(fetchLiveConfig, 30000);
   } else if (PAGE === 'FLAVOR' || PAGE === 'MENU') {
+    renderFlavorPage(availableLots);
+    fetchLiveConfig();
+    updateQuizRecommendation();
     renderLots(availableLots);
     fetchLiveConfig();
     updateQuizRecommendation();
