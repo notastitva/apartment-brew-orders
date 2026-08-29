@@ -217,8 +217,9 @@ body::before {
   line-height: 1.15;
   /* Brushed Gold Metallic Text Gradient */
   background: linear-gradient(135deg, #cd9a3a 0%, #e5c068 35%, #fcf29b 70%, #b08968 100%);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* Sub-Descriptor */
@@ -2745,12 +2746,12 @@ input:focus, select:focus, textarea:focus {
 }
 
 .destination-order-card.card-corporate {
-  border-color: rgba(144, 224, 239, 0.35);
-}
+  border-color: rgba(212, 163, 115, 0.35);
 
+}
 .destination-order-card.card-corporate:hover {
-  border-color: var(--info-blue);
-  box-shadow: 0 8px 24px rgba(144, 224, 239, 0.2);
+  border-color: var(--accent);
+  box-shadow: 0 8px 24px rgba(212, 163, 115, 0.25);
 }
 
 .dest-card-header {
@@ -2781,9 +2782,9 @@ input:focus, select:focus, textarea:focus {
 }
 
 .badge-corporate {
-  background: rgba(144, 224, 239, 0.18);
-  color: var(--info-blue);
-  border: 1px solid rgba(144, 224, 239, 0.4);
+  background: rgba(212, 163, 115, 0.18);
+  color: var(--accent);
+  border: 1px solid rgba(212, 163, 115, 0.4);
 }
 
 .dest-card-desc {
@@ -2810,9 +2811,8 @@ input:focus, select:focus, textarea:focus {
 }
 
 .cta-corporate {
-  background: rgba(144, 224, 239, 0.15);
-  color: var(--info-blue);
-  border: 1px solid var(--info-blue);
+  background: var(--gradient-gold);
+  color: #141312;
 }
 
 .cta-corporate:hover {
