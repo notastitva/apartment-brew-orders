@@ -331,10 +331,7 @@ function selectHarvestOption(lotId) {
   if (btnPersonal) btnPersonal.href = '/personal?bean=' + encodeURIComponent(targetLotParam);
   if (btnCorporate) btnCorporate.href = '/corporate?bean=' + encodeURIComponent(targetLotParam);
 }
-  if (btnPersonal) btnPersonal.href = '/personal?bean=' + encodeURIComponent(targetLotParam);
-  if (btnCorporate) btnCorporate.href = '/corporate?bean=' + encodeURIComponent(targetLotParam);
-
-  // Highlight cards
+function renderHarvestGateway(lots) {
   const container = document.getElementById('harvestLotsContainer');
   if (!container) return;
   const displayLots = Array.isArray(lots) && lots.length > 0 ? lots : availableLots;
@@ -351,7 +348,7 @@ function selectHarvestOption(lotId) {
   });
   const activeCount = displayLots.filter(l => l.isActive).length;
   if (activeCount >= 2) {
-    html += '<div class="harvest-preview-card" data-lot-id="MIX" id="cardLotMix" onclick="selectHarvestOption(\'MIX\')">' + '<div class="harvest-card-top">' + '<div class="harvest-info-wrap">' + '<div class="harvest-title">Mix & Match</div>' + '<div class="harvest-origin" style="color: var(--accent);">Custom Multi-Lot Discovery Flight</div>' + '<div class="harvest-notes">Curious about multiple harvests? Customize your split ratio across all active micro-lots.</div>' + '</div>' + '<div class="harvest-top-right">' + '<div class="harvest-tag tag-mix">Custom Split</div>' + '<div class="harvest-radio-dot"></div>' + '</div>' + '</div>' + '<div class="harvest-expanded-content">' + '<div class="mix-split-box">' + '<div class="mix-split-desc">Blend our single-estate micro-lots in a single order. Fine-tune your bottle split during checkout.</div>' + '<div class="mix-badges-row">' + '<span class="mix-badge">✨ Custom Bottle Split</span>' + '<span class="mix-badge">☕ Multi-Fermentation Styles</span>' + '<span class="mix-badge">⚡ Available Across All Packs</span>' + '</div>' + '</div>' + '</div>' + '</div>';
+    html += '<div class="harvest-preview-card" data-lot-id="MIX" id="cardLotMix" onclick="selectHarvestOption(\'MIX\')">' + '<div class="harvest-card-top">' + '<div class="harvest-info-wrap">' + '<div class="harvest-title">Mix & Match</div>' + '<div class="harvest-origin" style="color: var(--accent);">Custom Multi-Lot Discovery Flight</div> ' + '<div class="harvest-notes">Curious about multiple harvests? Customize your split ratio across all active micro-lots.</div>' + '</div>' + '<div class="harvest-top-right">' + '<div class="harvest-tag tag-mix">Custom Split</div>' + '<div class="harvest-radio-dot"></div>' + '</div>' + '</div>' + '<div class="harvest-expanded-content">' + '<div class="mix-split-box">' + '<div class="mix-split-desc">Blend our single-estate micro-lots in a single order. Fine-tune your bottle split during checkout.</div>' + '<div class="mix-badges-row">' + '<span class="mix-badge">✨ Custom Bottle Split</span>' + '<span class="mix-badge">☕ Multi-Fermentation Styles</span>' + '<span class="mix-badge">⚡ Available Across All Packs</span>' + '</div>' + '</div>' + '</div>' + '</div>';
   }
   container.innerHTML = html;
 }
