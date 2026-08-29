@@ -217,9 +217,8 @@ body::before {
   line-height: 1.15;
   /* Brushed Gold Metallic Text Gradient */
   background: linear-gradient(135deg, #cd9a3a 0%, #e5c068 35%, #fcf29b 70%, #b08968 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
 }
 
 /* Sub-Descriptor */
@@ -3263,4 +3262,28 @@ input:focus, select:focus, textarea:focus {
   color: var(--bg, #141312);
   border-color: var(--accent, #d4a373);
   transform: translateY(-1px);
+}
+  
+/* Destination Checkout Cards Disabled & Prompt State */
+.destination-order-card.disabled {
+  opacity: 0.45;
+  pointer-events: none;
+  filter: grayscale(0.4);
+  cursor: not-allowed;
+}
+
+.select-harvest-prompt {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: rgba(212, 163, 115, 0.1);
+  border: 1px dashed rgba(212, 163, 115, 0.4);
+  border-radius: 8px;
+  padding: 10px 14px;
+  text-align: center;
+  margin-bottom: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }

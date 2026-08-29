@@ -160,6 +160,20 @@ function selectBean(lotId) {
 
 function initHarvestFromUrl() {
   const params = new URLSearchParams(window.location.search);
+  const beanParam = params.get('bean') || params.get('lot');
+  if ((PAGE === 'PERSONAL' || PAGE === 'CORPORATE') && !beanParam) {
+    window.location.href = '/orders';
+    return;
+  }
+  if (beanParam) {
+    selectBean(beanParam);
+  }
+  const displayBeanEl = document.getElementById('displaySelectedBean');
+  if (displayBeanEl) {
+    displayBeanEl.textContent = selectedBean;
+  }
+}
+  const params = new URLSearchParams(window.location.search);
   const bean = params.get('bean') || params.get('lot') || params.get('harvest');
   if (bean) selectBean(bean);
   const displayBeanEl = document.getElementById('displaySelectedBean');
@@ -317,6 +331,41 @@ function updateQuizRecommendation() {
 let selectedGatewayLot = null;
 function selectHarvestOption(lotId) {
   selectedGatewayLot = (selectedGatewayLot === lotId) ? null : lotId;
+  document.querySelectorAll('.harvest-preview-card').forEach(card => {
+    card.classList.toggle('active', selectedGatewayLot && card.dataset.lotId === selectedGatewayLot);
+  });
+  const btnPersonal = document.getElementById('btnGoPersonal');
+  const btnCorporate = document.getElementById('btnGoCorporate');
+  const prompt = document.getElementById('harvestPrompt');
+  if (selectedGatewayLot) {
+    if (btnPersonal) {
+      btnPersonal.classList.remove('disabled');
+      btnPersonal.href = '/personal?bean=' + encodeURIComponent(selectedGatewayLot);
+    }
+    if (btnCorporate) {
+      btnCorporate.classList.remove('disabled');
+      btnCorporate.href = '/corporate?bean=' + encodeURIComponent(selectedGatewayLot);
+    }
+    if (prompt) {
+      prompt.textContent = '✓ Harvest selected! Choose your order scale below:';
+      prompt.classList.add('selection-made');
+    }
+  } else {
+    if (btnPersonal) {
+      btnPersonal.classList.add('disabled');
+      btnPersonal.href = 'javascript:void(0)';
+    }
+    if (btnCorporate) {
+      btnCorporate.classList.add('disabled');
+      btnCorporate.href = 'javascript:void(0)';
+    }
+    if (prompt) {
+      prompt.textContent = '👆 Please select a single-estate harvest above to choose your order scale';
+      prompt.classList.remove('selection-made');
+    }
+  }
+}
+  selectedGatewayLot = (selectedGatewayLot === lotId) ? null : lotId;
   document.querySelectorAll('.harvest-preview-card, #cardLot1, #cardLot2, #cardLotMix').forEach(card => {
     const cardLot = card.dataset.lotId;
     if (selectedGatewayLot && (cardLot === selectedGatewayLot || card.id === `cardLot${selectedGatewayLot.replace('LOT-', '')}` || (selectedGatewayLot === 'MIX' && card.id === 'cardLotMix'))) {
@@ -332,6 +381,28 @@ function selectHarvestOption(lotId) {
   if (btnCorporate) btnCorporate.href = '/corporate?bean=' + encodeURIComponent(targetLotParam);
 }
 function renderHarvestGateway(lots) {
+  const container = document.getElementById('harvestLotsContainer');
+  if (!container) return;
+  const displayLots = Array.isArray(lots) && lots.length > 0 ? lots : availableLots;
+  let html = '';
+  displayLots.forEach((lot) => {
+    const isSoldOut = !lot.isActive || (typeof lot.remainingBottles === 'number' && lot.remainingBottles <= 0);
+    const activeClass = selectedGatewayLot === lot.id ? 'active' : '';
+    const soldOutTag = isSoldOut ? '<div class="harvest-tag" style="background:#e63946; border-color:#e63946; color:#fff;">SOLD OUT</div>' : '';
+    const clickAttr = isSoldOut ? '' : ('onclick="selectHarvestOption(\'' + lot.id + '\')"');
+    const emojis = (lot.emojis || []).map((e, idx) => {
+      const label = (lot.pills && lot.pills[idx]) || 'Aroma';
+      return '<div class="flavor-swatch"><span class="swatch-icon">' + e + '</span><span class="swatch-text">' + label + '</span></div>';
+    }).join('');
+    html += '<div class="harvest-preview-card ' + activeClass + ' ' + (isSoldOut ? 'lot-sold-out' : '') + '" data-lot-id="' + lot.id + '" id="cardLot_' + lot.id + '" style="' + (isSoldOut ? 'opacity:0.5; cursor:not-allowed;' : '') + '" ' + clickAttr + '>' + '<div class="harvest-card-top">' + '<div class="harvest-info-wrap">' + '<div class="harvest-title" style="color:' + (lot.color || 'var(--text)') + ';">' + lot.name + '</div>' + '<div class="harvest-origin">' + (lot.region || 'Western Ghats • Single-Estate') + '</div>' + '<div class="harvest-notes">' + lot.notes + '</div>' + '</div>' + '<div class="harvest-top-right">' + (soldOutTag || ('<div class="harvest-tag" style="border-color:' + (lot.color || 'var(--accent)') + '; color:' + (lot.color || 'var(--accent)') + ';">' + lot.process + '</div>')) + '<div class="harvest-radio-dot"></div>' + '</div>' + '</div>' + '<div class="harvest-expanded-content">' + '<div class="flavor-swatches-grid">' + emojis + '</div>' + '<div class="spectrum-meter-group">' + '<div class="spectrum-meter">' + '<div class="spectrum-header"><span>Roast Degree</span><strong>' + (lot.roast || 45) + '%</strong></div>' + '<div class="spectrum-track"><div class="spectrum-fill fill-roast" style="width:' + (lot.roast || 45) + '%;"></div></div>' + '<div class="spectrum-labels"><span>Light</span><span>Medium</span><span>Dark</span></div>' + '</div>' + '<div class="spectrum-meter">' + '<div class="spectrum-header"><span>Fermentation Depth</span><strong>' + (lot.fermentation || 75) + '%</strong></div>' + '<div class="spectrum-track"><div class="spectrum-fill" style="width:' + (lot.fermentation || 75) + '%; background:' + (lot.color || 'var(--accent)') + ';"></div></div>' + '<div class="spectrum-labels"><span>Washed</span><span>Naturals</span><span>Experimental</span></div>' + '</div>' + '</div>' + '<div class="viscosity-meter-card">' + '<div class="viscosity-info">' + '<span class="viscosity-title">Body &amp; Texture: ' + (lot.body > 60 ? 'Heavy &amp; Syrupy' : 'Light &amp; Silky') + '</span>' + '<span class="viscosity-desc">' + (lot.rituals || 'Best paired with morning focus') + '</span></div>' + '<div class="viscosity-bar"><div class="viscosity-fill" style="width:' + (lot.body || 60) + '%; background:' + (lot.color || 'var(--accent)') + ';"></div></div>' + '</div>' + '</div>' + '</div>';
+  });
+  const activeCount = displayLots.filter(l => l.isActive).length;
+  if (activeCount >= 2) {
+    const mixActiveClass = selectedGatewayLot === 'MIX' ? 'active' : '';
+    html += '<div class="harvest-preview-card ' + mixActiveClass + '" data-lot-id="MIX" id="cardLotMix" onclick="selectHarvestOption(\'MIX\')">' + '<div class="harvest-card-top">' + '<div class="harvest-info-wrap">' + '<div class="harvest-title">Mix &amp; Match</div>' + '<div class="harvest-origin" style="color: var(--accent);">Custom Multi-Lot Discovery Flight</div> ' + '<div class="harvest-notes">Curious about multiple harvests? Customize your split ratio across all active micro-lots.</div>' + '</div>' + '<div class="harvest-top-right">' + '<div class="harvest-tag tag-mix">Custom Split</div>' + '<div class="harvest-radio-dot"></div>' + '</div>' + '</div>' + '<div class="harvest-expanded-content">' + '<div class="mix-split-box">' + '<div class="mix-split-desc">Blend our single-estate micro-lots in a single order. Fine-tune your bottle split during checkout.</div>' + '<div class="mix-badges-row">' + '<span class="mix-badge">✨ Custom Bottle Split</span>' + '<span class="mix-badge">☕ Multi-Fermentation Styles</span>' + '<span class="mix-badge">⚡ Available Across All Packs</span>' + '</div>' + '</div>' + '</div>' + '</div>';
+  }
+  container.innerHTML = html;
+}
   const container = document.getElementById('harvestLotsContainer');
   if (!container) return;
   const displayLots = Array.isArray(lots) && lots.length > 0 ? lots : availableLots;
@@ -878,7 +949,10 @@ function applyConfigToUI(data) {
     scarcityFill.style.transform = `scaleX(${pct / 100})`;
   }
   
-  if (data.lots) renderLots(data.lots);
+  if (data.lots) {
+    renderLots(data.lots);
+    if (PAGE === 'ORDERS') renderHarvestGateway(data.lots);
+  }
   if (data.b2cPacks || data.b2bPacks) renderPacks(data.b2cPacks, data.b2bPacks);
   if (Array.isArray(data.coupons) && data.coupons.length > 0) {
     availableCoupons = data.coupons;
@@ -2268,6 +2342,10 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTotal();
     goToWizardStep(1);
   } else if (PAGE === 'ORDERS') {
+    renderHarvestGateway(availableLots);
+    startCutoffCountdown();
+    fetchLiveConfig();
+    setInterval(fetchLiveConfig, 30000);
     startCutoffCountdown();
     fetchLiveConfig();
     setInterval(fetchLiveConfig, 30000);
