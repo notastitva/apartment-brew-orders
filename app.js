@@ -362,7 +362,7 @@ function renderHarvestGateway(lots) {
   const displayLots = Array.isArray(lots) && lots.length > 0 ? lots : availableLots;
   let html = '';
   displayLots.forEach((lot) => {
-    const isSoldOut = !lot.isActive || (typeof lot.remainingBottles === 'number' && lot.remainingBottles <= 0);
+    const isSoldOut = (lot.isActive === false) || (lot.isSoldOut === true) || (typeof lot.remainingBottles === 'number' && lot.remainingBottles <= 0);
     const activeClass = selectedGatewayLot === lot.id ? 'active' : '';
     const soldOutTag = isSoldOut ? '<div class="harvest-tag" style="background:#e63946; border-color:#e63946; color:#fff;">SOLD OUT</div>' : '';
     const clickAttr = isSoldOut ? '' : ('onclick="selectHarvestOption(\'' + lot.id + '\')"');
