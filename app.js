@@ -317,6 +317,32 @@ function updateQuizRecommendation() {
   }
 }
 
+function setRadarFocus(mode) {
+  const polyRatnagiri = document.getElementById('radarPolyRatnagiri');
+  const polyBanana = document.getElementById('radarPolyBanana');
+  const tabOverlay = document.getElementById('radarTabOverlay');
+  const tabLot1 = document.getElementById('radarTabLot1');
+  const tabLot2 = document.getElementById('radarTabLot2');
+
+  [tabOverlay, tabLot1, tabLot2].forEach(tab => {
+    if (tab) tab.classList.remove('active');
+  });
+
+  if (mode === 'LOT-01') {
+    if (polyRatnagiri) { polyRatnagiri.style.opacity = '1'; polyRatnagiri.style.strokeWidth = '3'; }
+    if (polyBanana) { polyBanana.style.opacity = '0.15'; polyBanana.style.strokeWidth = '1'; }
+    if (tabLot1) tabLot1.classList.add('active');
+  } else if (mode === 'LOT-02') {
+    if (polyRatnagiri) { polyRatnagiri.style.opacity = '0.15'; polyRatnagiri.style.strokeWidth = '1'; }
+    if (polyBanana) { polyBanana.style.opacity = '1'; polyBanana.style.strokeWidth = '3'; }
+    if (tabLot2) tabLot2.classList.add('active');
+  } else {
+    if (polyRatnagiri) { polyRatnagiri.style.opacity = '1'; polyRatnagiri.style.strokeWidth = '2.5'; }
+    if (polyBanana) { polyBanana.style.opacity = '1'; polyBanana.style.strokeWidth = '2.5'; }
+    if (tabOverlay) tabOverlay.classList.add('active');
+  }
+}
+
 // Orders Gateway Controller (orders.html)
 // --------------------------------------------------------------------
 let selectedGatewayLot = null;
@@ -356,29 +382,72 @@ function selectHarvestOption(lotId) {
     }
   }
 }
+function getSwatchClass(text) {
+  const t = (text || '').toLowerCase();
+  if (t.includes('berry') || t.includes('rasp') || t.includes('fruit') || t.includes('currant')) return 'swatch-berry';
+  if (t.includes('stone') || t.includes('peach') || t.includes('orange') || t.includes('citrus') || t.includes('bergamot')) return 'swatch-stonefruit';
+  if (t.includes('cacao') || t.includes('choc') || t.includes('toffee') || t.includes('caramel') || t.includes('nut') || t.includes('honey')) return 'swatch-cacao';
+  if (t.includes('blossom') || t.includes('flower') || t.includes('floral')) return 'swatch-blossom';
+  if (t.includes('apple') || t.includes('malic') || t.includes('crisp')) return 'swatch-apple';
+  if (t.includes('jasmine') || t.includes('clean') || t.includes('tea') || t.includes('clarity') || t.includes('silky')) return 'swatch-jasmine';
+  return 'swatch-stonefruit';
+}
 function renderHarvestGateway(lots) {
   const container = document.getElementById('harvestLotsContainer');
   if (!container) return;
-  const displayLots = Array.isArray(lots) && lots.length > 0 ? lots : availableLots;
+
+  const displayLots = Array.isArray(lots) &amp;&amp; lots.length > 0 ? lots : availableLots;
   let html = '';
+
   displayLots.forEach((lot) => {
-    const isSoldOut = (lot.isActive === false) || (lot.isSoldOut === true) || (typeof lot.remainingBottles === 'number' && lot.remainingBottles <= 0);
+    const isSoldOut = (lot.isActive === false) || (lot.isSoldOut === true) || (typeof lot.remainingBottles === 'number' &amp;&amp; lot.remainingBottles <= 0);
     const activeClass = selectedGatewayLot === lot.id ? 'active' : '';
     const soldOutTag = isSoldOut ? '<div class="harvest-tag" style="background:#e63946; border-color:#e63946; color:#fff;">SOLD OUT</div>' : '';
     const clickAttr = isSoldOut ? '' : ('onclick="selectHarvestOption(\'' + lot.id + '\')"');
-    const emojis = (lot.emojis || []).map((e, idx) => {
-      const label = (lot.pills && lot.pills[idx]) || 'Aroma';
-      return '<div class="flavor-swatch"><span class="swatch-icon">' + e + '</span><span class="swatch-text">' + label + '</span></div>';
+
+    // Tag class and accent color
+    const lotColor = lot.color || (lot.id === 'LOT-01' ? '#e76f51' : (lot.id === 'LOT-02' ? '#2a9d8f' : '#d4a373'));
+    const tagClass = lot.id === 'LOT-01' ? 'tag-ratnagiri' : (lot.id === 'LOT-02' ? 'tag-banana' : '');
+    const tagStyle = tagClass ? '' : ('style="border-color:' + lotColor + '; color:' + lotColor + '; background: rgba(212,163,115,0.12);"');
+
+    // Color-coded swatches
+    const emojis = (lot.emojis &amp;&amp; lot.emojis.length > 0) ? lot.emojis : (lot.id === 'LOT-01' ? ["🍇", "🍑", "🍫"] : (lot.id === 'LOT-02' ? ["🌸", "🍏", "✨"] : ["🫐", "🍊", "🍯"]));
+    const pills = (lot.pills &amp;&amp; lot.pills.length > 0) ? lot.pills : (lot.notes ? lot.notes.split(',').map(s => s.trim()) : ["Specialty Single-Estate", "Micro-Batch"]);
+
+    const swatchesHtml = emojis.map((e, sIdx) => {
+      const label = pills[sIdx] || 'Flavor Note';
+      const swatchCls = getSwatchClass(label);
+      return '<div class="flavor-swatch ' + swatchCls + '"><span class="swatch-icon">' + e + '</span><span class="swatch-text">' + label + '</span></div>';
     }).join('');
-    html += '<div class="harvest-preview-card ' + activeClass + ' ' + (isSoldOut ? 'lot-sold-out' : '') + '" data-lot-id="' + lot.id + '" id="cardLot_' + lot.id + '" style="' + (isSoldOut ? 'opacity:0.5; cursor:not-allowed;' : '') + '" ' + clickAttr + '>' + '<div class="harvest-card-top">' + '<div class="harvest-info-wrap">' + '<div class="harvest-title" style="color:' + (lot.color || 'var(--text)') + ';">' + lot.name + '</div>' + '<div class="harvest-origin">' + (lot.region || 'Western Ghats • Single-Estate') + '</div>' + '<div class="harvest-notes">' + lot.notes + '</div>' + '</div>' + '<div class="harvest-top-right">' + (soldOutTag || ('<div class="harvest-tag" style="border-color:' + (lot.color || 'var(--accent)') + '; color:' + (lot.color || 'var(--accent)') + ';">' + lot.process + '</div>')) + '<div class="harvest-radio-dot"></div>' + '</div>' + '</div>' + '<div class="harvest-expanded-content">' + '<div class="flavor-swatches-grid">' + emojis + '</div>' + '<div class="spectrum-meter-group">' + '<div class="spectrum-meter">' + '<div class="spectrum-header"><span>Roast Degree</span><strong>' + (lot.roast || 45) + '%</strong></div>' + '<div class="spectrum-track"><div class="spectrum-fill fill-roast" style="width:' + (lot.roast || 45) + '%;"></div></div>' + '<div class="spectrum-labels"><span>Light</span><span>Medium</span><span>Dark</span></div>' + '</div>' + '<div class="spectrum-meter">' + '<div class="spectrum-header"><span>Fermentation Depth</span><strong>' + (lot.fermentation || 75) + '%</strong></div>' + '<div class="spectrum-track"><div class="spectrum-fill" style="width:' + (lot.fermentation || 75) + '%; background:' + (lot.color || 'var(--accent)') + ';"></div></div>' + '<div class="spectrum-labels"><span>Washed</span><span>Naturals</span><span>Experimental</span></div>' + '</div>' + '</div>' + '<div class="viscosity-meter-card">' + '<div class="viscosity-info">' + '<span class="viscosity-title">Body &amp; Texture: ' + (lot.body > 60 ? 'Heavy &amp; Syrupy' : 'Light &amp; Silky') + '</span>' + '<span class="viscosity-desc">' + (lot.rituals || 'Best paired with morning focus') + '</span></div>' + '<div class="viscosity-bar"><div class="viscosity-fill" style="width:' + (lot.body || 60) + '%; background:' + (lot.color || 'var(--accent)') + ';"></div></div>' + '</div>' + '</div>' + '</div>';
+
+    // Fermentation meter
+    const fermentClass = lot.id === 'LOT-01' ? 'fill-ferment-lot1' : (lot.id === 'LOT-02' ? 'fill-ferment-lot2' : '');
+    const fermentStyle = fermentClass ? ('style="width:' + (lot.fermentation || 75) + '%;"') : ('style="width:' + (lot.fermentation || 75) + '%; background:' + lotColor + ';"');
+    const fermentLabel = lot.process || 'Single-Estate Fermentation';
+
+    // Viscosity
+    const viscClass = lot.id === 'LOT-01' ? 'viscosity-lot1' : (lot.id === 'LOT-02' ? 'viscosity-lot2' : '');
+    const viscStyle = viscClass ? '' : ('style="width:' + (lot.body || 60) + '%; background:' + lotColor + ';"');
+    const viscTitle = (lot.body &amp;&amp; lot.body > 65) || lot.id === 'LOT-01' ? '🍷 Body &amp; Texture: Syrupy &amp; Winey' : '🍵 Body &amp; Texture: Tea-Like &amp; Silky';
+    const viscDesc = lot.rituals || (lot.id === 'LOT-01' ? 'Medium-Full Body • Best paired with dark pastries &amp; morning focus' : 'Light, Crisp Body • Best paired with light desserts &amp; afternoon refresh');
+
+    html += '<div class="harvest-preview-card ' + activeClass + ' ' + (isSoldOut ? 'lot-sold-out' : '') + '" data-lot-id="' + lot.id + '" id="cardLot_' + lot.id + '" style="' + (isSoldOut ? 'opacity:0.5; cursor:not-allowed;' : '') + '" ' + clickAttr + '>' + '<div class="harvest-card-top">' + '<div class="harvest-info-wrap">' + '<div class="harvest-title" style="color:' + lotColor + ';">' + lot.name + '</div>' + '<div class="harvest-origin">' + (lot.region || 'Western Ghats • Single-Estate') + '</div>' + '<div class="harvest-notes">' + lot.notes + '</div>' + '</div>' + '<div class="harvest-top-right">' + (soldOutTag || ('<div class="harvest-tag ' + tagClass + '" ' + tagStyle + '>' + lot.process + '</div>')) + '<div class="harvest-radio-dot"></div>' + '</div>' + '</div>' + '<div class="harvest-expanded-content">' + '<div class="flavor-swatches-grid">' + swatchesHtml + '</div>' + '<div class="spectrum-meter-group">' + '<div class="spectrum-meter">' + '<div class="spectrum-header"><span>Roast Degree</span><strong>' + (lot.roast ? (lot.roast + '%') : 'Medium-Light (45%)') + '</strong></div>' + '<div class="spectrum-track"><div class="spectrum-fill fill-roast" style="width:' + (lot.roast || 45) + '%;"></div></div>' + '<div class="spectrum-labels"><span>Light</span><span>Medium</span><span>Dark</span></div>' + '</div>' + '<div class="spectrum-meter">' + '<div class="spectrum-header"><span>Fermentation Depth</span><strong>' + fermentLabel + ' (' + (lot.fermentation || 80) + '%)</strong></div>' + '<div class="spectrum-track"><div class="spectrum-fill ' + fermentClass + '" ' + fermentStyle + '></div></div>' + '<div class="spectrum-labels"><span>Washed</span><span>Naturals</span><span>Experimental</span></div>' + '</div>' + '</div>' + '<div class="viscosity-meter-card">' + '<div class="viscosity-info">' + '<span class="viscosity-title">' + viscTitle + '</span>' + '<span class="viscosity-desc">' + viscDesc + '</span></div>' + '<div class="viscosity-bar"><div class="viscosity-fill ' + viscClass + '" ' + viscStyle + '></div></div>' + '</div>' + '</div>' + '</div>';
   });
-  const activeCount = displayLots.filter(l => l.isActive).length;
+
+  const activeCount = displayLots.filter(l => l.isActive !== false &amp;&amp; !l.isSoldOut &amp;&amp; (typeof l.remainingBottles !== 'number' || l.remainingBottles > 0)).length;
   if (activeCount >= 2) {
     const mixActiveClass = selectedGatewayLot === 'MIX' ? 'active' : '';
-    html += '<div class="harvest-preview-card ' + mixActiveClass + '" data-lot-id="MIX" id="cardLotMix" onclick="selectHarvestOption(\'MIX\')">' + '<div class="harvest-card-top">' + '<div class="harvest-info-wrap">' + '<div class="harvest-title">Mix &amp; Match</div>' + '<div class="harvest-origin" style="color: var(--accent);">Custom Multi-Lot Discovery Flight</div> ' + '<div class="harvest-notes">Curious about multiple harvests? Customize your split ratio across all active micro-lots.</div>' + '</div>' + '<div class="harvest-top-right">' + '<div class="harvest-tag tag-mix">Custom Split</div>' + '<div class="harvest-radio-dot"></div>' + '</div>' + '</div>' + '<div class="harvest-expanded-content">' + '<div class="mix-split-box">' + '<div class="mix-split-desc">Blend our single-estate micro-lots in a single order. Fine-tune your bottle split during checkout.</div>' + '<div class="mix-badges-row">' + '<span class="mix-badge">✨ Custom Bottle Split</span>' + '<span class="mix-badge">☕ Multi-Fermentation Styles</span>' + '<span class="mix-badge">⚡ Available Across All Packs</span>' + '</div>' + '</div>' + '</div>' + '</div>';
-  }
+    html += '<div class="harvest-preview-card ' + mixActiveClass + '" data-lot-id="MIX" id="cardLotMix" onclick="selectHarvestOption(\'MIX\')">' + '<div class="harvest-card-top">' + '<div class="harvest-info-wrap">' + '<div class="harvest-title">Mix &amp; Match</div>' + '<div class="harvest-origin" style="color: var(--accent);">Custom Multi-Lot Discovery Flight</div>' + '<div class="harvest-notes">Curious about multiple harvests? Customize your split ratio across all active micro-lots.</div>' + '</div>' + '<div class="harvest-top-right">' + '<div class="harvest-tag tag-mix">Custom Split</div>' + '<div class="harvest-radio-dot"></div>' + '</div>' + '</div>' + '<div class="harvest-expanded-content">' + '<div class="mix-split-box">' + '<div class="mix-split-desc">Blend our single-estate micro-lots in a single order. Fine-tune your bottle split during checkout.</div>' + '<div class="mix-badges-row">' + '<span class="mix-badge">✨ Custom Bottle Split</span>' + '<span class="mix-badge">☕ Multi-Fermentation Styles</span>' + '<span class="mix-badge">⚡ Available Across All Packs</span>' + '</div>' + '</div>' + '</div>' + '</div>';
+
   container.innerHTML = html;
 }
+
+
+
+
+
+
+
 
 // --------------------------------------------------------------------
 function validateWizardStep(stepNum) {
@@ -886,17 +955,17 @@ function applyStoreStatus(status) {
 
 function applyConfigToUI(data) {
   if (!data || data.action === 'track') return;
-  
+
   const isB2b = (PAGE === 'CORPORATE' || PAGE === 'OFFICE' || currentMode === 'B2B');
   const cap = isB2b ? (data.b2bBatchCapacity || 200) : (data.b2cBatchCapacity || 150);
   const resCount = isB2b ? (data.b2bReservedBottles || 0) : (data.b2cReservedBottles || 0);
   const remBottles = isB2b ? data.b2bRemainingBatchBottles : data.b2cRemainingBatchBottles;
-  
+
   liveRemainingBatchBottles = typeof remBottles === 'number' ? remBottles : Math.max(0, cap - resCount);
-  
+
   const scarcityText = document.getElementById('scarcityText');
   const scarcityFill = document.getElementById('scarcityFill');
-  
+
   if (scarcityText) {
     scarcityText.textContent = `${resCount} / ${cap} Bottles Reserved`;
   }
@@ -904,34 +973,39 @@ function applyConfigToUI(data) {
     const pct = Math.min(Math.round((resCount / cap) * 100), 100);
     scarcityFill.style.transform = `scaleX(${pct / 100})`;
   }
-  
+
   if (data.lots) {
-    renderLots(data.lots);
+    data.lots.forEach(l => {
+      if (l.isActive === undefined) l.isActive = true;
+    });
+    availableLots = data.lots;
+    if (typeof renderLots === 'function') renderLots(data.lots);
     if (PAGE === 'ORDERS') renderHarvestGateway(data.lots);
   }
-  if (data.b2cPacks || data.b2bPacks) renderPacks(data.b2cPacks, data.b2bPacks);
+
+  if (data.b2cPacks || data.b2bPacks) {
+    if (typeof renderPacks === 'function') renderPacks(data.b2cPacks, data.b2bPacks);
+  }
+
   if (Array.isArray(data.coupons) && data.coupons.length > 0) {
     availableCoupons = data.coupons;
   }
+
   if ((PAGE === 'CORPORATE' || PAGE === 'OFFICE') && Array.isArray(data.clusters) && data.clusters.length > 0) {
     availableClusters = data.clusters;
-    renderClusterOptions();
+    if (typeof renderClusterOptions === 'function') renderClusterOptions();
   }
-  
+
   const isFull = isB2b ? (data.isB2bBatchFull === true || resCount >= cap) : (data.isB2cBatchFull === true || resCount >= cap);
   if (isFull) {
     applyStoreStatus('SOLD_OUT');
   } else if (data.storeStatus) {
     applyStoreStatus(data.storeStatus);
   }
-  
-  updateTotal();
-  if (isCustomSplit) rebalanceSplitter();
-  // Update Live Capacity on about.html (Story So Far)
-  const aboutB2cCapText = document.getElementById("aboutB2cCapText");
-  const aboutB2cBar = document.getElementById("aboutB2cBar");
-  const aboutB2bCapText = document.getElementById("aboutB2bCapText");
-  const aboutB2bBar = document.getElementById("aboutB2bBar");
+
+  if (typeof updateTotal === 'function') updateTotal();
+  if (isCustomSplit && typeof rebalanceSplitter === 'function') rebalanceSplitter();
+
 
   if (aboutB2cCapText && typeof data.b2cRemainingBottles === "number") {
     const total = data.b2cBatchCapacity || 150;
