@@ -1337,23 +1337,12 @@ function startCutoffCountdown() {
   function updateTimer() {
     const timerEl = document.getElementById('countdownTimer');
     if (!timerEl) return;
-  
     const now = new Date();
-    const isB2c = (PAGE === 'PERSONAL' || PAGE === 'ORDER' || PAGE === 'ORDERS' || currentMode === "B2C" || PAGE === 'INDEX');
     const target = new Date();
-  
-    if (isB2c) {
-      let daysUntilFri = (5 - now.getDay() + 7) % 7;
-      if (daysUntilFri === 0 && now.getHours() >= 22) daysUntilFri = 7;
-      target.setDate(now.getDate() + daysUntilFri);
-      target.setHours(22, 0, 0, 0);
-    } else {
-      let daysUntilThu = (4 - now.getDay() + 7) % 7;
-      if (daysUntilThu === 0 && now.getHours() >= 18) daysUntilThu = 7;
-      target.setDate(now.getDate() + daysUntilThu);
-      target.setHours(18, 0, 0, 0);
-    }
-  
+    let daysUntilFri = (5 - now.getDay() + 7) % 7;
+    if (daysUntilFri === 0 && now.getHours() >= 22) daysUntilFri = 7;
+    target.setDate(now.getDate() + daysUntilFri);
+    target.setHours(22, 0, 0, 0);
     const diff = target - now;
     if (diff <= 0) {
       timerEl.textContent = "⚡ Cutoff reached for next batch. Orders queue for following drop.";
@@ -1364,7 +1353,7 @@ function startCutoffCountdown() {
     const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const secs = Math.floor((diff % (1000 * 60)) / 1000);
   
-const cutoffLabel = (PAGE === 'INDEX' || PAGE === 'ORDERS') ? "Weekend Drops Cutoff" : (isB2c ? "Saturday/Sunday Drop Cutoff" : "Friday Drop Cutoff");
+    const cutoffLabel = "Weekend Drop Cutoff";
     timerEl.textContent = `⏱️ ${cutoffLabel} closes in ${hours}h ${mins}m ${secs}s`;
   }
   
@@ -2642,20 +2631,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const beanParam = urlParams.get('bean') || urlParams.get('lot');
   
-  if (PAGE === 'PERSONAL' || PAGE === 'ORDER' || PAGE === 'HOME') {
+  if (PAGE === 'PERSONAL' || PAGE === 'ORDER') {
+    startCutoffCountdown();
     renderLots(availableLots);
     renderPacks(availableB2cPacks, []);
     initHarvestFromUrl();
     updateTotal();
     goToWizardStep(1);
+    fetchLiveConfig();
+    setInterval(fetchLiveConfig, 30000);
     
   } else if (PAGE === 'CORPORATE' || PAGE === 'OFFICE') {
+    startCutoffCountdown();
     renderLots(availableLots);
     renderPacks([], availableB2bPacks);
     renderClusterOptions();
     initHarvestFromUrl();
     updateTotal();
     goToWizardStep(1);
+    fetchLiveConfig();
+    setInterval(fetchLiveConfig, 30000);
   } else if (PAGE === 'ORDERS') {
     renderHarvestGateway();
     fetchLiveConfig();
@@ -2665,9 +2660,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(fetchLiveConfig, 30000);
   } else if (PAGE === 'FLAVOR' || PAGE === 'MENU') {
     renderFlavorPage(availableLots);
-    fetchLiveConfig();
-    updateQuizRecommendation();
-    renderLots(availableLots);
     fetchLiveConfig();
     updateQuizRecommendation();
   } else if (PAGE === "ABOUT") {
