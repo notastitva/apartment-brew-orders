@@ -91,58 +91,25 @@ src="assets/tabc-emblem-gold-transparent.svg"
       
 <section class="section-card" style="margin-top: 14px;">
   <div class="section-title">
-    <span>🎯 2-Question Flavor Matcher</span>
-    <span class="section-subtitle">Find Your Brew</span>
+    <span>🎯 Find Your Signature Harvest Match</span>
+    <span class="section-subtitle">2 Quick Questions &bull; Immediate Taste Pairing</span>
   </div>
-  <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
-    Can't decide which brew suits you? Tap your preferences below to calculate your ideal match:
-  </p>
- 
-  <div class="quiz-container">
-    <!-- Question 1 -->
-    <div>
-      <div class="quiz-question-title">
-        <span>1. When will you enjoy your coffee?</span>
-      </div>
-      <div class="quiz-options-grid">
-        <button type="button" class="quiz-option-btn quiz-opt-q1 active" onclick="selectQuizAnswer(1, 'morning', this)">
-          <span style="font-size: 1.05rem;">☀️ Morning Focus</span>
-          <span style="font-size: 0.65rem; color: var(--text-dim);">8–11 AM • Rich, bold deep work</span>
-        </button>
-        <button type="button" class="quiz-option-btn quiz-opt-q1" onclick="selectQuizAnswer(1, 'afternoon', this)">
-          <span style="font-size: 1.05rem;">🌤️ Afternoon Recharge</span>
-          <span style="font-size: 0.65rem; color: var(--text-dim);">1–4 PM • Crisp, floral refresh</span>
-        </button>
-        <button type="button" class="quiz-option-btn quiz-opt-q1" onclick="selectQuizAnswer(1, 'mix', this)">
-          <span style="font-size: 1.05rem;">✨ All-Day / Both</span>
-          <span style="font-size: 0.65rem; color: var(--text-dim);">Duo discovery flight sampler</span>
-        </button>
-      </div>
+  <!-- Question 1 -->
+  <div class="quiz-question-wrap">
+    <div class="quiz-q-title">1. When will you enjoy your coffee?</div>
+    <div class="quiz-options-grid" id="quizQ1Options">
+      <!-- Dynamically populated from active Google Sheets lots -->
     </div>
- 
-    <!-- Question 2 -->
-    <div>
-      <div class="quiz-question-title">
-        <span>2. Which tasting notes appeal to you?</span>
-      </div>
-      <div class="quiz-options-grid">
-        <button type="button" class="quiz-option-btn quiz-opt-q2 active" onclick="selectQuizAnswer(2, 'berry', this)">
-          <span style="font-size: 1.05rem;">🍇 Fruity </span>
-          <span style="font-size: 0.65rem; color: var(--text-dim);">Jammy fruit, stone fruit, winey</span>
-        </button>
-        <button type="button" class="quiz-option-btn quiz-opt-q2" onclick="selectQuizAnswer(2, 'floral', this)">
-          <span style="font-size: 1.05rem;">🌸 Floral </span>
-          <span style="font-size: 0.65rem; color: var(--text-dim);">Jasmine, Orange blossom, citric clarity</span>
-        </button>
-        <button type="button" class="quiz-option-btn quiz-opt-q2" onclick="selectQuizAnswer(2, 'mix', this)">
-          <span style="font-size: 1.05rem;">🎯 Love Contrast</span>
-          <span style="font-size: 0.65rem; color: var(--text-dim);">Curious to taste both styles</span>
-        </button>
-      </div>
+  </div>
+  <!-- Question 2 -->
+  <div class="quiz-question-wrap" style="margin-top: 14px;">
+    <div class="quiz-q-title">2. Which tasting notes appeal to you?</div>
+    <div class="quiz-options-grid" id="quizQ2Options">
+      <!-- Dynamically populated from active Google Sheets lots -->
     </div>
- 
-    <!-- Dynamic Result Box -->
-    <div class="quiz-result-box result-ratnagiri" id="quizResultCard">
+  </div>
+  <!-- Dynamic Result Box -->
+  <div class="quiz-result-box result-ratnagiri" id="quizResultCard" style="margin-top: 18px;">
       <div id="quizResultBadge" style="font-size: 0.68rem; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 4px;">
         🍇 RECOMMENDED: SINGLE-ESTATE HARVEST
       </div>
@@ -150,18 +117,17 @@ src="assets/tabc-emblem-gold-transparent.svg"
         Ratnagiri Estate (Anaerobic Naturals)
       </div>
       <p id="quizResultDesc" style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px;">
-        Rich, winey, syrupy body with explosive wild raspberry, stone fruit, and dark cacao notes. Tailored for morning focus and deep work.
-      </p>
-      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-<a href="/personal?bean=LOT-01" id="quizBtnPersonal" class="btn btn-pay" style="flex: 1; padding: 9px 12px; font-size: 0.76rem; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
-          <span>☕ Personal Batch &rarr;</span>
-        </a>
-<a href="/corporate?bean=LOT-01" id="quizBtnPersonal" class="btn btn-pay" style="flex: 1; padding: 9px 12px; font-size: 0.76rem; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 4px;">
-          <span>🏢 Office Batch &rarr;</span>
-        </a>
-      </div>
-    </div>
+    Rich, winey, syrupy body with explosive wild raspberry, stone fruit, and dark cacao notes. Tailored for morning focus and deep work.
   </div>
+  <div style="display: flex; gap: 8px;">
+<a href="/personal?bean=LOT-01" class="btn" id="quizBtnPersonal" style="flex: 1; padding: 8px; font-size: 0.72rem; background: var(--gradient-gold); color: #141312; font-weight: 800; text-decoration: none; display: flex; align-items: center; justify-content: center; border-radius: 6px;">
+      Personal Order &rarr;
+    </a>
+<a href="/corporate?bean=LOT-01" class="btn" id="quizBtnCorporate" style="flex: 1; padding: 8px; font-size: 0.72rem; background: rgba(212,163,115,0.18); color: var(--accent); border: 1px solid var(--accent); font-weight: 800; text-decoration: none; display: flex; align-items: center; justify-content: center; border-radius: 6px;">
+      Corporate Order &rarr;
+    </a>
+  </div>
+</div>
 </section>
  
 <!-- MODULE 2: INTERACTIVE 5-AXIS SENSORY RADAR COMPARISON GRAPH -->

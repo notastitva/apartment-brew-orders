@@ -330,21 +330,107 @@ function renderSplitterUI() {
 // --------------------------------------------------------------------
 // --------------------------------------------------------------------
 // --------------------------------------------------------------------
-// 2-Question Flavor Matcher Engine (menu.html)
 // --------------------------------------------------------------------
-let quizAnswers = { time: 'morning', flavor: 'berry' };
+// --------------------------------------------------------------------
+// 2-Question Flavor Matcher Engine (flavor.html / menu.html)
+// --------------------------------------------------------------------
+let defaultQuizQuestions = [
+  { qId: 'Q1', qTitle: '1. When will you enjoy your coffee?', key: 'opt_morning', icon: '🌅', label: 'Morning Focus (8:00 AM – 11:30 AM)' },
+  { qId: 'Q1', qTitle: '1. When will you enjoy your coffee?', key: 'opt_afternoon', icon: '⚡', label: 'Afternoon Recharge (1:00 PM – 4:30 PM)' },
+  { qId: 'Q1', qTitle: '1. When will you enjoy your coffee?', key: 'opt_allday', icon: '☀️', label: 'All-Day Focus & Flow' },
+  { qId: 'Q1', qTitle: '1. When will you enjoy your coffee?', key: 'opt_mix', icon: '🌓', label: 'Both / All-Day Variety (Discovery Flight)' },
+  { qId: 'Q2', qTitle: '2. Which tasting notes appeal to you?', key: 'opt_berry', icon: '🍇', label: 'Wild Berry, Ripe Peach & Dark Cacao Finish' },
+  { qId: 'Q2', qTitle: '2. Which tasting notes appeal to you?', key: 'opt_floral', icon: '🌸', label: 'Jasmine Florals, Crisp Apple & Citrus' },
+  { qId: 'Q2', qTitle: '2. Which tasting notes appeal to you?', key: 'opt_complex', icon: '🫐', label: 'Blackcurrant, Bergamot & Raw Honeyed Peach' },
+  { qId: 'Q2', qTitle: '2. Which tasting notes appeal to you?', key: 'opt_mix', icon: '✨', label: 'Curious about multiple single-estate micro-lots' }
+];
+
+let defaultQuizRules = [
+  { q1: 'opt_morning', q2: 'opt_berry', lotId: 'LOT-01', badge: '🍇 RECOMMENDED: SINGLE-ESTATE HARVEST', note: 'Rich winey body with wild raspberry and dark cacao finish. Perfect for morning focus and deep creative work.' },
+  { q1: 'opt_morning', q2: 'opt_floral', lotId: 'LOT-02', badge: '🌸 RECOMMENDED: SPECIAL FERMENTATION', note: 'Bright floral aromas and crisp malic apple acidity to jumpstart your morning clean.' },
+  { q1: 'opt_morning', q2: 'opt_complex', lotId: 'LOT-03', badge: '🫐 RECOMMENDED: CLEAN MACERATION', note: 'Complex honeyed blackcurrant and stone fruit notes with crystalline sweetness.' },
+  { q1: 'opt_afternoon', q2: 'opt_floral', lotId: 'LOT-02', badge: '🌸 RECOMMENDED: AFTERNOON RECHARGE', note: 'Sparkling jasmine clarity and green apple acidity. Light tea-like mouthfeel ideal for afternoon refresh.' },
+  { q1: 'opt_afternoon', q2: 'opt_berry', lotId: 'LOT-01', badge: '🍇 RECOMMENDED: FRUIT INDULGENCE', note: 'Winey sweetness and dark cacao to power through late afternoon meetings.' },
+  { q1: 'opt_afternoon', q2: 'opt_complex', lotId: 'LOT-03', badge: '🫐 RECOMMENDED: AFTERNOON FLOW', note: 'Silky texture with lingering bergamot and honey notes for uninterrupted afternoon flow.' },
+  { q1: 'opt_allday', q2: 'opt_complex', lotId: 'LOT-03', badge: '☀️ RECOMMENDED: ALL-DAY HARVEST', note: 'Smooth balanced all-day brew with deep blackcurrant and raw honeyed sweetness.' },
+  { q1: 'opt_allday', q2: 'opt_berry', lotId: 'LOT-01', badge: '🍇 RECOMMENDED: SINGLE-ESTATE HARVEST', note: 'Full-bodied single-estate harvest crafted for deep focus all day long.' },
+  { q1: 'opt_allday', q2: 'opt_floral', lotId: 'LOT-02', badge: '🌸 RECOMMENDED: SPECIAL FERMENTATION', note: 'Clean floral fermentation with zero bitterness for all-day sipping.' },
+  { q1: 'opt_allday', q2: '*', lotId: 'LOT-03', badge: '☀️ RECOMMENDED: ALL-DAY BREW', note: 'Handcrafted for balanced all-day enjoyment.' },
+  { q1: 'opt_mix', q2: '*', lotId: 'MIX', badge: '✨ RECOMMENDED: DUO DISCOVERY FLIGHT', note: 'Experience multiple single-estate micro-lots in equal parts or custom ratios in a single pack!' },
+  { q1: '*', q2: 'opt_mix', lotId: 'MIX', badge: '✨ RECOMMENDED: DUO DISCOVERY FLIGHT', note: 'Blend our single-estate micro-lots in a single order with fine-tuned splits.' }
+];
+
+let liveQuizConfig = {
+  questions: defaultQuizQuestions,
+  rules: defaultQuizRules
+};
+
+let quizAnswers = { time: 'opt_morning', flavor: 'opt_berry' };
 
 function selectQuizAnswer(questionNum, answerKey, element) {
   if (questionNum === 1) {
     quizAnswers.time = answerKey;
-    document.querySelectorAll('.quiz-opt-q1').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.quiz-opt-q1').forEach(function(b) { b.classList.remove('active'); });
   } else if (questionNum === 2) {
     quizAnswers.flavor = answerKey;
-    document.querySelectorAll('.quiz-opt-q2').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.quiz-opt-q2').forEach(function(b) { b.classList.remove('active'); });
   }
   if (element) element.classList.add('active');
-  
   updateQuizRecommendation();
+}
+
+function renderQuizUI(lots, quizConfig) {
+  var config = (quizConfig && quizConfig.questions && quizConfig.questions.length > 0) ? quizConfig : liveQuizConfig;
+  var questions = (config && config.questions && config.questions.length > 0) ? config.questions : defaultQuizQuestions;
+
+  var q1Container = document.getElementById('quizQ1Options');
+  var q2Container = document.getElementById('quizQ2Options');
+
+  var q1Questions = questions.filter(function(q) { return q.qId === 'Q1'; });
+  var q2Questions = questions.filter(function(q) { return q.qId === 'Q2'; });
+
+  if (q1Container && q1Questions.length > 0) {
+    var q1Html = '';
+    q1Questions.forEach(function(q, idx) {
+      var isAct = (quizAnswers.time === q.key) || (!quizAnswers.time && idx === 0) ? 'active' : '';
+      if (!quizAnswers.time && idx === 0) quizAnswers.time = q.key;
+      q1Html += '<button type="button" class="quiz-opt-btn quiz-opt-q1 ' + isAct + '" data-ans="' + q.key + '" onclick="selectQuizAnswer(1, this.dataset.ans, this)">' +
+        '<span class="quiz-opt-icon">' + (q.icon || '☕') + '</span>' +
+        '<span class="quiz-opt-label">' + q.label + '</span>' +
+        '</button>';
+    });
+    q1Container.innerHTML = q1Html;
+  }
+
+  if (q2Container && q2Questions.length > 0) {
+    var q2Html = '';
+    q2Questions.forEach(function(q, idx) {
+      var isAct = (quizAnswers.flavor === q.key) || (!quizAnswers.flavor && idx === 0) ? 'active' : '';
+      if (!quizAnswers.flavor && idx === 0) quizAnswers.flavor = q.key;
+      q2Html += '<button type="button" class="quiz-opt-btn quiz-opt-q2 ' + isAct + '" data-ans="' + q.key + '" onclick="selectQuizAnswer(2, this.dataset.ans, this)">' +
+        '<span class="quiz-opt-icon">' + (q.icon || '✨') + '</span>' +
+        '<span class="quiz-opt-label">' + q.label + '</span>' +
+        '</button>';
+    });
+    q2Container.innerHTML = q2Html;
+  }
+}
+
+function findQuizRuleMatch(timeKey, flavorKey) {
+  var rules = (liveQuizConfig && liveQuizConfig.rules && liveQuizConfig.rules.length > 0) ? liveQuizConfig.rules : defaultQuizRules;
+  for (var i = 0; i < rules.length; i++) {
+    var r = rules[i];
+    if (r.q1 === timeKey && r.q2 === flavorKey) return r;
+  }
+  for (var j = 0; j < rules.length; j++) {
+    var r2 = rules[j];
+    if (r2.q1 === timeKey && r2.q2 === '*') return r2;
+  }
+  for (var k = 0; k < rules.length; k++) {
+    var r3 = rules[k];
+    if (r3.q1 === '*' && r3.q2 === flavorKey) return r3;
+  }
+  return null;
 }
 
 function updateQuizRecommendation() {
@@ -354,32 +440,50 @@ function updateQuizRecommendation() {
   const btnPersonal = document.getElementById('quizBtnPersonal');
   const btnCorporate = document.getElementById('quizBtnCorporate');
   const resultBadge = document.getElementById('quizResultBadge');
-  
   if (!resultCard) return;
-  
-  const { time, flavor } = quizAnswers;
-  
-  if (time === 'mix' || flavor === 'mix') {
+
+  const rule = findQuizRuleMatch(quizAnswers.time, quizAnswers.flavor);
+  const targetLotId = rule ? rule.lotId : (quizAnswers.flavor.includes('floral') ? 'LOT-02' : (quizAnswers.flavor.includes('complex') ? 'LOT-03' : 'LOT-01'));
+
+  if (targetLotId === 'MIX') {
     resultCard.className = 'quiz-result-box result-mix';
-    if (resultBadge) resultBadge.textContent = '✨ RECOMMENDED: DUO DISCOVERY FLIGHT';
+    resultCard.style.borderColor = 'var(--accent)';
+    resultCard.style.boxShadow = '0 8px 24px rgba(212, 163, 115, 0.25)';
+    if (resultBadge) resultBadge.textContent = rule && rule.badge ? rule.badge : '✨ RECOMMENDED: DUO DISCOVERY FLIGHT';
     if (resultTitle) resultTitle.textContent = 'Mix & Match Custom Split';
-    if (resultDesc) resultDesc.textContent = 'Experience both single-estate micro-lots in equal parts (or custom ratios) in a single pack! Enjoy wild berry richness in the morning and sparkling jasmine clarity in the afternoon.';
+    if (resultDesc) {
+      const defaultDesc = 'Experience multiple single-estate micro-lots in equal parts or custom ratios in a single pack! Enjoy rich winey fruit in the morning and sparkling floral clarity in the afternoon.';
+      resultDesc.textContent = (rule && rule.note) ? rule.note : defaultDesc;
+    }
     if (btnPersonal) btnPersonal.href = '/personal?bean=MIX';
     if (btnCorporate) btnCorporate.href = '/corporate?bean=MIX';
-  } else if (flavor === 'berry' || time === 'morning') {
-    resultCard.className = 'quiz-result-box result-ratnagiri';
-    if (resultBadge) resultBadge.textContent = '🍇 RECOMMENDED: SINGLE-ESTATE HARVEST';
-    if (resultTitle) resultTitle.textContent = 'Ratnagiri Estate (Anaerobic Naturals)';
-    if (resultDesc) resultDesc.textContent = 'Rich, winey, syrupy body with explosive wild raspberry, stone fruit, and dark cacao notes. Tailored for morning focus and deep work.';
-    if (btnPersonal) btnPersonal.href = '/personal?bean=LOT-01';
-    if (btnCorporate) btnCorporate.href = '/corporate?bean=LOT-01';
   } else {
-    resultCard.className = 'quiz-result-box result-banana';
-    if (resultBadge) resultBadge.textContent = '🌸 RECOMMENDED: SPECIAL FERMENTATION LOT';
-    if (resultTitle) resultTitle.textContent = 'Banana Banger (Special Yeast Micro-Lot)';
-    if (resultDesc) resultDesc.textContent = 'Clean, floral, sparkling jasmine clarity with crisp green apple and orange blossom notes. Light, tea-like mouthfeel ideal for afternoon recharge.';
-    if (btnPersonal) btnPersonal.href = '/personal?bean=LOT-02';
-    if (btnCorporate) btnCorporate.href = '/corporate?bean=LOT-02';
+    const lot = availableLots.find(function(l) { return l.id === targetLotId; }) || availableLots[0];
+    const lotColor = lot.color || (lot.id === 'LOT-01' ? '#e76f51' : (lot.id === 'LOT-02' ? '#2a9d8f' : '#d4a373'));
+    const emoji = (lot.emojis && lot.emojis[0]) || '☕';
+
+    resultCard.className = 'quiz-result-box';
+    resultCard.style.borderColor = lotColor;
+    resultCard.style.boxShadow = '0 8px 24px ' + lotColor + '22';
+
+    if (resultBadge) {
+      resultBadge.style.color = lotColor;
+      resultBadge.textContent = (rule && rule.badge) ? rule.badge : (emoji + ' RECOMMENDED: SINGLE-ESTATE HARVEST');
+    }
+    if (resultTitle) {
+      resultTitle.style.color = lotColor;
+      resultTitle.textContent = lot.name + ' (' + (lot.process || 'Single-Estate') + ')';
+    }
+    if (resultDesc) {
+      if (rule && rule.note) {
+        resultDesc.textContent = rule.note;
+      } else {
+        const rituals = lot.rituals ? (' • ' + lot.rituals) : '';
+        resultDesc.textContent = (lot.story || lot.notes) + rituals;
+      }
+    }
+    if (btnPersonal) btnPersonal.href = '/personal?bean=' + encodeURIComponent(lot.id);
+    if (btnCorporate) btnCorporate.href = '/corporate?bean=' + encodeURIComponent(lot.id);
   }
 }
 
@@ -1267,9 +1371,19 @@ function applyConfigToUI(data) {
     availableLots = data.lots;
     if (typeof renderLots === 'function') renderLots(data.lots);
     if (PAGE === 'ORDERS') renderHarvestGateway(data.lots);
-    if (PAGE === 'FLAVOR' || PAGE === 'MENU') renderFlavorPage(data.lots);
+    if (PAGE === 'FLAVOR' || PAGE === 'MENU') {
+      renderFlavorPage(data.lots);
+      renderQuizUI(data.lots);
+    }
   }
 
+  if (data.quizConfig) {
+    liveQuizConfig = data.quizConfig;
+    if (PAGE === 'FLAVOR' || PAGE === 'MENU') {
+      renderQuizUI(availableLots, data.quizConfig);
+      updateQuizRecommendation();
+    }
+  }
   if (data.b2cPacks || data.b2bPacks) {
     if (typeof renderPacks === 'function') renderPacks(data.b2cPacks, data.b2bPacks);
   }
@@ -2661,6 +2775,7 @@ document.addEventListener('DOMContentLoaded', () => {
   } else if (PAGE === 'FLAVOR' || PAGE === 'MENU') {
     renderFlavorPage(availableLots);
     fetchLiveConfig();
+    renderQuizUI(availableLots);
     updateQuizRecommendation();
   } else if (PAGE === "ABOUT") {
     fetchLiveConfig();
