@@ -307,7 +307,6 @@ function renderSplitterUI() {
     controlsContainer.innerHTML = rowsHtml;
   }
 
-  // Render One Bottle Allocation Card Per Active Lot
   // Render Center-Aligned Horizontal Bottle Crate (One Card Per Active Lot with Multiplier Badge)
   var crateContainer = document.getElementById('crateBottleGrid');
   if (crateContainer) {
@@ -321,7 +320,7 @@ function renderSplitterUI() {
 
       crateHtml += '<div class="lot-bottle-card' + (isZero ? ' is-zero' : '') + '" style="border-color: ' + (isZero ? 'var(--card-border)' : lotColor + '88') + ';">' +
         '<div class="lot-bottle-visual-wrap">' +
-          '<svg class="tabc-bottle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 240" width="30" height="60">' +
+          '<svg class="tabc-bottle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 240" width="28" height="56">' +
             '<defs>' +
               '<linearGradient id="capGrad_' + lot.id + '" x1="0%" y1="0%" x2="100%" y2="100%">' +
                 '<stop offset="0%" stop-color="#CD9A3A"/>' +
@@ -336,7 +335,7 @@ function renderSplitterUI() {
           '</svg>' +
         '</div>' +
         '<div class="lot-bottle-qty-badge" style="background: ' + (isZero ? 'rgba(255,255,255,0.06)' : lotColor + '22') + '; color: ' + (isZero ? 'var(--text-muted)' : lotColor) + '; border: 1px solid ' + (isZero ? 'var(--card-border)' : lotColor) + ';">' +
-          '×' + count
+          '×' + count +
         '</div>' +
         '<div class="lot-bottle-info">' +
           '<span class="lot-bottle-name" style="color: ' + (isZero ? 'var(--text-muted)' : '#fefae0') + ';">' + shortName + '</span>' +

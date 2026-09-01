@@ -3490,13 +3490,13 @@ input:focus, select:focus, textarea:focus {
 /* PHASE 2: INTERACTIVE VISUAL BOTTLE CRATE / RACK STYLES               */
 /* ==================================================================== */
 /* ==================================================================== */
-/* CENTER-ALIGNED HORIZONTAL BOTTLE CRATE (AT LEAST 3 BOTTLES ROW)     */
+/* CENTER-ALIGNED HORIZONTAL BOTTLE CRATE (3 BOTTLES SIDE-BY-SIDE)      */
 /* ==================================================================== */
 .bottle-crate-container {
-  background: rgba(21, 20, 19, 0.92);
+  background: rgba(21, 20, 19, 0.94);
   border: 1.5px solid var(--card-border);
   border-radius: 14px;
-  padding: 14px 10px;
+  padding: 12px 8px;
   margin: 12px 0;
   box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.6);
   position: relative;
@@ -3506,64 +3506,61 @@ input:focus, select:focus, textarea:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 700;
   color: var(--accent);
   text-transform: uppercase;
-  letter-spacing: 0.8px;
-  margin-bottom: 10px;
+  letter-spacing: 0.6px;
+  margin-bottom: 8px;
   padding: 0 4px;
 }
 .bottle-crate-grid {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: stretch;
-  gap: 10px;
-  width: 100%;
-  box-sizing: border-box;
-  overflow-x: auto;
-  padding: 4px 0;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: stretch !important;
+  gap: 8px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 .lot-bottle-card {
-  flex: 1 1 0px;
-  min-width: 95px;
-  max-width: 150px;
-  background: var(--card-inner);
-  border: 1.5px solid var(--card-border);
-  border-radius: 12px;
-  padding: 12px 6px 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  text-align: center;
-  gap: 6px;
-  transition: all 0.25s ease;
-  position: relative;
-  box-sizing: border-box;
+  flex: 1 1 0px !important;
+  min-width: 80px !important;
+  max-width: 140px !important;
+  background: var(--card-inner) !important;
+  border: 1.5px solid var(--card-border) !important;
+  border-radius: 10px !important;
+  padding: 10px 4px 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  text-align: center !important;
+  gap: 4px !important;
+  box-sizing: border-box !important;
+  transition: all 0.2s ease;
 }
 .lot-bottle-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 .lot-bottle-card.is-zero {
-  opacity: 0.38;
-  filter: grayscale(0.6);
+  opacity: 0.35;
+  filter: grayscale(0.7);
 }
 .lot-bottle-visual-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 64px;
+  height: 58px;
 }
 .lot-bottle-qty-badge {
   font-family: var(--tabc-font-display, 'Syne', sans-serif);
   font-size: 0.82rem;
   font-weight: 900;
   padding: 2px 8px;
-  border-radius: 8px;
-  letter-spacing: 0.4px;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -3572,11 +3569,11 @@ input:focus, select:focus, textarea:focus {
 .lot-bottle-info {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
   width: 100%;
 }
 .lot-bottle-name {
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   font-weight: 800;
   white-space: nowrap;
   overflow: hidden;
@@ -3584,7 +3581,7 @@ input:focus, select:focus, textarea:focus {
   line-height: 1.2;
 }
 .lot-bottle-count-label {
-  font-size: 0.66rem;
+  font-size: 0.64rem;
   font-weight: 700;
   color: var(--text-muted);
   line-height: 1.1;
