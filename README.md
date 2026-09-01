@@ -270,15 +270,13 @@ Customers track live orders in real time on `/track` via a 4-stage visual steppe
 
 Update the `CONFIG` object in `app.js`:
 
-const CONFIG \= {
-
-  razorpayKeyId: "rzp\_live\_XXXXXXXXXXXXXX",
-
+```javascript
+const CONFIG = {
+  razorpayKeyId: "rzp_live_XXXXXXXXXXXXXX",
   googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbz.../exec",
-
-  authToken: "TABC\_SECURE\_TOKEN\_2026"
-
+  authToken: "TABC_SECURE_TOKEN_2026"
 };
+```
 
 ### **9.2 Apps Script Deployment (`Code.gs`)**
 
