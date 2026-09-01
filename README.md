@@ -1,8 +1,19 @@
-☕ The Apartment Brew Co. — System & Operations Manual
-Micro-Batch Flash-Chilled Specialty Coffee • Gurugram & Delhi NCR
-![Platform](https://img.shields.io/badge/Platform-GitHub%20Pages%20%7C%20Static-gold?style=flat-square)![Backend](https://img.shields.io/badge/Backend-Google%20Apps%20Script%20%28Serverless%29-blue?style=flat-square)![Database](https://img.shields.io/badge/CMS%20%26%20Database-Google%20Sheets-success?style=flat-square)![Payment](https://img.shields.io/badge/Payments-Razorpay%20%7C%20Net--7%20Invoicing-orange?style=flat-square)![Bottles](https://img.shields.io/badge/Form%20Factor-200ml%20Amber%20Glass-brown?style=flat-square)![Routing](https://img.shields.io/badge/Routing-Clean%20Extensionless%20URLs-blueviolet?style=flat-square)
-A modern, serverless e-commerce and interactive sensory platform built for scheduled micro-batch craft coffee drops, headless Google Sheets CMS synchronization, Razorpay payment processing, corporate Net-7 invoicing, dynamic N-lot discovery flights, interactive sensory radar visualizations, and self-service order tracking.
-All coffee across retail, corporate, and catering tiers is standardized into recyclable 200ml glass bottles extracted hot (92–94°C) and instantly flash-chilled to 4°C with zero preservatives.
+# ☕ The Apartment Brew Co. — System & Operations Manual
+
+### **Micro-Batch Flash-Chilled Specialty Coffee • Gurugram & Delhi NCR**
+
+[![Platform](https://img.shields.io/badge/Platform-GitHub%20Pages%20%7C%20Static-gold?style=flat-square)](https://github.com/)
+[![Backend](https://img.shields.io/badge/Backend-Google%20Apps%20Script%20%28Serverless%29-blue?style=flat-square)](https://script.google.com/)
+[![Database](https://img.shields.io/badge/CMS%20%26%20Database-Google%20Sheets-success?style=flat-square)](https://sheets.google.com/)
+[![Payment](https://img.shields.io/badge/Payments-Razorpay%20%7C%20Net--7%20Invoicing-orange?style=flat-square)](https://razorpay.com/)
+[![Bottles](https://img.shields.io/badge/Form%20Factor-200ml%20Amber%20Glass-brown?style=flat-square)]()
+[![Routing](https://img.shields.io/badge/Routing-Clean%20Extensionless%20URLs-blueviolet?style=flat-square)]()
+
+A modern, serverless e-commerce and interactive sensory platform built for scheduled micro-batch craft coffee drops, headless Google Sheets CMS synchronization, Razorpay payment processing, corporate Net-7 invoicing, dynamic N-lot discovery flights, interactive sensory radar visualizations, and self-service order tracking. 
+
+All coffee across retail, corporate, and catering tiers is standardized into recyclable **200ml glass bottles** extracted hot (92–94°C) and instantly flash-chilled to 4°C with zero preservatives.
+
+---
 
 ## **📑 Table of Contents**
 
