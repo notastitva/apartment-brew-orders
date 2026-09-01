@@ -332,7 +332,7 @@ function renderSplitterUI() {
             '<path d="M 30,22 L 30,35 L 12,75 L 12,226 A 6,6 0 0,0 18,232 L 82,232 A 6,6 0 0,0 88,226 L 88,75 L 70,35 L 70,22 Z" fill="none" stroke="url(#goldCapGrad_' + lot.id + '_' + b + ')" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>' +
           '</svg>' +
           '<span class="crate-slot-badge" style="background: ' + lotColor + '22; color: ' + lotColor + '; border: 1px solid ' + lotColor + '88;">' + shortName + '</span>' +
-        </div>;
+        '</div>';
       }
     });
 
