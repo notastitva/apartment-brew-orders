@@ -235,17 +235,14 @@ Captures corporate coffee bar bookings, pop-up events, estimated headcounts, ven
 
 Customers track live orders in real time on `/track` via a 4-stage visual stepper:
 
-\+------------------+     \+------------------------+     \+--------------------+     \+------------------+
-
-|  1\. Pre-Ordered  | \--\> | 2\. Brewing & Chilling  | \--\> | 3\. Out for Delivery| \--\> |   4\. Delivered   |
-
-\+------------------+     \+------------------------+     \+--------------------+     \+------------------+
-
+```
++------------------+     +------------------------+     +--------------------+     +------------------+
+|  1. Pre-Ordered  | --> | 2. Brewing & Chilling  | --> | 3. Out for Delivery| --> |   4. Delivered   |
++------------------+     +------------------------+     +--------------------+     +------------------+
 | Order logged &   |     | Hot extraction (94°C)  |     | Dispatched in      |     | Dropped at door/ |
-
 | batch scheduled. |     | & flash-chilled to 4°C |     | thermal cold-bags. |     | concierge desk.  |
-
-\+------------------+     \+------------------------+     \+--------------------+     \+------------------+
++------------------+     +------------------------+     +--------------------+     +------------------+
+```
 
 * **Live Status Keywords:**  
   * **Stage 1 (Pre-Ordered):** `Pre-Ordered`, `Pending`, `Received`  
