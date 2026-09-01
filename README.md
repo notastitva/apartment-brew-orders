@@ -21,7 +21,14 @@ All coffee across retail, corporate, and catering tiers is standardized into rec
 7. [Self-Service Order Tracking State Machine](#7.-self-service-order-tracking-state-machine)  
 8. [Brewery Operational SOP & Drop Cycles](#8-brewery-operational-sop--drop-cycles)  
 9. [Deployment & Environment Configuration](#9-deployment--environment-configuration)  
-10. [Security, Performance & Resilience Guardrails](#10-security-performance--resilience-guardrails)
+10. [Security, Performance & Resilience Guardrails](#10-security-performance--resilience-guardrails)  
+11. [Multi-Step Checkout Wizards & State Flows](#11-multi-step-checkout-wizards--state-flows)  
+12. [Promo Code & Discount Engine](#12-promo-code--discount-engine)  
+13. [Packaging, Bottle Specifications & Handwritten Batch Ledger](#13-packaging-bottle-specifications--handwritten-batch-ledger)  
+14. [Geographic Service Areas & Corporate Tech Park Clusters](#14-geographic-service-areas--corporate-tech-park-clusters)  
+15. [Automated Email Receipts & Notification System](#15-automated-email-receipts--notification-system)  
+16. [Offline Resilience, Caching & Dynamic Fallbacks](#16-offline-resilience-caching--dynamic-fallbacks)  
+17. [Design System & Brand Asset Specifications](#17-design-system--brand-asset-specifications)
 
 ---
 
@@ -280,12 +287,11 @@ Col 17: Active (TRUE/FALSE)  (Controls visibility on frontend)
 
 ### **6.2 B2B Corporate Orders (`B2B Orders`)**
 
-Includes company name, GSTIN (for 18% Input Tax Credit), tech park cluster, Net-7 corporate invoicing references (`INV-REQ-XXXXXX`), and reception desk drop instructions.
+Includes company name, GSTIN (for 18% Input Tax Credit), tech park cluster, Net-7 corporate invoicing references (`INV-REQ-XXXXXX`), and reception desk drop instructions. Order IDs follow the `TABC-B2B-XXXXXX` taxonomy.
 
 ### **6.3 Event Catering Inquiries (`Event Inquiries`)**
 
-Captures corporate coffee bar bookings, pop-up events, estimated headcounts, venue locations, and lead management statuses (`New Lead` → `In Discussion` → `Event Confirmed` → `Event Completed`).  
-\---
+Captures corporate coffee bar bookings, pop-up events, estimated headcounts, venue locations, and lead management statuses (`New Lead` → `In Discussion` → `Event Confirmed` → `Event Completed`). Event leads are assigned IDs following the `TABC-EVT-XXXXXX` taxonomy.
 
 ## **7\. Self-Service Order Tracking State Machine**
 
@@ -307,7 +313,12 @@ Customers track live orders in real time on `/track` via a 4-stage visual steppe
   * **Stage 1 (Pre-Ordered):** `Pre-Ordered`, `Pending`, `Received`  
   * **Stage 2 (Brewing & Chilling):** `Brewing`, `Roasting`, `Extracting`, `Chilling`, `Prep`  
   * **Stage 3 (Out for Delivery):** `Dispatched`, `Out for Delivery`, `In Transit`, `Shipped`, `On the way`  
-  * **Stage 4 (Delivered):** `Delivered`, `Completed`, `Fulfilled` (Starts 48-hour freshness clock)
+  * **Stage 4 (Delivered):** `Delivered`, `Completed`, `Fulfilled` (Starts 48-hour freshness clock)  
+* **Event Inquiry Pipeline State Machine:**  
+  * **Stage 1:** `New Lead` (Inquiry received & logged)  
+  * **Stage 2:** `In Discussion` (Capacity, custom single-estate lot selection & date confirmation)  
+  * **Stage 3:** `Event Confirmed` (Logistics finalized, batch scheduled)  
+  * **Stage 4:** `Event Completed` (On-site bar execution / bulk dispatch fulfilled)
 
 \---
 
@@ -362,3 +373,125 @@ const CONFIG \= {
 *Crafted with pride by The Apartment Brew Co. • Gurugram, India*
 
 ### 
+
+\---
+
+## **11\. Multi-Step Checkout Wizards & State Flows**
+
+### **11.1 Residential Drop Wizard (`/personal`)**
+
+* **Step 1 — Pack & Harvest Configuration:** Customer selects pack size (Single 1x, Duo 2x, Weekend 4-Pack, Mega 6-Pack) and configures lot split via the Zero-Sum N-Lot Splitter.  
+* **Step 2 — Delivery Logistics:** Captures Customer Name, 10-digit WhatsApp number (validated via regex `^[6-9]\d{9}$`), Email Address, Delivery Area/Society, and specific Gate Drop Instructions (Concierge / Security / Doorstep).  
+* **Step 3 — Payment & Confirmation:** Triggers Razorpay Standard Checkout SDK modal (`checkout.js`). Upon successful capture (`razorpay_payment_id`), payload is dispatched via POST to Google Apps Script and user is redirected to `/track` with order ID preloaded.
+
+### **11.2 Corporate Drop Wizard (`/corporate`)**
+
+* **Step 1 — Office Pack Selection:** Choose team volume (Team 10-Pack @ ₹1,800, Office 20-Pack @ ₹3,400, Floor 40-Pack @ ₹6,000, Townhall 60-Pack @ ₹8,700).  
+* **Step 2 — Corporate Verification & Tech Park Cluster:** Company Name, Work Email, 10-digit WhatsApp contact, GSTIN (validated for 18% ITC), Tech Park selection from pre-configured cluster dropdown, and floor/reception delivery notes.  
+* **Step 3 — B2B Payment Route:** Select either Instant Gateway Checkout (Razorpay) or Net-7 Corporate Invoicing (`INV-REQ-XXXXXX`), with auto-generated pro-forma invoice reference.
+
+### **11.3 Event & Catering Inquiry Wizard (`/events`)**
+
+* **Step 1 — Scope & Scale:** Requirement type (Pop-Up Bar, Hackathon Bulk Drop, Townhall, Recurring Subscription) and estimated bottle headcount (20–50, 50–100, 100–250, 250+).  
+* **Step 2 — Logistics & Venue:** Target date/timeline, venue address / Tech Park hub in Delhi NCR, and co-branded packaging preferences.  
+* **Step 3 — Point of Contact:** Organization name, contact person, work email, mobile number, and submission into the `Event Inquiries` Google Sheet pipeline.
+
+\---
+
+## **12\. Promo Code & Discount Engine**
+
+### **12.1 Dynamic Coupon Validation**
+
+* **Configuration:** Defined in the `Menu & Config` sheet or handled dynamically by the frontend controller (`app.js`).  
+* **Active Codes (e.g., `NCRFIRST`):** Applies a 10% introductory discount across single and multi-bottle packs (e.g., \-₹24 on Single, \-₹48 on Duo, \-₹90 on Weekend 4-Pack).  
+* **Validation Rules:** Evaluates code case-insensitively, verifies expiration date and minimum spend thresholds, and dynamically recalculates total payable amount and savings badge.  
+* **Ledger Audit Trail:** The applied coupon code and exact discount amount are appended into Column R (`Notes / UTR`) of `Sheet1` (e.g., `Payment ID: pay_TUQ9XEXPBWbtHR | Coupon: NCRFIRST (-₹90)`).
+
+\---
+
+## **13\. Packaging, Bottle Specifications & Handwritten Batch Ledger**
+
+### **13.1 Physical Vessel Architecture**
+
+* **Vessel:** 200ml (6.76 fl oz) vintage-inspired Flint Glass Bottle.  
+* **Dimensions:** Height: 130 mm ± 1.5 mm, Outer Diameter: 56 mm, Circumference: \~175.93 mm.  
+* **Closure:** 38mm deep black metal lug cap with airtight food-grade plastisol liner to prevent oxygen ingress.  
+* **Thermal Performance:** Calibrated for sub-4°C refrigeration and rapid heat-dissipation during ice thermal shock.
+
+### **13.2 Label Dieline & Print Production**
+
+* **Dimensions:** 180 mm × 65 mm (allows 4.0 mm overlap adhesive seam; 2126 × 768 px at 300 DPI).  
+* **Layout:** 3-panel wrap (Panel 1: Left Wrap / Philosophy & 48h Storage Notice; Panel 2: Front Center / Gold Emblem & Estate Card; Panel 3: Right Wrap / Handwritten Batch Ledger).  
+* **Substrate & Finish:** Waterproof Synthetic Matte Polypropylene (PP) or Textured Estate Felt with cold-temperature permanent acrylic adhesive (-5°C to \+40°C).  
+* **Reference:** [The Apartment Brew Co. — 200ml Bottle Packaging, Label Print & Mockup Guide](https://docs.google.com/document/d/1SAih26Phm7hbLxFmXS91xYCkIdeGClnoxSB5_1lFYak/edit).
+
+### **13.3 Handwritten Craft Batch Ledger Fields**
+
+Each bottle is individually hand-inscribed with archival pigment paint pens (Uni Posca PC-1M 0.7mm White/Gold or Sakura Pigma Micron 08):
+
+18. **BATCH NO.:** Unique brew run identifier (e.g., `#048-RAT`, `TABC-AUG26`, `CORP-012`).  
+19. **BREW DATE:** Exact extraction date & timestamp (e.g., `28 AUG 2026 (06:30 AM)`).  
+20. **BOTTLE NO.:** Individual sequence within the batch (e.g., `14 of 30`).  
+21. **BREWER SIGN:** Barista / artisan initials (e.g., `AG`).  
+22. **BEST BEFORE:** Strict 48-Hour Cold-Chain Window benchmark from extraction time.
+
+\---
+
+## **14\. Geographic Service Areas & Corporate Tech Park Clusters**
+
+### **14.1 B2C Residential Delivery Zones**
+
+* **Primary Hub:** Gurugram residential societies and gated complexes (DLF Phase 1–5, Cyber City residential, Golf Course Road, Golf Course Extension Road, Sohna Road, Nirvana Country, Sectors 42–65).  
+* **Extended NCR Corridor:** Select South Delhi residential belts and Noida sectors (subject to cold-chain delivery transit windows).
+
+### **14.2 B2B Corporate Tech Park Clusters**
+
+Scheduled Friday office drop routes optimized for key commercial tech centers:
+
+* **DLF Cyber City & Cyber Hub:** Buildings 5, 8, 9, 10, 14, and Infinity Towers.  
+* **Golf Course Road Corridor:** One Horizon Center, Two Horizon Center, Palm Springs Plaza, Global Foyer.  
+* **Sohna Road & Sub-Arterial:** Candor TechSpace (Sector 21 & Sector 48), Bestech Business Park, Spaze I-Tech Park.  
+* **Delhi-Gurugram Border & Aerocity:** Cyber Park (Sector 20), Ambience Corporate Tower, Worldmark Aerocity.
+
+\---
+
+## **15\. Automated Email Receipts & Notification System**
+
+### **15.1 Google Apps Script `MailApp` Dispatch**
+
+Upon receiving validated POST data via `Code.gs`, the backend triggers transactional email workflows:
+
+* **Customer HTML Receipt:** Dispatched immediately to the customer's email address. Includes Order ID, itemized lot breakdown, pack type, delivery time window, payment reference, and bold cold-chain storage instructions: *"Please transfer your glass bottles to the refrigerator (≤4°C) immediately upon doorstep arrival and consume within 48 hours for peak aromatics."*  
+* **Roastery Operations Dispatch Alert:** Dispatched to the central brewery admin email containing customer contact, WhatsApp link, full delivery address, gate instructions, and batch fulfillment checklists.
+
+\---
+
+## **16\. Offline Resilience, Caching & Dynamic Fallbacks**
+
+### **16.1 Stale-While-Revalidate (SWR) & LocalStorage**
+
+* Initial page loads pull cached menu items, lot descriptions, and sensory parameters from browser `localStorage` instantly with zero layout shift.  
+* Background asynchronous fetch revalidates live stock, capacity limits, and announcements from Google Sheets.
+
+### **16.2 Hardcoded Dynamic Fallbacks**
+
+If Google Sheets API endpoint is unreachable or throttled, `app.js` automatically activates default static configurations (`availableLots`):
+
+23. **LOT-01:** *Ratnagiri Estate* (72h Anaerobic Natural • 1,350m MASL • Chikmagalur, Karnataka)  
+24. **LOT-02:** *Banana Banger* (Special Yeast Fermentation • 1,450m MASL • Shevaroys Hills, Tamil Nadu)
+
+### **16.3 Service Worker (`sw.js`) & PWA Architecture**
+
+* **Asset Caching:** Implements Cache-First strategy for static vectors (`tabc-emblem-gold-transparent.svg`), brand favicons (16x16, 180x180, 192x192), stylesheets (`style.css`), and Google Fonts.  
+* **Network Strategy:** Network-First with SWR fallback for all dynamic order and tracking API calls (`/exec`).
+
+\---
+
+## **17\. Design System & Brand Asset Specifications**
+
+### **17.1 Master Color Matrix & Design Tokens**
+
+* **Signature Brushed Gold:** Accent `#d4a373`, Hover `#b08968`, Metallic Gold `#CD9A3A`, Gold Sim `#faedcd`.  
+* **Dark Obsidian Backgrounds:** Body `#141312`, Elevated `#1a1816`, Card Surface `#1f1d1a`, Card Inner `#151413`.  
+* **Typography:** System UI Font Stack (`-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif`).  
+* **Design Reference:** [The Apartment Brew Co. — Visual Asset, Color & Typography Quick-Spec](https://drive.google.com/drive/folders/1nB4r9sdYrjuIpo7e84dil9K1hHsl64ug).
