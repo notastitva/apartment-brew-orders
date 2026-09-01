@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>The Apartment Brew Co. | Micro-Batch Flash-Chilled Specialty Coffee</title>
   <link rel="stylesheet" href="style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
 </head>
 <head>
   <meta charset="UTF-8" />
@@ -107,7 +110,28 @@
   
       <!-- 4-Stat Micro Highlights Grid -->
       <div class="hero-stats-row">
-        <div class="stat-box">
+<div class="stat-box">
+  <div class="stat-icon">
+    <svg class="tabc-bottle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 240" width="18" height="34" style="vertical-align: middle;">
+      <defs>
+        <linearGradient id="goldMini" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#CD9A3A"/>
+          <stop offset="50%" stop-color="#E5C068"/>
+          <stop offset="100%" stop-color="#B08968"/>
+        </linearGradient>
+        <linearGradient id="coffeeMini" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#54280E"/>
+          <stop offset="50%" stop-color="#241005"/>
+          <stop offset="100%" stop-color="#54280E"/>
+        </linearGradient>
+      </defs>
+      <path d="M 12,105 L 88,105 L 88,226 A 6,6 0 0,1 82,232 L 18,232 A 6,6 0 0,1 12,226 Z" fill="url(#coffeeMini)"/>
+      <rect x="20" y="8" width="60" height="14" rx="4" fill="url(#goldMini)"/>
+      <path d="M 30,22 L 30,35 L 12,75 L 12,226 A 6,6 0 0,0 18,232 L 82,232 A 6,6 0 0,0 88,226 L 88,75 L 70,35 L 70,22 Z" fill="none" stroke="url(#goldMini)" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="stat-label">200ml Glass</div>
+</div>
           <div class="stat-icon">☕</div>
           <div class="stat-label">100% Single-Estate</div>
         </div>
@@ -451,8 +475,8 @@
         </div>
       </div>
     </section>
-
-    <!-- STREAMLINED ORDERING & SERVICES HUB -->
+    
+        <!-- STREAMLINED ORDERING & SERVICES HUB -->
     <section class="section-card">
       <div class="section-title">
         <span>Order &amp; Inquire</span>

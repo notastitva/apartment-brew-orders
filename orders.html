@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>Harvests &amp; Order Gateway | The Apartment Brew Co.</title>
   <link rel="stylesheet" href="style.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
 
   <!-- Favicons & Mobile Touch Icons -->
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
@@ -79,8 +82,27 @@
   <div class="container">
     <!-- HARVEST SELECTION: FIND YOUR IDEAL SINGLE-ESTATE BREW -->
     <section class="section-card">
-      <div class="section-title">
-        <span>✨ Find Your Ideal Single-Estate Brew</span>
+<div class="section-title">
+  <span style="display: flex; align-items: center; gap: 8px;">
+    <svg class="tabc-bottle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 240" width="16" height="28" style="vertical-align: middle;">
+      <defs>
+        <linearGradient id="goldOrders" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#CD9A3A"/>
+          <stop offset="50%" stop-color="#E5C068"/>
+          <stop offset="100%" stop-color="#B08968"/>
+        </linearGradient>
+        <linearGradient id="coffeeOrders" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#54280E"/>
+          <stop offset="50%" stop-color="#241005"/>
+          <stop offset="100%" stop-color="#54280E"/>
+        </linearGradient>
+      </defs>
+      <path d="M 12,105 L 88,105 L 88,226 A 6,6 0 0,1 82,232 L 18,232 A 6,6 0 0,1 12,226 Z" fill="url(#coffeeOrders)"/>
+      <rect x="20" y="8" width="60" height="14" rx="4" fill="url(#goldOrders)"/>
+      <path d="M 30,22 L 30,35 L 12,75 L 12,226 A 6,6 0 0,0 18,232 L 82,232 A 6,6 0 0,0 88,226 L 88,75 L 70,35 L 70,22 Z" fill="none" stroke="url(#goldOrders)" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+    ✨ Find Your Ideal Single-Estate Brew
+  </span>
         <span class="section-subtitle">Tap to Choose Harvest</span>
       </div>
       <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
@@ -115,7 +137,7 @@
     </p>
   </div>
 <div class="dest-card-cta">
-    Personal Order &rarr;
+    Configure Personal Order &rarr;
   </div>
 </a>
     <!-- Option 2: Corporate Order -->
@@ -130,7 +152,7 @@
     </p>
   </div>
 <div class="dest-card-cta">
-    Corporate Order &rarr;
+    Configure Corporate Order &rarr;
   </div>
 </a>
   </div>

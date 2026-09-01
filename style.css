@@ -26,6 +26,14 @@
   --badge-bg: rgba(144, 224, 239, 0.1);
   --gradient-gold: linear-gradient(135deg, #d4a373 0%, #faedcd 50%, #b08968 100%);
   --gradient-glow: radial-gradient(circle at 50% 0%, rgba(212, 163, 115, 0.18) 0%, transparent 70%);
+  --tabc-font-display: 'Syne', 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --tabc-font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --tabc-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --tabc-frosted-bg: rgba(31, 29, 26, 0.78);
+  --tabc-frosted-card-inner: rgba(21, 20, 19, 0.85);
+  --tabc-frosted-border: rgba(212, 163, 115, 0.22);
+  --tabc-frosted-border-glow: rgba(212, 163, 115, 0.45);
+  --tabc-glass-blur: blur(14px);
 }
   
 * {
@@ -365,22 +373,26 @@ body::before {
 /* ==================================================================== */
   
 .header-card {
-  background: linear-gradient(160deg, #25221e 0%, #1a1816 100%);
-  border: 1px solid var(--card-border);
+  background: linear-gradient(160deg, rgba(37, 34, 30, 0.9) 0%, rgba(26, 24, 22, 0.85) 100%);
+  backdrop-filter: var(--tabc-glass-blur, blur(16px));
+  -webkit-backdrop-filter: var(--tabc-glass-blur, blur(16px));
+  border: 1px solid var(--tabc-frosted-border, var(--card-border));
   border-radius: 16px;
   padding: 20px 18px;
   text-align: center;
-  box-shadow: 0 4px 25px rgba(0,0,0,0.45);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   position: relative;
   overflow: hidden;
 }
   
 .section-card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
+  background: var(--tabc-frosted-bg, var(--card-bg));
+  backdrop-filter: var(--tabc-glass-blur, blur(14px));
+  -webkit-backdrop-filter: var(--tabc-glass-blur, blur(14px));
+  border: 1px solid var(--tabc-frosted-border, var(--card-border));
   border-radius: 16px;
   padding: 20px 18px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
   position: relative;
 }
   
@@ -409,12 +421,14 @@ body::before {
 /* ==================================================================== */
   
 .hero-visual-card {
-  background: linear-gradient(175deg, #28241f 0%, #181614 100%);
-  border: 1px solid rgba(212, 163, 115, 0.28);
+  background: linear-gradient(175deg, rgba(40, 36, 31, 0.92) 0%, rgba(24, 22, 20, 0.88) 100%);
+  backdrop-filter: var(--tabc-glass-blur, blur(16px));
+  -webkit-backdrop-filter: var(--tabc-glass-blur, blur(16px));
+  border: 1px solid var(--tabc-frosted-border-glow, rgba(212, 163, 115, 0.28));
   border-radius: 18px;
   padding: 24px 18px 20px;
   text-align: center;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   position: relative;
   overflow: hidden;
 }
@@ -3409,7 +3423,6 @@ input:focus, select:focus, textarea:focus {
   color: currentColor;
   opacity: 0.85;
 }
-
 /* Quiz Result Actions & Shared Button Styles */
 .quiz-result-actions {
   display: grid;
@@ -3449,3 +3462,27 @@ input:focus, select:focus, textarea:focus {
   box-shadow: 0 6px 18px rgba(212, 163, 115, 0.3);
 }
 
+/* ==================================================================== */
+/* TABC BOTTLE VECTOR ICON & HERO SHOWCASE STYLES                       */
+/* ==================================================================== */
+.tabc-bottle-icon {
+  display: inline-block;
+  vertical-align: middle;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+.tabc-bottle-icon:hover {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 8px rgba(212, 163, 115, 0.6));
+}
+.hero-bottle-badge-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 12px auto;
+}
+.tabc-editorial-serif {
+  font-family: var(--tabc-font-serif, 'Playfair Display', 'Cormorant Garamond', Georgia, serif);
+  font-style: italic;
+  letter-spacing: 0.2px;
+}
