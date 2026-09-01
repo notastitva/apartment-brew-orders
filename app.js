@@ -378,6 +378,16 @@ function selectQuizAnswer(questionNum, answerKey, element) {
   if (element) element.classList.add('active');
   updateQuizRecommendation();
 }
+function getQuizSwatchClass(key, label) {
+  var k = (key || '').toLowerCase();
+  var l = (label || '').toLowerCase();
+  if (k.indexOf('mix') !== -1 || l.indexOf('mix') !== -1 || l.indexOf('variety') !== -1 || l.indexOf('both') !== -1 || l.indexOf('flight') !== -1) return 'swatch-mix';
+  if (k.indexOf('berry') !== -1 || k.indexOf('morning') !== -1 || l.indexOf('berry') !== -1 || l.indexOf('morning') !== -1 || l.indexOf('fruit') !== -1 || l.indexOf('raspberry') !== -1 || l.indexOf('cacao') !== -1) return 'swatch-berry';
+  if (k.indexOf('floral') !== -1 || k.indexOf('afternoon') !== -1 || l.indexOf('floral') !== -1 || l.indexOf('afternoon') !== -1 || l.indexOf('jasmine') !== -1 || l.indexOf('apple') !== -1 || l.indexOf('citrus') !== -1) return 'swatch-floral';
+  if (k.indexOf('complex') !== -1 || k.indexOf('allday') !== -1 || l.indexOf('complex') !== -1 || l.indexOf('all-day') !== -1 || l.indexOf('honey') !== -1 || l.indexOf('blackcurrant') !== -1 || l.indexOf('maceration') !== -1) return 'swatch-complex';
+  return 'swatch-complex';
+}
+
 
 function renderQuizUI(lots, quizConfig) {
   var config = (quizConfig && quizConfig.questions && quizConfig.questions.length > 0) ? quizConfig : liveQuizConfig;
@@ -394,7 +404,8 @@ function renderQuizUI(lots, quizConfig) {
     q1Questions.forEach(function(q, idx) {
       var isAct = (quizAnswers.time === q.key) || (!quizAnswers.time && idx === 0) ? 'active' : '';
       if (!quizAnswers.time && idx === 0) quizAnswers.time = q.key;
-      q1Html += '<button type="button" class="quiz-opt-btn quiz-opt-q1 ' + isAct + '" data-ans="' + q.key + '" onclick="selectQuizAnswer(1, this.dataset.ans, this)">' +
+      var swatchCls = getQuizSwatchClass(q.key, q.label);
+      q1Html += '<button type="button" class="quiz-opt-btn quiz-opt-q1 ' + swatchCls + ' ' + isAct + '" data-ans="' + q.key + '" onclick="selectQuizAnswer(1, this.dataset.ans, this)">' +
         '<span class="quiz-opt-icon">' + (q.icon || '☕') + '</span>' +
         '<span class="quiz-opt-label">' + q.label + '</span>' +
         '</button>';
@@ -407,7 +418,8 @@ function renderQuizUI(lots, quizConfig) {
     q2Questions.forEach(function(q, idx) {
       var isAct = (quizAnswers.flavor === q.key) || (!quizAnswers.flavor && idx === 0) ? 'active' : '';
       if (!quizAnswers.flavor && idx === 0) quizAnswers.flavor = q.key;
-      q2Html += '<button type="button" class="quiz-opt-btn quiz-opt-q2 ' + isAct + '" data-ans="' + q.key + '" onclick="selectQuizAnswer(2, this.dataset.ans, this)">' +
+      var swatchCls = getQuizSwatchClass(q.key, q.label);
+      q2Html += '<button type="button" class="quiz-opt-btn quiz-opt-q2 ' + swatchCls + ' ' + isAct + '" data-ans="' + q.key + '" onclick="selectQuizAnswer(2, this.dataset.ans, this)">' +
         '<span class="quiz-opt-icon">' + (q.icon || '✨') + '</span>' +
         '<span class="quiz-opt-label">' + q.label + '</span>' +
         '</button>';
