@@ -15,20 +15,20 @@ All coffee across retail, corporate, and catering tiers is standardized into rec
 
 ---
 
-## **📑 Table of Contents**
+## 📑 Table of Contents
 
-1. 1\. [Craft Philosophy & Operations](#1-craft-philosophy--operations)  
-2. 2\. [Platform Architecture & Data Flow](#2-platform-architecture--data-flow)  
-3. 3\. [Portal Directory & Clean-URL Routing](#3-portal-directory--clean-url-routing)  
-4. 4\. [Interactive Frontend Engines](#4-interactive-frontend-engines)  
-5. 5\. [Headless CMS Schema (Google Sheets)](#5-headless-cms-schema-google-sheets)  
-6. 6\. [Database Schema & Order Ledgers](#6-database-schema--order-ledgers)  
-7. 7\. [Self-Service Order Tracking State Machine](#7-self-service-order-tracking-state-machine)  
-8. 8\. [Brewery Operational SOP & Drop Cycles](#8-brewery-operational-sop--drop-cycles)  
-9. 9\. [Deployment & Environment Configuration](#9-deployment--environment-configuration)  
-10. 10\. [Security, Performance & Resilience Guardrails](#10-security-performance--resilience-guardrails)
+1. [Craft Philosophy & Operations](#1-craft-philosophy--operations)
+2. [Platform Architecture & Data Flow](#2-platform-architecture--data-flow)
+3. [Portal Directory & Clean-URL Routing](#3-portal-directory--clean-url-routing)
+4. [Interactive Frontend Engines](#4-interactive-frontend-engines)
+5. [Headless CMS Schema (Google Sheets)](#5-headless-cms-schema-google-sheets)
+6. [Database Schema & Order Ledgers](#6-database-schema--order-ledgers)
+7. [Self-Service Order Tracking State Machine](#7-self-service-order-tracking-state-machine)
+8. [Brewery Operational SOP & Drop Cycles](#8-brewery-operational-sop--drop-cycles)
+9. [Deployment & Environment Configuration](#9-deployment--environment-configuration)
+10. [Security, Performance & Resilience Guardrails](#10-security-performance--resilience-guardrails)
 
-\---
+---
 
 ## **1\. Craft Philosophy & Operations**
 
