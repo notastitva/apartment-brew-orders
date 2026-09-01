@@ -680,17 +680,43 @@ function renderFlavorPage(lots) {
     displayLots.forEach(function(lot) {
       var lotColor = lot.color || (lot.id === 'LOT-01' ? '#e76f51' : (lot.id === 'LOT-02' ? '#2a9d8f' : '#d4a373'));
       var emoji = (lot.emojis && lot.emojis[0]) || '☕';
-      var ritualsText = lot.rituals || 'Best enjoyed during morning focus or afternoon recharge with artisanal pastries.';
+      var rawRituals = lot.rituals || '';
+
+      var timePart = '';
+      var pairingPart = '';
+
+      if (rawRituals.indexOf('• Pairings:') !== -1) {
+        var splits = rawRituals.split('• Pairings:');
+        timePart = splits[0].replace(/^[•\s]+/, '').replace(/[•\s]+$/, '').trim();
+        pairingPart = splits[1].trim();
+      } else if (rawRituals.indexOf('•') !== -1) {
+        var splits2 = rawRituals.split('•');
+        timePart = splits2[0].trim();
+        pairingPart = splits2.slice(1).join('•').replace(/^Pairings:\s*/i, '').trim();
+      } else {
+        timePart = rawRituals || 'Best enjoyed fresh in small batches.';
+      }
+
+      var itemsHtml = '';
+      if (timePart) {
+        itemsHtml += '<div class="pairing-list-item" style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.74rem; color: var(--text-muted); line-height: 1.4;">' +
+          '<span style="font-size: 0.95rem; flex-shrink: 0;">⏱️</span>' +
+          '<span><strong style="color: var(--text);">' + (timePart.indexOf('Best Time:') === -1 ? 'Best Time: ' : '') + '</strong>' + timePart.replace(/^Best Time:\s*/i, '') + '</span>' +
+          '</div>';
+      }
+      if (pairingPart) {
+        itemsHtml += '<div class="pairing-list-item" style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.74rem; color: var(--text-muted); line-height: 1.4; margin-top: 4px;">' +
+          '<span style="font-size: 0.95rem; flex-shrink: 0;">🥐</span>' +
+          '<span><strong style="color: var(--text);">Food Pairings: </strong>' + pairingPart.replace(/^Pairings:\s*/i, '') + '</span>' +
+          '</div>';
+      }
       pairHtml += '<div class="pairing-card" style="background: var(--card-inner); border: 1.5px solid ' + lotColor + '33; border-radius: 12px; padding: 14px; margin-bottom: 10px;">' +
         '<div class="pairing-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">' +
         '<span style="font-weight: 800; color: ' + lotColor + '; font-size: 0.9rem;">' + emoji + ' ' + lot.name + ' Rituals</span>' +
         '<span style="font-size: 0.68rem; font-weight: 700; color: var(--accent); background: rgba(212,163,115,0.12); padding: 2px 8px; border-radius: 8px;">' + (lot.pills ? lot.pills[0] : 'Specialty') + '</span>' +
         '</div>' +
         '<div class="pairing-list" style="display: flex; flex-direction: column; gap: 6px;">' +
-        '<div class="pairing-list-item" style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.74rem; color: var(--text-muted); line-height: 1.35;">' +
-        '<span>⏱️</span>' +
-        '<span>' + ritualsText + '</span>' +
-        '</div>' +
+        itemsHtml +
         '</div>' +
         '</div>';
     });
