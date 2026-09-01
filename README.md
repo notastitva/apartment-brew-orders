@@ -21,14 +21,7 @@ All coffee across retail, corporate, and catering tiers is standardized into rec
 7. [Self-Service Order Tracking State Machine](#7.-self-service-order-tracking-state-machine)  
 8. [Brewery Operational SOP & Drop Cycles](#8-brewery-operational-sop--drop-cycles)  
 9. [Deployment & Environment Configuration](#9-deployment--environment-configuration)  
-10. [Security, Performance & Resilience Guardrails](#10-security-performance--resilience-guardrails)  
-11. [Multi-Step Checkout Wizards & State Flows](#11-multi-step-checkout-wizards--state-flows)  
-12. [Promo Code & Discount Engine](#12-promo-code--discount-engine)  
-13. [Packaging, Bottle Specifications & Handwritten Batch Ledger](#13-packaging-bottle-specifications--handwritten-batch-ledger)  
-14. [Geographic Service Areas & Corporate Tech Park Clusters](#14-geographic-service-areas--corporate-tech-park-clusters)  
-15. [Automated Email Receipts & Notification System](#15-automated-email-receipts--notification-system)  
-16. [Offline Resilience, Caching & Dynamic Fallbacks](#16-offline-resilience-caching--dynamic-fallbacks)  
-17. [Design System & Brand Asset Specifications](#17-design-system--brand-asset-specifications)
+10. [Security, Performance & Resilience Guardrails](#10-security-performance--resilience-guardrails)
 
 ---
 
@@ -287,11 +280,12 @@ Col 17: Active (TRUE/FALSE)  (Controls visibility on frontend)
 
 ### **6.2 B2B Corporate Orders (`B2B Orders`)**
 
-Includes company name, GSTIN (for 18% Input Tax Credit), tech park cluster, Net-7 corporate invoicing references (`INV-REQ-XXXXXX`), and reception desk drop instructions. Order IDs follow the `TABC-B2B-XXXXXX` taxonomy.
+Includes company name, GSTIN (for 18% Input Tax Credit), tech park cluster, Net-7 corporate invoicing references (`INV-REQ-XXXXXX`), and reception desk drop instructions.
 
 ### **6.3 Event Catering Inquiries (`Event Inquiries`)**
 
-Captures corporate coffee bar bookings, pop-up events, estimated headcounts, venue locations, and lead management statuses (`New Lead` → `In Discussion` → `Event Confirmed` → `Event Completed`). Event leads are assigned IDs following the `TABC-EVT-XXXXXX` taxonomy.
+Captures corporate coffee bar bookings, pop-up events, estimated headcounts, venue locations, and lead management statuses (`New Lead` → `In Discussion` → `Event Confirmed` → `Event Completed`).  
+\---
 
 ## **7\. Self-Service Order Tracking State Machine**
 
@@ -313,12 +307,7 @@ Customers track live orders in real time on `/track` via a 4-stage visual steppe
   * **Stage 1 (Pre-Ordered):** `Pre-Ordered`, `Pending`, `Received`  
   * **Stage 2 (Brewing & Chilling):** `Brewing`, `Roasting`, `Extracting`, `Chilling`, `Prep`  
   * **Stage 3 (Out for Delivery):** `Dispatched`, `Out for Delivery`, `In Transit`, `Shipped`, `On the way`  
-  * **Stage 4 (Delivered):** `Delivered`, `Completed`, `Fulfilled` (Starts 48-hour freshness clock)  
-* **Event Inquiry Pipeline State Machine:**  
-  * **Stage 1:** `New Lead` (Inquiry received & logged)  
-  * **Stage 2:** `In Discussion` (Capacity, custom single-estate lot selection & date confirmation)  
-  * **Stage 3:** `Event Confirmed` (Logistics finalized, batch scheduled)  
-  * **Stage 4:** `Event Completed` (On-site bar execution / bulk dispatch fulfilled)
+  * **Stage 4 (Delivered):** `Delivered`, `Completed`, `Fulfilled` (Starts 48-hour freshness clock)
 
 \---
 
@@ -370,11 +359,6 @@ const CONFIG \= {
 * **Cross-Browser Verification:** Fully tested and AST-compiled under JavaScriptCore and modern browser engines with zero console syntax errors.
 
 \---  
-*Crafted with pride by The Apartment Brew Co. • Gurugram, India*
-
-### 
-
-\---
 
 ## **11\. Multi-Step Checkout Wizards & State Flows**
 
@@ -495,3 +479,9 @@ If Google Sheets API endpoint is unreachable or throttled, `app.js` automaticall
 * **Dark Obsidian Backgrounds:** Body `#141312`, Elevated `#1a1816`, Card Surface `#1f1d1a`, Card Inner `#151413`.  
 * **Typography:** System UI Font Stack (`-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif`).  
 * **Design Reference:** [The Apartment Brew Co. — Visual Asset, Color & Typography Quick-Spec](https://drive.google.com/drive/folders/1nB4r9sdYrjuIpo7e84dil9K1hHsl64ug).
+
+\--- 
+
+*Crafted with pride by The Apartment Brew Co. • Gurugram, India*
+
+### 
