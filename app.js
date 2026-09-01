@@ -307,6 +307,45 @@ function renderSplitterUI() {
     controlsContainer.innerHTML = rowsHtml;
   }
 
+  // Render One Bottle Allocation Card Per Active Lot
+  var crateContainer = document.getElementById('crateBottleGrid');
+  if (crateContainer) {
+    var crateHtml = '';
+    activeLots.forEach(function(lot) {
+      var count = customSplit[lot.id] || 0;
+      var lotColor = lot.color || (lot.id === 'LOT-01' ? '#e76f51' : (lot.id === 'LOT-02' ? '#2a9d8f' : '#d4a373'));
+      var pct = total > 0 ? Math.round((count / total) * 100) : 0;
+      var isZero = (count === 0);
+
+      crateHtml += '<div class="lot-bottle-card" ' + (isZero ? ' is-zero' : '') + '" style="border-color: ' + (isZero ? 'var(--card-border)' : lotColor + '66') + ';">' +
+        '<div class="lot-bottle-visual-wrap">' +
+          '<svg class="tabc-bottle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 240" width="34" height="68">' +
+            '<defs>' +
+              '<linearGradient id="capGrad_' + lot.id + '" x1="0%" y1="0%" x2="100%" y2="100%">' +
+                '<stop offset="0%" stop-color="#CD9A3A"/>' +
+                '<stop offset="50%" stop-color="#E5C068"/>' +
+                '<stop offset="100%" stop-color="#B08968"/>' +
+              '</linearGradient>' +
+            '</defs>' +
+            '<path d="M 12,105 L 88,105 L 88,226 A 6,6 0 0,1 82,232 L 18,232 A 6,6 0 0,1 12,226 Z" fill="' + (isZero ? '#191816' : '#241005') + '"/>' +
+            '<line x1="12" y1="105" x2="88" y2="105" stroke="' + lotColor + '" stroke-width="3"/>' +
+            '<rect x="20" y="8" width="60" height="14" rx="4" fill="url(#capGrad_' + lot.id + ')"/>' +
+            '<path d="M 30,22 L 30,35 L 12,75 L 12,226 A 6,6 0 0,0 18,232 L 82,232 A 6,6 0 0,0 88,226 L 88,75 L 70,35 L 70,22 Z" fill="none" stroke="url(#capGrad_' + lot.id + ')" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>' +
+          '</svg>' +
+          '<span class="lot-bottle-qty-overlay" style="background: ' + (isZero ? 'var(--card-border)' : lotColor) + '; color: ' + (isZero ? 'var(--text-muted)' : '#141312') + ';">' + count + '</span>' +
+        '</div>' +
+        '<div class="lot-bottle-info">' +
+          '<span class="lot-bottle-name" style="color: ' + (isZero ? 'var(--text-muted)' : lotColor) + ';">' + lot.name + '</span>' +
+          '<span class="lot-bottle-count-label">' + count + ' ' + (count === 1 ? 'Bottle' : 'Bottles') + ' (' + pct + '%)</span>' +
+        '</div>' +
+      '</div>';
+    });
+
+    if (crateHtml === '') {
+      crateHtml = '<div style="color: var(--text-muted); font-size: 0.74rem; padding: 12px; grid-column: 1 / -1;">Select a pack size above to configure bottle splits.</div>';
+    }
+    crateContainer.innerHTML = crateHtml;
+  }
   // Render Interactive Visual Bottle Crate Slots
   var crateContainer = document.getElementById('crateBottleGrid');
   if (crateContainer) {

@@ -3513,51 +3513,84 @@ input:focus, select:focus, textarea:focus {
   padding: 0 4px;
 }
 
+/* ==================================================================== */
+/* PER-LOT BOTTLE ALLOCATION CARDS (N-LOT SPLITTER)                    */
+/* ==================================================================== */
 .bottle-crate-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-  align-items: flex-end;
-  min-height: 90px;
-  padding: 6px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  padding: 8px 4px;
+  width: 100%;
 }
 
-.crate-slot {
+.lot-bottle-card {
+  background: var(--card-inner);
+  border: 1.5px solid var(--card-border);
+  border-radius: 12px;
+  padding: 12px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  animation: bottlePop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  transition: transform 0.2s ease;
-}
-
-.crate-slot:hover {
-  transform: translateY(-4px);
-}
-
-@keyframes bottlePop {
-  0% {
-    transform: scale(0.5) translateY(20px);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1) translateY(0);
-    opacity: 1;
-  }
-}
-
-.crate-slot-badge {
-  font-size: 0.62rem;
-  font-weight: 800;
-  padding: 2px 6px;
-  border-radius: 6px;
-  letter-spacing: 0.2px;
   text-align: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+  position: relative;
+}
+  
+.lot-bottle-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+  
+.lot-bottle-card.is-zero {
+  opacity: 0.45;
+  filter: grayscale(0.5);
+}
+  
+.lot-bottle-visual-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+  
+.lot-bottle-qty-overlay {
+  position: absolute;
+  bottom: 6px;
+  right: -8px;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 12px;
+  font-size: 0.76rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  border: 1.5px solid #141312;
+}
+  
+.lot-bottle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+}
+  
+.lot-bottle-name {
+  font-size: 0.78rem;
+  font-weight: 800;
   white-space: nowrap;
-  max-width: 72px;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+  
+.lot-bottle-count-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
 }
 
 /* ==================================================================== */
