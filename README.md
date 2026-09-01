@@ -13,154 +13,32 @@ All coffee across retail, corporate, and catering tiers is standardized into rec
 6. Database Schema & Order Ledgers
 7. Self-Service Order Tracking State Machine
 8. Brewery Operational SOP & Drop Cycles
-5. [5\. Headless CMS Schema ("Menu & Config")](#5-headless-cms-schema-menu--config)  
 9. Deployment & Environment Configuration
 10. Security, Performance & Resilience Guardrails
 ---
-8. [8\. Brewery Operational SOP & Drop Cycles](#8-brewery-operational-sop--drop-cycles)  
-9. [9\. Deployment & Environment Configuration](#9-deployment--environment-configuration)  
 1. Craft Philosophy & Operations
 1.1 The Micro-Batch Manifesto
 Hot Extraction & Rapid Thermal Shock: Coffee is hand-extracted hot at 92–94°C to dissolve delicate floral aromatics, complex fruit acids, and natural sugars, then immediately flash-chilled over ice directly to 4°C to seal volatile aroma compounds before oxidation occurs.
 100% Preservative-Free: Zero artificial stabilizers, chemical additives, or high-heat industrial pasteurization.
----
 48-Hour Peak Flavor Window: Formulated strictly for peak sensory enjoyment within 48 hours of brewing when kept refrigerated (≤4°C).
 Single-Estate Terroir: Small-batch roastery curation celebrating high-elevation micro-lots from Chikmagalur, Shevaroys Hills, and the Western & Eastern Ghats.
 1.2 Dual Delivery Model & Scheduled Cutoffs
-#### **1.1 The Micro-Batch Manifesto**
-
-* Hot Extraction & Rapid Thermal Shock: Coffee is hand-extracted hot at 92–94°C to dissolve delicate volatile floral aromatics, organic fruit acids, and natural sucrose, then instantly flash-chilled over ice directly to 4°C. This locks in complex aroma compounds before oxidation occurs.  
-* 100% Preservative-Free: Zero artificial stabilizers, chemical additives, or high-heat industrial pasteurization.  
-* 48-Hour Peak Flavor Window: Formulated strictly for peak enjoyment within 48 hours of brewing when kept refrigerated (≤4°C).  
-* Artisanal Micro-Lot Nuances: Handcrafted separately to order in small batches to celebrate the natural nuances of specialty Indian terroir.
-
-#### **1.2 Dual Delivery Model & Scheduled Cutoffs**
-
-###
-
-| Fulfillment Stream | Delivery Windows | Order Cutoff Timing |
-| :---- | :---- | :---- |
-| **🏢 Friday Office Drops** *(Corporate B2B)* | Friday Morning Kickoff (9:30–11:30 AM) Friday Afternoon Recharge (2:00–4:00 PM) | **Thursday at 6:00 PM** *(Strict roster finalization)* |
-| **☕ Saturday Drop** *(Personal B2C)* | Saturday Morning Drop (8:00 AM – 11:00 AM) | **Friday at 10:00 PM** *(Night batch brew & chill)* |
-| **☕ Sunday Drop** *(Personal B2C)* | Sunday Morning Drop (8:00 AM – 11:00 AM) | **Saturday at 10:00 PM** *(Night batch brew & chill)* |
-| **🎉 Event Catering** *(Townhalls / Offsites)* | Scheduled custom target dates across Delhi NCR | **On-Demand (24-Hour SLA)** |
-
----
-
-### **2\. Platform Architecture & Data Flow**
-
-* **Client Layer**:  
-  * Multi-Page Clean-URL Static Web Portal (hosted on GitHub Pages / CDN).  
-  * `style.css`: Dark Roast Glassmorphism Design System (Max-Width 540px Bounded).  
-  * `app.js`: Page Controller, Splitter Engine, Live SWR Sync, and Form Validation.  
-* **Payment Layer**:  
-  * Razorpay Gateway SDK (`checkout.js`): Cards, UPI, NetBanking, and Net-7 Corporate Invoicing.  
-* **Serverless Backend (Google Apps Script \- `Code.gs`)**:  
-  * `doGet`: Live CMS & Order Status API (*Menu & Config* \+ Live Tracking lookup).  
-  * `doPost`: Concurrency Locks (`LockService`), Order Intake, and Bot Honeypot Validation.  
-* **Database & Notification Layer**:  
-  * Google Sheets Database (*Menu & Config, Sheet1, B2B Orders, Custom & Event Inquiries, Operational Guide & SOP*).  
-  * Gmail Notification Engine: Rich HTML Receipts, 1-Click Google Calendar Add Links, and WhatsApp Deep-Links (`wa.me`).
-
----
-
-### **3\. Portal Directory & Clean-URL Routing**
-
-The platform uses extensionless, clean URLs across all navigation links, action buttons, and internal scripts:
-
-| Clean Route | Source Document | Primary Purpose & Functional Scope |
-| :---- | :---- | :---- |
-| **/** | index.html | **Home & Craft Manifesto**: Origin story, 4 craft pillars, flash-chilling thermodynamic extraction science, flavor curve, and FAQs |
-| **/orders** | orders.html | **Order Now (Harvests Gateway)**: Discovery portal to compare flavor swatches, roast meters, and body gauges before selecting personal or corporate fulfillment |
-| **/personal** | personal.html | **Personal Pre-Order Wizard**: Streamlined 3-step checkout (1. Batch Size & Splitter → 2\. Delivery & PIN Validation → 3\. Review & Payment) for 1–6 bottles |
-| **/corporate** | corporate.html | **Corporate Office Drops**: Streamlined 3-step B2B checkout (1. Batch Tier & Splitter → 2\. Tech Park Window, GSTIN & Role → 3\. Razorpay or Net-7 Invoice) for 10–60+ bottles |
-| **/flavor** | flavor.html | **flavor matcher (Sensory Menu)**: Interactive 2-question quiz matcher, 5-axis Sensory Radar, and side-by-side spectrum intensity gauges |
-| **/guide** | guide.html | **Freshness Guide**: Science of flash-chilling, temperature stability graph, and 48-hour cold storage/serving rituals |
-| **/about** | about.html | **Story so far**: Hand-brewing journey, milestone statistics (2,480+ bottles, 18+ harvests, 1,250+ hours, 35+ events), and live batch capacity dashboard |
-| **/events** | events.html | **Event Runs Wizard**: Streamlined 3-step catering intake (1. Scope & Scale → 2\. Logistics & Contact → 3\. Review & Submit) with 24-hour proposal SLA |
-| **/track** | track.html | **Inquiry/Order tracking**: Real-time customer self-service status lookup with dynamic 4-stage visual timeline stepper and FAQ accordion |
-
----
-
-### **4\. User Journey & Ordering Engine**
-
-*
-
-1. **Discovery Gateway (`/orders`)**:  
-   * Customers explore active single-estate harvest micro-lots (`LOT-01`, `LOT-02`, or `MIX`) and pass selection parameters to `/personal?bean=...` or `/corporate?bean=...`.  
-2. **Streamlined 3-Step Checkout Wizards (`/personal` & `/corporate`)**:  
-   * **Step 1: Batch Size & Split**: Select pack tier, quantity, fine-tune bottle ratio (for Mix & Match), apply promo codes, and verify live capacity.  
-   * **Step 2: Delivery & Contact Details**: Select drop schedule / tech park window, validate 6-digit Delhi NCR PIN, and enter recipient info (with 1-click autofill).  
-   * **Step 3: Review & Confirmation**: Review breakdown and complete checkout via Razorpay or request a Net-7 Corporate Invoice.  
-3. **Streamlined 3-Step Event Runs Wizard (`/events`)**:  
-   * **Step 1: Scope & Scale**: Organization name, requirement type, estimated headcount, and blend.  
-   * **Step 2: Logistics & Contact**: Target date, venue location, contact person name, email, phone, and setup preferences.  
-   * **Step 3: Review & Submit**: Comprehensive inquiry summary card with 24-hour SLA guarantee.  
-4. **Post-Order Confirmation**:  
-   * Instant order confirmation card with Inquiry/Order ID.  
-   * 1-Click Google Calendar event addition with formatted drop notes.  
-   * 1-Click WhatsApp direct concierge deep-link.  
-   * Real-time self-service order tracking link (`/track?orderId=...`).
-
-#### **4.1 Discovery Gateway (/orders)**
-
-* Interactive harvest selector cards highlight estate details (LOT-01, LOT-02, or MIX) and pass the selection via URL query parameters (/personal?bean=LOT-01 or /corporate?bean=LOT-02).  
-* Interactive sensory palettes display color-coded flavor swatches, roast degrees, and anaerobic fermentation meters.
-
-#### **4.2 3-Step Checkout Wizards (/personal & /corporate)**
-
-1. Step 1: Batch Size & Fine-Tune Split:  
-   1. Select bottle pack tiers, adjust quantity, and use the custom stepper controls to fine-tune Mix & Match bottle distributions (e.g. 3x Ratnagiri \+ 3x Banana Banger).  
-   2. Real-time capacity checks prevent ordering above active batch caps.  
-   3. ← Back to Harvest button returns customers directly to /orders.  
-2. Step 2: Delivery & Contact Details:  
-   1. Personal orders select Saturday or Sunday delivery; corporate drops choose from pre-set Friday Tech Park cluster windows.  
-   2. Real-time 6-digit Delhi NCR PIN validation (11xxxx, 122xxx, 121xxx, 201xxx).  
-   3. 1-click customer profile autofill for returning users via localStorage.  
-3. Step 3: Review & Confirmation:  
-   1. Comprehensive breakdown of coffee selections, batch sizes, promo discounts, delivery schedules, and tax credits.  
-   2. Personal orders check out via Razorpay (UPI, Credit/Debit Cards, NetBanking); Corporate orders can select Razorpay or Net-7 Invoice.
-
-#### **4.3 3-Step Event Runs Wizard (/events)**
-
-1. Step 1: Event Scope & Scale: Organization name, requirement type, bottle volume / headcount, and preferred single-estate coffee selection.  
-2. Step 2: Logistics & Contact Details: Target delivery date, event venue, contact person name, corporate work email, WhatsApp number, and setup preferences.  
-3. Step 3: Review & Submit: Comprehensive inquiry summary card, 24-hour SLA guarantee, instant WhatsApp deep-link dispatch, and live status tracker link.
-
----
-
-### **5\. Headless CMS Schema ("Menu & Config")**
-
-The frontend dynamically hydrates and updates from the Menu & Config tab in Google Sheets via doGet:
-
-### 5.1 General Store Settings & Batch Capacities
-
-* Store Status: OPEN (active ordering), PAUSED (maintenance/prep), or SOLD\_OUT (capacity reached).  
-* **Batch Limits**:  
-  * B2C Batch Capacity: 150 bottles (200ml) per weekend drop.  
-  * B2B Batch Capacity: 200 bottles (200ml) per Friday office drop.  
-* Banner Text: Real-time announcement bar rendered across all headers.
-
-### 5.2 Single-Estate Harvest Lots
-
-
-
 Fulfillment Stream
 Target Audience
 Delivery Windows
 Order Cutoff
 Pricing & Packs
-🏠 B2C Residential Drop (`/personal`)
+🏠 B2C Residential Drop (/personal)
 Gurugram & Delhi NCR homes
 Saturday Morning (8:00 AM – 11:00 AM)Sunday Morning (8:00 AM – 11:00 AM)
 Friday 10:00 PM
 Single (₹240), Duo (₹480), Weekend 4-Pack (₹899), Mega 6-Pack (₹1,200)
-🏢 B2B Corporate Drop (`/corporate`)
+🏢 B2B Corporate Drop (/corporate)
 Tech parks & commercial offices
 Friday Morning Kickoff (9:30 AM – 11:30 AM)Friday Afternoon Recharge (2:00 PM – 4:00 PM)
 Thursday 6:00 PM
 Team 10-Pack (₹1,800), Office 20-Pack (₹3,400), Floor 40-Pack (₹6,000), Townhall 60-Pack (₹8,700)
-🎪 Event Catering (`/events`)
+🎪 Event Catering (/events)
 Hackathons, pop-up bars & summits
 Custom Scheduled Dates
 7 Days Prior
@@ -208,7 +86,7 @@ Custom Single-Estate Curation & Co-Branded Labeling
 |  [ B2B Orders ]        -> Corporate Order Ledger (GSTIN, Tech Park, Invoice Refs) |
 |  [ Event Inquiries ]   -> Catering Leads & Bar Booking Pipeline                   |
 |  [ Operational SOP ]   -> Roastery Brew Guide, Thermal Shock & Packing Specs      |
-+----------------------------------------+------------------------------------------+
++-----------------------------------------------------------------------------------+
 ---
 3. Portal Directory & Clean-URL Routing
 The platform uses clean, extensionless routing across 9 dedicated portals:
@@ -235,37 +113,172 @@ Active State Routing: Expanding a card unlocks the Personal Order and Corporate 
 4.2 Dynamic N-Lot Mix & Match Splitter Engine (personal.html & corporate.html)
 Multi-Lot Support: Automatically scales to support any number of active lots in Google Sheets.
 Balanced Auto-Rebalance: Divides the target batch volume evenly across active harvests upon opening.
-Zero-Sum Stepper: Adjusting (+) / (-) any harvest automatically rebalances remaining lots so the total bottle allocation strictly equals the selected pack size.
+Zero-Sum Stepper: Adjusting (+ / -) any harvest automatically rebalances remaining lots so the total bottle allocation strictly equals the selected pack size.
 Multi-Segment Ratio Bar: Dynamically renders color-coded progress segments representing each harvest's share in real time.
+Live Order Breakdown: Compiles exact bottle splits into the order payload (e.g. Mix & Match (2x Ratnagiri Estate + 1x Banana Banger + 1x Riverdale Estate)).
 4.3 Sheets-Driven 2-Question Flavor Matcher (flavor.html)
 Configurable from Google Sheets: Questions, buttons, icons, and combination rules are parsed from the Menu & Config tab.
+Centered Swatch Tiles: Responsive multi-line grid (justify-content: center) with tactile color-coded swatch cards.
+Rule-Based Decision Matrix (findQuizRuleMatch): Matches answer pairs (e.g., opt_morning + opt_berry → LOT-01) with wildcard fallback (*), dynamically styling the result box and generating direct checkout buttons.
 4.4 Interactive 5-Axis Sensory Radar (flavor.html)
 Mathematical Polygon Generation: Computes regular pentagon trigonometric coordinates from 5 sensory axes (acidity, aromatics, sweetness, body, clarity).
+Multi-Lot Overlay & Isolation: Clickable tabs allow customers to isolate single estates or view the multi-lot overlay with ambient glow.
 ---
 5. Headless CMS Schema (Google Sheets)
-The Menu & Config tab acts as the real-time CMS backend:
+The Menu & Config tab in The Apartment Brew Co. — Live Order Tracker acts as the real-time CMS backend:
 5.1 General Settings
-Includes global store status (OPEN/PAUSED/SOLD_OUT), batch capacities (500 total, 200 B2C, 300 B2B), and announcement banner text.
+Setting Key
+Example Value
+Purpose
+Store Status
+OPEN / PAUSED / SOLD_OUT
+Global web checkout switch
+Batch Capacity
+500
+Total combined bottle brew capacity
+B2C Batch Capacity
+200
+Residential weekend bottle volume cap
+B2B Batch Capacity
+300
+Commercial Friday bottle volume cap
+Announcement Banner
+Weekend Drops & Friday Office Drops
+Global header banner text
+
 5.2 Coffee Lots (18-Column Schema)
-Columns include Lot ID, Estate Name, Region, Process Tag, Tasting Notes, Emojis, Flavor Pills, Roast/Fermentation %, Sensory Axis % (Acidity, Body, Sweetness, Aromatics, Clarity), Process Story, Pairing Rituals, and Active status.
+Col 0:  Lot ID               (e.g., LOT-01)
+Col 1:  Estate Name          (e.g., Ratnagiri Estate)
+Col 2:  Region & Elevation   (e.g., Chikmagalur, Karnataka • 1,350m MASL)
+Col 3:  Process Tag          (e.g., 72h Anaerobic Natural)
+Col 4:  Tasting Notes        (e.g., Wild Raspberry, Ripe Stone Fruit & Dark Cacao Finish)
+Col 5:  Emojis               (e.g., 🍇, 🍑, 🍫)
+Col 6:  Flavor Pills         (e.g., Fruity, High Acidity, Winey Body, Morning Focus)
+Col 7:  Roast Level %        (e.g., 45)
+Col 8:  Fermentation Depth % (e.g., 80)
+Col 9:  Acidity %            (e.g., 85)
+Col 10: Body %               (e.g., 70)
+Col 11: Sweetness %          (e.g., 80)
+Col 12: Aromatics %          (e.g., 75)
+Col 13: Clarity %            (e.g., 65)
+Col 14: Process Story        (Narrative of farm processing and fermentation science)
+Col 15: Pairing Rituals      (Best Time: 8:00 AM – 11:00 AM • Pairings: Sourdough toast...)
+Col 16: Max Bottles          (e.g., 200)
+Col 17: Active (TRUE/FALSE)  (Controls visibility on frontend)
+5.3 Flavor Quiz Questions & Combination Matrix
+--- FLAVOR QUIZ QUESTIONS & OPTIONS ---
+Question ID (Q1 / Q2) | Question Title | Option Key (opt_morning, opt_berry) | Option Icon (🌅, 🍇) | Option Label
+--- FLAVOR QUIZ COMBINATION RULES ---
+Q1 Option Key | Q2 Option Key | Matched Lot ID (LOT-01, LOT-02, LOT-03, MIX) | Badge Text | Custom Recommendation Note
 ---
 6. Database Schema & Order Ledgers
 6.1 B2C Residential Orders (Sheet1)
-Tracks Order ID, Timestamp, Contact Info, Delivery Address, Saturday/Sunday Window, Bottle Split Breakdown, Pack Selection, and Payment/Delivery Status.
+Col
+Header
+Description
+A
+Order Timestamp
+ISO string timestamp
+B
+Order ID
+Unique alphanumeric identifier (TABC-XXXXXX)
+C
+Customer Name
+Primary contact name
+D
+WhatsApp Number
+10-digit mobile number for dispatch updates
+E
+Email Address
+Customer receipt & notification address
+F
+Delivery Address / Area
+Residence / Society / Tower details
+G
+Delivery / Gate Instruction
+Concierge / Door / Security drop rules
+H
+Delivery Date
+Saturday / Sunday drop date
+I
+Delivery Window
+Saturday Morning (8:00 AM – 11:00 AM) / Sunday Morning
+J
+Coffee Bean Lot
+Single-estate selection or custom split breakdown
+K
+Pack Selected
+Single, Duo, Weekend Pack, Mega Weekender
+L
+Quantity
+Number of packs ordered
+M
+Total Bottles
+Computed bottle count
+N
+Total Amount (₹)
+Final charged amount after discounts
+O
+Payment Preference
+Razorpay Gateway
+P
+Payment Status
+Gateway capture reference (Paid via Gateway (pay_XXX))
+Q
+Delivery Status
+Pre-Ordered → Brewing → Dispatched → Delivered
+R
+Notes / UTR
+Payment ID, applied coupon discount breakdown
+
 6.2 B2B Corporate Orders (B2B Orders)
-Includes GSTIN, Tech Park Cluster, and Invoicing references.
+Includes company name, GSTIN (for 18% Input Tax Credit), tech park cluster, Net-7 corporate invoicing references (INV-REQ-XXXXXX), and reception desk drop instructions.
+6.3 Event Catering Inquiries (Event Inquiries)
+Captures corporate coffee bar bookings, pop-up events, estimated headcounts, venue locations, and lead management statuses (New Lead → In Discussion → Event Confirmed → Event Completed).
 ---
 7. Self-Service Order Tracking State Machine
-Real-time stepper: 1. Pre-Ordered → 2. Brewing & Chilling → 3. Out for Delivery → 4. Delivered.
+Customers track live orders in real time on /track via a 4-stage visual stepper:
++------------------+     +------------------------+     +--------------------+     +------------------+
+|  1. Pre-Ordered  | --> | 2. Brewing & Chilling  | --> | 3. Out for Delivery| --> |   4. Delivered   |
++------------------+     +------------------------+     +--------------------+     +------------------+
+| Order logged &   |     | Hot extraction (94°C)  |     | Dispatched in      |     | Dropped at door/ |
+| batch scheduled. |     | & flash-chilled to 4°C |     | thermal cold-bags. |     | concierge desk.  |
++------------------+     +------------------------+     +--------------------+     +------------------+
+Live Status Keywords:
+Stage 1 (Pre-Ordered): Pre-Ordered, Pending, Received
+Stage 2 (Brewing & Chilling): Brewing, Roasting, Extracting, Chilling, Prep
+Stage 3 (Out for Delivery): Dispatched, Out for Delivery, In Transit, Shipped, On the way
+Stage 4 (Delivered): Delivered, Completed, Fulfilled (Starts 48-hour freshness clock)
 ---
 8. Brewery Operational SOP & Drop Cycles
-Weekly cycle: Production planning Mon-Wed; Thursday cutoff for B2B; Friday production & delivery; Friday cutoff for B2C; Weekend production & residential delivery.
+8.1 Weekly Production Timeline
+Monday – Wednesday: Headless CMS configuration, green coffee QC, estate allocation, and tech park cluster scheduling.
+Thursday 6:00 PM: B2B Corporate Drop order cutoff. Production planning for Friday tech park runs.
+Friday 6:00 AM – 9:00 AM: Hot extraction & flash chilling for Friday office morning kickoff & afternoon recharge.
+Friday 10:00 PM: B2C Residential Drop order cutoff.
+Saturday & Sunday 5:30 AM – 7:30 AM: Weekend batch extraction, ice shock chilling, 200ml bottle packaging, and dispatch across Delhi NCR.
 ---
 9. Deployment & Environment Configuration
-Configure app.js with Razorpay keys and Apps Script endpoint; deploy Code.gs as a Web App (Execute as Me, Access Anyone).
+9.1 Frontend Configuration (app.js)
+Update the CONFIG object in app.js:
+const CONFIG = {
+  razorpayKeyId: "rzp_live_XXXXXXXXXXXXXX",
+  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbz.../exec",
+  authToken: "TABC_SECURE_TOKEN_2026"
+};
+9.2 Apps Script Deployment (Code.gs)
+Open the spreadsheet: The Apartment Brew Co. — Live Order Tracker.
+Go to Extensions > Apps Script and paste the code from Code.gs.
+Click Deploy > Manage deployments > Edit > New version.
+Configure:
+Execute as: Me
+Who has access: Anyone
+Copy the generated Web App URL (.../exec) into app.js.
 ---
 10. Security, Performance & Resilience Guardrails
-Zero-Leak bot traps, token auth, SWR caching for UI responsiveness, and guaranteed order intake even at capacity.
+Zero-Leak Bot Trap & Token Authorization: All POST requests validate the internal auth token and reject hidden bot-trap fields.
+Stale-While-Revalidate (SWR): UI components render immediately from cached localStorage while background polling refreshes live bottle counts without layout flashes.
+Guaranteed Order Intake: Orders are recorded in sheets even if capacity limits are breached (flagged as [Over-Capacity] in the notes column for roastery review).
+Cross-Browser Verification: Fully tested and AST-compiled under JavaScriptCore and modern browser engines with zero console syntax errors.
 ---
 Crafted with pride by The Apartment Brew Co. • Gurugram, India
-
