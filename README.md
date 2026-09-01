@@ -15,13 +15,20 @@ All coffee across retail, corporate, and catering tiers is standardized into rec
 1. [Craft Philosophy & Operations](#1-craft-philosophy--operations)  
 2. [Platform Architecture & Data Flow](#2-platform-architecture--data-flow)  
 3. [Portal Directory & Clean-URL Routing](#3-portal-directory--clean-url-routing)  
-4. [Interactive Frontend Engines](#4.-interactive-frontend-engines)  
-5. [Headless CMS Schema (Google Sheets)](#5.-headless-cms-schema-\(google-sheets\))  
+4. [Interactive Frontend Engines](#heading=h.s9anyf326sxl)  
+5. [Headless CMS Schema (Google Sheets)](#heading=h.l652kpeao23h)  
 6. [Database Schema & Order Ledgers](#6-database-schema--order-ledgers)  
-7. [Self-Service Order Tracking State Machine](#7.-self-service-order-tracking-state-machine)  
+7. [Self-Service Order Tracking State Machine](#heading=h.njko29qbya1w)  
 8. [Brewery Operational SOP & Drop Cycles](#8-brewery-operational-sop--drop-cycles)  
 9. [Deployment & Environment Configuration](#9-deployment--environment-configuration)  
-10. [Security, Performance & Resilience Guardrails](#10-security-performance--resilience-guardrails)
+10. [Security, Performance & Resilience Guardrails](#10-security-performance--resilience-guardrails)  
+11. [Multi-Step Checkout Wizards & State Flows](#11-multi-step-checkout-wizards--state-flows)  
+12. [Promo Code & Discount Engine](#12-promo-code--discount-engine)  
+13. [Packaging, Bottle Specifications & Handwritten Batch Ledger](#13-packaging-bottle-specifications--handwritten-batch-ledger)  
+14. [Geographic Service Areas & Corporate Tech Park Clusters](#14-geographic-service-areas--corporate-tech-park-clusters)  
+15. [Automated Email Receipts & Notification System](#15-automated-email-receipts--notification-system)  
+16. [Offline Resilience, Caching & Dynamic Fallbacks](#16-offline-resilience-caching--dynamic-fallbacks)  
+17. [Design System & Brand Asset Specifications](#17-design-system--brand-asset-specifications)
 
 ---
 
@@ -46,87 +53,49 @@ All coffee across retail, corporate, and catering tiers is standardized into rec
 
 ## **2\. Platform Architecture & Data Flow**
 
-\+-----------------------------------------------------------------------------------+
-
+```
++-----------------------------------------------------------------------------------+
 |                            CLIENT BROWSER (Static PWA)                             |
-
 |                                                                                   |
-
-|  \[ index.html \]   \[ orders.html \]   \[ personal.html \]   \[ corporate.html \]        |
-
-|  \[ flavor.html \]  \[ guide.html \]    \[ about.html \]      \[ events.html \]   \[ track.html \]
-
+|  [ index.html ]   [ orders.html ]   [ personal.html ]   [ corporate.html ]        |
+|  [ flavor.html ]  [ guide.html ]    [ about.html ]      [ events.html ]   [ track.html ]
 |                                                                                   |
-
 |                         Shared Frontend Controller (app.js)                       |
-
-|   \* SWR Caching (localStorage)            \* Dynamic N-Lot Mix Splitter Engine     |
-
-|   \* Dynamic Radar & Spectrum Visualizer   \* Sheets-Driven 2-Question Quiz Engine  |
-
-|   \* Multi-Step Wizard State Machine       \* Razorpay Standard Checkout SDK        |
-
-\+----------------------------------------+------------------------------------------+
-
+|   * SWR Caching (localStorage)            * Dynamic N-Lot Mix Splitter Engine     |
+|   * Dynamic Radar & Spectrum Visualizer   * Sheets-Driven 2-Question Quiz Engine  |
+|   * Multi-Step Wizard State Machine       * Razorpay Standard Checkout SDK        |
++----------------------------------------+------------------------------------------+
                                          |
-
                        Fetch API (GET / POST JSON)
-
                                          |
-
                                          v
-
-\+-----------------------------------------------------------------------------------+
-
++-----------------------------------------------------------------------------------+
 |                     SERVERLESS BACKEND (Google Apps Script)                       |
-
 |                                                                                   |
-
 |                                     Code.gs                                       |
-
-|   \* doGet(e):                                                                     |
-
-|       \- Action 'track': Queries B2C/B2B/Event sheets & returns timeline state.    |
-
-|       \- Action 'config' (Default): Parses Menu & Config (Lots, Packs, Clusters,   |
-
+|   * doGet(e):                                                                     |
+|       - Action 'track': Queries B2C/B2B/Event sheets & returns timeline state.    |
+|       - Action 'config' (Default): Parses Menu & Config (Lots, Packs, Clusters,   |
 |         Coupons, Live Capacities, Quiz Questions & Combination Matrix).           |
-
-|   \* doPost(e):                                                                    |
-
-|       \- Validates auth token, sanitize inputs, prevents bot spam.                 |
-
-|       \- Appends order rows to Sheet1 (B2C), B2B Orders, or Event Inquiries.       |
-
-|       \- Dispatches HTML receipt emails via MailApp.                               |
-
-\+----------------------------------------+------------------------------------------+
-
+|   * doPost(e):                                                                    |
+|       - Validates auth token, sanitize inputs, prevents bot spam.                 |
+|       - Appends order rows to Sheet1 (B2C), B2B Orders, or Event Inquiries.       |
+|       - Dispatches HTML receipt emails via MailApp.                               |
++----------------------------------------+------------------------------------------+
                                          |
-
                         Google Spreadsheet REST / Service
-
                                          |
-
                                          v
-
-\+-----------------------------------------------------------------------------------+
-
++-----------------------------------------------------------------------------------+
 |                   HEADLESS DATABASE (Live Order Tracker Sheet)                    |
-
 |                                                                                   |
-
-|  \[ Menu & Config \]     \-\> Dynamic CMS (18-col Lots, Packs, Quiz Matrix, Clusters) |
-
-|  \[ Sheet1 \]            \-\> B2C Order Ledger (Timestamp, ID, Address, Status, Notes)|
-
-|  \[ B2B Orders \]        \-\> Corporate Order Ledger (GSTIN, Tech Park, Invoice Refs) |
-
-|  \[ Event Inquiries \]   \-\> Catering Leads & Bar Booking Pipeline                   |
-
-|  \[ Operational SOP \]   \-\> Roastery Brew Guide, Thermal Shock & Packing Specs      |
-
-\+-----------------------------------------------------------------------------------+
+|  [ Menu & Config ]     -> Dynamic CMS (18-col Lots, Packs, Quiz Matrix, Clusters) |
+|  [ Sheet1 ]            -> B2C Order Ledger (Timestamp, ID, Address, Status, Notes)|
+|  [ B2B Orders ]        -> Corporate Order Ledger (GSTIN, Tech Park, Invoice Refs) |
+|  [ Event Inquiries ]   -> Catering Leads & Bar Booking Pipeline                   |
+|  [ Operational SOP ]   -> Roastery Brew Guide, Thermal Shock & Packing Specs      |
++-----------------------------------------------------------------------------------+
+```
 
 \---
 
@@ -134,31 +103,21 @@ All coffee across retail, corporate, and catering tiers is standardized into rec
 
 The platform uses clean, extensionless routing across 9 dedicated portals:
 
-├── /                    (index.html)     \-\> Hero landing, weekend countdown, batch scarcity, FAQ accordion
-
-├── /orders              (orders.html)    \-\> Visual Harvest Discovery Gateway with dynamic cards, swatches & meters
-
-├── /personal            (personal.html)  \-\> B2C residential pre-order wizard with dynamic N-lot bottle splitter
-
-├── /corporate           (corporate.html) \-\> B2B Friday office drop wizard with tech park clusters & Net-7 invoicing
-
-├── /flavor              (flavor.html)    \-\> Dynamic 5-axis sensory radar, spectrum comparison & sheet-driven quiz
-
-├── /guide               (guide.html)     \-\> 48-hour freshness protocol, rapid thermal shock & serving rituals
-
-├── /about               (about.html)     \-\> Story so far, craft manifesto, big bold stats & live roastery capacity
-
-├── /events              (events.html)    \-\> Corporate coffee bar catering, hackathon drops & bulk lead wizard
-
-├── /track               (track.html)     \-\> Self-service 4-step real-time order and event inquiry tracking portal
-
-├── /style.css           (style.css)      \-\> Universal stylesheet (Dark artisanal theme, gold gradient accents)
-
-├── /app.js              (app.js)         \-\> Universal JavaScript controller and client-side state machine
-
-├── /sw.js               (sw.js)          \-\> Service Worker for offline resilience & asset caching
-
-└── /assets/             (assets/)        \-\> Standalone gold emblem SVG, favicons, banners & icons
+```
+├── /                    (index.html)     -> Hero landing, weekend countdown, batch scarcity, FAQ accordion
+├── /orders              (orders.html)    -> Visual Harvest Discovery Gateway with dynamic cards, swatches & meters
+├── /personal            (personal.html)  -> B2C residential pre-order wizard with dynamic N-lot bottle splitter
+├── /corporate           (corporate.html) -> B2B Friday office drop wizard with tech park clusters & Net-7 invoicing
+├── /flavor              (flavor.html)    -> Dynamic 5-axis sensory radar, spectrum comparison & sheet-driven quiz
+├── /guide               (guide.html)     -> 48-hour freshness protocol, rapid thermal shock & serving rituals
+├── /about               (about.html)     -> Story so far, craft manifesto, big bold stats & live roastery capacity
+├── /events              (events.html)    -> Corporate coffee bar catering, hackathon drops & bulk lead wizard
+├── /track               (track.html)     -> Self-service 4-step real-time order and event inquiry tracking portal
+├── /style.css           (style.css)      -> Universal stylesheet (Dark artisanal theme, gold gradient accents)
+├── /app.js              (app.js)         -> Universal JavaScript controller and client-side state machine
+├── /sw.js               (sw.js)          -> Service Worker for offline resilience & asset caching
+└── /assets/             (assets/)        -> Standalone gold emblem SVG, favicons, banners & icons
+```
 
 \---
 
