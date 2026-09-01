@@ -217,7 +217,7 @@ body::before {
   line-height: 1.15;
   /* Brushed Gold Metallic Text Gradient */
   background: linear-gradient(135deg, #cd9a3a 0%, #e5c068 35%, #fcf29b 70%, #b08968 100%);
-  -webkit-background-clip: text;
+ -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -3254,173 +3254,159 @@ input:focus, select:focus, textarea:focus {
   justify-content: center;
   gap: 6px;
 }
-
-/* Dynamic Flavor Quiz Options & Cards */
 /* ==================================================================== */
-/* Option C: Dynamic Color-Coded Swatch Tiles (Centered Multi-Line Grid) */
+/* Dynamic Flavor Quiz Options & Cards (Compact & Uniform 2-Column Grid) */
 /* ==================================================================== */
 .quiz-options-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: stretch;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
   margin-top: 10px;
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
 }
-@media (max-width: 520px) {
+
+@media (max-width: 540px) {
   .quiz-options-grid {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+    grid-template-columns: 1fr;
   }
 }
-  
+
 .quiz-opt-btn {
-  flex: 0 1 calc(50% - 6px);
-  min-width: 220px;
-  max-width: 380px;
   background: linear-gradient(165deg, #24201c 0%, #171513 100%);
   border: 1.5px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  padding: 14px 16px;
+  border-radius: 10px;
+  padding: 10px 14px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: 6px;
+  justify-content: flex-start;
+  text-align: left;
+  gap: 10px;
+  min-height: 54px;
   cursor: pointer;
   color: var(--text-muted);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 700;
-  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  box-sizing: border-box;
 }
-  
-@media (max-width: 520px) {
-  .quiz-opt-btn {
-    flex: 1 1 100%;
-    max-width: 100%;
-  }
+
+.quiz-opt-btn:hover {
+  border-color: rgba(212, 163, 115, 0.5);
+  transform: translateY(-1px);
+  color: var(--text);
 }
-  
+
 .quiz-opt-btn .quiz-opt-icon {
-  font-size: 1.6rem;
-  display: inline-flex;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2px;
-  transition: transform 0.25s ease;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
 }
-  
-.quiz-opt-btn:hover .quiz-opt-icon {
-  transform: scale(1.15);
-}
-  
+
 .quiz-opt-btn .quiz-opt-label {
-  line-height: 1.35;
+  flex: 1;
+  line-height: 1.3;
   color: var(--text);
-  font-size: 0.78rem;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
-  
-/* Swatch Color Variations */
-/* 1. Berry / Raspberry Red (e.g. Ratnagiri / Morning) */
+
+/* Swatch Color Variations (Compact Subtle Accents) */
+/* 1. Berry / Raspberry Red */
 .quiz-opt-btn.swatch-berry {
-  border-color: rgba(231, 111, 81, 0.28);
+  border-color: rgba(231, 111, 81, 0.25);
 }
 .quiz-opt-btn.swatch-berry:hover {
-  border-color: rgba(231, 111, 81, 0.65);
-  box-shadow: 0 6px 20px rgba(231, 111, 81, 0.2);
-  transform: translateY(-2px);
+  border-color: rgba(231, 111, 81, 0.6);
+  box-shadow: 0 4px 14px rgba(231, 111, 81, 0.15);
 }
 .quiz-opt-btn.swatch-berry.active {
   border-color: #e76f51;
-  background: linear-gradient(165deg, rgba(231, 111, 81, 0.18) 0%, #1e1715 100%);
-  color: #fff;
-  box-shadow: 0 6px 22px rgba(231, 111, 81, 0.35);
+  background: linear-gradient(165deg, rgba(231, 111, 81, 0.16) 0%, #1e1715 100%);
+  box-shadow: 0 4px 16px rgba(231, 111, 81, 0.25);
 }
 .quiz-opt-btn.swatch-berry.active .quiz-opt-label {
   color: #ffb4a2;
 }
-  
-/* 2. Floral / Jasmine Teal (e.g. Banana Banger / Afternoon) */
+
+/* 2. Floral / Jasmine Teal */
 .quiz-opt-btn.swatch-floral,
 .quiz-opt-btn.swatch-banana {
-  border-color: rgba(42, 157, 143, 0.28);
+  border-color: rgba(42, 157, 143, 0.25);
 }
 .quiz-opt-btn.swatch-floral:hover,
 .quiz-opt-btn.swatch-banana:hover {
-  border-color: rgba(42, 157, 143, 0.65);
-  box-shadow: 0 6px 20px rgba(42, 157, 143, 0.2);
-  transform: translateY(-2px);
+  border-color: rgba(42, 157, 143, 0.6);
+  box-shadow: 0 4px 14px rgba(42, 157, 143, 0.15);
 }
 .quiz-opt-btn.swatch-floral.active,
 .quiz-opt-btn.swatch-banana.active {
   border-color: #2a9d8f;
-  background: linear-gradient(165deg, rgba(42, 157, 143, 0.18) 0%, #131d1b 100%);
-  color: #fff;
-  box-shadow: 0 6px 22px rgba(42, 157, 143, 0.35);
+  background: linear-gradient(165deg, rgba(42, 157, 143, 0.16) 0%, #131d1b 100%);
+  box-shadow: 0 4px 16px rgba(42, 157, 143, 0.25);
 }
 .quiz-opt-btn.swatch-floral.active .quiz-opt-label,
 .quiz-opt-btn.swatch-banana.active .quiz-opt-label {
   color: #a8dadc;
 }
-  
-/* 3. Complex / Honeyed Amber Gold (e.g. Riverdale / All-Day) */
+
+/* 3. Complex / Honeyed Amber Gold */
 .quiz-opt-btn.swatch-complex,
 .quiz-opt-btn.swatch-riverdale {
-  border-color: rgba(212, 163, 115, 0.28);
+  border-color: rgba(212, 163, 115, 0.25);
 }
 .quiz-opt-btn.swatch-complex:hover,
 .quiz-opt-btn.swatch-riverdale:hover {
-  border-color: rgba(212, 163, 115, 0.65);
-  box-shadow: 0 6px 20px rgba(212, 163, 115, 0.2);
-  transform: translateY(-2px);
+  border-color: rgba(212, 163, 115, 0.6);
+  box-shadow: 0 4px 14px rgba(212, 163, 115, 0.15);
 }
 .quiz-opt-btn.swatch-complex.active,
 .quiz-opt-btn.swatch-riverdale.active {
   border-color: #d4a373;
-  background: linear-gradient(165deg, rgba(212, 163, 115, 0.18) 0%, #201a14 100%);
-  color: #fff;
-  box-shadow: 0 6px 22px rgba(212, 163, 115, 0.35);
+  background: linear-gradient(165deg, rgba(212, 163, 115, 0.16) 0%, #201a14 100%);
+  box-shadow: 0 4px 16px rgba(212, 163, 115, 0.25);
 }
 .quiz-opt-btn.swatch-complex.active .quiz-opt-label,
 .quiz-opt-btn.swatch-riverdale.active .quiz-opt-label {
   color: #faedcd;
 }
-  
-/* 4. Mix & Match / Discovery Multi-Flight */
+
+/* 4. Mix & Match / Discovery Flight */
 .quiz-opt-btn.swatch-mix {
-  border-color: rgba(254, 250, 224, 0.25);
+  border-color: rgba(254, 250, 224, 0.2);
 }
 .quiz-opt-btn.swatch-mix:hover {
   border-color: var(--accent);
-  box-shadow: 0 6px 20px rgba(212, 163, 115, 0.25);
-  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(212, 163, 115, 0.2);
 }
 .quiz-opt-btn.swatch-mix.active {
   border-color: var(--accent);
-  background: linear-gradient(165deg, rgba(212, 163, 115, 0.22) 0%, #25201a 100%);
-  color: #fff;
-  box-shadow: 0 6px 24px rgba(212, 163, 115, 0.4);
+  background: linear-gradient(165deg, rgba(212, 163, 115, 0.18) 0%, #25201a 100%);
+  box-shadow: 0 4px 18px rgba(212, 163, 115, 0.3);
 }
 .quiz-opt-btn.swatch-mix.active .quiz-opt-label {
   color: #fff;
 }
-  
-/* Active Check Indicator Pill */
-.quiz-opt-btn.active::before {
-  content: 'SELECTED ✓';
-  font-size: 0.58rem;
+
+/* Subtle Active Corner Checkmark */
+.quiz-opt-btn.active::after {
+  content: '✓';
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-size: 0.68rem;
   font-weight: 900;
-  letter-spacing: 0.8px;
-  padding: 2px 8px;
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid currentColor;
-  margin-bottom: 2px;
+  color: currentColor;
+  opacity: 0.85;
 }
 
