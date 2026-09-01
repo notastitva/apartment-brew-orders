@@ -167,41 +167,26 @@ The **`Menu & Config`** tab in [The Apartment Brew Co. — Live Order Tracker](h
 
 ### **5.2 Coffee Lots (18-Column Schema)**
 
+```
 Col 0:  Lot ID               (e.g., LOT-01)
-
 Col 1:  Estate Name          (e.g., Ratnagiri Estate)
-
 Col 2:  Region & Elevation   (e.g., Chikmagalur, Karnataka • 1,350m MASL)
-
 Col 3:  Process Tag          (e.g., 72h Anaerobic Natural)
-
 Col 4:  Tasting Notes        (e.g., Wild Raspberry, Ripe Stone Fruit & Dark Cacao Finish)
-
 Col 5:  Emojis               (e.g., 🍇, 🍑, 🍫)
-
 Col 6:  Flavor Pills         (e.g., Fruity, High Acidity, Winey Body, Morning Focus)
-
-Col 7:  Roast Level %        (e.g., 45\)
-
-Col 8:  Fermentation Depth % (e.g., 80\)
-
-Col 9:  Acidity %            (e.g., 85\)
-
-Col 10: Body %               (e.g., 70\)
-
-Col 11: Sweetness %          (e.g., 80\)
-
-Col 12: Aromatics %          (e.g., 75\)
-
-Col 13: Clarity %            (e.g., 65\)
-
+Col 7:  Roast Level %        (e.g., 45)
+Col 8:  Fermentation Depth % (e.g., 80)
+Col 9:  Acidity %            (e.g., 85)
+Col 10: Body %               (e.g., 70)
+Col 11: Sweetness %          (e.g., 80)
+Col 12: Aromatics %          (e.g., 75)
+Col 13: Clarity %            (e.g., 65)
 Col 14: Process Story        (Narrative of farm processing and fermentation science)
-
 Col 15: Pairing Rituals      (Best Time: 8:00 AM – 11:00 AM • Pairings: Sourdough toast...)
-
-Col 16: Max Bottles          (e.g., 200\)
-
+Col 16: Max Bottles          (e.g., 200)
 Col 17: Active (TRUE/FALSE)  (Controls visibility on frontend)
+```
 
 ### **5.3 Flavor Quiz Questions & Combination Matrix**
 
