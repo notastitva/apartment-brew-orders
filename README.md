@@ -55,10 +55,10 @@ All coffee across retail, corporate, and catering tiers is standardized into rec
 
 ```
 +-----------------------------------------------------------------------------------+
-|                            CLIENT BROWSER (Static PWA)                             |
+|                            CLIENT BROWSER (Static PWA)                            |
 |                                                                                   |
 |  [ index.html ]   [ orders.html ]   [ personal.html ]   [ corporate.html ]        |
-|  [ flavor.html ]  [ guide.html ]    [ about.html ]      [ events.html ]   [ track.html ]
+|  [ flavor.html ]  [ guide.html ]  [ about.html ]  [ events.html ]  [ track.html ] |
 |                                                                                   |
 |                         Shared Frontend Controller (app.js)                       |
 |   * SWR Caching (localStorage)            * Dynamic N-Lot Mix Splitter Engine     |
