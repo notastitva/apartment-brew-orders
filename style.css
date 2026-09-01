@@ -217,7 +217,7 @@ body::before {
   line-height: 1.15;
   /* Brushed Gold Metallic Text Gradient */
   background: linear-gradient(135deg, #cd9a3a 0%, #e5c068 35%, #fcf29b 70%, #b08968 100%);
- -webkit-background-clip: text;
+  -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -3408,5 +3408,44 @@ input:focus, select:focus, textarea:focus {
   font-weight: 900;
   color: currentColor;
   opacity: 0.85;
+}
+
+/* Quiz Result Actions & Shared Button Styles */
+.quiz-result-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 480px) {
+  .quiz-result-actions {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+.quiz-result-btn {
+  background: var(--gradient-gold);
+  color: #141312;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 10px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(212, 163, 115, 0.2);
+}
+
+.quiz-result-btn:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(212, 163, 115, 0.3);
 }
 
