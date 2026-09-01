@@ -171,6 +171,45 @@ Ambient Exposure (25&deg;C+ Room Temp)
             <text x="440" y="142" fill="#d4a373" font-size="8" font-weight="700" text-anchor="end">48h Cutoff</text>
           </svg>
         </div>
+<!-- Interactive Draggable 48-Hour Freshness Scrubber Widget -->
+<div class="freshness-scrubber-box" style="margin-top: 14px;">
+  <div class="scrubber-header">
+    <span style="font-size: 0.8rem; font-weight: 800; color: var(--accent);">⏱️ Drag Timeline to Inspect Flavor Shift</span>
+    <span id="scrubberBadge" class="scrubber-badge" style="background: rgba(149, 213, 178, 0.2); color: #95d5b2; border: 1px solid #95d5b2;">0h: Explosive Aromatics</span>
+  </div>
+
+  <div class="scrubber-slider-wrap">
+    <input 
+      type="range" 
+      id="freshnessSlider" 
+      class="freshness-slider" 
+      min="0" 
+      max="60" 
+      value="0" 
+      step="1" 
+      oninput="updateFreshnessScrubber(this.value)" 
+    />
+    <div class="scrubber-ticks">
+      <span>0h (Drop)</span>
+      <span>12h</span>
+      <span>24h (Peak)</span>
+      <span>36h</span>
+      <span>48h (Cutoff)</span>
+      <span>60h (Oxidized)</span>
+    </div>
+  </div>
+
+  <!-- Live Dynamic Sensory Output Card -->
+  <div class="scrubber-output-card" id="scrubberOutputCard">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <strong id="scrubberHourTitle" style="color: var(--text); font-size: 0.88rem;">Hour 0 &mdash; Immediate Morning Drop</strong>
+      <span id="scrubberVolatiles" style="color: #95d5b2; font-size: 0.74rem; font-weight: 800;">96% Volatiles Locked</span>
+    </div>
+    <p id="scrubberDesc" style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.4; margin: 4px 0 0;">
+      Explosive wild berry aromatics, sparkling malic acidity, and intense floral jasmine esters trapped under rapid 4&deg;C thermal shock.
+    </p>
+  </div>
+</div>
       </section>
       <!-- Section 3: Process-Based Flavor Evolution (Lot-Agnostic) -->
       <section class="section-card" style="margin-top: 14px;">

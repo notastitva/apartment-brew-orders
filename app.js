@@ -307,6 +307,41 @@ function renderSplitterUI() {
     controlsContainer.innerHTML = rowsHtml;
   }
 
+  // Render Interactive Visual Bottle Crate Slots
+  var crateContainer = document.getElementById('crateBottleGrid');
+  if (crateContainer) {
+    var crateHtml = '';
+    activeLots.forEach(function(lot) {
+      var count = customSplit[lot.id] || 0;
+      var lotColor = lot.color || (lot.id === 'LOT-01' ? '#e76f51' : (lot.id === 'LOT-02' ? '#2a9d8f' : '#d4a373'));
+      var shortName = lot.name.split(' ')[0]; // e.g. Ratnagiri, Banana, Riverdale
+
+      for (var b = 0; b < count; b++) {
+        crateHtml += '<div class="crate-slot" style="animation-delay: ' + (b * 0.05) + 's;">' +
+          '<svg class="tabc-bottle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 240" width="28" height="56">' +
+            '<defs>' +
+              '<linearGradient id="goldCapGrad_' + lot.id + '_' + b + '" x1="0%" y1="0%" x2="100%" y2="100%">' +
+                '<stop offset="0%" stop-color="#CD9A3A"/>' +
+                '<stop offset="50%" stop-color="#E5C068"/>' +
+                '<stop offset="100%" stop-color="#B08968"/>' +
+              '</linearGradient>' +
+            '</defs>' +
+            '<path d="M 12,105 L 88,105 L 88,226 A 6,6 0 0,1 82,232 L 18,232 A 6,6 0 0,1 12,226 Z" fill="#241005"/>' +
+            '<line x1="12" y1="105" x2="88" y2="105" stroke="' + lotColor + '" stroke-width="3"/>' +
+            '<rect x="20" y="8" width="60" height="14" rx="4" fill="url(#goldCapGrad_' + lot.id + '_' + b + ')"/>' +
+            '<path d="M 30,22 L 30,35 L 12,75 L 12,226 A 6,6 0 0,0 18,232 L 82,232 A 6,6 0 0,0 88,226 L 88,75 L 70,35 L 70,22 Z" fill="none" stroke="url(#goldCapGrad_' + lot.id + '_' + b + ')" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>' +
+          '</svg>' +
+          '<span class="crate-slot-badge" style="background: ' + lotColor + '22; color: ' + lotColor + '; border: 1px solid ' + lotColor + '88;">' + shortName + '</span>' +
+        </div>;
+      }
+    });
+
+    if (crateHtml === '') {
+      crateHtml = '<div style="color: var(--text-muted); font-size: 0.74rem; padding: 12px;">Select a pack size above to populate your bottle crate.</div>';
+    }
+    crateContainer.innerHTML = crateHtml;
+  }
+
   if (ratioBar) {
     var segmentsHtml = '';
     activeLots.forEach(function(lot) {
@@ -721,6 +756,67 @@ function renderFlavorPage(lots) {
         '</div>';
     });
     pairContainer.innerHTML = pairHtml;
+  }
+}
+
+// ====================================================================
+// 48-HOUR FRESHNESS INTERACTIVE SCRUBBER CONTROLLER (guide.html)
+// ====================================================================
+function updateFreshnessScrubber(val) {
+  var hours = parseInt(val, 10);
+  if (isNaN(hours)) hours = 0;
+
+  var badge = document.getElementById('scrubberBadge');
+  var title = document.getElementById('scrubberHourTitle');
+  var volatiles = document.getElementById('scrubberVolatiles');
+  var desc = document.getElementById('scrubberDesc');
+  var card = document.getElementById('scrubberOutputCard');
+
+  if (!badge || !title || !volatiles || !desc) return;
+
+  if (hours <= 12) {
+    var retPct = Math.round(96 - (hours / 12) * 4); // 96% down to 92%
+    badge.textContent = hours + 'h: Explosive Aromatics';
+    badge.style.background = 'rgba(149, 213, 178, 0.2)';
+    badge.style.color = '#95d5b2';
+    badge.style.borderColor = '#95d5b2';
+
+    title.textContent = 'Hour ' + hours + ' — Immediate Morning Drop';
+    volatiles.textContent = retPct + '% Volatiles Locked';
+    volatiles.style.color = '#95d5b2';
+    desc.textContent = 'Explosive wild berry aromatics, sparkling malic acidity, and intense floral jasmine esters trapped under rapid 4°C thermal shock.';
+  } else if (hours <= 36) {
+    var retPct = Math.round(92 - ((hours - 12) / 24) * 8); // 92% down to 84%
+    badge.textContent = hours + 'h: Peak Balance & Integration';
+    badge.style.background = 'rgba(212, 163, 115, 0.2)';
+    badge.style.color = '#d4a373';
+    badge.style.borderColor = '#d4a373';
+
+    title.textContent = 'Hour ' + hours + ' — Integrated Sweetness Window';
+    volatiles.textContent = retPct + '% Stable';
+    volatiles.style.color = '#d4a373';
+    desc.textContent = 'Acidity rounds out seamlessly with dark cacao and sweet stone fruit undertones. Maximum flavor cohesion across single-estate lots.';
+  } else if (hours <= 48) {
+    var retPct = Math.round(84 - ((hours - 36) / 12) * 10); // 84% down to 74%
+    badge.textContent = hours + 'h: Mellow Finish (Cutoff)';
+    badge.style.background = 'rgba(231, 111, 81, 0.2)';
+    badge.style.color = '#e76f51';
+    badge.style.borderColor = '#e76f51';
+
+    title.textContent = 'Hour ' + hours + ' — Peak 48h Freshness Benchmark';
+    volatiles.textContent = retPct + '% (Approaching Cutoff)';
+    volatiles.style.color = '#e76f51';
+    desc.textContent = 'Rich, smooth, rounded sweetness. The delicate floral top-notes begin to settle. Consume before the 48-hour peak benchmark!';
+  } else {
+    badge.textContent = hours + 'h: Oxidation & Degradation';
+    badge.style.background = 'rgba(230, 57, 70, 0.2)';
+    badge.style.color = '#e63946';
+    badge.style.borderColor = '#e63946';
+
+    title.textContent = 'Hour ' + hours + ' — Past Peak Freshness';
+    volatiles.textContent = '<50% Volatiles (Oxidizing)';
+    volatiles.style.color = '#e63946';
+    desc.textContent = 'Because our coffee contains zero chemical stabilizers or artificial preservatives, exposure past 48 hours results in aromatic decay and muted acidity.';
   }
 }
 

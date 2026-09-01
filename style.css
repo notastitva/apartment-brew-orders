@@ -3486,3 +3486,170 @@ input:focus, select:focus, textarea:focus {
   font-style: italic;
   letter-spacing: 0.2px;
 }
+/* ==================================================================== */
+/* PHASE 2: INTERACTIVE VISUAL BOTTLE CRATE / RACK STYLES               */
+/* ==================================================================== */
+.bottle-crate-container {
+  background: rgba(21, 20, 19, 0.9);
+  border: 1.5px solid var(--card-border);
+  border-radius: 14px;
+  padding: 14px 10px;
+  margin: 12px 0;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+.bottle-crate-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 10px;
+  padding: 0 4px;
+}
+
+.bottle-crate-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  align-items: flex-end;
+  min-height: 90px;
+  padding: 6px 0;
+}
+
+.crate-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  animation: bottlePop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  transition: transform 0.2s ease;
+}
+
+.crate-slot:hover {
+  transform: translateY(-4px);
+}
+
+@keyframes bottlePop {
+  0% {
+    transform: scale(0.5) translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.crate-slot-badge {
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 6px;
+  letter-spacing: 0.2px;
+  text-align: center;
+  white-space: nowrap;
+  max-width: 72px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==================================================================== */
+/* PHASE 2: DRAGGABLE 48-HOUR FRESHNESS TIMELINE & SCRUBBER STYLES     */
+/* ==================================================================== */
+.freshness-scrubber-box {
+  background: var(--card-inner);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 16px 14px;
+  margin-top: 12px;
+  position: relative;
+}
+
+.scrubber-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.scrubber-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.scrubber-slider-wrap {
+  position: relative;
+  margin: 14px 0 8px;
+}
+
+.freshness-slider {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #95d5b2 0%, #d4a373 50%, #e76f51 80%, #e63946 100%);
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.freshness-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fefae0;
+  border: 3px solid #cd9a3a;
+  box-shadow: 0 0 10px rgba(205, 154, 58, 0.8);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.freshness-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fefae0;
+  border: 3px solid #cd9a3a;
+  box-shadow: 0 0 10px rgba(205, 154, 58, 0.8);
+  cursor: pointer;
+}
+
+.freshness-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.scrubber-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.scrubber-output-card {
+  background: rgba(20, 19, 18, 0.9);
+  border: 1px solid rgba(212, 163, 115, 0.25);
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: all 0.25s ease;
+}

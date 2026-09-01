@@ -170,6 +170,16 @@
             <span class="splitter-tally" id="splitterTally">Allocated: <strong><span id="allocCount">4</span> / <span id="targetCount">4</span></strong> bottles</span>
           </div>
           <div id="tallyStatus" class="splitter-tally-note" style="font-size: 0.76rem; color: var(--accent); margin-bottom: 8px; text-align: center;"></div>
+<!-- Interactive Visual Bottle Crate / Rack Display -->
+<div class="bottle-crate-container" id="splitterBottleCrate">
+  <div class="bottle-crate-header">
+    <span>📦 Your Custom Pack Composition</span>
+    <span style="color: var(--text-muted); font-size: 0.65rem;">Tap steppers below to adjust</span>
+  </div>
+  <div class="bottle-crate-grid" id="crateBottleGrid">
+    <!-- Populated dynamically by app.js with themed bottle icons & estate badges -->
+  </div>
+</div>
 <div class="splitter-controls" id="splitterControlsContainer">
             <div class="splitter-row">
               <div class="splitter-lot-info">
@@ -458,3 +468,6 @@
   <script src="app.js"></script>
 </body>
 </html>
+
+
+
