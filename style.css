@@ -1,4 +1,104 @@
 /* ==================================================================== */
+/* FLIP-CLOCK TICKER & PULSING CAPACITY BAR STYLES                      */
+/* ==================================================================== */
+.flip-clock-ticker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 10px auto 6px;
+  user-select: none;
+}
+
+.flip-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.flip-card {
+  background: linear-gradient(180deg, #242220 0%, #171615 50%, #121110 51%, #1a1817 100%);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  min-width: 44px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.flip-card::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.6);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.flip-digit {
+  font-family: var(--tabc-font-display, 'Syne', monospace);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: 1px;
+  display: block;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.flip-label {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.flip-colon {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
+/* Pulsing Scarcity Capacity Bar */
+.scarcity-fill.capacity-amber {
+  background: linear-gradient(90deg, #f39c12 0%, #e76f51 100%) !important;
+  box-shadow: 0 0 10px rgba(231, 111, 81, 0.6);
+  animation: pulseCapacityAmber 1.8s infinite ease-in-out;
+}
+
+.scarcity-fill.capacity-red {
+  background: linear-gradient(90deg, #e63946 0%, #d90429 100%) !important;
+  box-shadow: 0 0 14px rgba(230, 57, 70, 0.8);
+  animation: pulseCapacityRed 1.2s infinite ease-in-out;
+}
+
+@keyframes pulseCapacityAmber {
+  0%, 100% { filter: brightness(1); box-shadow: 0 0 8px rgba(231, 111, 81, 0.4); }
+  50% { filter: brightness(1.25); box-shadow: 0 0 18px rgba(231, 111, 81, 0.9); }
+}
+
+@keyframes pulseCapacityRed {
+  0%, 100% { filter: brightness(1); box-shadow: 0 0 10px rgba(230, 57, 70, 0.5); }
+  50% { filter: brightness(1.35); box-shadow: 0 0 22px rgba(230, 57, 70, 1); }
+}
+
+.scarcity-bar-container.pulsing-amber {
+  border-color: rgba(231, 111, 81, 0.4);
+}
+
+.scarcity-bar-container.pulsing-red {
+  border-color: rgba(230, 57, 70, 0.6);
+}
+
+/* ==================================================================== */
 /* THE APARTMENT BREW CO. — COMPREHENSIVE DESIGN SYSTEM & STYLESHEET    */
 /* ==================================================================== */
   
@@ -1469,6 +1569,34 @@ body::before {
   transition: background 0.3s ease;
 }
   
+/* ==================================================================== */
+/* HARDWARE-ACCELERATED WIZARD SLIDE TRANSITIONS                        */
+/* ==================================================================== */
+.wizard-slider-viewport {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.wizard-slider-track {
+  display: flex;
+  flex-direction: row;
+  width: 300%;
+  transform: translateX(0%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+  align-items: flex-start;
+}
+
+.wizard-step-panel {
+  flex: 0 0 33.333333%;
+  width: 33.333333%;
+  max-width: 33.333333%;
+  box-sizing: border-box;
+  margin: 0;
+  transition: opacity 0.25s ease;
+}
 .wizard-step-node.node-active .node-circle {
   background: var(--accent);
   color: #141312;
@@ -3886,4 +4014,42 @@ input:focus, select:focus, textarea:focus {
   color: #e5c068;
   letter-spacing: 2px;
   margin: 6px 0;
+}
+/* ==================================================================== */
+/* 5-AXIS RADAR POLYGON AURA & MICRO-TOOLTIPS                           */
+/* ==================================================================== */
+.radar-node-pulse {
+  animation: radarNodePulse 2.4s infinite alternate ease-in-out;
+}
+
+@keyframes radarNodePulse {
+  0% { r: 5px; opacity: 0.35; }
+  100% { r: 8px; opacity: 0.75; }
+}
+
+.radar-vertex-interactive {
+  cursor: pointer;
+}
+
+.radar-vertex-interactive:hover .radar-node-pulse {
+  r: 9.5px;
+  opacity: 1;
+}
+
+.radar-micro-tooltip-box {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(20, 19, 18, 0.96);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--text);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 12px rgba(212, 163, 115, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 100;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
 }

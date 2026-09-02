@@ -28,7 +28,8 @@ All coffee across retail, corporate, and catering tiers is standardized into rec
 14. [Geographic Service Areas & Corporate Tech Park Clusters](#14-geographic-service-areas--corporate-tech-park-clusters)  
 15. [Automated Email Receipts & Notification System](#15-automated-email-receipts--notification-system)  
 16. [Offline Resilience, Caching & Dynamic Fallbacks](#16-offline-resilience-caching--dynamic-fallbacks)  
-17. [Design System & Brand Asset Specifications](#17-design-system--brand-asset-specifications)
+17. [Design System & Brand Asset Specifications](#17-design-system--brand-asset-specifications)  
+18. [Visual & Interaction Polls](#18.-visual-&-interaction-polish)
 
 ---
 
@@ -429,11 +430,11 @@ const CONFIG \= {
 
 Each bottle is individually hand-inscribed with archival pigment paint pens (Uni Posca PC-1M 0.7mm White/Gold or Sakura Pigma Micron 08):
 
-18. **BATCH NO.:** Unique brew run identifier (e.g., `#048-RAT`, `TABC-AUG26`, `CORP-012`).  
-19. **BREW DATE:** Exact extraction date & timestamp (e.g., `28 AUG 2026 (06:30 AM)`).  
-20. **BOTTLE NO.:** Individual sequence within the batch (e.g., `14 of 30`).  
-21. **BREWER SIGN:** Barista / artisan initials (e.g., `AG`).  
-22. **BEST BEFORE:** Strict 48-Hour Cold-Chain Window benchmark from extraction time.
+19. **BATCH NO.:** Unique brew run identifier (e.g., `#048-RAT`, `TABC-AUG26`, `CORP-012`).  
+20. **BREW DATE:** Exact extraction date & timestamp (e.g., `28 AUG 2026 (06:30 AM)`).  
+21. **BOTTLE NO.:** Individual sequence within the batch (e.g., `14 of 30`).  
+22. **BREWER SIGN:** Barista / artisan initials (e.g., `AG`).  
+23. **BEST BEFORE:** Strict 48-Hour Cold-Chain Window benchmark from extraction time.
 
 \---
 
@@ -465,9 +466,9 @@ Upon order submission, Code.gs immediately dispatches an itemized HTML receipt c
 
 Editing the Delivery Status column in Google Sheets (Sheet1 Column Q for B2C, B2B Orders Column U for B2B) automatically triggers stage-specific transactional emails:
 
-23. Brewing & Chilling (Brewing): Notifies customer that single-estate beans are currently undergoing 92–94°C hot extraction and rapid 4°C thermal shock over clean ice.  
-24. Out for Delivery (Dispatched): Informs customer that insulated cold bags are in transit, reminding them of doorstep/concierge drop instructions.  
-25. Delivered (Delivered): Confirms delivery completion, starts the 48-hour peak freshness clock, and presents the 1-Click Sensory Feedback Widget.
+24. Brewing & Chilling (Brewing): Notifies customer that single-estate beans are currently undergoing 92–94°C hot extraction and rapid 4°C thermal shock over clean ice.  
+25. Out for Delivery (Dispatched): Informs customer that insulated cold bags are in transit, reminding them of doorstep/concierge drop instructions.  
+26. Delivered (Delivered): Confirms delivery completion, starts the 48-hour peak freshness clock, and presents the 1-Click Sensory Feedback Widget.
 
 ### **15.3 3-Criteria 5-Star Sensory Feedback Engine**
 
@@ -506,14 +507,14 @@ Editing the Delivery Status column in Google Sheets (Sheet1 Column Q for B2C, B2
 
 To enable status-change triggers in Google Sheets:
 
-26. Open The Apartment Brew Co. — Live Order Tracker.  
-27. Navigate to Extensions \> Apps Script.  
-28. Go to Triggers (clock icon) \> Add Trigger.  
-29. Configure:  
+27. Open The Apartment Brew Co. — Live Order Tracker.  
+28. Navigate to Extensions \> Apps Script.  
+29. Go to Triggers (clock icon) \> Add Trigger.  
+30. Configure:  
     1. Choose which function to run: onEdit  
     2. Select event source: From spreadsheet  
     3. Select event type: On edit  
-30. Save and authorize the requested Gmail permissions (GmailApp.sendEmail).
+31. Save and authorize the requested Gmail permissions (GmailApp.sendEmail).
 
 \---
 
@@ -528,8 +529,8 @@ To enable status-change triggers in Google Sheets:
 
 If Google Sheets API endpoint is unreachable or throttled, `app.js` automatically activates default static configurations (`availableLots`):
 
-31. **LOT-01:** *Ratnagiri Estate* (72h Anaerobic Natural • 1,350m MASL • Chikmagalur, Karnataka)  
-32. **LOT-02:** *Banana Banger* (Special Yeast Fermentation • 1,450m MASL • Shevaroys Hills, Tamil Nadu)
+32. **LOT-01:** *Ratnagiri Estate* (72h Anaerobic Natural • 1,350m MASL • Chikmagalur, Karnataka)  
+33. **LOT-02:** *Banana Banger* (Special Yeast Fermentation • 1,450m MASL • Shevaroys Hills, Tamil Nadu)
 
 ### **16.3 Service Worker (`sw.js`) & PWA Architecture**
 
@@ -546,3 +547,32 @@ If Google Sheets API endpoint is unreachable or throttled, `app.js` automaticall
 * **Dark Obsidian Backgrounds:** Body `#141312`, Elevated `#1a1816`, Card Surface `#1f1d1a`, Card Inner `#151413`.  
 * **Typography:** System UI Font Stack (`-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif`).  
 * **Design Reference:** [The Apartment Brew Co. — Visual Asset, Color & Typography Quick-Spec](https://drive.google.com/drive/folders/1nB4r9sdYrjuIpo7e84dil9K1hHsl64ug).
+
+\---
+
+## **18\. Visual & Interaction Polish**
+
+### **18.1 5-Axis Sensory Radar Polygon Enhancements**
+
+* **Ambient Aura Effect:** Added an SVG Gaussian blur filter (`#radarAuraFilter`, `stdDeviation="5"`) and dual-stroke layering that projects an ambient, theme-colored aura behind each estate's sensory polygon.  
+* **Glowing Gradient Vertex Nodes:** Replaced basic dots with concentric glowing gradient nodes (outer 7px pulsing breathing aura circle \+ inner 3.5px high-contrast core).  
+* **Contextual Micro-Tooltips:** Hovering over individual axes (Bright Acidity, Floral Aromatics, Cane Sweetness, Body & Texture, Cup Clarity) displays real-time micro-tooltips with exact lot percentages and sensory descriptions (e.g., *"85% Wild Raspberry Acidity"*, *"95% Orange Blossom Aromatics"*, *"88% Raw Honey Sweetness"*).
+
+### **18.2 Animated Flip-Clock Ticker & Pulsing Capacity Bar**
+
+* **Flip-Clock Cutoff Countdown:** Replaced plain text timer with an animated flip-clock style mechanical ticker displaying `[ DAYS ] : [ HOURS ] : [ MINS ] : [ SECS ]` in tabular figures, styled with gold-edged flip cards and ambient depth shadows.  
+* **Tiered Scarcity Bar:**  
+  * **Normal State:** Standard gold gradient progress bar tracking total reserved bottles.  
+  * **Amber Warning (\< 20% Capacity Remaining):** Turns amber/orange (`#f39c12` / `#e76f51`) with a breathing glow animation (`@keyframes pulseCapacityAmber`) and warning badge (*"⚡ Only X Bottles Left"*).  
+  * **Red Critical (\< 10% Capacity Remaining):** Turns bright crimson (`#e63946`) with rapid pulsing glow (`@keyframes pulseCapacityRed`) and critical scarcity alert (*"🔥 CRITICAL: Only X Bottles Left\!"*).
+
+### **18.3 Hardware-Accelerated Wizard Slide Transitions**
+
+* **Fluid Slide Physics:** Step panels in `personal.html` and `corporate.html` are wrapped in a 300% horizontal track inside a clipping viewport.
+
+```css
+transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+will-change: transform;
+```
+
+* **Frictionless Navigation:** Navigating forward and backward smoothly shifts the viewport via `translateX(-0%)`, `translateX(-33.3333%)`, and `translateX(-66.6667%)` with GPU composition, eliminating layout jumps.
