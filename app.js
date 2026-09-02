@@ -3012,6 +3012,29 @@ function submitFeedbackAction(orderId, name, bean, type) {
 
   saveLocalFeedback(orderId, feedbackData);
 
+  // 1. Primary Transport: POST JSON with text/plain (matches robust order intake)
+  const postPayload = {
+    action: 'feedback',
+    orderType: 'FEEDBACK',
+    authToken: CONFIG.authToken || 'TABC_SECURE_TOKEN_2026',
+    orderId: orderId,
+    overall: feedbackOverall,
+    bitterness: feedbackBitterness,
+    clarity: feedbackClarity,
+    notes: userComment,
+    name: name,
+    bean: bean,
+    type: type
+  };
+
+  fetch(CONFIG.googleSheetEndpoint, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(postPayload)
+  }).catch(function() {});
+
+  // 2. Secondary Transport: GET Query String
   const apiUrl = CONFIG.googleSheetEndpoint + 
     '?action=feedback' +
     '&orderId=' + encodeURIComponent(orderId) +
@@ -3024,6 +3047,12 @@ function submitFeedbackAction(orderId, name, bean, type) {
     '&type=' + encodeURIComponent(type);
 
   fetch(apiUrl, { mode: 'no-cors' }).catch(function() {});
+
+  // 3. Fallback Transport: Image beacon (bypasses browser CORS/redirect blocks)
+  try {
+    const beacon = new Image();
+    beacon.src = apiUrl;
+  } catch (e) {}
 
   setTimeout(function() {
     renderOrderFeedbackSection({
