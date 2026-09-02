@@ -114,6 +114,9 @@
           <button type="button" id="btnSubmitTrack" class="btn-track" onclick="submitTrackOrder()">Track</button>
         </div>
         <div id="trackStatusMsg" class="track-status-msg" style="display: none;"></div>
+
+        <!-- Interactive Brew Feedback Container (Positioned directly below Order ID input) -->
+        <div id="feedbackContainer" style="display: none; margin-top: 14px;"></div>
   
         <!-- Tracker Results Container -->
         <div id="trackerResult" style="display: none; margin-top: 18px;">
@@ -204,8 +207,6 @@
               &#10052; <strong>48-Hour Freshness Window:</strong> Keep refrigerated upon delivery and consume within 48 hours for peak tasting notes!
             </div>
           </div>
-          <!-- Interactive Brew Feedback Container (Rendered dynamically when order is delivered) -->
-          <div id="feedbackContainer"></div>
         </div>
       </section>
       

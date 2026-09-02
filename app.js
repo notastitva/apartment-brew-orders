@@ -2800,6 +2800,10 @@ function renderTrackingDetails(order) {
 // SENSORY FEEDBACK SYSTEM FOR DELIVERED ORDERS (/track)
 // Dimensions: Overall Brew (1-5), Bitterness (1-5), Notes Clarity (1-5)
 // ====================================================================
+// ====================================================================
+// SENSORY FEEDBACK SYSTEM FOR DELIVERED ORDERS (/track)
+// Dimensions: Overall Brew (1-5), Bitterness (1-5), Notes Clarity (1-5)
+// ====================================================================
 let feedbackOverall = 5;
 let feedbackBitterness = 3;
 let feedbackClarity = 5;
@@ -2845,20 +2849,20 @@ function selectOverallStar(val) {
   if (tag) tag.textContent = feedbackOverall + ' / 5 Stars';
 }
 
-function selectBitternessScale(val) {
+function selectBitternessStar(val) {
   feedbackBitterness = parseInt(val, 10) || 3;
-  document.querySelectorAll('.bitter-btn').forEach(function(b) {
-    if (parseInt(b.dataset.val, 10) === feedbackBitterness) b.classList.add('active');
+  document.querySelectorAll('.bitter-star-btn').forEach(function(b, idx) {
+    if (idx < feedbackBitterness) b.classList.add('active');
     else b.classList.remove('active');
   });
   const tag = document.getElementById('bitterValTag');
   if (tag) tag.textContent = bitternessDescriptions[feedbackBitterness];
 }
 
-function selectClarityScale(val) {
+function selectClarityStar(val) {
   feedbackClarity = parseInt(val, 10) || 5;
-  document.querySelectorAll('.clarity-btn').forEach(function(b) {
-    if (parseInt(b.dataset.val, 10) === feedbackClarity) b.classList.add('active');
+  document.querySelectorAll('.clarity-star-btn').forEach(function(b, idx) {
+    if (idx < feedbackClarity) b.classList.add('active');
     else b.classList.remove('active');
   });
   const tag = document.getElementById('clarityValTag');
@@ -2868,38 +2872,136 @@ function selectClarityScale(val) {
 function renderOrderFeedbackSection(order) {
   const container = document.getElementById('feedbackContainer');
   if (!container) return;
+
   const status = normalizeStr(order.deliveryStatus || '');
   const isDelivered = (status === 'delivered' || status.includes('complete') || status.includes('fulfilled') || status.includes('received by customer'));
+
   if (!isDelivered) {
     container.innerHTML = '';
     container.style.display = 'none';
     return;
   }
+
   container.style.display = 'block';
   const existing = order.feedback || getLocalFeedback(order.orderId);
+
   if (existing) {
+    // State B: Customer has already rated this specific order
     const overallNum = parseInt(existing.overall || existing.rating, 10) || 5;
     const bitterNum = parseInt(existing.bitterness, 10) || 3;
     const clarityNum = parseInt(existing.clarity, 10) || 5;
     const stars = '★'.repeat(Math.max(1, Math.min(5, overallNum)));
+    const bitterStars = '★'.repeat(Math.max(1, Math.min(5, bitterNum))) + '☆'.repeat(Math.max(0, 5 - bitterNum));
+    const clarityStars = '★'.repeat(Math.max(1, Math.min(5, clarityNum))) + '☆'.repeat(Math.max(0, 5 - clarityNum));
     const dateStr = existing.timestamp ? (' • ' + new Date(existing.timestamp).toLocaleDateString()) : '';
-    container.innerHTML = '<div class="feedback-submitted-card">' + '<div style="font-size: 0.72rem; font-weight: 800; color: var(--accent); letter-spacing: 1px; text-transform: uppercase;">' + '✓ Your Sensory Rating for this Brew' + '</div>' + '<div class="submitted-stars-display">' + stars + ' (' + overallNum + '/5 Overall)</div>' + '<div class="submitted-dimensions-list">' + '<div class="submitted-dimension-item">' + '<span class="submitted-dimension-label">Overall Brew:</span>' + '<span class="submitted-dimension-val">' + overallNum + ' / 5 Stars</span></div>' + '<div class="submitted-dimension-item">' + '<span class="submitted-dimension-label">Bitterness:</span>' + '<span class="submitted-dimension-val">' + (bitternessDescriptions[bitterNum] || (bitterNum + '/5')) + '</span></div>' + '<div class="submitted-dimension-item">' + '<span class="submitted-dimension-label">Notes Clarity:</span>' + '<span class="submitted-dimension-val">' + (clarityDescriptions[clarityNum] || (clarityNum + '/5')) + '</span></div>' + (existing.notes ? ('<div class="submitted-dimension-item" style="border-top: 1px solid var(--card-border); padding-top: 6px; margin-top: 2px;"><span class="submitted-dimension-label">Barista Notes:</span><span class="submitted-dimension-val" style="color: var(--text); font-weight: 600;">' + existing.notes + '</span></div>') : '') + '</div>' + '<p style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.35; margin: 6px 0 0;">' + 'Thank you for calibrating this harvest batch' + dateStr + '! Your ratings directly guide our roastery for next week\'s extraction.' + '</p></div>';
+
+    container.innerHTML = 
+      '<div class="feedback-submitted-card">' +
+        '<div style="font-size: 0.72rem; font-weight: 800; color: var(--accent); letter-spacing: 1px; text-transform: uppercase;">' +
+          '✓ Your Sensory Rating for this Brew' +
+        '</div>' +
+        '<div class="submitted-stars-display">' + stars + ' (' + overallNum + '/5 Overall)</div>' +
+        '<div class="submitted-dimensions-list">' +
+          '<div class="submitted-dimension-item">' +
+            '<span class="submitted-dimension-label">Overall Brew:</span>' +
+            '<span class="submitted-dimension-val">' + stars + ' (' + overallNum + '/5)</span>' +
+          '</div>' +
+          '<div class="submitted-dimension-item">' +
+            '<span class="submitted-dimension-label">Bitterness:</span>' +
+            '<span class="submitted-dimension-val">' + bitterStars + ' (' + (bitternessDescriptions[bitterNum] || (bitterNum + '/5')) + ')</span>' +
+          '</div>' +
+          '<div class="submitted-dimension-item">' +
+            '<span class="submitted-dimension-label">Notes Clarity:</span>' +
+            '<span class="submitted-dimension-val">' + clarityStars + ' (' + (clarityDescriptions[clarityNum] || (clarityNum + '/5')) + ')</span>' +
+          '</div>' +
+          (existing.notes ? (
+            '<div class="submitted-dimension-item" style="border-top: 1px solid var(--card-border); padding-top: 6px; margin-top: 2px;">' +
+              '<span class="submitted-dimension-label">Barista Notes:</span>' +
+              '<span class="submitted-dimension-val" style="color: var(--text); font-weight: 600;">' + existing.notes + '</span>' +
+            '</div>'
+          ) : '') +
+        '</div>' +
+        '<p style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.35; margin: 6px 0 0;">' +
+          'Thank you for calibrating this harvest batch' + dateStr + '! Your ratings directly guide our roastery for next week\'s extraction.' +
+        '</p>' +
+      '</div>';
     return;
   }
+
+  // State A: Order is delivered but not yet rated
   feedbackOverall = 5;
   feedbackBitterness = 3;
   feedbackClarity = 5;
-  container.innerHTML = '<div class="feedback-card">' + '<div class="feedback-card-title">✨ Rate Your Fresh Brew</div>' + '<div class="feedback-card-sub">Help calibrate our next roast by rating your sensory cup experience across 3 key criteria:</div>' + '<div class="feedback-dimension-group">' + '<!-- 1. Overall Brew -->' + '<div class="feedback-dimension-row">' + '<div class="feedback-dimension-header">' + '<span class="feedback-dimension-title">1. Overall Brew Experience</span>' + '<span class="feedback-dimension-value-tag" id="overallValTag">5 / 5 Stars</span>' + '</div>' + '<div class="rating-stars-row" style="margin: 4px 0 2px;">' + '<button type="button" class="rating-star-btn star-btn active" onclick="selectOverallStar(1)">★</button>' + '<button type="button" class="rating-star-btn star-btn active" onclick="selectOverallStar(2)">★</button>' + '<button type="button" class="rating-star-btn star-btn active" onclick="selectOverallStar(3)">★</button>' + '<button type="button" class="rating-star-btn star-btn active" onclick="selectOverallStar(4)">★</button>' + '<button type="button" class="rating-star-btn star-btn active" onclick="selectOverallStar(5)">★</button>' + '</div>' + '</div>' + '<!-- 2. Bitterness -->' + '<div class="feedback-dimension-row">' + '<div class="feedback-dimension-header">' + '<span class="feedback-dimension-title">2. Bitterness Level</span>' + '<span class="feedback-dimension-value-tag" id="bitterValTag">3/5 • Balanced</span>' + '</div>' + '<div class="dimension-scale-buttons">' + '<button type="button" class="scale-btn bitter-btn" data-val="1" onclick="selectBitternessScale(1)">1 (Low)</button>' + '<button type="button" class="scale-btn bitter-btn" data-val="2" onclick="selectBitternessScale(2)">2 (Mild)</button>' + '<button type="button" class="scale-btn bitter-btn active" data-val="3" onclick="selectBitternessScale(3)">3 (Balanced)</button>' + '<button type="button" class="scale-btn bitter-btn" data-val="4" onclick="selectBitternessScale(4)">4 (High)</button>' + '<button type="button" class="scale-btn bitter-btn" data-val="5" onclick="selectBitternessScale(5)">5 (Intense)</button>' + '</div>' + '</div>' + '<!-- 3. Notes Clarity -->' + '<div class="feedback-dimension-row">' + '<div class="feedback-dimension-header">' + '<span class="feedback-dimension-title">3. Tasting Notes Clarity</span>' + '<span class="feedback-dimension-value-tag" id="clarityValTag">5/5 • Crystalline / Complex</span>' + '</div>' + '<div class="dimension-scale-buttons">' + '<button type="button" class="scale-btn clarity-btn" data-val="1" onclick="selectClarityScale(1)">1 (Muted)</button>' + '<button type="button" class="scale-btn clarity-btn" data-val="2" onclick="selectClarityScale(2)">2 (Subtle)</button>' + '<button type="button" class="scale-btn clarity-btn" data-val="3" onclick="selectClarityScale(3)">3 (Distinct)</button>' + '<button type="button" class="scale-btn clarity-btn" data-val="4" onclick="selectClarityScale(4)">4 (High)</button>' + '<button type="button" class="scale-btn clarity-btn active" data-val="5" onclick="selectClarityScale(5)">5 (Crystalline)</button>' + '</div>' + '</div>' + '</div>' + '<textarea id="feedbackCommentInput" class="feedback-textarea" rows="2" placeholder="Any specific feedback on acidity, ice temperature, or mouthfeel (optional)..."></textarea>' + '<button type="button" class="btn-submit-feedback" id="btnSubmitFeedback" onclick="submitFeedbackAction(\'' + order.orderId + '\', \'' + (order.customerName || '') + '\', \'' + (order.bean || '') + '\', \'' + (order.orderType || 'B2C') + '\')">' + '<span>Submit Calibration Rating &rarr;</span>' + '</button></div>';
+
+  container.innerHTML = 
+    '<div class="feedback-card">' +
+      '<div class="feedback-card-title">✨ Rate Your Fresh Brew</div>' +
+      '<div class="feedback-card-sub">Help calibrate our next roast by rating your sensory cup experience across 3 key criteria:</div>' +
+
+      '<div class="feedback-dimension-group">' +
+        '<!-- 1. Overall Brew -->' +
+        '<div class="feedback-dimension-row">' +
+          '<div class="feedback-dimension-header">' +
+            '<span class="feedback-dimension-title">1. Overall Brew Experience</span>' +
+            '<span class="feedback-dimension-value-tag" id="overallValTag">5 / 5 Stars</span>' +
+          '</div>' +
+          '<div class="rating-stars-row" style="margin: 4px 0 2px;">' +
+            '<button type="button" class="rating-star-btn star-btn active" onclick="selectOverallStar(1)">★</button>' +
+            '<button type="button" class="rating-star-btn star-btn active" onclick="selectOverallStar(2)">★</button>' +
+            '<button type="button" class="rating-star-btn star-btn active" onclick="selectOverallStar(3)">★</button>' +
+            '<button type="button" class="rating-star-btn star-btn active" onclick="selectOverallStar(4)">★</button>' +
+            '<button type="button" class="rating-star-btn star-btn active" onclick="selectOverallStar(5)">★</button>' +
+          '</div>' +
+        '</div>' +
+
+        '<!-- 2. Bitterness -->' +
+        '<div class="feedback-dimension-row">' +
+          '<div class="feedback-dimension-header">' +
+            '<span class="feedback-dimension-title">2. Bitterness Level</span>' +
+            '<span class="feedback-dimension-value-tag" id="bitterValTag">3/5 • Balanced</span>' +
+          '</div>' +
+          '<div class="rating-stars-row" style="margin: 4px 0 2px;">' +
+            '<button type="button" class="rating-star-btn bitter-star-btn active" onclick="selectBitternessStar(1)">★</button>' +
+            '<button type="button" class="rating-star-btn bitter-star-btn active" onclick="selectBitternessStar(2)">★</button>' +
+            '<button type="button" class="rating-star-btn bitter-star-btn active" onclick="selectBitternessStar(3)">★</button>' +
+            '<button type="button" class="rating-star-btn bitter-star-btn" onclick="selectBitternessStar(4)">★</button>' +
+            '<button type="button" class="rating-star-btn bitter-star-btn" onclick="selectBitternessStar(5)">★</button>' +
+          '</div>' +
+        '</div>' +
+
+        '<!-- 3. Notes Clarity -->' +
+        '<div class="feedback-dimension-row">' +
+          '<div class="feedback-dimension-header">' +
+            '<span class="feedback-dimension-title">3. Tasting Notes Clarity</span>' +
+            '<span class="feedback-dimension-value-tag" id="clarityValTag">5/5 • Crystalline / Complex</span>' +
+          '</div>' +
+          '<div class="rating-stars-row" style="margin: 4px 0 2px;">' +
+            '<button type="button" class="rating-star-btn clarity-star-btn active" onclick="selectClarityStar(1)">★</button>' +
+            '<button type="button" class="rating-star-btn clarity-star-btn active" onclick="selectClarityStar(2)">★</button>' +
+            '<button type="button" class="rating-star-btn clarity-star-btn active" onclick="selectClarityStar(3)">★</button>' +
+            '<button type="button" class="rating-star-btn clarity-star-btn active" onclick="selectClarityStar(4)">★</button>' +
+            '<button type="button" class="rating-star-btn clarity-star-btn active" onclick="selectClarityStar(5)">★</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<textarea id="feedbackCommentInput" class="feedback-textarea" rows="2" placeholder="Any specific feedback on acidity, ice temperature, or mouthfeel (optional)..."></textarea>' +
+      '<button type="button" class="btn-submit-feedback" id="btnSubmitFeedback" onclick="submitFeedbackAction(\'' + order.orderId + '\', \'' + (order.customerName || '') + '\', \'' + (order.bean || '') + '\', \'' + (order.orderType || 'B2C') + '\')">' +
+        '<span>Submit Calibration Rating &rarr;</span>' +
+      '</button>' +
+    '</div>';
 }
 
 function submitFeedbackAction(orderId, name, bean, type) {
   const btn = document.getElementById('btnSubmitFeedback');
   const commentInput = document.getElementById('feedbackCommentInput');
   const userComment = commentInput ? commentInput.value.trim() : '';
+
   if (btn) {
     btn.disabled = true;
     btn.textContent = 'Saving Rating...';
   }
+
   const feedbackData = {
     overall: feedbackOverall,
     bitterness: feedbackBitterness,
@@ -2907,9 +3009,22 @@ function submitFeedbackAction(orderId, name, bean, type) {
     notes: userComment,
     timestamp: new Date().toISOString()
   };
+
   saveLocalFeedback(orderId, feedbackData);
-  const apiUrl = CONFIG.googleSheetEndpoint + '?action=feedback' + '&orderId=' + encodeURIComponent(orderId) + '&overall=' + encodeURIComponent(feedbackOverall) + '&bitterness=' + encodeURIComponent(feedbackBitterness) + '&clarity=' + encodeURIComponent(feedbackClarity) + '&notes=' + encodeURIComponent(userComment) + '&name=' + encodeURIComponent(name) + '&bean=' + encodeURIComponent(bean) + '&type=' + encodeURIComponent(type);
+
+  const apiUrl = CONFIG.googleSheetEndpoint + 
+    '?action=feedback' +
+    '&orderId=' + encodeURIComponent(orderId) +
+    '&overall=' + encodeURIComponent(feedbackOverall) +
+    '&bitterness=' + encodeURIComponent(feedbackBitterness) +
+    '&clarity=' + encodeURIComponent(feedbackClarity) +
+    '&notes=' + encodeURIComponent(userComment) +
+    '&name=' + encodeURIComponent(name) +
+    '&bean=' + encodeURIComponent(bean) +
+    '&type=' + encodeURIComponent(type);
+
   fetch(apiUrl, { mode: 'no-cors' }).catch(function() {});
+
   setTimeout(function() {
     renderOrderFeedbackSection({
       orderId: orderId,
