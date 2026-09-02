@@ -3679,3 +3679,211 @@ input:focus, select:focus, textarea:focus {
   gap: 4px;
   transition: all 0.25s ease;
 }
+
+/* ==================================================================== */
+/* SENSORY BREW FEEDBACK & RATING COMPONENT (/track)                    */
+/* ==================================================================== */
+.feedback-card {
+  background: var(--card-inner);
+  border: 1.5px solid rgba(212, 163, 115, 0.35);
+  border-radius: 14px;
+  padding: 18px 16px;
+  margin-top: 14px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+  
+.feedback-card-title {
+  font-size: 0.96rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 4px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+  
+.feedback-card-sub {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+  margin-bottom: 12px;
+}
+  
+.rating-stars-row {
+  display: inline-flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 6px 0 12px;
+  user-select: none;
+}
+  
+.rating-star-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.75rem;
+  color: #3a3632;
+  cursor: pointer;
+  padding: 0 2px;
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+  
+.rating-star-btn:hover,
+.rating-star-btn.active {
+  color: #e5c068;
+  transform: scale(1.15);
+  text-shadow: 0 0 12px rgba(229, 192, 104, 0.6);
+}
+  
+/* Multi-Criteria Sensory Rating Dimensions (/track) */
+.feedback-dimension-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 12px 0 14px;
+  text-align: left;
+}
+  
+.feedback-dimension-row {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+  
+.feedback-dimension-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+  
+.feedback-dimension-title {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.3px;
+}
+  
+.feedback-dimension-value-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+  
+.dimension-scale-buttons {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+}
+  
+.scale-btn {
+  flex: 1 1 0px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--card-border);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 7px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+  
+.scale-btn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+  
+.scale-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #141312;
+  box-shadow: 0 0 10px rgba(212, 163, 115, 0.3);
+}
+  
+.submitted-dimensions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 10px 0;
+  text-align: left;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+}
+  
+.submitted-dimension-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.74rem;
+}
+  
+.submitted-dimension-label {
+  color: var(--text-muted);
+}
+  
+.submitted-dimension-val {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.feedback-textarea {
+  width: 100%;
+  background: #141312;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--text);
+  font-size: 0.76rem;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+}
+  
+.feedback-textarea:focus {
+  border-color: var(--accent);
+}
+  
+.btn-submit-feedback {
+  background: var(--gradient-gold);
+  color: #141312;
+  font-size: 0.82rem;
+  font-weight: 800;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 14px rgba(212, 163, 115, 0.3);
+}
+  
+.btn-submit-feedback:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+  
+.feedback-submitted-card {
+  background: linear-gradient(165deg, rgba(31, 29, 26, 0.95) 0%, rgba(20, 19, 18, 0.98) 100%);
+  border: 1.5px solid var(--accent);
+  border-radius: 14px;
+  padding: 18px 16px;
+  text-align: center;
+  margin-top: 14px;
+  box-shadow: 0 4px 20px rgba(212, 163, 115, 0.15);
+}
+  
+.submitted-stars-display {
+  font-size: 1.35rem;
+  color: #e5c068;
+  letter-spacing: 2px;
+  margin: 6px 0;
+}
