@@ -2,9 +2,14 @@
 
 ### **Micro-Batch Flash-Chilled Specialty Coffee • Gurugram & Delhi NCR**
 
-[![Platform](https://img.shields.io/badge/Platform-GitHub%20Pages%20%7C%20Static-gold?style=flat-square)](https://github.com/) [![Backend](https://img.shields.io/badge/Backend-Google%20Apps%20Script%20%28Serverless%29-blue?style=flat-square)](https://script.google.com/) [![Database](https://img.shields.io/badge/CMS%20%26%20Database-Google%20Sheets-success?style=flat-square)](https://sheets.google.com/) [![Payment](https://img.shields.io/badge/Payments-Razorpay%20%7C%20Net--7%20Invoicing-orange?style=flat-square)](https://razorpay.com/) ![Bottles](https://img.shields.io/badge/Form%20Factor-200ml%20Amber%20Glass-brown?style=flat-square) ![Routing](https://img.shields.io/badge/Routing-Clean%20Extensionless%20URLs-blueviolet?style=flat-square)
+[![Platform](https://img.shields.io/badge/Platform-GitHub%20Pages%20%7C%20Static-gold?style=flat-square)](https://github.com/)
+[![Backend](https://img.shields.io/badge/Backend-Google%20Apps%20Script%20%28Serverless%29-blue?style=flat-square)](https://script.google.com/)
+[![Database](https://img.shields.io/badge/CMS%20%26%20Database-Google%20Sheets-success?style=flat-square)](https://sheets.google.com/)
+[![Payment](https://img.shields.io/badge/Payments-Razorpay%20%7C%20Net--7%20Invoicing-orange?style=flat-square)](https://razorpay.com/)
+[![Bottles](https://img.shields.io/badge/Form%20Factor-200ml%20Amber%20Glass-brown?style=flat-square)]()
+[![Routing](https://img.shields.io/badge/Routing-Clean%20Extensionless%20URLs-blueviolet?style=flat-square)]()
 
-A modern, serverless e-commerce and interactive sensory platform built for scheduled micro-batch craft coffee drops, headless Google Sheets CMS synchronization, Razorpay payment processing, corporate Net-7 invoicing, dynamic N-lot discovery flights, interactive sensory radar visualizations, and self-service order tracking.
+A modern, serverless e-commerce and interactive sensory platform built for scheduled micro-batch craft coffee drops, headless Google Sheets CMS synchronization, Razorpay payment processing, corporate Net-7 invoicing, dynamic N-lot discovery flights, interactive sensory radar visualizations, and self-service order tracking. 
 
 All coffee across retail, corporate, and catering tiers is standardized into recyclable **200ml glass bottles** extracted hot (92–94°C) and instantly flash-chilled to 4°C with zero preservatives.
 
@@ -12,16 +17,16 @@ All coffee across retail, corporate, and catering tiers is standardized into rec
 
 ## 📑 Table of Contents
 
-1. [Craft Philosophy & Operations](#1-craft-philosophy--operations)  
-2. [Platform Architecture & Data Flow](#2-platform-architecture--data-flow)  
-3. [Portal Directory & Clean-URL Routing](#3-portal-directory--clean-url-routing)  
-4. [Interactive Frontend Engines](#4.-interactive-frontend-engines)  
-5. [Headless CMS Schema (Google Sheets)](#5.-headless-cms-schema-\(google-sheets\))  
-6. [Database Schema & Order Ledgers](#6-database-schema--order-ledgers)  
-7. [Self-Service Order Tracking State Machine](#7.-self-service-order-tracking-state-machine)  
-8. [Brewery Operational SOP & Drop Cycles](#8-brewery-operational-sop--drop-cycles)  
-9. [Deployment & Environment Configuration](#9-deployment--environment-configuration)  
-10. [Security, Performance & Resilience Guardrails](#10-security-performance--resilience-guardrails)  
+1. [Craft Philosophy & Operations](#1-craft-philosophy--operations)
+2. [Platform Architecture & Data Flow](#2-platform-architecture--data-flow)
+3. [Portal Directory & Clean-URL Routing](#3-portal-directory--clean-url-routing)
+4. [Interactive Frontend Engines](#4-interactive-frontend-engines)
+5. [Headless CMS Schema (Google Sheets)](#5-headless-cms-schema-google-sheets)
+6. [Database Schema & Order Ledgers](#6-database-schema--order-ledgers)
+7. [Self-Service Order Tracking State Machine](#7-self-service-order-tracking-state-machine)
+8. [Brewery Operational SOP & Drop Cycles](#8-brewery-operational-sop--drop-cycles)
+9. [Deployment & Environment Configuration](#9-deployment--environment-configuration)
+10. [Security, Performance & Resilience Guardrails](#10-security-performance--resilience-guardrails)
 11. [Multi-Step Checkout Wizards & State Flows](#11-multi-step-checkout-wizards--state-flows)  
 12. [Promo Code & Discount Engine](#12-promo-code--discount-engine)  
 13. [Packaging, Bottle Specifications & Handwritten Batch Ledger](#13-packaging-bottle-specifications--handwritten-batch-ledger)  
@@ -54,87 +59,49 @@ All coffee across retail, corporate, and catering tiers is standardized into rec
 
 ## **2\. Platform Architecture & Data Flow**
 
-\+-----------------------------------------------------------------------------------+
-
+```
++-----------------------------------------------------------------------------------+
 |                            CLIENT BROWSER (Static PWA)                             |
-
 |                                                                                   |
-
-|  \[ index.html \]   \[ orders.html \]   \[ personal.html \]   \[ corporate.html \]        |
-
-|  \[ flavor.html \]  \[ guide.html \]    \[ about.html \]      \[ events.html \]   \[ track.html \]
-
+|  [ index.html ]   [ orders.html ]   [ personal.html ]   [ corporate.html ]        |
+|  [ flavor.html ]  [ guide.html ]    [ about.html ]      [ events.html ]   [ track.html ]
 |                                                                                   |
-
 |                         Shared Frontend Controller (app.js)                       |
-
-|   \* SWR Caching (localStorage)            \* Dynamic N-Lot Mix Splitter Engine     |
-
-|   \* Dynamic Radar & Spectrum Visualizer   \* Sheets-Driven 2-Question Quiz Engine  |
-
-|   \* Multi-Step Wizard State Machine       \* Razorpay Standard Checkout SDK        |
-
-\+----------------------------------------+------------------------------------------+
-
+|   * SWR Caching (localStorage)            * Dynamic N-Lot Mix Splitter Engine     |
+|   * Dynamic Radar & Spectrum Visualizer   * Sheets-Driven 2-Question Quiz Engine  |
+|   * Multi-Step Wizard State Machine       * Razorpay Standard Checkout SDK        |
++----------------------------------------+------------------------------------------+
                                          |
-
                        Fetch API (GET / POST JSON)
-
                                          |
-
                                          v
-
-\+-----------------------------------------------------------------------------------+
-
++-----------------------------------------------------------------------------------+
 |                     SERVERLESS BACKEND (Google Apps Script)                       |
-
 |                                                                                   |
-
 |                                     Code.gs                                       |
-
-|   \* doGet(e):                                                                     |
-
-|       \- Action 'track': Queries B2C/B2B/Event sheets & returns timeline state.    |
-
-|       \- Action 'config' (Default): Parses Menu & Config (Lots, Packs, Clusters,   |
-
+|   * doGet(e):                                                                     |
+|       - Action 'track': Queries B2C/B2B/Event sheets & returns timeline state.    |
+|       - Action 'config' (Default): Parses Menu & Config (Lots, Packs, Clusters,   |
 |         Coupons, Live Capacities, Quiz Questions & Combination Matrix).           |
-
-|   \* doPost(e):                                                                    |
-
-|       \- Validates auth token, sanitize inputs, prevents bot spam.                 |
-
-|       \- Appends order rows to Sheet1 (B2C), B2B Orders, or Event Inquiries.       |
-
-|       \- Dispatches HTML receipt emails via MailApp.                               |
-
-\+----------------------------------------+------------------------------------------+
-
+|   * doPost(e):                                                                    |
+|       - Validates auth token, sanitize inputs, prevents bot spam.                 |
+|       - Appends order rows to Sheet1 (B2C), B2B Orders, or Event Inquiries.       |
+|       - Dispatches HTML receipt emails via MailApp.                               |
++----------------------------------------+------------------------------------------+
                                          |
-
                         Google Spreadsheet REST / Service
-
                                          |
-
                                          v
-
-\+-----------------------------------------------------------------------------------+
-
++-----------------------------------------------------------------------------------+
 |                   HEADLESS DATABASE (Live Order Tracker Sheet)                    |
-
 |                                                                                   |
-
-|  \[ Menu & Config \]     \-\> Dynamic CMS (18-col Lots, Packs, Quiz Matrix, Clusters) |
-
-|  \[ Sheet1 \]            \-\> B2C Order Ledger (Timestamp, ID, Address, Status, Notes)|
-
-|  \[ B2B Orders \]        \-\> Corporate Order Ledger (GSTIN, Tech Park, Invoice Refs) |
-
-|  \[ Event Inquiries \]   \-\> Catering Leads & Bar Booking Pipeline                   |
-
-|  \[ Operational SOP \]   \-\> Roastery Brew Guide, Thermal Shock & Packing Specs      |
-
-\+-----------------------------------------------------------------------------------+
+|  [ Menu & Config ]     -> Dynamic CMS (18-col Lots, Packs, Quiz Matrix, Clusters) |
+|  [ Sheet1 ]            -> B2C Order Ledger (Timestamp, ID, Address, Status, Notes)|
+|  [ B2B Orders ]        -> Corporate Order Ledger (GSTIN, Tech Park, Invoice Refs) |
+|  [ Event Inquiries ]   -> Catering Leads & Bar Booking Pipeline                   |
+|  [ Operational SOP ]   -> Roastery Brew Guide, Thermal Shock & Packing Specs      |
++-----------------------------------------------------------------------------------+
+```
 
 \---
 
@@ -142,31 +109,21 @@ All coffee across retail, corporate, and catering tiers is standardized into rec
 
 The platform uses clean, extensionless routing across 9 dedicated portals:
 
-├── /                    (index.html)     \-\> Hero landing, weekend countdown, batch scarcity, FAQ accordion
-
-├── /orders              (orders.html)    \-\> Visual Harvest Discovery Gateway with dynamic cards, swatches & meters
-
-├── /personal            (personal.html)  \-\> B2C residential pre-order wizard with dynamic N-lot bottle splitter
-
-├── /corporate           (corporate.html) \-\> B2B Friday office drop wizard with tech park clusters & Net-7 invoicing
-
-├── /flavor              (flavor.html)    \-\> Dynamic 5-axis sensory radar, spectrum comparison & sheet-driven quiz
-
-├── /guide               (guide.html)     \-\> 48-hour freshness protocol, rapid thermal shock & serving rituals
-
-├── /about               (about.html)     \-\> Story so far, craft manifesto, big bold stats & live roastery capacity
-
-├── /events              (events.html)    \-\> Corporate coffee bar catering, hackathon drops & bulk lead wizard
-
-├── /track               (track.html)     \-\> Self-service 4-step real-time order and event inquiry tracking portal
-
-├── /style.css           (style.css)      \-\> Universal stylesheet (Dark artisanal theme, gold gradient accents)
-
-├── /app.js              (app.js)         \-\> Universal JavaScript controller and client-side state machine
-
-├── /sw.js               (sw.js)          \-\> Service Worker for offline resilience & asset caching
-
-└── /assets/             (assets/)        \-\> Standalone gold emblem SVG, favicons, banners & icons
+```
+├── /                    (index.html)     -> Hero landing, weekend countdown, batch scarcity, FAQ accordion
+├── /orders              (orders.html)    -> Visual Harvest Discovery Gateway with dynamic cards, swatches & meters
+├── /personal            (personal.html)  -> B2C residential pre-order wizard with dynamic N-lot bottle splitter
+├── /corporate           (corporate.html) -> B2B Friday office drop wizard with tech park clusters & Net-7 invoicing
+├── /flavor              (flavor.html)    -> Dynamic 5-axis sensory radar, spectrum comparison & sheet-driven quiz
+├── /guide               (guide.html)     -> 48-hour freshness protocol, rapid thermal shock & serving rituals
+├── /about               (about.html)     -> Story so far, craft manifesto, big bold stats & live roastery capacity
+├── /events              (events.html)    -> Corporate coffee bar catering, hackathon drops & bulk lead wizard
+├── /track               (track.html)     -> Self-service 4-step real-time order and event inquiry tracking portal
+├── /style.css           (style.css)      -> Universal stylesheet (Dark artisanal theme, gold gradient accents)
+├── /app.js              (app.js)         -> Universal JavaScript controller and client-side state machine
+├── /sw.js               (sw.js)          -> Service Worker for offline resilience & asset caching
+└── /assets/             (assets/)        -> Standalone gold emblem SVG, favicons, banners & icons
+```
 
 \---
 
@@ -216,41 +173,26 @@ The **`Menu & Config`** tab in [The Apartment Brew Co. — Live Order Tracker](h
 
 ### **5.2 Coffee Lots (18-Column Schema)**
 
+```
 Col 0:  Lot ID               (e.g., LOT-01)
-
 Col 1:  Estate Name          (e.g., Ratnagiri Estate)
-
 Col 2:  Region & Elevation   (e.g., Chikmagalur, Karnataka • 1,350m MASL)
-
 Col 3:  Process Tag          (e.g., 72h Anaerobic Natural)
-
 Col 4:  Tasting Notes        (e.g., Wild Raspberry, Ripe Stone Fruit & Dark Cacao Finish)
-
 Col 5:  Emojis               (e.g., 🍇, 🍑, 🍫)
-
 Col 6:  Flavor Pills         (e.g., Fruity, High Acidity, Winey Body, Morning Focus)
-
-Col 7:  Roast Level %        (e.g., 45\)
-
-Col 8:  Fermentation Depth % (e.g., 80\)
-
-Col 9:  Acidity %            (e.g., 85\)
-
-Col 10: Body %               (e.g., 70\)
-
-Col 11: Sweetness %          (e.g., 80\)
-
-Col 12: Aromatics %          (e.g., 75\)
-
-Col 13: Clarity %            (e.g., 65\)
-
+Col 7:  Roast Level %        (e.g., 45)
+Col 8:  Fermentation Depth % (e.g., 80)
+Col 9:  Acidity %            (e.g., 85)
+Col 10: Body %               (e.g., 70)
+Col 11: Sweetness %          (e.g., 80)
+Col 12: Aromatics %          (e.g., 75)
+Col 13: Clarity %            (e.g., 65)
 Col 14: Process Story        (Narrative of farm processing and fermentation science)
-
 Col 15: Pairing Rituals      (Best Time: 8:00 AM – 11:00 AM • Pairings: Sourdough toast...)
-
-Col 16: Max Bottles          (e.g., 200\)
-
+Col 16: Max Bottles          (e.g., 200)
 Col 17: Active (TRUE/FALSE)  (Controls visibility on frontend)
+```
 
 ### **5.3 Flavor Quiz Questions & Combination Matrix**
 
@@ -288,38 +230,31 @@ Col 17: Active (TRUE/FALSE)  (Controls visibility on frontend)
 
 ### **6.2 B2B Corporate Orders (`B2B Orders`)**
 
-Includes company name, GSTIN (for 18% Input Tax Credit), tech park cluster, Net-7 corporate invoicing references (`INV-REQ-XXXXXX`), and reception desk drop instructions. Order IDs follow the `TABC-B2B-XXXXXX` taxonomy.
+Includes company name, GSTIN (for 18% Input Tax Credit), tech park cluster, Net-7 corporate invoicing references (`INV-REQ-XXXXXX`), and reception desk drop instructions.
 
 ### **6.3 Event Catering Inquiries (`Event Inquiries`)**
 
-Captures corporate coffee bar bookings, pop-up events, estimated headcounts, venue locations, and lead management statuses (`New Lead` → `In Discussion` → `Event Confirmed` → `Event Completed`). Event leads are assigned IDs following the `TABC-EVT-XXXXXX` taxonomy.
+Captures corporate coffee bar bookings, pop-up events, estimated headcounts, venue locations, and lead management statuses (`New Lead` → `In Discussion` → `Event Confirmed` → `Event Completed`).  
+\---
 
 ## **7\. Self-Service Order Tracking State Machine**
 
 Customers track live orders in real time on `/track` via a 4-stage visual stepper:
 
-\+------------------+     \+------------------------+     \+--------------------+     \+------------------+
-
-|  1\. Pre-Ordered  | \--\> | 2\. Brewing & Chilling  | \--\> | 3\. Out for Delivery| \--\> |   4\. Delivered   |
-
-\+------------------+     \+------------------------+     \+--------------------+     \+------------------+
-
+```
++------------------+     +------------------------+     +--------------------+     +------------------+
+|  1. Pre-Ordered  | --> | 2. Brewing & Chilling  | --> | 3. Out for Delivery| --> |   4. Delivered   |
++------------------+     +------------------------+     +--------------------+     +------------------+
 | Order logged &   |     | Hot extraction (94°C)  |     | Dispatched in      |     | Dropped at door/ |
-
 | batch scheduled. |     | & flash-chilled to 4°C |     | thermal cold-bags. |     | concierge desk.  |
-
-\+------------------+     \+------------------------+     \+--------------------+     \+------------------+
++------------------+     +------------------------+     +--------------------+     +------------------+
+```
 
 * **Live Status Keywords:**  
   * **Stage 1 (Pre-Ordered):** `Pre-Ordered`, `Pending`, `Received`  
   * **Stage 2 (Brewing & Chilling):** `Brewing`, `Roasting`, `Extracting`, `Chilling`, `Prep`  
   * **Stage 3 (Out for Delivery):** `Dispatched`, `Out for Delivery`, `In Transit`, `Shipped`, `On the way`  
-  * **Stage 4 (Delivered):** `Delivered`, `Completed`, `Fulfilled` (Starts 48-hour freshness clock)  
-* **Event Inquiry Pipeline State Machine:**  
-  * **Stage 1:** `New Lead` (Inquiry received & logged)  
-  * **Stage 2:** `In Discussion` (Capacity, custom single-estate lot selection & date confirmation)  
-  * **Stage 3:** `Event Confirmed` (Logistics finalized, batch scheduled)  
-  * **Stage 4:** `Event Completed` (On-site bar execution / bulk dispatch fulfilled)
+  * **Stage 4 (Delivered):** `Delivered`, `Completed`, `Fulfilled` (Starts 48-hour freshness clock)
 
 \---
 
@@ -335,33 +270,7 @@ Customers track live orders in real time on `/track` via a 4-stage visual steppe
 
 \---
 
-## **9\. Deployment & Environment Configuration**
 
-### **9.1 Frontend Configuration (`app.js`)**
-
-Update the `CONFIG` object in `app.js`:
-
-const CONFIG \= {
-
-  razorpayKeyId: "rzp\_live\_XXXXXXXXXXXXXX",
-
-  googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbz.../exec",
-
-  authToken: "TABC\_SECURE\_TOKEN\_2026"
-
-};
-
-### **9.2 Apps Script Deployment (`Code.gs`)**
-
-* Open the spreadsheet: [The Apartment Brew Co. — Live Order Tracker](https://drive.google.com/open?id=1k4mRcFpbIVf3CLtzzGoXEvA_FM1Q70dMWKiBqQFZQ_4).  
-* Go to **Extensions \> Apps Script** and paste the code from `Code.gs`.  
-* Click **Deploy \> Manage deployments \> Edit \> New version**.  
-* Configure:  
-  * **Execute as:** `Me`  
-  * **Who has access:** `Anyone`  
-* Copy the generated Web App URL (`.../exec`) into `app.js`.
-
-\---
 
 ## **10\. Security, Performance & Resilience Guardrails**
 
@@ -369,11 +278,6 @@ const CONFIG \= {
 * **Stale-While-Revalidate (SWR):** UI components render immediately from cached `localStorage` while background polling refreshes live bottle counts without layout flashes.  
 * **Guaranteed Order Intake:** Orders are recorded in sheets even if capacity limits are breached (flagged as `[Over-Capacity]` in the notes column for roastery review).  
 * **Cross-Browser Verification:** Fully tested and AST-compiled under JavaScriptCore and modern browser engines with zero console syntax errors.
-
-\---  
-*Crafted with pride by The Apartment Brew Co. • Gurugram, India*
-
-### 
 
 \---
 
