@@ -76,13 +76,13 @@
       <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&times;</button>
     </div>
     <nav class="drawer-nav">
-      <a href="/" class="drawer-link active" data-page-link="INDEX">Home</a>
-      <a href="/orders" class="drawer-link" data-page-link="ORDERS">Order Batch</a>
-      <a href="/flavor" class="drawer-link" data-page-link="FLAVOR">Flavor Matcher</a>
-      <a href="/guide" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
-      <a href="/about" class="drawer-link" data-page-link="ABOUT">Story so far</a>
-      <a href="/events" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
-      <a href="/track" class="drawer-link" data-page-link="TRACK">Inquiry/Order tracking</a>
+<a href="/" class="drawer-link active" data-page-link="INDEX">Home</a>
+<a href="/orders" class="drawer-link" data-page-link="ORDERS">Order Batch</a>
+<a href="/flavor" class="drawer-link" data-page-link="FLAVOR">Flavor Matcher</a>
+<a href="/guide" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
+<a href="/about" class="drawer-link" data-page-link="ABOUT">Story so far</a>
+<a href="/events" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
+<a href="/track" class="drawer-link" data-page-link="TRACK">Inquiry/Order tracking</a>
     </nav>
     <div class="drawer-footer">
       <div class="drawer-footer-text">☕ Hand-Brewed Fresh to Order in Gurugram</div>
@@ -100,6 +100,28 @@
 📍 Hand-Brewed Specialty Brewery Operating in Gurugram, India
       </div>
     </header>
+  
+    <!-- DUAL-STREAM ROTATING BATCH CUTOFF TICKER & CAPACITY CARD -->
+    <div class="countdown-ticker-card" id="dualStreamTickerCard">
+      <div class="stream-pill-toggle">
+        <button type="button" class="stream-pill active" id="pillPersonal" onclick="setTickerStream('PERSONAL', true)">🏠 Weekend Personal</button>
+        <button type="button" class="stream-pill" id="pillCorporate" onclick="setTickerStream('CORPORATE', true)">🏢 Friday Corporate</button>
+      </div>
+      <div class="countdown-ticker-header">
+        <span id="tickerCutoffHeader">⏱️ FRIDAY 10:00 PM BATCH CUTOFF</span>
+        <span class="countdown-live-badge" id="tickerStreamBadge">LIVE TICKER</span>
+      </div>
+      <div class="countdown-timer" id="countdownTimer"></div>
+      <div class="scarcity-bar-container" style="margin-top: 10px;">
+        <div class="scarcity-label">
+          <span id="scarcityStreamTitle">🔥 Weekend Batch Capacity</span>
+          <span id="scarcityText">Loading batch reserve...</span>
+        </div>
+        <div class="scarcity-track">
+          <div class="scarcity-fill" id="scarcityFill" style="width: 0%;"></div>
+        </div>
+      </div>
+    </div>
   
     <!-- Story Content Sections -->
     <main class="story-content">
@@ -285,7 +307,7 @@ By partnering directly with award-winning growers and specialty roasters in Karn
       <section class="section-card" style="margin-top: 14px; text-align: center;">
         <h3 style="font-size: 1.1rem; color: var(--accent); margin-bottom: 6px;">Taste This Weekend's Fresh Drop</h3>
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">Pre-orders open for Saturday &amp; Sunday morning delivery across Gurugram &amp; Delhi NCR.</p>
-        <a href="/orders" class="btn btn-pay" style="text-decoration: none; display: inline-block;">
+<a href="/orders" class="btn btn-pay" style="text-decoration: none; display: inline-block;">
           <span>☕ Weekend Pre-Order</span>
         </a>
       </section>
@@ -296,6 +318,7 @@ By partnering directly with award-winning growers and specialty roasters in Karn
   <script src="app.js"></script>
 </body>
 </html>
+
 
 
 

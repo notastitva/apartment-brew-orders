@@ -1,49 +1,79 @@
 /* ==================================================================== */
-/* MECHANICAL FLIP-CLOCK TICKER & CUTOFF COMPONENT                     */
+/* DUAL-STREAM ROTATING FLIP-CLOCK TICKER & CAPACITY COMPONENT          */
 /* ==================================================================== */
 .countdown-ticker-card {
-  max-width: 360px;
-  background: rgba(26, 24, 22, 0.95);
+  background: rgba(24, 22, 20, 0.96);
   border: 1.5px solid var(--card-border);
   border-radius: 12px;
-  padding: 10px 14px;
+  padding: 10px 12px;
   margin: 10px auto 14px;
+  max-width: 380px;
+  width: 100%;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   position: relative;
-  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.stream-pill-toggle {
+  display: inline-flex;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 2px;
+  margin-bottom: 8px;
+  gap: 2px;
+}
+
+.stream-pill {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.stream-pill.active {
+  background: var(--card-inner);
+  color: var(--accent);
+  border: 1px solid rgba(212, 163, 115, 0.4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .countdown-ticker-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 800;
   color: var(--accent);
-  letter-spacing: 0.8px;
+  letter-spacing: 0.4px;
   text-transform: uppercase;
-  margin-bottom: 8px;
-  padding: 0 4px;
+  margin-bottom: 6px;
+  padding: 0 2px;
 }
 
 .countdown-live-badge {
   background: rgba(230, 57, 70, 0.15);
   border: 1px solid rgba(230, 57, 70, 0.4);
   color: #ff8fa3;
-  font-size: 0.62rem;
+  font-size: 0.58rem;
   font-weight: 800;
-  padding: 2px 8px;
-  border-radius: 10px;
-  letter-spacing: 0.6px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
 }
 
 .flip-clock-ticker {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 8px !important;
-  margin: 8px auto !important;
+  gap: 6px !important;
+  margin: 6px auto !important;
   user-select: none !important;
 }
 
@@ -51,18 +81,18 @@
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  gap: 4px !important;
+  gap: 3px !important;
 }
 
 .flip-card {
-  background: linear-gradient(180deg, #2b2825 0%, #1a1816 49%, #0f0e0d 51%, #1d1b19 100%) !important;
-  border: 1.5px solid rgba(212, 163, 115, 0.45) !important;
-  border-radius: 6px !important;
-  padding: 5px 6px !important;
-  min-width: 36px !important;
-  max-width: 42px !important;
+  background: linear-gradient(180deg, #2a2724 0%, #1a1816 49%, #0d0c0b 51%, #1c1a18 100%) !important;
+  border: 1.5px solid rgba(212, 163, 115, 0.5) !important;
+  border-radius: 7px !important;
+  padding: 6px 8px !important;
+  min-width: 44px !important;
+  max-width: 50px !important;
   text-align: center !important;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
   position: relative !important;
   overflow: hidden !important;
 }
@@ -73,33 +103,33 @@
   top: 50%;
   left: 0;
   right: 0;
-  height: 1.5px;
+  height: 1px;
   background: #000;
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .flip-digit {
-  font-family: 'Montserrat', 'Inter', sans-serif !important;
-  font-size: 1.05rem !important;
-  font-weight: 900 !important;
+  font-family: 'Montserrat', 'Inter', -apple-system, sans-serif !important;
+  font-size: 1.3rem !important;
+  font-weight: 800 !important;
   color: #fcf29b !important;
-  letter-spacing: 0px !important;
+  letter-spacing: 0.5px !important;
   display: block !important;
   font-variant-numeric: tabular-nums !important;
   line-height: 1 !important;
-  text-shadow: 0 0 10px rgba(252, 242, 155, 0.4);
+  text-shadow: 0 0 10px rgba(252, 242, 155, 0.35);
 }
 
 .flip-label {
-  font-size: 0.6rem !important;
+  font-size: 0.56rem !important;
   font-weight: 800 !important;
-  letter-spacing: 1px !important;
+  letter-spacing: 0.8px !important;
   color: var(--text-muted) !important;
   text-transform: uppercase !important;
 }
 
 .flip-colon {
-  font-size: 1.05rem !important;
+  font-size: 1.25rem !important;
   font-weight: 900 !important;
   color: var(--accent) !important;
   margin-bottom: 12px !important;

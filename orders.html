@@ -80,16 +80,20 @@
     </div>
   </aside>
   <div class="container">
-<!-- MECHANICAL FLIP-CLOCK CUTOFF TICKER & WEEKEND BATCH SCARCITY BAR -->
-<div class="countdown-ticker-card">
+<!-- DUAL-STREAM ROTATING BATCH CUTOFF TICKER & CAPACITY CARD -->
+<div class="countdown-ticker-card" id="dualStreamTickerCard">
+  <div class="stream-pill-toggle">
+    <button type="button" class="stream-pill active" id="pillPersonal" onclick="setTickerStream('PERSONAL', true)">🏠 Weekend Personal</button>
+    <button type="button" class="stream-pill" id="pillCorporate" onclick="setTickerStream('CORPORATE', true)">🏢 Friday Corporate</button>
+  </div>
   <div class="countdown-ticker-header">
-    <span>⏱️ Friday 10:00 PM Batch Cutoff</span>
-    <span class="countdown-live-badge">Live Ticker</span>
+    <span id="tickerCutoffHeader">⏱️ FRIDAY 10:00 PM BATCH CUTOFF</span>
+    <span class="countdown-live-badge" id="tickerStreamBadge">LIVE TICKER</span>
   </div>
   <div class="countdown-timer" id="countdownTimer"></div>
-  <div class="scarcity-bar-container" style="margin-top: 12px;">
+  <div class="scarcity-bar-container" style="margin-top: 10px;">
     <div class="scarcity-label">
-      <span>🔥 Limited Weekend Batch Capacity</span>
+      <span id="scarcityStreamTitle">🔥 Weekend Batch Capacity</span>
       <span id="scarcityText">Loading batch reserve...</span>
     </div>
     <div class="scarcity-track">

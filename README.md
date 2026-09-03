@@ -462,13 +462,21 @@ If Google Sheets API endpoint is unreachable or throttled, `app.js` automaticall
 * **Glowing Gradient Vertex Nodes:** Replaced basic dots with concentric glowing gradient nodes (outer 7px pulsing breathing aura circle \+ inner 3.5px high-contrast core).  
 * **Contextual Micro-Tooltips:** Hovering over individual axes (Bright Acidity, Floral Aromatics, Cane Sweetness, Body & Texture, Cup Clarity) displays real-time micro-tooltips with exact lot percentages and sensory descriptions (e.g., *"85% Wild Raspberry Acidity"*, *"95% Orange Blossom Aromatics"*, *"88% Raw Honey Sweetness"*).
 
-### **18.2 Animated Flip-Clock Ticker & Pulsing Capacity Bar**
+### **18.2 Dual-Stream Automatic Rotating Ticker & Capacity Engine**
 
-* **Flip-Clock Cutoff Countdown:** Replaced plain text timer with an animated flip-clock style mechanical ticker displaying `[ DAYS ] : [ HOURS ] : [ MINS ] : [ SECS ]` in tabular figures, styled with gold-edged flip cards and ambient depth shadows.  
-* **Tiered Scarcity Bar:**  
-  * **Normal State:** Standard gold gradient progress bar tracking total reserved bottles.  
-  * **Amber Warning (\< 20% Capacity Remaining):** Turns amber/orange (`#f39c12` / `#e76f51`) with a breathing glow animation (`@keyframes pulseCapacityAmber`) and warning badge (*"⚡ Only X Bottles Left"*).  
-  * **Red Critical (\< 10% Capacity Remaining):** Turns bright crimson (`#e63946`) with rapid pulsing glow (`@keyframes pulseCapacityRed`) and critical scarcity alert (*"🔥 CRITICAL: Only X Bottles Left\!"*).
+* 5-Second Auto-Cycling (INDEX, ORDERS, ABOUT):  
+  * Automatically rotates every 5 seconds between:  
+    1. 1\. 🏠 Weekend Personal Drops: Countdown to Friday 10:00 PM cutoff; displays weekend retail capacity (250 bottles).  
+    2. 2\. 🏢 Friday Corporate Drops: Countdown to Thursday 6:00 PM cutoff; displays Friday tech-park office batch capacity (350 bottles).  
+  * Includes manual override toggle pills (\#pillPersonal & \#pillCorporate) so visitors can instantly lock to their desired stream.  
+* Dedicated Single Streams (PERSONAL & CORPORATE Pages):  
+  * personal.html is locked strictly to Weekend Personal (Friday 10:00 PM).  
+  * corporate.html is locked strictly to Friday Corporate (Thursday 6:00 PM).  
+* Enlarged Mechanical Flip Cards & Compact Spacing:  
+  * Flip-card digits enlarged to 1.3rem with tabular-nums in high-contrast gold (\#fcf29b).  
+  * Card padding tightened to 6px 8px and container constrained to max-width: 380px for optimal mobile legibility without horizontal elongation.  
+  * Turns amber (`#f39c12` / `#e76f51`) when remaining batch capacity falls below 20%.  
+  * Turns crimson red (\#e63946) with rapid breathing pulse when remaining capacity falls below 10%.
 
 ### **18.3 Hardware-Accelerated Wizard Slide Transitions**
 

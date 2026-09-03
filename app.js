@@ -1625,6 +1625,7 @@ function applyStoreStatus(status) {
 
 function applyConfigToUI(data) {
   if (!data || data.action === 'track') return;
+  updateDualStreamUI();
 
   const isB2b = (PAGE === 'CORPORATE' || PAGE === 'OFFICE' || currentMode === 'B2B');
   const cap = isB2b ? (data.b2bBatchCapacity || 200) : (data.b2cBatchCapacity || 150);
@@ -1744,22 +1745,125 @@ function fetchLiveConfig() {
 // Live Countdown Timer for Pre-Order Cutoff
 // Live Countdown Timer for Pre-Order Cutoff with Flip-Clock Ticker
 // Live Countdown Timer for Pre-Order Cutoff with Flip-Clock Ticker
+// ====================================================================
+// DUAL-STREAM ROTATING COUNTDOWN & CAPACITY CONTROLLER
+// (Auto-cycles every 5s on INDEX, ORDERS, and ABOUT)
+// ====================================================================
+let activeTickerStream = 'PERSONAL'; // 'PERSONAL' (Fri 10PM) or 'CORPORATE' (Thu 6PM)
+let tickerAutoSwitchInterval = null;
+
+function setTickerStream(stream, manual) {
+  activeTickerStream = stream;
+  
+  const pillP = document.getElementById('pillPersonal');
+  const pillC = document.getElementById('pillCorporate');
+  if (pillP) pillP.classList.toggle('active', stream === 'PERSONAL');
+  if (pillC) pillC.classList.toggle('active', stream === 'CORPORATE');
+  
+  updateDualStreamUI();
+  
+  if (manual && tickerAutoSwitchInterval) {
+    clearInterval(tickerAutoSwitchInterval);
+    startTickerAutoSwitch();
+  }
+}
+
+function startTickerAutoSwitch() {
+  if (PAGE !== 'INDEX' && PAGE !== 'ORDERS' && PAGE !== 'ABOUT') return;
+  if (tickerAutoSwitchInterval) clearInterval(tickerAutoSwitchInterval);
+  
+  tickerAutoSwitchInterval = setInterval(function() {
+    const next = (activeTickerStream === 'PERSONAL') ? 'CORPORATE' : 'PERSONAL';
+    setTickerStream(next, false);
+  }, 5000);
+}
+
+function updateDualStreamUI() {
+  let stream = activeTickerStream;
+  if (PAGE === 'PERSONAL' || PAGE === 'ORDER') stream = 'PERSONAL';
+  if (PAGE === 'CORPORATE' || PAGE === 'OFFICE') stream = 'CORPORATE';
+  const isB2b = (stream === 'CORPORATE');
+
+  const headerEl = document.getElementById('tickerCutoffHeader');
+  if (headerEl) {
+    headerEl.textContent = isB2b 
+      ? '⏱️ THURSDAY 6:00 PM BATCH CUTOFF' 
+      : '⏱️ FRIDAY 10:00 PM BATCH CUTOFF';
+  }
+
+  const streamTitle = document.getElementById('scarcityStreamTitle');
+  if (streamTitle) {
+    streamTitle.textContent = isB2b 
+      ? '🏢 Friday Tech-Park Capacity' 
+      : '🔥 Weekend Batch Capacity';
+  }
+
+  let data = {};
+  try {
+    data = JSON.parse(localStorage.getItem('tabc_live_config')) || {};
+  } catch (e) {}
+
+  const cap = isB2b ? (data.b2bBatchCapacity || 350) : (data.b2cBatchCapacity || 250);
+  const resCount = isB2b ? (data.b2bReservedBottles || 0) : (data.b2cReservedBottles || 0);
+  const remBottles = isB2b 
+    ? (typeof data.b2bRemainingBatchBottles === 'number' ? data.b2bRemainingBatchBottles : Math.max(0, cap - resCount))
+    : (typeof data.b2cRemainingBatchBottles === 'number' ? data.b2cRemainingBatchBottles : Math.max(0, cap - resCount));
+
+  const remainingPct = cap > 0 ? (remBottles / cap) : 1;
+  const scarcityText = document.getElementById('scarcityText');
+  const scarcityFill = document.getElementById('scarcityFill');
+  const scarcityContainer = document.querySelector('.scarcity-bar-container');
+
+  if (scarcityFill) {
+    const pct = Math.min(Math.round((resCount / cap) * 100), 100);
+    scarcityFill.style.transform = `scaleX(${pct / 100})`;
+
+    scarcityFill.classList.remove('capacity-amber', 'capacity-red');
+    if (scarcityContainer) scarcityContainer.classList.remove('pulsing-amber', 'pulsing-red');
+
+    if (remainingPct <= 0.10) {
+      scarcityFill.classList.add('capacity-red');
+      if (scarcityContainer) scarcityContainer.classList.add('pulsing-red');
+      if (scarcityText) scarcityText.innerHTML = `<span style="color:#ff8fa3; font-weight:800;">🔥 CRITICAL: Only ${remBottles} Left!</span> (${resCount}/${cap})`;
+    } else if (remainingPct <= 0.20) {
+      scarcityFill.classList.add('capacity-amber');
+      if (scarcityContainer) scarcityContainer.classList.add('pulsing-amber');
+      if (scarcityText) scarcityText.innerHTML = `<span style="color:#ffb703; font-weight:800;">⚡ Only ${remBottles} Left</span> (${resCount}/${cap})`;
+    } else {
+      if (scarcityText) scarcityText.textContent = `${resCount} / ${cap} Bottles Reserved`;
+    }
+  }
+}
+// Live Countdown Timer for Pre-Order Cutoff with Flip-Clock Ticker
 function startCutoffCountdown() {
   function updateTimer() {
     const timerEls = document.querySelectorAll('.countdown-timer, #countdownTimer, .flip-clock-target');
     if (!timerEls || timerEls.length === 0) return;
 
     const now = new Date();
+    
+    let stream = activeTickerStream;
+    if (PAGE === 'PERSONAL' || PAGE === 'ORDER') stream = 'PERSONAL';
+    if (PAGE === 'CORPORATE' || PAGE === 'OFFICE') stream = 'CORPORATE';
+
     const target = new Date();
-    let daysUntilFri = (5 - now.getDay() + 7) % 7;
-    if (daysUntilFri === 0 && now.getHours() >= 22) daysUntilFri = 7;
-    target.setDate(now.getDate() + daysUntilFri);
-    target.setHours(22, 0, 0, 0);
+    if (stream === 'PERSONAL') {
+      let daysUntilFri = (5 - now.getDay() + 7) % 7;
+      if (daysUntilFri === 0 && now.getHours() >= 22) daysUntilFri = 7;
+      target.setDate(now.getDate() + daysUntilFri);
+      target.setHours(22, 0, 0, 0);
+    } else {
+      let daysUntilThu = (4 - now.getDay() + 7) % 7;
+      if (daysUntilThu === 0 && now.getHours() >= 18) daysUntilThu = 7;
+      target.setDate(now.getDate() + daysUntilThu);
+      target.setHours(18, 0, 0, 0);
+    }
+
     const diff = target - now;
 
     if (diff <= 0) {
       timerEls.forEach(el => {
-        el.innerHTML = "<div style='color:var(--accent); font-weight:800; font-size:0.8rem; padding:8px; text-align:center;'>⚡ Cutoff reached for this weekend's drop. Pre-orders queue for following drop.</div>";
+        el.innerHTML = "<div style='color:var(--accent); font-weight:800; font-size:0.78rem; padding:6px; text-align:center;'>⚡ Cutoff reached. Pre-orders queue for following drop.</div>";
       });
       return;
     }
@@ -1784,8 +1888,10 @@ function startCutoffCountdown() {
 
     timerEls.forEach(el => {
       const curSec = el.getAttribute('data-last-sec');
-      if (curSec !== String(secs)) {
+      const curStream = el.getAttribute('data-last-stream');
+      if (curSec !== String(secs) || curStream !== stream) {
         el.setAttribute('data-last-sec', String(secs));
+        el.setAttribute('data-last-stream', stream);
         el.innerHTML = flipHtml;
       }
     });
@@ -3364,9 +3470,11 @@ document.addEventListener('DOMContentLoaded', () => {
   } else if (PAGE === 'ORDERS') {
     renderHarvestGateway();
     startCutoffCountdown();
+    startTickerAutoSwitch();
     fetchLiveConfig();
   } else if (PAGE === 'INDEX') {
     startCutoffCountdown();
+    startTickerAutoSwitch();
     fetchLiveConfig();
     setInterval(fetchLiveConfig, 30000);
   } else if (PAGE === 'FLAVOR' || PAGE === 'MENU') {
@@ -3375,6 +3483,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderQuizUI(availableLots);
     updateQuizRecommendation();
   } else if (PAGE === "ABOUT") {
+    startCutoffCountdown(); startTickerAutoSwitch();
     fetchLiveConfig();
     setInterval(fetchLiveConfig, 30000);
   } else if (PAGE === 'TRACK') {
