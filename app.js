@@ -1743,10 +1743,12 @@ function fetchLiveConfig() {
 
 // Live Countdown Timer for Pre-Order Cutoff
 // Live Countdown Timer for Pre-Order Cutoff with Flip-Clock Ticker
+// Live Countdown Timer for Pre-Order Cutoff with Flip-Clock Ticker
 function startCutoffCountdown() {
   function updateTimer() {
-    const timerEl = document.getElementById('countdownTimer');
-    if (!timerEl) return;
+    const timerEls = document.querySelectorAll('.countdown-timer, #countdownTimer, .flip-clock-target');
+    if (!timerEls || timerEls.length === 0) return;
+
     const now = new Date();
     const target = new Date();
     let daysUntilFri = (5 - now.getDay() + 7) % 7;
@@ -1756,7 +1758,9 @@ function startCutoffCountdown() {
     const diff = target - now;
 
     if (diff <= 0) {
-      timerEl.innerHTML = "<div style='color:var(--accent); font-weight:800; font-size:0.8rem; padding:8px;'>⚡ Cutoff reached for next batch. Orders queue for following drop.</div>";
+      timerEls.forEach(el => {
+        el.innerHTML = "<div style='color:var(--accent); font-weight:800; font-size:0.8rem; padding:8px; text-align:center;'>⚡ Cutoff reached for this weekend's drop. Pre-orders queue for following drop.</div>";
+      });
       return;
     }
 
@@ -1767,7 +1771,7 @@ function startCutoffCountdown() {
 
     const pad = (n) => String(n).padStart(2, '0');
 
-    timerEl.innerHTML = 
+    const flipHtml = 
       '<div class="flip-clock-ticker">' +
         '<div class="flip-unit"><div class="flip-card"><span class="flip-digit">' + pad(days) + '</span></div><span class="flip-label">DAYS</span></div>' +
         '<span class="flip-colon">:</span>' +
@@ -1777,11 +1781,24 @@ function startCutoffCountdown() {
         '<span class="flip-colon">:</span>' +
         '<div class="flip-unit"><div class="flip-card"><span class="flip-digit">' + pad(secs) + '</span></div><span class="flip-label">SECS</span></div>' +
       '</div>';
+
+    timerEls.forEach(el => {
+      const curSec = el.getAttribute('data-last-sec');
+      if (curSec !== String(secs)) {
+        el.setAttribute('data-last-sec', String(secs));
+        el.innerHTML = flipHtml;
+      }
+    });
   }
 
   updateTimer();
   setInterval(updateTimer, 1000);
 }
+
+
+
+
+
 
 function setB2bPayOption(option) {
   currentB2bPayOption = option;
@@ -3346,6 +3363,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(fetchLiveConfig, 30000);
   } else if (PAGE === 'ORDERS') {
     renderHarvestGateway();
+    startCutoffCountdown();
     fetchLiveConfig();
   } else if (PAGE === 'INDEX') {
     startCutoffCountdown();

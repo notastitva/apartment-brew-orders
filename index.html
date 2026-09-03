@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -6,10 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>The Apartment Brew Co. | Micro-Batch Flash-Chilled Specialty Coffee</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
-
 </head>
 <head>
   <meta charset="UTF-8" />
@@ -36,13 +35,7 @@
   <div class="header-inner">
     <a href="/" class="nav-logo" aria-label="The Apartment Brew Co. Home">
       <div class="nav-logo-brand">
-        <!-- Standalone Emblem SVG -->
-        <img 
-          src="assets/tabc-emblem-gold-transparent.svg" 
-          alt="The Apartment Brew Co. Emblem" 
-          class="nav-logo-icon" 
-        />
-        <!-- Crisp, High-Resolution DOM Typography -->
+        <img src="assets/tabc-emblem-gold-transparent.svg" alt="The Apartment Brew Co. Emblem" class="nav-logo-icon" />
         <div class="nav-logo-titles">
           <span class="logo-text">The Apartment Brew Co.</span>
           <span class="logo-sub">Specialty Coffee &bull; Gurugram</span>
@@ -137,22 +130,42 @@
       <path d="M 30,22 L 30,35 L 12,75 L 12,226 A 6,6 0 0,0 18,232 L 82,232 A 6,6 0 0,0 88,226 L 88,75 L 70,35 L 70,22 Z" fill="none" stroke="url(#goldMini)" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
     </svg>
   </div>
-  <div class="stat-label">Glass bottles</div>
+  <div class="stat-label">200ml Glass</div>
 </div>
+          <div class="stat-icon">☕</div>
+          <div class="stat-label">100% Single-Estate</div>
+        </div>
         <div class="stat-box">
           <div class="stat-icon">❄️</div>
           <div class="stat-label">4&deg;C Flash-Chilled</div>
         </div>
         <div class="stat-box">
           <div class="stat-icon">⏱️</div>
-          <div class="stat-label">48-Hour Peak freshness</div>
+          <div class="stat-label">48-Hour Peak</div>
         </div>
         <div class="stat-box">
           <div class="stat-icon">🌿</div>
-          <div class="stat-label">0 Preservatives added</div>
+          <div class="stat-label">0 Preservatives</div>
         </div>
       </div>
     </section>
+    <!-- MECHANICAL FLIP-CLOCK CUTOFF TICKER & WEEKEND BATCH SCARCITY BAR -->
+    <div class="countdown-ticker-card">
+      <div class="countdown-ticker-header">
+        <span>⏱️ Friday 10:00 PM Batch Cutoff</span>
+        <span class="countdown-live-badge">Live Ticker</span>
+      </div>
+      <div class="countdown-timer" id="countdownTimer"></div>
+      <div class="scarcity-bar-container" style="margin-top: 12px;">
+        <div class="scarcity-label">
+          <span>🔥 Limited Weekend Batch Capacity</span>
+          <span id="scarcityText">Loading batch reserve...</span>
+        </div>
+        <div class="scarcity-track">
+          <div class="scarcity-fill" id="scarcityFill" style="width: 0%;"></div>
+        </div>
+      </div>
+    </div>
   
 <!-- SENSORY EXTRACTION SCIENCE &amp; GRAPH COMPARISON (REDESIGNED BOLD &amp; COLORFUL) -->
 <section class="section-card">
@@ -479,7 +492,7 @@
         </div>
       </div>
     </section>
-    
+
         <!-- STREAMLINED ORDERING & SERVICES HUB -->
     <section class="section-card">
       <div class="section-title">
@@ -519,8 +532,7 @@
         </a>
       </div>
     </section>
-
-        <!-- FREQUENTLY ASKED QUESTIONS &amp; HELPFUL GUIDES (CONSISTENT WITH TRACK.HTML) -->
+    <!-- FREQUENTLY ASKED QUESTIONS &amp; HELPFUL GUIDES (CONSISTENT WITH TRACK.HTML) -->
     <section class="section-card" style="margin-top: 14px;">
       <div class="section-title">
         <span>Frequently Asked Questions</span>
@@ -531,7 +543,7 @@
       </p>
       <div class="faq-accordion-group">
         <!-- FAQ 1: Tracking ID Reference -->
-        <details class="faq-item">
+<details class="faq-item">
           <summary class="faq-summary">
             <span>🔍 Tracking ID Reference</span>
           </summary>
