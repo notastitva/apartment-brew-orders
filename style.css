@@ -4127,3 +4127,144 @@ input:focus, select:focus, textarea:focus {
   white-space: nowrap;
 }
 
+/* ==================================================================== */
+/* COMPREHENSIVE RESPONSIVE DESKTOP & TABLET DESIGN SYSTEM              */
+/* ==================================================================== */
+
+/* Tablet Breakpoint (min-width: 768px) */
+@media (min-width: 768px) {
+  .container {
+    max-width: 760px;
+    padding: 0 24px;
+    gap: 20px;
+  }
+
+  .header-inner {
+    max-width: 760px;
+  }
+
+  .site-header-sticky {
+    padding: 14px 24px;
+  }
+
+  /* Hero Typography & Micro-Stats */
+  .hero-visual-card {
+    padding: 38px 28px 32px;
+  }
+
+  .hero-main-title {
+    font-size: 2.15rem;
+    line-height: 1.22;
+  }
+
+  .hero-lead-text {
+    font-size: 0.95rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-stats-row {
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .stat-box {
+    padding: 10px 4px !important;
+  }
+
+  /* Pack Grid Expansion (4-column row) */
+  .pack-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  /* Streamlined Gateway Hub & Comparisons */
+  .streamlined-hub-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  .comparison-cards-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  .destination-cards-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  .review-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 14px !important;
+  }
+
+  .stats-showcase-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .pairing-cards-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 14px !important;
+  }
+
+  .timeline-summary-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 14px !important;
+  }
+
+  .craft-flow-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 14px !important;
+  }
+}
+
+/* Wide Desktop Breakpoint (min-width: 1024px) */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1000px;
+    padding: 0 32px;
+    gap: 24px;
+  }
+
+  .header-inner {
+    max-width: 1000px;
+  }
+
+  .hero-visual-card {
+    padding: 46px 36px 36px;
+  }
+
+  .hero-main-title {
+    font-size: 2.45rem;
+    line-height: 1.25;
+  }
+
+  .countdown-ticker-card {
+    max-width: 420px;
+    padding: 12px 18px;
+  }
+
+  /* 2-Column Responsive Harvest Cards */
+  .harvest-lots-container {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 18px !important;
+  }
+
+  .harvest-preview-card.active {
+    grid-column: span 2;
+  }
+
+  /* Sensory Grid Cards (4 columns) */
+  .sensory-grid-cards {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 14px !important;
+  }
+
+  .stat-huge-multiplier {
+    font-size: 1.7rem !important;
+  }
+}

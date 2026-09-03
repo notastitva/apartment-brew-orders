@@ -17,16 +17,16 @@ All coffee across retail, corporate, and catering tiers is standardized into rec
 
 ## 📑 Table of Contents
 
-1. [Craft Philosophy & Operations](#1-craft-philosophy--operations)
-2. [Platform Architecture & Data Flow](#2-platform-architecture--data-flow)
-3. [Portal Directory & Clean-URL Routing](#3-portal-directory--clean-url-routing)
-4. [Interactive Frontend Engines](#4-interactive-frontend-engines)
-5. [Headless CMS Schema (Google Sheets)](#5-headless-cms-schema-google-sheets)
-6. [Database Schema & Order Ledgers](#6-database-schema--order-ledgers)
-7. [Self-Service Order Tracking State Machine](#7-self-service-order-tracking-state-machine)
-8. [Brewery Operational SOP & Drop Cycles](#8-brewery-operational-sop--drop-cycles)
-9. [Deployment & Environment Configuration](#9-deployment--environment-configuration)
-10. [Security, Performance & Resilience Guardrails](#10-security-performance--resilience-guardrails)
+1. [Craft Philosophy & Operations](#1-craft-philosophy--operations)  
+2. [Platform Architecture & Data Flow](#2-platform-architecture--data-flow)  
+3. [Portal Directory & Clean-URL Routing](#3-portal-directory--clean-url-routing)  
+4. [Interactive Frontend Engines](#heading=h.s9anyf326sxl)  
+5. [Headless CMS Schema (Google Sheets)](#heading=h.l652kpeao23h)  
+6. [Database Schema & Order Ledgers](#6-database-schema--order-ledgers)  
+7. [Self-Service Order Tracking State Machine](#heading=h.njko29qbya1w)  
+8. [Brewery Operational SOP & Drop Cycles](#8-brewery-operational-sop--drop-cycles)  
+9. [Deployment & Environment Configuration](#9-deployment--environment-configuration)  
+10. [Security, Performance & Resilience Guardrails](#10-security-performance--resilience-guardrails)  
 11. [Multi-Step Checkout Wizards & State Flows](#11-multi-step-checkout-wizards--state-flows)  
 12. [Promo Code & Discount Engine](#12-promo-code--discount-engine)  
 13. [Packaging, Bottle Specifications & Handwritten Batch Ledger](#13-packaging-bottle-specifications--handwritten-batch-ledger)  
@@ -34,7 +34,8 @@ All coffee across retail, corporate, and catering tiers is standardized into rec
 15. [Automated Email Receipts & Notification System](#15-automated-email-receipts--notification-system)  
 16. [Offline Resilience, Caching & Dynamic Fallbacks](#16-offline-resilience-caching--dynamic-fallbacks)  
 17. [Design System & Brand Asset Specifications](#17-design-system--brand-asset-specifications)  
-18. [Visual & Interaction Polls](#18.-visual-&-interaction-polish)
+18. [Visual & Interaction Polls](#18-visual--interaction-polish)  
+19. [Responsive Desktop & Tablet Design System](#19-responsive-desktop--tablet-design-system)
 
 ---
 
@@ -488,3 +489,23 @@ will-change: transform;
 ```
 
 * **Frictionless Navigation:** Navigating forward and backward smoothly shifts the viewport via `translateX(-0%)`, `translateX(-33.3333%)`, and `translateX(-66.6667%)` with GPU composition, eliminating layout jumps.
+
+## **19\. Responsive Desktop & Tablet Design System**
+
+### **19.1 Breakpoint Architecture**
+
+The stylesheet incorporates progressive enhancement media queries that unlock spacious desktop layouts while preserving the mobile-first UX on handheld devices:
+
+* **Mobile Default (\< 768px):** Constrained 540px mobile canvas with touch-optimized buttons and full-width card flows.  
+* **Tablet Breakpoint (`min-width: 768px`):**  
+  * Expands `.container` and `.header-inner` to `max-width: 760px` with `24px` horizontal padding.  
+  * `.pack-grid`: Expands into a 4-column single row (`grid-template-columns: repeat(4, 1fr)`) for both B2C and B2B ordering tiers.  
+  * `.hero-stats-row`: Expands into 5 evenly distributed columns (`repeat(5, 1fr)`).  
+  * `.streamlined-hub-grid`, `.comparison-cards-grid`, `.destination-cards-grid`, `.pairing-cards-grid`, `.timeline-summary-grid`: Expand into clean 2-column grids.  
+  * `.review-grid`: Displays 3 customer reviews across (`repeat(3, 1fr)`).  
+* **Wide Desktop Breakpoint (`min-width: 1024px`):**  
+  * Expands `.container` and `.header-inner` to `max-width: 1000px` with `32px` horizontal padding.  
+  * Hero Section: Typography scales up (`2.45rem` title, `0.95rem` lead paragraph) with spacious card padding (`46px 36px`).  
+  * `.harvest-lots-container`: Displays coffee harvests in a balanced 2-column layout (`repeat(2, 1fr)`), expanding active selections across the full width.  
+  * `.countdown-ticker-card`: Anchored and centered at `max-width: 420px`.  
+  * Sensory highlights expand into 4 columns with large numeric multipliers.
