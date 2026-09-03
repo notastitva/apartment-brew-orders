@@ -541,30 +541,6 @@ function updateQuizRecommendation() {
     if (btnCorporate) btnCorporate.href = '/corporate?bean=' + encodeURIComponent(lot.id);
   }
 }
-function showRadarMicroTooltip(evt, text) {
-  const tooltip = document.getElementById('radarMicroTooltip');
-  if (!tooltip) return;
-  tooltip.textContent = text;
-  tooltip.style.display = 'block';
-
-  const container = tooltip.parentElement;
-  if (container) {
-    const rect = container.getBoundingClientRect();
-    const x = evt.clientX - rect.left;
-    const y = evt.clientY - rect.top;
-    tooltip.style.left = Math.max(10, Math.min(x - 60, rect.width - 180)) + 'px';
-    tooltip.style.top = Math.max(10, y - 42) + 'px';
-  }
-
-  setTimeout(() => { tooltip.style.opacity = '1'; }, 10);
-}
-
-function hideRadarMicroTooltip() {
-  const tooltip = document.getElementById('radarMicroTooltip');
-  if (!tooltip) return;
-  tooltip.style.opacity = '0';
-  setTimeout(() => { tooltip.style.display = 'none'; }, 200);
-}
 
 
 function setRadarFocus(mode) {
@@ -613,6 +589,7 @@ function renderFlavorPage(lots) {
   }
 
   // 2. Render Radar SVG with Ambient Aura & Glowing Gradient Nodes
+  // 2. Render Radar SVG with Ambient Aura & Color-Matched Nodes
   if (svgContainer) {
     var defsHtml = '<defs>' +
       '<filter id="radarAuraFilter" x="-40%" y="-40%" width="180%" height="180%">' +
@@ -627,13 +604,6 @@ function renderFlavorPage(lots) {
     var angles = [-Math.PI/2, -18 * Math.PI/180, 54 * Math.PI/180, 126 * Math.PI/180, 198 * Math.PI/180];
     var cx = 200, cy = 120, maxR = 80;
 
-    var traitMap = {
-      'LOT-01': ["85% Wild Raspberry Acidity", "75% Dark Cacao Aromatics", "80% Dense Fruit Sweetness", "70% Velvety Winey Body", "65% Natural Cup Clarity"],
-      'LOT-02': ["75% Crisp Green Apple Acidity", "95% Orange Blossom Aromatics", "70% Cane Sugar Sweetness", "45% Light Tea-Like Body", "90% Crystalline Jasmine Clarity"],
-      'LOT-03': ["80% Bergamot Citrus Acidity", "88% Honeyed Blackcurrant Aromatics", "88% Raw Honey Sweetness", "55% Silky Texture & Viscosity", "85% Carbonic Maceration Clarity"],
-      'LOT-04': ["60% Gentle Soft Acidity", "65% Hazelnut Aromatics", "78% Dense Caramel Sweetness", "75% Medium-Heavy Rich Body", "70% Balanced Honey Clarity"]
-    };
-
     displayLots.forEach(function(lot) {
       var lotColor = lot.color || (lot.id === 'LOT-01' ? '#e76f51' : (lot.id === 'LOT-02' ? '#2a9d8f' : '#d4a373'));
       var gradId = 'radarGrad_' + lot.id.replace(/[^a-zA-Z0-9]/g, '_');
@@ -642,23 +612,22 @@ function renderFlavorPage(lots) {
         '<stop offset="100%" stop-color="#d4a373" stop-opacity="0.2" />' +
         '</linearGradient>';
 
+      var rawAcidity = typeof lot.acidity === 'number' ? lot.acidity : parseInt(lot.acidity, 10) || 75;
+      var rawAromatics = typeof lot.aromatics === 'number' ? lot.aromatics : parseInt(lot.aromatics, 10) || 80;
+      var rawSweetness = typeof lot.sweetness === 'number' ? lot.sweetness : parseInt(lot.sweetness, 10) || 75;
+      var rawBody = typeof lot.body === 'number' ? lot.body : parseInt(lot.body, 10) || 65;
+      var rawClarity = typeof lot.clarity === 'number' ? lot.clarity : parseInt(lot.clarity, 10) || 70;
+
       var vals = [
-        (lot.acidity || 75) / 100,
-        (lot.aromatics || 80) / 100,
-        (lot.sweetness || 75) / 100,
-        (lot.body || 65) / 100,
-        (lot.clarity || 70) / 100
+        rawAcidity / 100,
+        rawAromatics / 100,
+        rawSweetness / 100,
+        rawBody / 100,
+        rawClarity / 100
       ];
 
       var pointsArr = [];
       var nodesHtml = '';
-      var lotTraits = traitMap[lot.id] || [
-        Math.round(vals[0]*100) + "% Acidity",
-        Math.round(vals[1]*100) + "% Aromatics",
-        Math.round(vals[2]*100) + "% Sweetness",
-        Math.round(vals[3]*100) + "% Body",
-        Math.round(vals[4]*100) + "% Clarity"
-      ];
 
       for (var i = 0; i < 5; i++) {
         var r = maxR * Math.min(Math.max(vals[i], 0.2), 1.0);
@@ -666,89 +635,17 @@ function renderFlavorPage(lots) {
         var py = (cy + r * Math.sin(angles[i])).toFixed(1);
         pointsArr.push(px + ',' + py);
 
-        var tooltipText = lot.name + ': ' + lotTraits[i];
-        nodesHtml += '<g class="radar-vertex-interactive" onmouseenter="showRadarMicroTooltip(event, \'' + tooltipText + '\')" onmouseleave="hideRadarMicroTooltip()">' +
-          '<circle cx=\"' + px + '\" cy=\"' + py + '\" r=\"7\" fill=\"' + lotColor + '\" fill-opacity=\"0.35\" class=\"radar-node-pulse\" />' +
-          '<circle cx=\"' + px + '\" cy=\"' + py + '\" r=\"3.5\" fill=\"#fefae0\" stroke=\"' + lotColor + '\" stroke-width=\"2\" />' +
-        '</g>';
+        // Color-matched glowing dots without hover tooltips
+        nodesHtml += '<circle cx="' + px + '" cy="' + py + '" r="7" fill="' + lotColor + '" fill-opacity="0.3" class="radar-node-pulse" />' +
+          '<circle cx="' + px + '" cy="' + py + '" r="3.8" fill="' + lotColor + '" stroke="#ffffff" stroke-width="1.6" style="filter: drop-shadow(0 0 3px ' + lotColor + ');" />';
       }
 
-      polysHtml += '<g class="radar-lot-poly-group" id="radarGroup_" + lot.id + "" style="transition: all 0.35s ease;">' +
+      polysHtml += '<g class="radar-lot-poly-group" id="radarGroup_' + lot.id + '" style="transition: all 0.35s ease;">' +
         '<!-- Ambient Aura Glow -->' +
         '<polygon points="' + pointsArr.join(' ') + '" fill="none" stroke="' + lotColor + '" stroke-width="6" stroke-opacity="0.25" filter="url(#radarAuraFilter)" />' +
         '<!-- Main Filled Polygon -->' +
         '<polygon points="' + pointsArr.join(' ') + '" fill="url(#' + gradId + ')" stroke="' + lotColor + '" stroke-width="2.5" style="filter: drop-shadow(0 0 6px ' + lotColor + '88);" />' +
         nodesHtml +
-        '</g>';
-    });
-    defsHtml += '</defs>';
-
-    var gridPolys = [
-      '<polygon points="200,100 219.0,113.8 211.8,136.2 188.2,136.2 181.0,113.8" stroke="rgba(255,255,255,0.08)" stroke-width="1" fill="none" />',
-      '<polygon points="200,80 238.0,107.6 223.5,152.4 176.5,152.4 162.0,107.6" stroke="rgba(255,255,255,0.1)" stroke-width="1" fill="none" />',
-      '<polygon points="200,60 257.1,101.5 235.3,168.5 164.7,168.5 142.9,101.5" stroke="rgba(255,255,255,0.12)" stroke-width="1" fill="none" />',
-      '<polygon points="200,40 276.1,95.3 247.0,184.7 153.0,184.7 123.9,95.3" stroke="rgba(212,163,115,0.3)" stroke-width="1.2" fill="none" />'
-    ].join('');
-
-    var spokes = [
-      '<line x1="200" y1="120" x2="200" y2="40" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />',
-      '<line x1="200" y1="120" x2="276.1" y2="95.3" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />',
-      '<line x1="200" y1="120" x2="247.0" y2="184.7" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />',
-      '<line x1="200" y1="120" x2="153.0" y2="184.7" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />',
-      '<line x1="200" y1="120" x2="123.9" y2="95.3" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />'
-    ].join('');
-
-    var labels = [
-      '<text x="200" y="26" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="middle" class="radar-vertex-interactive" onmouseenter="showRadarMicroTooltip(event, \'Acidity: Vibrant fruit sparkle & esters\')" onmouseleave="hideRadarMicroTooltip()">Bright Acidity</text>',
-      '<text x="292" y="93" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="start" class="radar-vertex-interactive" onmouseenter="showRadarMicroTooltip(event, \'Aromatics: Floral terpenes & volatile notes\')" onmouseleave="hideRadarMicroTooltip()">Floral Aromatics</text>',
-      '<text x="258" y="204" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="start" class="radar-vertex-interactive" onmouseenter="showRadarMicroTooltip(event, \'Sweetness: Natural fruit & cane sugars\')" onmouseleave="hideRadarMicroTooltip()">Cane Sweetness</text>',
-      '<text x="142" y="204" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="end" class="radar-vertex-interactive" onmouseenter="showRadarMicroTooltip(event, \'Body: Silky or velvety palate viscosity\')" onmouseleave="hideRadarMicroTooltip()">Body &amp; Texture</text>',
-      '<text x="108" y="93" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="end" class="radar-vertex-interactive" onmouseenter="showRadarMicroTooltip(event, \'Clarity: Separation of individual tasting notes\')" onmouseleave="hideRadarMicroTooltip()">Cup Clarity</text>'
-    ].join('');
-
-    svgContainer.innerHTML = '<div style="position:relative; width:100%; max-width:380px; margin:0 auto;">' +
-      '<svg viewBox="0 0 400 250" style="width: 100%; height: auto; display: block;" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-      defsHtml + gridPolys + spokes + polysHtml + labels +
-      '</svg>' +
-      '<div id="radarMicroTooltip" class="radar-micro-tooltip-box" style="display:none; opacity:0;"></div>' +
-      '</div>';
-  }
-  if (svgContainer) {
-    var defsHtml = '<defs>';
-    var polysHtml = '';
-
-    var angles = [-Math.PI/2, -18 * Math.PI/180, 54 * Math.PI/180, 126 * Math.PI/180, 198 * Math.PI/180];
-    var cx = 200, cy = 120, maxR = 80;
-
-    displayLots.forEach(function(lot) {
-      var lotColor = lot.color || (lot.id === 'LOT-01' ? '#e76f51' : (lot.id === 'LOT-02' ? '#2a9d8f' : '#d4a373'));
-      var gradId = 'radarGrad_' + lot.id.replace(/[^a-zA-Z0-9]/g, '_');
-      defsHtml += '<linearGradient id="' + gradId + '" x1="0%" y1="0%" x2="100%" y2="100%">' +
-        '<stop offset="0%" stop-color="' + lotColor + '" stop-opacity="0.65" />' +
-        '<stop offset="100%" stop-color="#d4a373" stop-opacity="0.2" />' +
-        '</linearGradient>';
-
-      var vals = [
-        (lot.acidity || 75) / 100,
-        (lot.aromatics || 80) / 100,
-        (lot.sweetness || 75) / 100,
-        (lot.body || 65) / 100,
-        (lot.clarity || 70) / 100
-      ];
-
-      var pointsArr = [];
-      var circlesHtml = '';
-      for (var i = 0; i < 5; i++) {
-        var r = maxR * Math.min(Math.max(vals[i], 0.2), 1.0);
-        var px = (cx + r * Math.cos(angles[i])).toFixed(1);
-        var py = (cy + r * Math.sin(angles[i])).toFixed(1);
-        pointsArr.push(px + ',' + py);
-        circlesHtml += '<circle cx="' + px + '" cy="' + py + '" r="3.5" fill="' + lotColor + '" />';
-      }
-
-      polysHtml += '<g class="radar-lot-poly-group" id="radarGroup_' + lot.id + '" style="transition: all 0.35s ease;">' +
-        '<polygon points="' + pointsArr.join(' ') + '" fill="url(#' + gradId + ')" stroke="' + lotColor + '" stroke-width="2.5" style="filter: drop-shadow(0 0 6px ' + lotColor + '88);" />' +
-        circlesHtml +
         '</g>';
     });
     defsHtml += '</defs>';
