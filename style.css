@@ -5,10 +5,10 @@
   background: rgba(24, 22, 20, 0.96);
   border: 1.5px solid var(--card-border);
   border-radius: 12px;
-  padding: 10px 12px;
-  margin: 10px auto 14px;
-  max-width: 380px;
+  padding: 12px 14px;
+  margin: 10px 0 14px;
   width: 100%;
+  max-width: 100%;
   text-align: center;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   position: relative;
@@ -1658,13 +1658,18 @@ body::before {
   align-items: flex-start;
 }
 
-.wizard-step-panel {
+.wizard-slider-track .wizard-step-panel {
   flex: 0 0 33.333333%;
   width: 33.333333%;
   max-width: 33.333333%;
   box-sizing: border-box;
   margin: 0;
   transition: opacity 0.25s ease;
+}
+
+.wizard-step-panel {
+  width: 100%;
+  max-width: 100%;
 }
 
 .wizard-step-node.node-active .node-circle {
@@ -4121,3 +4126,4 @@ input:focus, select:focus, textarea:focus {
   transition: opacity 0.2s ease, transform 0.2s ease;
   white-space: nowrap;
 }
+

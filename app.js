@@ -1088,6 +1088,10 @@ function goToWizardStep(stepNum) {
   // Hardware-Accelerated Slide Transitions
   const track = document.getElementById('wizardSliderTrack');
   if (track) {
+    for (let i = 1; i <= 3; i++) {
+      const panel = document.getElementById(`stepPanel${i}`);
+      if (panel) panel.style.display = 'block';
+    }
     const shiftPct = (stepNum - 1) * (100 / 3);
     track.style.transform = `translateX(-${shiftPct.toFixed(4)}%)`;
 
