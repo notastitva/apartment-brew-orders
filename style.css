@@ -4220,6 +4220,69 @@ input:focus, select:focus, textarea:focus {
     gap: 14px !important;
   }
 }
+  /* Responsive Ticker Scaling (Tablet - min-width: 768px) */
+  .countdown-ticker-card {
+    max-width: 520px;
+    padding: 14px 20px;
+    margin: 14px auto 18px;
+    border-radius: 14px;
+  }
+
+  .stream-pill-toggle {
+    margin-bottom: 10px;
+    padding: 3px;
+    gap: 4px;
+  }
+
+  .stream-pill {
+    font-size: 0.72rem;
+    padding: 5px 12px;
+  }
+
+  .countdown-ticker-header {
+    font-size: 0.76rem;
+    margin-bottom: 8px;
+  }
+
+  .countdown-live-badge {
+    font-size: 0.65rem;
+    padding: 3px 8px;
+  }
+
+  .flip-clock-ticker {
+    gap: 8px !important;
+    margin: 8px auto !important;
+  }
+
+  .flip-card {
+    min-width: 58px !important;
+    max-width: 68px !important;
+    padding: 8px 10px !important;
+    border-radius: 8px !important;
+  }
+
+  .flip-digit {
+    font-size: 1.65rem !important;
+    letter-spacing: 1px !important;
+  }
+
+  .flip-label {
+    font-size: 0.64rem !important;
+    letter-spacing: 0.9px !important;
+  }
+
+  .flip-colon {
+    font-size: 1.5rem !important;
+    margin-bottom: 16px !important;
+  }
+
+  .scarcity-track {
+    height: 10px;
+  }
+
+  .scarcity-label {
+    font-size: 0.78rem;
+  }
 
 /* Wide Desktop Breakpoint (min-width: 1024px) */
 @media (min-width: 1024px) {
@@ -4242,9 +4305,71 @@ input:focus, select:focus, textarea:focus {
     line-height: 1.25;
   }
 
+  /* Responsive Ticker Scaling (Desktop - min-width: 1024px) */
   .countdown-ticker-card {
-    max-width: 420px;
-    padding: 12px 18px;
+    max-width: 620px;
+    padding: 16px 24px;
+    margin: 16px auto 22px;
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  .stream-pill-toggle {
+    margin-bottom: 12px;
+    padding: 4px;
+    gap: 6px;
+  }
+
+  .stream-pill {
+    font-size: 0.78rem;
+    padding: 6px 16px;
+  }
+
+  .countdown-ticker-header {
+    font-size: 0.82rem;
+    margin-bottom: 10px;
+  }
+
+  .countdown-live-badge {
+    font-size: 0.68rem;
+    padding: 3px 10px;
+  }
+
+  .flip-clock-ticker {
+    gap: 10px !important;
+    margin: 10px auto !important;
+  }
+
+  .flip-card {
+    min-width: 72px !important;
+    max-width: 82px !important;
+    padding: 10px 14px !important;
+    border-radius: 10px !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  }
+
+  .flip-digit {
+    font-size: 2.05rem !important;
+    letter-spacing: 1.5px !important;
+  }
+
+  .flip-label {
+    font-size: 0.7rem !important;
+    letter-spacing: 1.1px !important;
+    margin-top: 2px;
+  }
+
+  .flip-colon {
+    font-size: 1.9rem !important;
+    margin-bottom: 20px !important;
+  }
+
+  .scarcity-track {
+    height: 11px;
+  }
+
+  .scarcity-label {
+    font-size: 0.82rem;
   }
 
   /* 2-Column Responsive Harvest Cards */
