@@ -641,23 +641,33 @@ function renderFlavorPage(lots) {
         '<stop offset="0%" stop-color="' + lotColor + '" stop-opacity="0.65" />' +
         '<stop offset="100%" stop-color="#d4a373" stop-opacity="0.2" />' +
         '</linearGradient>';
-
+      var lotColor = lot.color || (lot.id === 'LOT-01' ? '#e76f51' : (lot.id === 'LOT-02' ? '#2a9d8f' : '#d4a373'));
+      var gradId = 'radarGrad_' + lot.id.replace(/[^a-zA-Z0-9]/g, '_');
+      defsHtml += '<linearGradient id="' + gradId + '" x1="0%" y1="0%" x2="100%" y2="100%">' +
+        '<stop offset="0%" stop-color="' + lotColor + '" stop-opacity="0.65" />' +
+        '<stop offset="100%" stop-color="#d4a373" stop-opacity="0.2" />' +
+        '</linearGradient>';
+      // Read values dynamically from live lot metrics
+      var rawAcidity = typeof lot.acidity === 'number' ? lot.acidity : parseInt(lot.acidity, 10) || 75;
+      var rawAromatics = typeof lot.aromatics === 'number' ? lot.aromatics : parseInt(lot.aromatics, 10) || 80;
+      var rawSweetness = typeof lot.sweetness === 'number' ? lot.sweetness : parseInt(lot.sweetness, 10) || 75;
+      var rawBody = typeof lot.body === 'number' ? lot.body : parseInt(lot.body, 10) || 65;
+      var rawClarity = typeof lot.clarity === 'number' ? lot.clarity : parseInt(lot.clarity, 10) || 70;
       var vals = [
-        (lot.acidity || 75) / 100,
-        (lot.aromatics || 80) / 100,
-        (lot.sweetness || 75) / 100,
-        (lot.body || 65) / 100,
-        (lot.clarity || 70) / 100
+        rawAcidity / 100,
+        rawAromatics / 100,
+        rawSweetness / 100,
+        rawBody / 100,
+        rawClarity / 100
       ];
-
       var pointsArr = [];
       var nodesHtml = '';
-      var lotTraits = traitMap[lot.id] || [
-        Math.round(vals[0]*100) + "% Acidity",
-        Math.round(vals[1]*100) + "% Aromatics",
-        Math.round(vals[2]*100) + "% Sweetness",
-        Math.round(vals[3]*100) + "% Body",
-        Math.round(vals[4]*100) + "% Clarity"
+      var lotTraits = [
+        rawAcidity + '% ' + (lot.id === 'LOT-01' ? 'Wild Raspberry Acidity' : (lot.id === 'LOT-02' ? 'Crisp Green Apple Acidity' : (lot.id === 'LOT-04' ? 'Gentle Soft Acidity' : 'Fruit Acidity'))),
+        rawAromatics + '% ' + (lot.id === 'LOT-01' ? 'Dark Cacao & Jasmine Aromatics' : (lot.id === 'LOT-02' ? 'Orange Blossom Aromatics' : (lot.id === 'LOT-04' ? 'Hazelnut & Spiced Plum Aromatics' : 'Volatile Aromatics'))),
+        rawSweetness + '% ' + (lot.id === 'LOT-01' ? 'Dense Fruit Sugar Sweetness' : (lot.id === 'LOT-02' ? 'Clean Sugarcane Sweetness' : (lot.id === 'LOT-04' ? 'Caramel & Toffee Sweetness' : 'Natural Sweetness'))),
+        rawBody + '% ' + (lot.id === 'LOT-01' ? 'Velvety Winey Body' : (lot.id === 'LOT-02' ? 'Light Tea-Like Body' : (lot.id === 'LOT-04' ? 'Medium-Heavy Rich Body' : 'Palate Viscosity'))),
+        rawClarity + '% ' + (lot.id === 'LOT-01' ? 'Balanced Natural Clarity' : (lot.id === 'LOT-02' ? 'Crystalline Jasmine Clarity' : (lot.id === 'LOT-04' ? 'Balanced Honey Clarity' : 'Cup Clarity')))
       ];
 
       for (var i = 0; i < 5; i++) {
@@ -667,13 +677,15 @@ function renderFlavorPage(lots) {
         pointsArr.push(px + ',' + py);
 
         var tooltipText = lot.name + ': ' + lotTraits[i];
-        nodesHtml += '<g class="radar-vertex-interactive" onmouseenter="showRadarMicroTooltip(event, \'' + tooltipText + '\')" onmouseleave="hideRadarMicroTooltip()">' +
-          '<circle cx=\"' + px + '\" cy=\"' + py + '\" r=\"7\" fill=\"' + lotColor + '\" fill-opacity=\"0.35\" class=\"radar-node-pulse\" />' +
-          '<circle cx=\"' + px + '\" cy=\"' + py + '\" r=\"3.5\" fill=\"#fefae0\" stroke=\"' + lotColor + '\" stroke-width=\"2\" />' +
+        // Dots match the exact graph color with outer pulsing halo
+        nodesHtml += '<g class="radar-vertex-interactive" onmouseenter="showRadarMicroTooltip(event, \'' + tooltipText + '\')" onclick="showRadarMicroTooltip(event, \'' + tooltipText + '\')" onmouseleave="hideRadarMicroTooltip()">' +
+          '<circle cx="' + px + '" cy="' + py + '" r="7.5" fill="' + lotColor + '" fill-opacity="0.3" class="radar-node-pulse" />' +
+          '<circle cx="' + px + '" cy="' + py + '" r="3.8" fill="' + lotColor + '" stroke="#ffffff" stroke-width="1.6" style="filter: drop-shadow(0 0 3px ' + lotColor + ');" />' +
         '</g>';
       }
 
-      polysHtml += '<g class="radar-lot-poly-group" id="radarGroup_" + lot.id + "" style="transition: all 0.35s ease;">' +
+      // Properly concatenate lot ID to enable setRadarFocus() tab switching
+      polysHtml += '<g class="radar-lot-poly-group" id="radarGroup_' + lot.id + '" style="transition: all 0.35s ease;">' +
         '<!-- Ambient Aura Glow -->' +
         '<polygon points="' + pointsArr.join(' ') + '" fill="none" stroke="' + lotColor + '" stroke-width="6" stroke-opacity="0.25" filter="url(#radarAuraFilter)" />' +
         '<!-- Main Filled Polygon -->' +
