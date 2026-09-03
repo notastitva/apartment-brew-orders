@@ -459,8 +459,8 @@ If Google Sheets API endpoint is unreachable or throttled, `app.js` automaticall
 ### **18.1 5-Axis Sensory Radar Polygon Enhancements**
 
 * **Ambient Aura Effect:** Added an SVG Gaussian blur filter (`#radarAuraFilter`, `stdDeviation="5"`) and dual-stroke layering that projects an ambient, theme-colored aura behind each estate's sensory polygon.  
-* **Glowing Gradient Vertex Nodes:** Replaced basic dots with concentric glowing gradient nodes (outer 7px pulsing breathing aura circle \+ inner 3.5px high-contrast core).  
-* **Contextual Micro-Tooltips:** Hovering over individual axes (Bright Acidity, Floral Aromatics, Cane Sweetness, Body & Texture, Cup Clarity) displays real-time micro-tooltips with exact lot percentages and sensory descriptions (e.g., *"85% Wild Raspberry Acidity"*, *"95% Orange Blossom Aromatics"*, *"88% Raw Honey Sweetness"*).
+* **Color-Matched Glowing Vertex Nodes:** Each vertex displays concentric circles matching the harvest's exact theme color (outer 7.5px breathing aura halo \+ inner 3.8px color-filled node with a crisp white edge), keeping the visual presentation clean and distraction-free.  
+* Dynamic Metric Calibration: Values across all 5 axes (Bright Acidity, Floral Aromatics, Cane Sweetness, Body & Texture, Cup Clarity) map dynamically to live lot metrics fetched from Google Sheets.
 
 ### **18.2 Dual-Stream Automatic Rotating Ticker & Capacity Engine**
 

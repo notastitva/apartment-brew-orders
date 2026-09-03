@@ -541,30 +541,6 @@ function updateQuizRecommendation() {
     if (btnCorporate) btnCorporate.href = '/corporate?bean=' + encodeURIComponent(lot.id);
   }
 }
-function showRadarMicroTooltip(evt, text) {
-  const tooltip = document.getElementById('radarMicroTooltip');
-  if (!tooltip) return;
-  tooltip.textContent = text;
-  tooltip.style.display = 'block';
-
-  const container = tooltip.parentElement;
-  if (container) {
-    const rect = container.getBoundingClientRect();
-    const x = evt.clientX - rect.left;
-    const y = evt.clientY - rect.top;
-    tooltip.style.left = Math.max(10, Math.min(x - 60, rect.width - 180)) + 'px';
-    tooltip.style.top = Math.max(10, y - 42) + 'px';
-  }
-
-  setTimeout(() => { tooltip.style.opacity = '1'; }, 10);
-}
-
-function hideRadarMicroTooltip() {
-  const tooltip = document.getElementById('radarMicroTooltip');
-  if (!tooltip) return;
-  tooltip.style.opacity = '0';
-  setTimeout(() => { tooltip.style.display = 'none'; }, 200);
-}
 
 
 function setRadarFocus(mode) {
@@ -675,13 +651,9 @@ function renderFlavorPage(lots) {
         var px = (cx + r * Math.cos(angles[i])).toFixed(1);
         var py = (cy + r * Math.sin(angles[i])).toFixed(1);
         pointsArr.push(px + ',' + py);
-
-        var tooltipText = lot.name + ': ' + lotTraits[i];
-        // Dots match the exact graph color with outer pulsing halo
-        nodesHtml += '<g class="radar-vertex-interactive" onmouseenter="showRadarMicroTooltip(event, \'' + tooltipText + '\')" onclick="showRadarMicroTooltip(event, \'' + tooltipText + '\')" onmouseleave="hideRadarMicroTooltip()">' +
-          '<circle cx="' + px + '" cy="' + py + '" r="7.5" fill="' + lotColor + '" fill-opacity="0.3" class="radar-node-pulse" />' +
-          '<circle cx="' + px + '" cy="' + py + '" r="3.8" fill="' + lotColor + '" stroke="#ffffff" stroke-width="1.6" style="filter: drop-shadow(0 0 3px ' + lotColor + ');" />' +
-        '</g>';
+        // Color-matched glowing dots without hover tooltips
+        nodesHtml += '<circle cx="' + px + '" cy="' + py + '" r="7" fill="' + lotColor + '" fill-opacity="0.3" class="radar-node-pulse" />' +
+          '<circle cx="' + px + '" cy="' + py + '" r="3.8" fill="' + lotColor + '" stroke="#ffffff" stroke-width="1.6" style="filter: drop-shadow(0 0 3px ' + lotColor + ');" />';
       }
 
       // Properly concatenate lot ID to enable setRadarFocus() tab switching
@@ -711,19 +683,16 @@ function renderFlavorPage(lots) {
     ].join('');
 
     var labels = [
-      '<text x="200" y="26" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="middle" class="radar-vertex-interactive" onmouseenter="showRadarMicroTooltip(event, \'Acidity: Vibrant fruit sparkle & esters\')" onmouseleave="hideRadarMicroTooltip()">Bright Acidity</text>',
-      '<text x="292" y="93" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="start" class="radar-vertex-interactive" onmouseenter="showRadarMicroTooltip(event, \'Aromatics: Floral terpenes & volatile notes\')" onmouseleave="hideRadarMicroTooltip()">Floral Aromatics</text>',
-      '<text x="258" y="204" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="start" class="radar-vertex-interactive" onmouseenter="showRadarMicroTooltip(event, \'Sweetness: Natural fruit & cane sugars\')" onmouseleave="hideRadarMicroTooltip()">Cane Sweetness</text>',
-      '<text x="142" y="204" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="end" class="radar-vertex-interactive" onmouseenter="showRadarMicroTooltip(event, \'Body: Silky or velvety palate viscosity\')" onmouseleave="hideRadarMicroTooltip()">Body &amp; Texture</text>',
-      '<text x="108" y="93" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="end" class="radar-vertex-interactive" onmouseenter="showRadarMicroTooltip(event, \'Clarity: Separation of individual tasting notes\')" onmouseleave="hideRadarMicroTooltip()">Cup Clarity</text>'
+      '<text x="200" y="26" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="middle">Bright Acidity</text>',
+      '<text x="292" y="93" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="start">Floral Aromatics</text>',
+      '<text x="258" y="204" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="start">Cane Sweetness</text>',
+      '<text x="142" y="204" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="end">Body &amp; Texture</text>',
+      '<text x="108" y="93" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="end">Cup Clarity</text>'
     ].join('');
 
-    svgContainer.innerHTML = '<div style="position:relative; width:100%; max-width:380px; margin:0 auto;">' +
-      '<svg viewBox="0 0 400 250" style="width: 100%; height: auto; display: block;" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+    svgContainer.innerHTML = '<svg viewBox="0 0 400 250" style="width: 100%; max-width: 380px; height: auto; margin: 0 auto; display: block;" fill="none" xmlns="http://www.w3.org/2000/svg">' +
       defsHtml + gridPolys + spokes + polysHtml + labels +
-      '</svg>' +
-      '<div id="radarMicroTooltip" class="radar-micro-tooltip-box" style="display:none; opacity:0;"></div>' +
-      '</div>';
+      '</svg>';
   }
 
   // 3. Render Side-by-Side Sensory Spectrum Bars
