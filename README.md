@@ -488,9 +488,23 @@ transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 will-change: transform;
 ```
 
+### **18.4 Desktop Layout & Parallel Alignment Optimizations (index.html)**
+
+**Decoupled Full-Length Cards:** Removed `.parallel-card-deck` 50/50 split wrappers so each core content block spans full width on desktop viewports.  
+**1\. Sensory Profile & Extraction:** Full-width card with all 4 sensory metric cards (Aromatics, Acidity, Sweetness, Clarity) arranged in parallel across 4 columns (`grid-template-columns: repeat(4, 1fr)`).  
+**2\. 48-Hour Freshness Peak:** 2-tier layout featuring the full-width SVG freshness curve on Line 1, and the 3 milestone cards (Hours 0–12, Hours 12–36, Hours 36–48) arranged in 3 parallel columns on Line 2 (`grid-template-columns: repeat(3, 1fr)`).  
+**3\. The Craft Process:** 3-step brewing methodology laid out in 3 parallel columns (`grid-template-columns: repeat(3, 1fr)`).  
+**4\. "Confused About What to Order?" Banner:** Single horizontal line banner on desktop (`.confused-order-banner`) with icon \+ title \+ descriptor on the left and primary CTA button on the right.  
+**5\. The Comparison Matrix:** 3 comparison cards (The Apartment Brew Co., Commercial Cold Brew, Instant) aligned side-by-side in 3 parallel columns (`grid-template-columns: repeat(3, 1fr)`).
+
+```css
+transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+will-change: transform;
+```
+
 * **Frictionless Navigation:** Navigating forward and backward smoothly shifts the viewport via `translateX(-0%)`, `translateX(-33.3333%)`, and `translateX(-66.6667%)` with GPU composition, eliminating layout jumps.
 
-### **18.4 Responsive Desktop Parallel Card Architecture & Full-Width Ticker**
+### **18.5 Responsive Desktop Parallel Card Architecture & Full-Width Ticker**
 
 * **Full-Width Ticker Integration:** Removed fixed `max-width` bottlenecks on `.countdown-ticker-card` across tablet (`768px`) and desktop (`1024px`) breakpoints (`width: 100% !important; max-width: 100% !important;`). The ticker card now aligns flush with the full width of `.hero-visual-card` and `.section-card`, while its internal mechanical flip cards and dual-stream toggle remain centered.  
 * **Responsive Parallel Card Decks (`.parallel-card-deck`):**  
@@ -498,6 +512,8 @@ will-change: transform;
   * On screens `≥ 860px` (laptops and desktops), cards auto-switch to a 2-column grid (`grid-template-columns: repeat(2, 1fr); gap: 20px; align-items: stretch;`):  
     1. **Homepage (`index.html`):** *Sensory Profile & Science* card sits parallel to *48-Hour Freshness Curve*; *Flavor Guidance* card sits parallel to *The Comparison (How We Differ)* card.  
     2. **Flavor Page (`flavor.html`):** *5-Axis Sensory Radar* sits parallel to *Side-by-Side Spectrum Bars*; *Process Science* sits parallel to *Food Pairings*.
+
+\---
 
 ## **19\. SEO, LocalBusiness Schema & Mobile Form Architecture**
 

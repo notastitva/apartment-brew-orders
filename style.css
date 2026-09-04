@@ -4100,50 +4100,77 @@ input:focus, select:focus, textarea:focus {
   100% { r: 8px; opacity: 0.75; }
 }
 
+/* ==================================================================== */
+/* "CONFUSED ABOUT WHAT TO ORDER?" GUIDANCE BANNER                      */
+/* ==================================================================== */
+.confused-order-banner {
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.confused-order-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.confused-order-icon {
+  font-size: 1.6rem;
+}
+
+.confused-order-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.confused-order-title {
+  font-family: var(--tabc-font-display, 'Montserrat', sans-serif);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: 0.3px;
+}
+
+.confused-order-sub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  max-width: 460px;
+}
+
+.confused-order-btn {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 340px;
+}
+
 
 /* ==================================================================== */
 /* COMPREHENSIVE RESPONSIVE DESKTOP & TABLET DESIGN SYSTEM              */
 /* ==================================================================== */
 
 /* ==================================================================== */
-/* PARALLEL CARD DECKS FOR WIDER SCREENS (min-width: 860px)             */
+/* RESPONSIVE BREAKPOINTS (Desktop & Tablet Expansion)                  */
 /* ==================================================================== */
-.parallel-card-deck {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-}
-
-@media (min-width: 860px) {
-  .parallel-card-deck {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 20px !important;
-    align-items: stretch !important;
-    width: 100% !important;
-  }
-
-  .parallel-card-deck > .section-card,
-  .parallel-card-deck > article {
-    margin: 0 !important;
-    height: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
-  }
-}
-
-/* Tablet Breakpoint (min-width: 768px) */
+/* Tablet & Desktop Breakpoint (min-width: 768px) */
 @media (min-width: 768px) {
   .container {
-    max-width: 760px;
+    max-width: 960px;
     padding: 0 24px;
     gap: 20px;
   }
 
   .header-inner {
-    max-width: 760px;
+    max-width: 960px;
   }
 
   .site-header-sticky {
@@ -4176,19 +4203,128 @@ input:focus, select:focus, textarea:focus {
     padding: 10px 4px !important;
   }
 
+  /* 1. Sensory Profile & Extraction: 4 columns in parallel */
+  .sensory-grid-cards {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 14px !important;
+  }
+
+  .stat-huge-multiplier {
+    font-size: 1.55rem !important;
+  }
+
+  /* 2. 48-Hour Freshness: Graph on Line 1 (100%), 3 Cards on Line 2 (in parallel) */
+  .freshness-graph-wrapper {
+    width: 100% !important;
+    display: block !important;
+    margin-bottom: 16px !important;
+  }
+
+  .timeline-summary-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 14px !important;
+    width: 100% !important;
+  }
+
+  .timeline-point-card {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+
+  /* 3. The Craft Process: 3 steps in parallel */
+  .craft-flow-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 16px !important;
+    align-items: stretch !important;
+  }
+
+  .craft-flow-step {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+
+  /* 4. Confused About What to Order: 1 Line */
+  .confused-order-banner {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    text-align: left !important;
+    padding: 16px 24px !important;
+    gap: 20px !important;
+  }
+
+  .confused-order-content {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 16px !important;
+    flex: 1 1 auto !important;
+  }
+
+  .confused-order-icon {
+    font-size: 1.8rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  .confused-order-text {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+  }
+
+  .confused-order-title {
+    font-size: 1.05rem !important;
+    font-weight: 800 !important;
+    color: var(--text) !important;
+  }
+
+  .confused-order-sub {
+    font-size: 0.78rem !important;
+    color: var(--text-muted) !important;
+    max-width: 520px !important;
+    line-height: 1.35 !important;
+  }
+
+  .confused-order-btn {
+    flex-shrink: 0 !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+    padding: 12px 22px !important;
+  }
+
+  /* 5. Elements of The Comparison: 3 cards in parallel */
+  .comparison-cards-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 16px !important;
+    align-items: stretch !important;
+  }
+
+  .comp-card {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+  }
+
   /* Pack Grid Expansion (4-column row) */
   .pack-grid {
     grid-template-columns: repeat(4, 1fr) !important;
     gap: 12px !important;
   }
 
-  /* Streamlined Gateway Hub & Comparisons */
+  /* Streamlined Gateway Hub & Destinations */
   .streamlined-hub-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 16px !important;
-  }
-
-  .comparison-cards-grid {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 16px !important;
   }
@@ -4213,91 +4349,40 @@ input:focus, select:focus, textarea:focus {
     gap: 14px !important;
   }
 
-  .timeline-summary-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 14px !important;
-  }
-
-  .craft-flow-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 14px !important;
-  }
-}
-  /* Responsive Ticker Scaling (Tablet - min-width: 768px) */
+  /* Ticker Centering & Scaling */
   .countdown-ticker-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 14px 20px;
-    margin: 14px 0 18px !important;
+    max-width: 420px !important;
+    margin: 14px auto 18px !important;
     border-radius: 14px;
   }
 
-  .stream-pill-toggle {
-    margin-bottom: 10px;
-    padding: 3px;
-    gap: 4px;
-  }
-
-  .stream-pill {
-    font-size: 0.72rem;
-    padding: 5px 12px;
-  }
-
-  .countdown-ticker-header {
-    font-size: 0.76rem;
-    margin-bottom: 8px;
-  }
-
-  .countdown-live-badge {
-    font-size: 0.65rem;
-    padding: 3px 8px;
-  }
-
-  .flip-clock-ticker {
-    gap: 8px !important;
-    margin: 8px auto !important;
-  }
-
   .flip-card {
-    min-width: 58px !important;
-    max-width: 68px !important;
-    padding: 8px 10px !important;
-    border-radius: 8px !important;
+    min-width: 48px !important;
+    max-width: 56px !important;
+    padding: 6px 10px !important;
   }
 
   .flip-digit {
-    font-size: 1.65rem !important;
-    letter-spacing: 1px !important;
+    font-size: 1.45rem !important;
   }
-
-  .flip-label {
-    font-size: 0.64rem !important;
-    letter-spacing: 0.9px !important;
+  .flip-clock-ticker {
+    gap: 12px !important;
   }
 
   .flip-colon {
-    font-size: 1.5rem !important;
-    margin-bottom: 16px !important;
+    font-size: 1.35rem !important;
+    margin-bottom: 14px !important;
   }
-
-  .scarcity-track {
-    height: 10px;
-  }
-
-  .scarcity-label {
-    font-size: 0.78rem;
-  }
-
-/* Wide Desktop Breakpoint (min-width: 1024px) */
+}
 @media (min-width: 1024px) {
   .container {
-    max-width: 1000px;
+    max-width: 1040px;
     padding: 0 32px;
     gap: 24px;
   }
 
   .header-inner {
-    max-width: 1000px;
+    max-width: 1040px;
   }
 
   .hero-visual-card {
@@ -4309,71 +4394,9 @@ input:focus, select:focus, textarea:focus {
     line-height: 1.25;
   }
 
-  /* Responsive Ticker Scaling (Desktop - min-width: 1024px) */
   .countdown-ticker-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 16px 24px;
-    margin: 16px 0 22px !important;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  }
-
-  .stream-pill-toggle {
-    margin-bottom: 12px;
-    padding: 4px;
-    gap: 6px;
-  }
-
-  .stream-pill {
-    font-size: 0.78rem;
-    padding: 6px 16px;
-  }
-
-  .countdown-ticker-header {
-    font-size: 0.82rem;
-    margin-bottom: 10px;
-  }
-
-  .countdown-live-badge {
-    font-size: 0.68rem;
-    padding: 3px 10px;
-  }
-
-  .flip-clock-ticker {
-    gap: 10px !important;
-    margin: 10px auto !important;
-  }
-
-  .flip-card {
-    min-width: 72px !important;
-    max-width: 82px !important;
-    padding: 10px 14px !important;
-    border-radius: 10px !important;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
-  }
-
-  .flip-digit {
-    font-size: 2.05rem !important;
-    letter-spacing: 1.5px !important;
-  }
-
-  .flip-label {
-    font-size: 0.7rem !important;
-    letter-spacing: 1.1px !important;
-    margin-top: 2px;
-  }
-
-  .flip-colon {
-    font-size: 1.9rem !important;
-    margin-bottom: 20px !important;
-  }
-
-  .scarcity-track {
-    height: 11px;
-  }
-
-  .scarcity-label {
-    font-size: 0.82rem;
+    max-width: 440px !important;
+    margin: 16px auto 22px !important;
   }
 
   /* 2-Column Responsive Harvest Cards */
@@ -4387,13 +4410,13 @@ input:focus, select:focus, textarea:focus {
     grid-column: span 2;
   }
 
-  /* Sensory Grid Cards (4 columns) */
   .sensory-grid-cards {
     grid-template-columns: repeat(4, 1fr) !important;
-    gap: 14px !important;
+    gap: 16px !important;
   }
 
   .stat-huge-multiplier {
     font-size: 1.7rem !important;
   }
 }
+
