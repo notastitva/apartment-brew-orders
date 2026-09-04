@@ -259,6 +259,56 @@
       &#10052; <strong>48-Hour Freshness Window:</strong> Keep refrigerated upon delivery and consume within 48 hours for peak tasting notes!
     </div>
 
+    <!-- Self-Service Subscription Management Card (Visible for Standing Orders) -->
+    <div class="tracker-summary-card" id="subscriptionManageCard" style="display: none; margin-top: 14px; background: #1a1816; border: 1.5px solid rgba(212, 163, 115, 0.4); border-radius: 14px; padding: 16px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px dashed var(--card-border); padding-bottom: 10px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.1rem;">🔄</span>
+          <div>
+            <div style="font-size: 0.85rem; font-weight: 800; color: var(--text);">Manage Your Standing Order</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted);">Pause next drop, switch single-estate harvest, or cancel anytime</div>
+          </div>
+        </div>
+        <span class="standing-order-pill" id="subStatusBadge" style="background: rgba(45,106,79,0.25); border: 1px solid #2d6a4f; color: #95d5b2; font-size: 0.65rem; font-weight: 800; padding: 3px 8px; border-radius: 6px;">ACTIVE</span>
+      </div>
+      <!-- Subscription Action Feedback Message -->
+      <div id="subActionMsg" style="display: none; padding: 10px 12px; border-radius: 8px; font-size: 0.76rem; font-weight: 700; margin-bottom: 12px; text-align: center;"></div>
+      <!-- Action Controls -->
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <!-- 1. Pause / Resume Drop -->
+        <div style="display: flex; justify-content: space-between; align-items: center; background: var(--card-inner); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--card-border);">
+          <div>
+            <div style="font-size: 0.78rem; font-weight: 800; color: var(--text);" id="subPauseTitle">Pause Upcoming Drop</div>
+            <div style="font-size: 0.68rem; color: var(--text-muted);" id="subPauseDesc">Skip your next scheduled delivery. Automatically resumes after.</div>
+          </div>
+          <button type="button" id="btnToggleSubPause" class="btn-secondary" style="font-size: 0.74rem; font-weight: 800; padding: 6px 14px; border-radius: 6px;" onclick="handleSubscriptionAction('TOGGLE_PAUSE')">⏸️ Pause</button>
+        </div>
+        <!-- 2. Switch Harvest Lot -->
+        <div style="background: var(--card-inner); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--card-border);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <div style="font-size: 0.78rem; font-weight: 800; color: var(--text);">Switch Single-Estate Harvest</div>
+            <span style="font-size: 0.68rem; color: var(--accent);" id="currentSubLotText">Current: Loading...</span>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <select id="selectNewHarvest" style="flex: 1; padding: 6px 10px; background: #141312; border: 1px solid var(--card-border); color: var(--text); border-radius: 6px; font-size: 0.75rem;">
+              <option value="Ratnagiri Estate (72h Anaerobic Natural)">Ratnagiri Estate (72h Anaerobic Natural)</option>
+              <option value="Banana Banger (Special Yeast Fermentation)">Banana Banger (Special Yeast Fermentation)</option>
+              <option value="Thogarihunkal Estate (Honey Sun-Dried)">Thogarihunkal Estate (Honey Sun-Dried)</option>
+            </select>
+            <button type="button" class="btn-secondary" style="font-size: 0.74rem; font-weight: 800; padding: 6px 12px; border-radius: 6px;" onclick="handleSubscriptionAction('SWITCH_HARVEST')">Update Lot</button>
+          </div>
+        </div>
+        <!-- 3. Cancel Subscription -->
+        <div style="display: flex; justify-content: space-between; align-items: center; background: var(--card-inner); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--card-border);">
+          <div>
+            <div style="font-size: 0.78rem; font-weight: 800; color: var(--text);">Cancel Subscription</div>
+            <div style="font-size: 0.68rem; color: var(--text-muted);">Permanently stop recurring deliveries. Reorder anytime.</div>
+          </div>
+          <button type="button" id="btnToggleSubPause" class="btn-secondary" style="font-size: 0.74rem; font-weight: 800; padding: 6px 12px; border-radius: 6px; color: #ff8fa3; border-color: rgba(230,57,70,0.4);" onclick="handleSubscriptionAction('CANCEL')">✕ Cancel</button>
+        </div>
+      </div>
+    </div>
+
     <!-- 1-Click Refill My Brew Action Card -->
     <div id="refillBrewWrap" style="margin-top: 14px;">
       <div class="refill-action-card">

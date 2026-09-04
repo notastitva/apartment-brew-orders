@@ -3176,6 +3176,71 @@ function renderTrackingDetails(order) {
     }
   }
 
+  const subManageCard = document.getElementById('subscriptionManageCard');
+  const subStatusBadge = document.getElementById('subStatusBadge');
+  const btnToggleSubPause = document.getElementById('btnToggleSubPause');
+  const subPauseTitle = document.getElementById('subPauseTitle');
+  const subPauseDesc = document.getElementById('subPauseDesc');
+  const currentSubLotText = document.getElementById('currentSubLotText');
+  const selectNewHarvest = document.getElementById('selectNewHarvest');
+
+  const isStandingOrder = order.isStandingOrder || (order.notes && order.notes.includes('STANDING_ORDER')) || (order.cadence && order.cadence !== 'One-Time Drop');
+  const isPaused = (order.notes && order.notes.includes('PAUSED')) || (order.cadence && order.cadence.includes('Paused'));
+  const isCancelled = (order.notes && order.notes.includes('CANCELLED')) || (order.cadence && order.cadence.includes('Cancelled'));
+
+  if (subManageCard) {
+    if (isStandingOrder) {
+      subManageCard.style.display = 'block';
+      if (currentSubLotText) currentSubLotText.textContent = 'Current: ' + order.bean;
+
+      if (selectNewHarvest && availableLots && availableLots.length > 0) {
+        let optsHtml = '';
+        availableLots.filter(l => l.isActive !== false).forEach(lot => {
+          const isSel = (lot.name === order.bean || order.bean.includes(lot.name));
+          optsHtml += '<option value="' + lot.name + ' (' + lot.process + ')" ' + (isSel ? 'selected' : '') + '>' + lot.name + ' (' + lot.process + ')</option>';
+        });
+        selectNewHarvest.innerHTML = optsHtml;
+      }
+
+      if (isCancelled) {
+        if (subStatusBadge) {
+          subStatusBadge.textContent = 'CANCELLED';
+          subStatusBadge.style.background = 'rgba(230,57,70,0.25)';
+          subStatusBadge.style.borderColor = '#e63946';
+          subStatusBadge.style.color = '#ff8fa3';
+        }
+        if (btnToggleSubPause) {
+          btnToggleSubPause.textContent = 'Reactivate';
+          btnToggleSubPause.onclick = () => handleSubscriptionAction('RESUME');
+        }
+        if (subPauseTitle) subPauseTitle.textContent = 'Reactivate Subscription';
+        if (subPauseDesc) subPauseDesc.textContent = 'Resume recurring drops and unlock your 10% subscriber reservation.';
+      } else if (isPaused) {
+        if (subStatusBadge) {
+          subStatusBadge.textContent = 'PAUSED';
+          subStatusBadge.style.background = 'rgba(231,111,81,0.25)';
+          subStatusBadge.style.borderColor = '#e76f51';
+          subStatusBadge.style.color = '#f39c12';
+        }
+        if (btnToggleSubPause) btnToggleSubPause.textContent = '▶️ Resume Drop';
+        if (subPauseTitle) subPauseTitle.textContent = 'Resume Standing Order';
+        if (subPauseDesc) subPauseDesc.textContent = 'Your next drop is paused. Tap to reactivate for the upcoming cutoff.';
+      } else {
+        if (subStatusBadge) {
+          subStatusBadge.textContent = 'ACTIVE';
+          subStatusBadge.style.background = 'rgba(45,106,79,0.25)';
+          subStatusBadge.style.borderColor = '#2d6a4f';
+          subStatusBadge.style.color = '#95d5b2';
+        }
+        if (btnToggleSubPause) btnToggleSubPause.textContent = '⏸️ Pause Next Drop';
+        if (subPauseTitle) subPauseTitle.textContent = 'Pause Upcoming Drop';
+        if (subPauseDesc) subPauseDesc.textContent = 'Skip your next scheduled delivery. Automatically resumes following week.';
+      }
+    } else {
+      subManageCard.style.display = 'none';
+    }
+  }
+
   const refillWrap = document.getElementById('refillBrewWrap');
   if (refillWrap) {
     refillWrap.style.display = 'block';
@@ -3308,6 +3373,66 @@ function handleRefillBrew() {
   localStorage.setItem('tabc_refill_order', JSON.stringify(refillPayload));
   const targetUrl = (currentTrackedOrder.orderType === 'B2B') ? '/corporate?refill=1' : '/personal?refill=1';
   window.location.href = targetUrl;
+}
+
+function handleSubscriptionAction(actionType) {
+  playHapticTap('click');
+  if (!currentTrackedOrder) return;
+  const orderId = currentTrackedOrder.orderId;
+  const statusMsg = document.getElementById('subActionMsg');
+  const isCurrentlyPaused = (currentTrackedOrder.notes || '').includes('PAUSED');
+
+  let subAction = actionType;
+  if (actionType === 'TOGGLE_PAUSE') {
+    subAction = isCurrentlyPaused ? 'RESUME' : 'PAUSE';
+  }
+
+  let newHarvest = '';
+  if (subAction === 'SWITCH_HARVEST') {
+    const sel = document.getElementById('selectNewHarvest');
+    newHarvest = sel ? sel.value : '';
+    if (!newHarvest) return;
+  }
+
+  if (subAction === 'CANCEL') {
+    if (!confirm('Are you sure you want to cancel your recurring standing order? You will lose your 10% subscriber reservation.')) {
+      return;
+    }
+  }
+
+  if (statusMsg) {
+    statusMsg.style.display = 'block';
+    statusMsg.style.background = 'rgba(212,163,115,0.15)';
+    statusMsg.style.color = 'var(--accent)';
+    statusMsg.textContent = '⏳ Updating subscription in roastery database...';
+  }
+
+  const payload = {
+    action: 'manage_subscription',
+    orderId: orderId,
+    subAction: subAction,
+    newHarvest: newHarvest,
+    cadence: currentTrackedOrder.cadence || 'WEEKLY'
+  };
+
+  fetch(CONFIG.googleSheetEndpoint, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  }).then(() => {
+    if (statusMsg) {
+      statusMsg.style.background = 'rgba(45,106,79,0.25)';
+      statusMsg.style.color = '#95d5b2';
+      statusMsg.textContent = '✓ Subscription updated successfully!';
+    }
+    setTimeout(() => { submitTrackOrder(); }, 1200);
+  }).catch(() => {
+    const getUrl = `${CONFIG.googleSheetEndpoint}?action=manage_subscription&orderId=${encodeURIComponent(orderId)}&subAction=${encodeURIComponent(subAction)}&newHarvest=${encodeURIComponent(newHarvest)}`;
+    fetch(getUrl, { mode: 'no-cors' }).finally(() => {
+      setTimeout(() => { submitTrackOrder(); }, 1200);
+    });
+  });
 }
 // ====================================================================
 // SENSORY FEEDBACK SYSTEM FOR DELIVERED ORDERS (/track)
@@ -3549,27 +3674,6 @@ function submitFeedbackAction(orderId, name, bean, type) {
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify(postPayload)
   }).catch(function() {});
-
-  // 2. Secondary Transport: GET Query String
-  const apiUrl = CONFIG.googleSheetEndpoint + 
-    '?action=feedback' +
-    '&orderId=' + encodeURIComponent(orderId) +
-    '&overall=' + encodeURIComponent(feedbackOverall) +
-    '&bitterness=' + encodeURIComponent(feedbackBitterness) +
-    '&clarity=' + encodeURIComponent(feedbackClarity) +
-    '&notes=' + encodeURIComponent(userComment) +
-    '&name=' + encodeURIComponent(name) +
-    '&bean=' + encodeURIComponent(bean) +
-    '&type=' + encodeURIComponent(type);
-
-  fetch(apiUrl, { mode: 'no-cors' }).catch(function() {});
-
-  // 3. Fallback Transport: Image beacon (bypasses browser CORS/redirect blocks)
-  try {
-    const beacon = new Image();
-    beacon.src = apiUrl;
-  } catch (e) {}
-
   setTimeout(function() {
     renderOrderFeedbackSection({
       orderId: orderId,
