@@ -35,7 +35,7 @@ All coffee across retail, corporate, and catering tiers is standardized into rec
 16. [Offline Resilience, Caching & Dynamic Fallbacks](#16-offline-resilience-caching--dynamic-fallbacks)  
 17. [Design System & Brand Asset Specifications](#17-design-system--brand-asset-specifications)  
 18. [Visual & Interaction Polls](#18-visual--interaction-polish)  
-19. [Responsive Desktop & Tablet Design System](#19-responsive-desktop--tablet-design-system)
+19. [SEO, LocalBusiness Schema & Mobile Form Architecture](#19-seo-localbusiness-schema--mobile-form-architecture)
 
 ---
 
@@ -490,22 +490,50 @@ will-change: transform;
 
 * **Frictionless Navigation:** Navigating forward and backward smoothly shifts the viewport via `translateX(-0%)`, `translateX(-33.3333%)`, and `translateX(-66.6667%)` with GPU composition, eliminating layout jumps.
 
-## **19\. Responsive Desktop & Tablet Design System**
+## **19\. SEO, LocalBusiness Schema & Mobile Form Architecture**
 
-### **19.1 Breakpoint Architecture**
+### 19.1 Technical SEO & Canonical Routing
 
-The stylesheet incorporates progressive enhancement media queries that unlock spacious desktop layouts while preserving the mobile-first UX on handheld devices:
+Every route across the website implements canonical link tags and contextual meta descriptions to prevent duplicate content indexing and maximize search engine visibility:
 
-* **Mobile Default (\< 768px):** Constrained 540px mobile canvas with touch-optimized buttons and full-width card flows.  
-* **Tablet Breakpoint (`min-width: 768px`):**  
-  * Expands `.container` and `.header-inner` to `max-width: 760px` with `24px` horizontal padding.  
-  * `.pack-grid`: Expands into a 4-column single row (`grid-template-columns: repeat(4, 1fr)`) for both B2C and B2B ordering tiers.  
-  * `.hero-stats-row`: Expands into 5 evenly distributed columns (`repeat(5, 1fr)`).  
-  * `.streamlined-hub-grid`, `.comparison-cards-grid`, `.destination-cards-grid`, `.pairing-cards-grid`, `.timeline-summary-grid`: Expand into clean 2-column grids.  
-  * `.review-grid`: Displays 3 customer reviews across (`repeat(3, 1fr)`).  
-* **Wide Desktop Breakpoint (`min-width: 1024px`):**  
-  * Expands `.container` and `.header-inner` to `max-width: 1000px` with `32px` horizontal padding.  
-  * Hero Section: Typography scales up (`2.45rem` title, `0.95rem` lead paragraph) with spacious card padding (`46px 36px`).  
-  * `.harvest-lots-container`: Displays coffee harvests in a balanced 2-column layout (`repeat(2, 1fr)`), expanding active selections across the full width.  
-  * `.countdown-ticker-card`: Anchored and centered at `max-width: 420px`.  
-  * Sensory highlights expand into 4 columns with large numeric multipliers.
+* / (index.html): Canonical to https://apartmentbrewco.in/ — Meta Description for micro-batch flash-chilled specialty coffee hand-brewed fresh to order in Gurugram.  
+* /orders: Canonical to https://apartmentbrewco.in/orders — Meta Description for single-estate harvest curation and order scaling.  
+* /personal: Canonical to https://apartmentbrewco.in/personal — Meta Description for weekend retail drops across Delhi NCR.  
+* /corporate: Canonical to https://apartmentbrewco.in/corporate — Meta Description for corporate tech-park office drops.  
+* /flavor: Canonical to https://apartmentbrewco.in/flavor — Meta Description for flavor matcher and sensory radar comparison.  
+* /guide: Canonical to https://apartmentbrewco.in/guide — Meta Description for 48-hour freshness science and temperature stability.  
+* /about: Canonical to https://apartmentbrewco.in/about — Meta Description for brewery philosophy and sourcing story.  
+* /events: Canonical to https://apartmentbrewco.in/events — Meta Description for custom coffee runs and catering bars.  
+* /track: Canonical to https://apartmentbrewco.in/track — Meta Description for live order tracking and 3-criteria calibration.
+
+### 19.2 JSON-LD LocalBusiness & CoffeeShop Schema
+
+Implemented structured data on index.html and about.html following schema.org standards for enhanced Google search snippets and local Knowledge Graph integration:
+
+* Entity Type: CoffeeShop (LocalBusiness)  
+* Coordinates: Lat 28.4595, Long 77.0266 (Gurugram, Haryana, India)  
+* Operating Windows: Friday corporate dispatch (09:30–16:00), Saturday & Sunday weekend drops (08:00–11:00).  
+* Coverage Area: Gurugram, Delhi, Noida, Faridabad.  
+* Catalog: Itemized menu offerings for Ratnagiri Estate and Banana Banger 200ml bottles.
+
+### 19.3 Mobile Keyboard & Form Optimization
+
+All customer-facing forms (personal.html, corporate.html, events.html, track.html) are augmented with HTML5 attributes for native mobile keyboard invocation and browser autofill:
+
+* Full Name: autocomplete="name" autocapitalize="words" spellcheck="false"  
+* Work/Personal Email: type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false"  
+* WhatsApp / Phone: type="tel" inputmode="tel" autocomplete="tel"  
+* Pincode: type="text" inputmode="numeric" pattern="\[0-9\]\*" autocomplete="postal-code" maxlength="6"  
+* Company Name: autocomplete="organization" autocapitalize="words"  
+* Delivery Address: autocomplete="street-address" autocapitalize="words"  
+* Coupons, GSTIN & Order IDs: inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false"  
+* Quantity Selectors: inputmode="numeric" min="1"
+
+### 19.4 Asset Cache-Busting Protocol
+
+To bypass aggressive browser and CDN (Cloudflare) caching upon deploying updates to GitHub Pages, static asset imports append versioned query parameters:
+
+* \<link rel="stylesheet" href="style.css?v=2.5" /\>  
+* \<script src="app.js?v=2.5"\>\</script\>
+
+When pushing stylesheet or controller updates, incrementing the version string guarantees instantaneous asset invalidation for all visitors.

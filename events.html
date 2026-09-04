@@ -5,10 +5,14 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>Custom Events &amp; Coffee Runs | The Apartment Brew Co.</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="description" content="Specialty coffee catering, pop-up pour-over bars, and custom roastery drops for corporate events, hackathons, and gatherings in Delhi NCR." />
+  <link rel="canonical" href="https://apartmentbrewco.in/events" />
+  <link rel="stylesheet" href="style.css?v=2.5" />
+
+  <!-- Google Fonts Embed -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&amp;family=Inter:wght@300;400;500;600;700;800&amp;family=Montserrat:wght@600;700;800&amp;family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet" />
 
 
   <!-- Favicons & Mobile Touch Icons -->
@@ -132,7 +136,7 @@ Planning a company townhall, hackathon, product launch, pop-up booth, or a dedic
   
 <div class="form-group">
 <label for="inqCompany">Organization / Startup / Event Name *</label>
-<input type="text" id="inqCompany" placeholder="e.g. Zomato / Google India / Tech Hackathon 2026" oninput="validateInqField('inqCompany')" />
+<input type="text" id="inqCompany" autocomplete="organization" autocapitalize="words" placeholder="e.g. Zomato / Google India / Tech Hackathon 2026" oninput="validateInqField('inqCompany')" />
 <div class="field-error" id="errInqCompany">Please enter your organization or event name.</div>
 </div>
   
@@ -192,30 +196,30 @@ Planning a company townhall, hackathon, product launch, pop-up booth, or a dedic
   
 <div class="form-group">
 <label for="inqDate">Target Event / Delivery Date *</label>
-<input type="text" id="inqDate" placeholder="e.g. 4 Sep 2026 or Next Friday" oninput="validateInqField('inqDate')" />
+<input type="text" id="inqDate" inputmode="text" autocomplete="off" placeholder="e.g. 4 Sep 2026 or Next Friday" oninput="validateInqField('inqDate')" />
 <div class="field-error" id="errInqDate">Please specify your target date or timeline.</div>
 </div>
   
 <div class="form-group">
 <label for="inqLocation">Venue Location / Tech Park (Delhi NCR)</label>
-<input type="text" id="inqLocation" placeholder="e.g. DLF Cyber City / Ambience Mall / Office HQ" />
+<input type="text" id="inqLocation" autocomplete="street-address" autocapitalize="words" placeholder="e.g. DLF Cyber City / Ambience Mall / Office HQ" />
 </div>
   
 <div class="form-group">
 <label for="inqName">Contact Person Name *</label>
-<input type="text" id="inqName" placeholder="e.g. Astitva Gupta" oninput="validateInqField('inqName')" />
+<input type="text" id="inqName" autocomplete="name" autocapitalize="words" spellcheck="false" placeholder="e.g. Astitva Gupta" oninput="validateInqField('inqName')" />
 <div class="field-error" id="errInqName">Please enter your name.</div>
 </div>
   
 <div class="form-group">
 <label for="inqEmail">Work Email Address (For Custom Proposals &amp; Quotes) *</label>
-<input type="email" id="inqEmail" placeholder="e.g. astitva@company.com" oninput="validateInqEmail()" />
+<input type="email" id="inqEmail" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="e.g. astitva@company.com" oninput="validateInqEmail()" />
 <div class="field-error" id="errInqEmail">Please enter a valid work email address.</div>
 </div>
   
 <div class="form-group">
 <label for="inqPhone">WhatsApp / Mobile Number (For Coordination) *</label>
-<input type="tel" id="inqPhone" placeholder="e.g. 9876543210 / +91 9876543210" maxlength="15" oninput="validateInqPhone()" />
+<input type="tel" id="inqPhone" inputmode="tel" autocomplete="tel" placeholder="e.g. 9876543210 / +91 9876543210" maxlength="15" oninput="validateInqPhone()" />
 <div class="field-error" id="errInqPhone">Please enter a valid mobile number (at least 8 digits).</div>
 </div>
   
@@ -359,6 +363,10 @@ Planning a company townhall, hackathon, product launch, pop-up booth, or a dedic
       });
     }
   </script>
-  <script src="app.js"></script>
+  <script src="app.js?v=2.5"></script>
 </body>
 </html>
+
+
+
+

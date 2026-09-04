@@ -5,10 +5,15 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>Weekend Pre-Order (Sat &amp; Sun Drops) | The Apartment Brew Co.</title>
-  <link rel="stylesheet" href="style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <meta name="description" content="Custom weekend flash-chilled specialty coffee drops across Gurugram &amp; Delhi NCR. Select pack size and fine-tune single-estate lot ratios." />
+  <link rel="canonical" href="https://apartmentbrewco.in/personal" />
+  <link rel="stylesheet" href="style.css?v=2.5" />
+
+
+ <!-- Google Fonts Embed -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&amp;family=Inter:wght@300;400;500;600;700;800&amp;family=Montserrat:wght@600;700;800&amp;family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet" />
 
 
   <!-- Favicons & Mobile Touch Icons -->
@@ -166,7 +171,7 @@
 
         <div class="form-group" style="margin-top: 12px;">
           <label for="packQty">Quantity of Selected Batches / Packs</label>
-          <input type="number" id="packQty" min="1" value="1" oninput="updateTotal()" />
+          <input type="number" id="packQty" min="1" value="1" inputmode="numeric" oninput="updateTotal()" />
           <div class="field-error" id="errQty">Please enter a valid pack quantity (minimum 1).</div>
         </div>
 
@@ -224,7 +229,7 @@
         <div class="form-group" style="margin-top: 14px;">
           <label for="couponInput">Promo / Coupon Code</label>
           <div class="coupon-input-group">
-            <input type="text" id="couponInput" placeholder="e.g. FRESHDROP / NCRFIRST" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();applyCoupon();}" />
+            <input type="text" id="couponInput" placeholder="e.g. FRESHDROP / NCRFIRST" autocomplete="off" inputmode="text" autocapitalize="characters" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();applyCoupon();}" />
             <button type="button" id="btnApplyCoupon" class="btn-coupon" onclick="applyCoupon()">Apply</button>
             <button type="button" id="btnRemoveCoupon" class="btn-coupon-remove" onclick="removeCoupon()" style="display: none;">Remove</button>
           </div>
@@ -288,32 +293,32 @@
 
         <div class="form-group">
           <label for="custPincode">6-Digit PIN Code *</label>
-          <input type="text" id="custPincode" maxlength="6" placeholder="e.g. 122002" oninput="validatePincodeField()" />
+          <input type="text" id="custPincode" maxlength="6" inputmode="numeric" pattern="[0-9]*" autocomplete="postal-code" placeholder="e.g. 122002" oninput="validatePincodeField()" />
           <div id="pinStatus" class="pin-status"></div>
           <div class="field-error" id="errPincode">Please enter a valid 6-digit Delhi NCR PIN code.</div>
         </div>
 
         <div class="form-group">
           <label id="labelName" for="custName">Your Name *</label>
-          <input type="text" id="custName" placeholder="e.g. Astitva Gupta" oninput="validateField('custName')" />
+          <input type="text" id="custName" autocomplete="name" autocapitalize="words" spellcheck="false" placeholder="e.g. Astitva Gupta" oninput="validateField('custName')" />
           <div class="field-error" id="errName">Please enter your name (at least 2 characters).</div>
         </div>
 
         <div class="form-group">
           <label id="labelEmail" for="custEmail">Email Address (For Order Updates &amp; Invoices) *</label>
-          <input type="email" id="custEmail" placeholder="e.g. astitva@example.com" oninput="validateEmailField()" />
+          <input type="email" id="custEmail" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="e.g. astitva@example.com" oninput="validateEmailField()" />
           <div class="field-error" id="errEmail">Please enter a valid email address.</div>
         </div>
 
         <div class="form-group">
           <label for="custPhone">WhatsApp / Mobile Number *</label>
-          <input type="tel" id="custPhone" placeholder="e.g. 9876543210" maxlength="10" oninput="validatePhoneField()" />
+          <input type="tel" id="custPhone" inputmode="tel" autocomplete="tel" placeholder="e.g. 9876543210" maxlength="10" oninput="validatePhoneField()" />
           <div class="field-error" id="errPhone">Please enter a valid 10-digit Indian mobile number.</div>
         </div>
 
         <div class="form-group">
           <label id="labelAddress" for="custAddress">Delivery Address (Building, Flat, Society) *</label>
-          <textarea id="custAddress" rows="2" placeholder="e.g. Flat 402, Tower 3, DLF Phase 5" oninput="validateField('custAddress')"></textarea>
+          <textarea id="custAddress" rows="2" autocomplete="street-address" autocapitalize="words" placeholder="e.g. Flat 402, Tower 3, DLF Phase 5" oninput="validateField('custAddress')"></textarea>
           <div class="field-error" id="errAddress">Please enter your complete address.</div>
         </div>
 
@@ -474,7 +479,7 @@
       });
     }
   </script>
-  <script src="app.js"></script>
+  <script src="app.js?v=2.5"></script>
 </body>
 </html>
 
