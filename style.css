@@ -4351,8 +4351,9 @@ input:focus, select:focus, textarea:focus {
 
   /* Ticker Centering & Scaling */
   .countdown-ticker-card {
-    max-width: 420px !important;
-    margin: 14px auto 18px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 14px 0 18px !important;
     border-radius: 14px;
   }
 
@@ -4395,8 +4396,10 @@ input:focus, select:focus, textarea:focus {
   }
 
   .countdown-ticker-card {
-    max-width: 440px !important;
-    margin: 16px auto 22px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 16px 0 22px !important;
+    padding: 16px 24px !important;
   }
 
   /* 2-Column Responsive Harvest Cards */
