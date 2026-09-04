@@ -1501,7 +1501,7 @@ function applyStoreStatus(status) {
   currentStoreStatus = (status || 'OPEN').toUpperCase();
   const banner = document.getElementById('storeStatusBanner');
   const payBtn = document.getElementById('payNowBtn');
-  const btnText = document.getElementById('btnText');
+  const btnText = document.getElementById('btnText') || document.getElementById('payBtnText');
   
   if (currentStoreStatus === 'PAUSED') {
     if (banner) {
@@ -1980,8 +1980,8 @@ function updateTotal() {
   const discountDisplay = document.getElementById('discountDisplay');
   const discountLabel = document.getElementById('discountLabel');
   const summaryBreakdown = document.getElementById('summaryBreakdown');
-  const btnAmount = document.getElementById('btnAmount');
-  const btnText = document.getElementById('btnText');
+  const btnAmount = document.getElementById('btnAmount') || document.getElementById('btnPayAmount');
+  const btnText = document.getElementById('btnText') || document.getElementById('payBtnText');
   const statusEl = document.getElementById('couponStatus');
   
   if (appliedCoupon) {
