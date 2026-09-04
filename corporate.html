@@ -95,14 +95,14 @@ src="assets/tabc-emblem-gold-transparent.svg"
     <!-- Live Drop & Batch Capacity Header Card -->
     <header class="header-card">
       <div class="drop-banner" id="dropBanner">
-⚡ Next Fresh Drops: Saturday & Sunday Morning
+⚡ Next Corporate Office Drop: Friday Morning &amp; Afternoon
       </div>
-<div class="countdown-timer" id="countdownTimer">Weekend Drop Cutoff closes in: Loading...</div>
+<div class="countdown-timer" id="countdownTimer">Friday Drop Cutoff (Thursday 6:00 PM) closes in: Loading...</div>
       
       <!-- Scarcity Bar -->
       <div class="scarcity-bar-container">
         <div class="scarcity-label">
-🔥 Limited Weekend Batch Capacity
+🏢 Limited Friday Office Batch Capacity
           <span id="scarcityText">Loading batch availability...</span>
         </div>
         <div class="scarcity-progress-track">
@@ -233,7 +233,7 @@ Need 100+ bottles for a hackathon or all-hands? <a href="/events">Custom Event C
           <span style="font-size: 0.72rem; color: var(--accent); font-weight: 700;">Office Run Cadence: </span>
           <select id="standingCadenceSelect" onchange="updateTotal()" style="padding: 4px 8px; font-size: 0.74rem; background: var(--card-inner); color: var(--text); border: 1px solid var(--card-border); border-radius: 6px;">
             <option value="WEEKLY" selected>Every Friday (Weekly Office Drop)</option>
-            <option value="BIWEEKLY">Every 2 Weeks (Bi-Weekly Drop)</option>
+<option value="BI_WEEKLY">Every 2 Weeks (Bi-Weekly Drop)</option>
           </select>
           <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 4px;">
             Consolidated Net-7 invoice &bull; Modify bottle tiers or pause anytime via account manager.
@@ -257,7 +257,7 @@ Need 100+ bottles for a hackathon or all-hands? <a href="/events">Custom Event C
     <span class="standing-order-discount-badge">Save 10% on Office Standing Orders</span>
   </div>
   <div class="cadence-options-grid">
-    <div class="cadence-option active" id="cadenceOneTime" onclick="selectOrderCadence(&apos;ONE_TIME&apos;)">
+<div class="cadence-option active" id="cadenceOneTime" onclick="selectOrderCadence('ONE_TIME')">
       <div class="cadence-radio"></div>
       <div class="cadence-info">
         <div class="cadence-name">One-Time Friday Drop</div>
@@ -265,7 +265,7 @@ Need 100+ bottles for a hackathon or all-hands? <a href="/events">Custom Event C
       </div>
       <div class="cadence-tag">Standard</div>
     </div>
-    <div class="cadence-option" id="cadenceWeekly" onclick="selectOrderCadence(&apos;WEEKLY&apos;)">
+<div class="cadence-option" id="cadenceWeekly" onclick="selectOrderCadence('WEEKLY')">
       <div class="cadence-radio"></div>
       <div class="cadence-info">
         <div class="cadence-name">Weekly Friday Standing Order</div>
@@ -273,7 +273,7 @@ Need 100+ bottles for a hackathon or all-hands? <a href="/events">Custom Event C
       </div>
       <div class="cadence-tag tag-discount">Save 10%</div>
     </div>
-    <div class="cadence-option" id="cadenceBiWeekly" onclick="selectOrderCadence(&apos;BI_WEEKLY&apos;)">
+<div class="cadence-option" id="cadenceBiWeekly" onclick="selectOrderCadence('BI_WEEKLY')">
       <div class="cadence-radio"></div>
       <div class="cadence-info">
         <div class="cadence-name">Bi-Weekly Friday Standing Order</div>
@@ -541,3 +541,6 @@ Need 100+ bottles for a hackathon or all-hands? <a href="/events">Custom Event C
   <script src="app.js?v=2.5"></script>
 </body>
 </html>
+
+
+

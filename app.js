@@ -1990,9 +1990,6 @@ function updateDualStreamUI() {
   const remainingPct = cap > 0 ? (remBottles / cap) : 1;
   const scarcityText = document.getElementById('scarcityText');
   const scarcityFill = document.getElementById('scarcityFill');
-  if (standingDiscount > 0) {
-    breakdownHtml += '<div class="summary-discount" style="color:#95d5b2;"><span>Standing Order Discount (10%):</span><strong>-&#8377;' + standingDiscount + '</strong></div>';
-  }
   const scarcityContainer = document.querySelector('.scarcity-bar-container');
 
   if (scarcityFill) {
@@ -2266,6 +2263,7 @@ function updateTotal() {
     if (payBtn && currentStoreStatus === 'OPEN') payBtn.disabled = false;
   }
 
+  const total = calculateTotal();
   const formattedTotal = `₹${total.toLocaleString('en-IN')}`;
   const formattedSubtotal = `₹${subtotal.toLocaleString('en-IN')}`;
 
@@ -2279,7 +2277,7 @@ function updateTotal() {
   const statusEl = document.getElementById('couponStatus');
 
   if (summaryBreakdown) {
-    const totalDiscount = couponDiscount + standingDiscount;
+    const totalDiscount = promoDiscount + standingDiscount;
     if (totalDiscount > 0) {
       summaryBreakdown.style.display = 'flex';
       if (subtotalDisplay) subtotalDisplay.textContent = formattedSubtotal;
