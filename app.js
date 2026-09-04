@@ -184,15 +184,14 @@ let selectedB2bPack = null;
 let currentOrderDetails = null;
 let selectedCadence = 'ONE_TIME'; // 'ONE_TIME', 'WEEKLY', 'BI_WEEKLY'
 function selectOrderCadence(cadence) {
+  playHapticTap('click');
   selectedCadence = cadence;
   const c1 = document.getElementById('cadenceOneTime');
   const c2 = document.getElementById('cadenceWeekly');
   const c3 = document.getElementById('cadenceBiWeekly');
-
   if (c1) c1.classList.toggle('active', cadence === 'ONE_TIME');
   if (c2) c2.classList.toggle('active', cadence === 'WEEKLY');
   if (c3) c3.classList.toggle('active', cadence === 'BI_WEEKLY');
-
   updateTotal();
 }
 
@@ -2113,12 +2112,14 @@ function recalculateCouponDiscount(subtotal) {
 
 function calculateTotal() {
   const subtotal = calculateSubtotal();
+  const isStanding = (selectedCadence !== 'ONE_TIME');
+  const standingDiscount = isStanding ? Math.round(subtotal * 0.10) : 0;
+  let promoDiscount = 0;
   if (appliedCoupon) {
-    const discount = recalculateCouponDiscount(subtotal);
-    appliedCoupon.discount = discount;
-    return Math.max(0, subtotal - discount);
+    promoDiscount = recalculateCouponDiscount(subtotal);
+    appliedCoupon.discount = promoDiscount;
   }
-  return subtotal;
+  return Math.max(0, subtotal - promoDiscount - standingDiscount);
 }
 
 function applyCoupon() {
@@ -2242,7 +2243,7 @@ function updateTotal() {
   const subtotal = calculateSubtotal();
   const totalBottles = getTotalBottles();
 
-  const isStanding = (selectedCadence !== 'ONE_TIME') || (typeof isStandingOrderActive !== 'undefined' && isStandingOrderActive);
+  const isStanding = (selectedCadence !== 'ONE_TIME');
   const standingDiscount = isStanding ? Math.round(subtotal * 0.10) : 0;
   const promoDiscount = recalculateCouponDiscount(subtotal);
 
@@ -2283,7 +2284,7 @@ function updateTotal() {
       if (subtotalDisplay) subtotalDisplay.textContent = formattedSubtotal;
       if (discountDisplay) discountDisplay.textContent = `-₹${totalDiscount.toLocaleString('en-IN')}`;
       let dLabel = appliedCoupon ? `Promo Discount (${appliedCoupon.code})` : '';
-      if (isStandingOrderActive) dLabel += (dLabel ? ' + ' : '') + 'Recurring Order (10% Off)';
+      if (isStanding) dLabel += (dLabel ? ' + ' : '') + 'Standing Order (10% Off)';
       if (discountLabel) discountLabel.textContent = dLabel + ':';
     } else {
       summaryBreakdown.style.display = 'none';
@@ -2579,9 +2580,9 @@ async function handleOrderSuccess(paymentId, statusText) {
     paymentMode: paymentMode,
     paymentStatus: `${statusText} (${paymentId})`,
     deliveryStatus: 'Pre-Ordered',
-    isStandingOrder: (selectedCadence !== 'ONE_TIME') || Boolean(isStandingOrderActive),
-    standingFrequency: document.getElementById('standingCadenceSelect')?.value || 'WEEKLY',
-    cadence: (selectedCadence !== 'ONE_TIME') ? selectedCadence : (isStandingOrderActive ? 'WEEKLY' : 'ONE_TIME'),
+    isStandingOrder: (selectedCadence !== 'ONE_TIME'),
+    standingFrequency: selectedCadence,
+    cadence: selectedCadence,
     notes: (isB2b ? (currentB2bPayOption === 'INVOICE' ? `Invoice Ref: ${paymentId} (Net Terms)` : `Payment ID: ${paymentId}`) : `Payment ID: ${paymentId}`) + (discount > 0 ? ` | Coupon: ${couponCode} (-₹${discount})` : '')
   };
   

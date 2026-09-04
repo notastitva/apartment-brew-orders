@@ -224,33 +224,6 @@
         <!-- Real-Time Batch Capacity Warning Container -->
         <div class="capacity-warning-msg" id="errCapacityLimit" style="display: none;"></div>
 
-        <!-- RECURRING STANDING ORDER SUBSCRIPTION TOGGLE -->
-          <div class="standing-order-card" id="standingOrderCard">
-            <label class="standing-order-header" for="chkStandingOrder">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <input type="checkbox" id="chkStandingOrder" onchange="toggleStandingOrder(this.checked)" style="width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer;" />
-                <div>
-                  <div style="font-size: 0.85rem; font-weight: 800; color: var(--text);">
-                    🔄 Make this a Standing Order
-                  </div>
-                  <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">
-                    Automated fresh weekend delivery &bull; Guaranteed roastery batch reserve
-                  </div>
-                </div>
-              </div>
-              <span class="standing-order-pill">SAVE 10%</span>
-            </label>
-            <div id="standingOrderCadence" style="display: none; margin-top: 10px; border-top: 1px dashed var(--card-border); padding-top: 8px;">
-              <span style="font-size: 0.72rem; color: var(--accent); font-weight: 700;">Delivery Cadence: </span>
-              <select id="standingCadenceSelect" onchange="updateTotal()" style="padding: 4px 8px; font-size: 0.74rem; background: var(--card-inner); color: var(--text); border: 1px solid var(--card-border); border-radius: 6px;">
-                <option value="WEEKLY" selected>Every Weekend (Weekly Drop)</option>
-                <option value="BIWEEKLY">Every 2 Weeks (Bi-Weekly Drop)</option>
-              </select>
-              <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 4px;">
-                Pause, modify harvest split, or cancel anytime with 1-click via WhatsApp or tracker.
-              </div>
-            </div>
-          </div>
 
         <!-- Coupon Code Input -->
         <div class="form-group" style="margin-top: 14px;">
