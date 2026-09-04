@@ -490,6 +490,15 @@ will-change: transform;
 
 * **Frictionless Navigation:** Navigating forward and backward smoothly shifts the viewport via `translateX(-0%)`, `translateX(-33.3333%)`, and `translateX(-66.6667%)` with GPU composition, eliminating layout jumps.
 
+### **18.4 Responsive Desktop Parallel Card Architecture & Full-Width Ticker**
+
+* **Full-Width Ticker Integration:** Removed fixed `max-width` bottlenecks on `.countdown-ticker-card` across tablet (`768px`) and desktop (`1024px`) breakpoints (`width: 100% !important; max-width: 100% !important;`). The ticker card now aligns flush with the full width of `.hero-visual-card` and `.section-card`, while its internal mechanical flip cards and dual-stream toggle remain centered.  
+* **Responsive Parallel Card Decks (`.parallel-card-deck`):**  
+  * On screens `< 860px`, cards stack vertically with standard mobile spacing.  
+  * On screens `≥ 860px` (laptops and desktops), cards auto-switch to a 2-column grid (`grid-template-columns: repeat(2, 1fr); gap: 20px; align-items: stretch;`):  
+    1. **Homepage (`index.html`):** *Sensory Profile & Science* card sits parallel to *48-Hour Freshness Curve*; *Flavor Guidance* card sits parallel to *The Comparison (How We Differ)* card.  
+    2. **Flavor Page (`flavor.html`):** *5-Axis Sensory Radar* sits parallel to *Side-by-Side Spectrum Bars*; *Process Science* sits parallel to *Food Pairings*.
+
 ## **19\. SEO, LocalBusiness Schema & Mobile Form Architecture**
 
 ### 19.1 Technical SEO & Canonical Routing

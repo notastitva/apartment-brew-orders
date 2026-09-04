@@ -4096,40 +4096,43 @@ input:focus, select:focus, textarea:focus {
 }
 
 @keyframes radarNodePulse {
-  0% { r: 5px; opacity: 0.35; }
+  0% { r: 5.5px; opacity: 0.35; }
   100% { r: 8px; opacity: 0.75; }
 }
 
-.radar-vertex-interactive {
-  cursor: pointer;
-}
-
-.radar-vertex-interactive:hover .radar-node-pulse {
-  r: 9.5px;
-  opacity: 1;
-}
-
-.radar-micro-tooltip-box {
-  position: absolute;
-  pointer-events: none;
-  background: rgba(20, 19, 18, 0.96);
-  border: 1px solid var(--accent);
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-size: 0.74rem;
-  font-weight: 700;
-  color: var(--text);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 12px rgba(212, 163, 115, 0.35);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  z-index: 100;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  white-space: nowrap;
-}
 
 /* ==================================================================== */
 /* COMPREHENSIVE RESPONSIVE DESKTOP & TABLET DESIGN SYSTEM              */
 /* ==================================================================== */
+
+/* ==================================================================== */
+/* PARALLEL CARD DECKS FOR WIDER SCREENS (min-width: 860px)             */
+/* ==================================================================== */
+.parallel-card-deck {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+@media (min-width: 860px) {
+  .parallel-card-deck {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px !important;
+    align-items: stretch !important;
+    width: 100% !important;
+  }
+
+  .parallel-card-deck > .section-card,
+  .parallel-card-deck > article {
+    margin: 0 !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+}
 
 /* Tablet Breakpoint (min-width: 768px) */
 @media (min-width: 768px) {
@@ -4222,9 +4225,10 @@ input:focus, select:focus, textarea:focus {
 }
   /* Responsive Ticker Scaling (Tablet - min-width: 768px) */
   .countdown-ticker-card {
-    max-width: 520px;
+    width: 100% !important;
+    max-width: 100% !important;
     padding: 14px 20px;
-    margin: 14px auto 18px;
+    margin: 14px 0 18px !important;
     border-radius: 14px;
   }
 
@@ -4307,10 +4311,10 @@ input:focus, select:focus, textarea:focus {
 
   /* Responsive Ticker Scaling (Desktop - min-width: 1024px) */
   .countdown-ticker-card {
-    max-width: 620px;
+    width: 100% !important;
+    max-width: 100% !important;
     padding: 16px 24px;
-    margin: 16px auto 22px;
-    border-radius: 16px;
+    margin: 16px 0 22px !important;
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
 
