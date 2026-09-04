@@ -8,13 +8,9 @@
   <meta name="description" content="Custom weekend flash-chilled specialty coffee drops across Gurugram &amp; Delhi NCR. Select pack size and fine-tune single-estate lot ratios." />
   <link rel="canonical" href="https://apartmentbrewco.in/personal" />
   <link rel="stylesheet" href="style.css?v=2.5" />
-
-
- <!-- Google Fonts Embed -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&amp;family=Inter:wght@300;400;500;600;700;800&amp;family=Montserrat:wght@600;700;800&amp;family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet" />
-
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
 
   <!-- Favicons & Mobile Touch Icons -->
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
@@ -35,6 +31,8 @@
   
   <!-- Razorpay Standard Checkout SDK -->
   <script defer src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <body data-page="PERSONAL">
   <!-- Sticky Top Header & Hamburger Navigation (Topmost Component) -->
@@ -168,6 +166,7 @@
 
         <!-- Dynamic B2C Packs Grid -->
         <div class="pack-grid" id="b2cPacks"></div>
+        <div class="field-error" id="errPackSelection" style="display: none; margin-top: 8px;">⚠️ Please select a batch size to continue.</div>
 
         <div class="form-group" style="margin-top: 12px;">
           <label for="packQty">Quantity of Selected Batches / Packs</label>
@@ -225,6 +224,34 @@
         <!-- Real-Time Batch Capacity Warning Container -->
         <div class="capacity-warning-msg" id="errCapacityLimit" style="display: none;"></div>
 
+        <!-- RECURRING STANDING ORDER SUBSCRIPTION TOGGLE -->
+          <div class="standing-order-card" id="standingOrderCard">
+            <label class="standing-order-header" for="chkStandingOrder">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="chkStandingOrder" onchange="toggleStandingOrder(this.checked)" style="width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer;" />
+                <div>
+                  <div style="font-size: 0.85rem; font-weight: 800; color: var(--text);">
+                    🔄 Make this a Standing Order
+                  </div>
+                  <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">
+                    Automated fresh weekend delivery &bull; Guaranteed roastery batch reserve
+                  </div>
+                </div>
+              </div>
+              <span class="standing-order-pill">SAVE 10%</span>
+            </label>
+            <div id="standingOrderCadence" style="display: none; margin-top: 10px; border-top: 1px dashed var(--card-border); padding-top: 8px;">
+              <span style="font-size: 0.72rem; color: var(--accent); font-weight: 700;">Delivery Cadence: </span>
+              <select id="standingCadenceSelect" onchange="updateTotal()" style="padding: 4px 8px; font-size: 0.74rem; background: var(--card-inner); color: var(--text); border: 1px solid var(--card-border); border-radius: 6px;">
+                <option value="WEEKLY" selected>Every Weekend (Weekly Drop)</option>
+                <option value="BIWEEKLY">Every 2 Weeks (Bi-Weekly Drop)</option>
+              </select>
+              <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 4px;">
+                Pause, modify harvest split, or cancel anytime with 1-click via WhatsApp or tracker.
+              </div>
+            </div>
+          </div>
+
         <!-- Coupon Code Input -->
         <div class="form-group" style="margin-top: 14px;">
           <label for="couponInput">Promo / Coupon Code</label>
@@ -236,7 +263,42 @@
           <div id="couponStatus" class="coupon-status" style="display: none;"></div>
         </div>
 
-        <div class="summary-box">
+<!-- Recurring Standing Order Cadence Selector -->
+<div class="cadence-selector-container" id="cadenceSelectorContainer">
+  <div class="cadence-selector-header">
+    <span>🔄 Delivery Cadence</span>
+    <span class="standing-order-discount-badge">Save 10% on Standing Orders</span>
+  </div>
+  <div class="cadence-options-grid">
+    <div class="cadence-option active" id="cadenceOneTime" onclick="selectOrderCadence('ONE_TIME')">
+      <div class="cadence-radio"></div>
+      <div class="cadence-info">
+        <div class="cadence-name">One-Time Weekend Drop</div>
+        <div class="cadence-desc">Upcoming weekend batch only. No recurring commitment.</div>
+      </div>
+      <div class="cadence-tag">Standard</div>
+    </div>
+    <div class="cadence-option" id="cadenceWeekly" onclick="selectOrderCadence('WEEKLY')">
+      <div class="cadence-radio"></div>
+      <div class="cadence-info">
+        <div class="cadence-name">Weekly Standing Order</div>
+        <div class="cadence-desc">Fresh drop every weekend. Guaranteed batch reserve before cutoff.</div>
+      </div>
+      <div class="cadence-tag tag-discount">Save 10%</div>
+    </div>
+    <div class="cadence-option" id="cadenceBiWeekly" onclick="selectOrderCadence('BI_WEEKLY')">
+      <div class="cadence-radio"></div>
+      <div class="cadence-info">
+        <div class="cadence-name">Bi-Weekly Standing Order</div>
+        <div class="cadence-desc">Fresh drop every alternate weekend. Pause or cancel anytime.</div>
+      </div>
+      <div class="cadence-tag tag-discount">Save 10%</div>
+    </div>
+  </div>
+</div>
+
+<!-- Order Price Summary Card -->
+<div class="summary-box" style="margin-top: 14px;">
           <div class="summary-breakdown" id="summaryBreakdown" style="display: none;">
             <div class="summary-line">
               <span>Subtotal:</span>
@@ -324,9 +386,9 @@
 
         <div class="form-group">
           <label for="dropInstructions">Delivery / Gate Drop Preference</label>
-          <select id="dropInstructions">
-            <option value="Deliver directly to door / desk">Deliver directly to door / desk</option>
-            <option value="Leave with Tower Security / Concierge Desk">Leave with Tower Security / Concierge Desk</option>
+<select id="dropInstructions" style="padding: 10px; background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 8px; color: var(--text); font-size: 0.82rem; width: 100%;">
+<option value="Deliver directly to door/desk">Deliver directly to door / desk</option>
+<option value="Leave with Tower Security/Concierge Desk">Leave with Tower Security / Concierge Desk</option>
             <option value="Call upon arrival for pickup">Call upon arrival for pickup</option>
           </select>
         </div>
@@ -472,13 +534,6 @@
   </div>
   
   <!-- Service Worker Registration -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW error:', err));
-      });
-    }
-  </script>
   <script src="app.js?v=2.5"></script>
 </body>
 </html>

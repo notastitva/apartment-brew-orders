@@ -8,12 +8,11 @@
   <meta name="description" content="Interactive specialty coffee flavor matcher and 5-axis sensory spectrum radar comparing single-estate Arabica harvests from Indian estates." />
   <link rel="canonical" href="https://apartmentbrewco.in/flavor" />
   <link rel="stylesheet" href="style.css?v=2.5" />
-
-  <!-- Google Fonts Embed -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&amp;family=Inter:wght@300;400;500;600;700;800&amp;family=Montserrat:wght@600;700;800&amp;family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&amp;family=Syne:wght@700;800&amp;display=swap" rel="stylesheet" />
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
 
   <!-- Favicons & Mobile Touch Icons -->
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
@@ -142,7 +141,7 @@ src="assets/tabc-emblem-gold-transparent.svg"
     <!-- MODULE 2: INTERACTIVE 5-AXIS SENSORY RADAR COMPARISON GRAPH -->
 <section class="section-card" style="margin-top: 14px;">
   <div class="section-title">
-    <span>📊 Sensory Radar Comparison</span>
+<span><i data-lucide="radar" style="width: 18px; height: 18px; vertical-align: -3px; margin-right: 4px; color: var(--accent);"></i> Sensory Radar Comparison</span>
     <span class="section-subtitle">5-Axis Tasting Matrix</span>
   </div>
   <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
@@ -156,56 +155,10 @@ src="assets/tabc-emblem-gold-transparent.svg"
     <button type="button" class="mode-tab" id="radarTabLot2" style="padding: 6px 12px; font-size: 0.72rem;" onclick="setRadarFocus('LOT-02')">🌸 Banana Banger</button>
   </div>
  
-  <!-- Radar SVG Container -->
-  <div id="radarSvgContainer" style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px 10px; text-align: center;">
-    <svg viewBox="0 0 400 250" style="width: 100%; max-width: 380px; height: auto; margin: 0 auto; display: block;" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="ratnagiriRadarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#e76f51" stop-opacity="0.65" />
-          <stop offset="100%" stop-color="#d4a373" stop-opacity="0.25" />
-        </linearGradient>
-        <linearGradient id="bananaRadarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#2a9d8f" stop-opacity="0.65" />
-          <stop offset="100%" stop-color="#00b4d8" stop-opacity="0.25" />
-        </linearGradient>
-      </defs>
- 
-      <!-- Concentric Grid Polygons -->
-      <polygon points="200,100 219.0,113.8 211.8,136.2 188.2,136.2 181.0,113.8" stroke="rgba(255,255,255,0.08)" stroke-width="1" fill="none" />
-      <polygon points="200,80 238.0,107.6 223.5,152.4 176.5,152.4 162.0,107.6" stroke="rgba(255,255,255,0.1)" stroke-width="1" fill="none" />
-      <polygon points="200,60 257.1,101.5 235.3,168.5 164.7,168.5 142.9,101.5" stroke="rgba(255,255,255,0.12)" stroke-width="1" fill="none" />
-      <polygon points="200,40 276.1,95.3 247.0,184.7 153.0,184.7 123.9,95.3" stroke="rgba(212,163,115,0.3)" stroke-width="1.2" fill="none" />
- 
-      <!-- Axis Spokes -->
-      <line x1="200" y1="120" x2="200" y2="40" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />
-      <line x1="200" y1="120" x2="276.1" y2="95.3" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />
-      <line x1="200" y1="120" x2="247.0" y2="184.7" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />
-      <line x1="200" y1="120" x2="153.0" y2="184.7" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />
-      <line x1="200" y1="120" x2="123.9" y2="95.3" stroke="rgba(255,255,255,0.14)" stroke-dasharray="2 2" />
- 
-      <!-- Lot 2: Banana Banger Radar Area -->
-      <polygon id="radarPolyBanana" points="200,60 272.3,96.5 237.6,171.8 174.1,155.6 129.6,97.1" fill="url(#bananaRadarGrad)" stroke="#2a9d8f" stroke-width="2.5" style="transition: all 0.35s ease; filter: drop-shadow(0 0 6px rgba(42,157,143,0.4));" />
-      <circle cx="200" cy="60" r="3.5" fill="#2a9d8f" />
-      <circle cx="272.3" cy="96.5" r="3.5" fill="#2a9d8f" />
-      <circle cx="237.6" cy="171.8" r="3.5" fill="#2a9d8f" />
-      <circle cx="174.1" cy="155.6" r="3.5" fill="#2a9d8f" />
-      <circle cx="129.6" cy="97.1" r="3.5" fill="#2a9d8f" />
- 
-      <!-- Lot 1: Ratnagiri Estate Radar Area -->
-      <polygon id="radarPolyRatnagiri" points="200,52 253.3,102.7 242.3,178.2 164.7,168.5 139.1,100.2" fill="url(#ratnagiriRadarGrad)" stroke="#e76f51" stroke-width="2.5" style="transition: all 0.35s ease; filter: drop-shadow(0 0 6px rgba(231,111,81,0.4));" />
-      <circle cx="200" cy="52" r="4" fill="#e76f51" />
-      <circle cx="253.3" cy="102.7" r="4" fill="#e76f51" />
-      <circle cx="242.3" cy="178.2" r="4" fill="#e76f51" />
-      <circle cx="164.7" cy="168.5" r="4" fill="#e76f51" />
-      <circle cx="139.1" cy="100.2" r="4" fill="#e76f51" />
- 
-      <!-- Axis Labels -->
-      <text x="200" y="26" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="middle">Bright Acidity</text>
-      <text x="292" y="93" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="start">Floral Aromatics</text>
-      <text x="258" y="204" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="start">Cane Sweetness</text>
-      <text x="142" y="204" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="end">Body &amp; Texture</text>
-      <text x="108" y="93" fill="#fefae0" font-size="9.5" font-weight="800" text-anchor="end">Cup Clarity</text>
-    </svg>
+<!-- Radar Chart &amp; SVG Container -->
+<div id="radarSvgContainer" style="background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px 10px; text-align: center; position: relative; max-width: 440px; margin: 0 auto; min-height: 280px; display: flex; align-items: center; justify-content: center;">
+  <canvas id="sensoryRadarCanvas" style="max-height: 280px; width: 100%; max-width: 380px;"></canvas>
+</div>
     
     <!-- Radar Legend -->
     <div id="radarLegendContainer" style="display: flex; justify-content: center; gap: 16px; margin-top: 10px; font-size: 0.74rem;">
@@ -218,6 +171,22 @@ src="assets/tabc-emblem-gold-transparent.svg"
         Banana Banger (Silky &amp; Floral)
       </div>
     </div>
+  </div>
+</section>
+ 
+<!-- SECTION: LIVE COMMUNITY CALIBRATION SCORES -->
+<section class="section-card" id="communityCalibrationSection">
+  <div class="section-title">
+    <span style="display: flex; align-items: center; gap: 8px;">
+      <span>★</span> Live Community Calibration Scores
+    </span>
+    <span class="section-subtitle">Real Drinker Feedback &bull; Verified Batches</span>
+  </div>
+  <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.45;">
+    Aggregated in real-time from verified post-delivery drinker feedback across Delhi NCR. Every bottle is rated on overall brew balance, fruit acidity, and cup clarity:
+  </p>
+  <div class="community-calib-grid" id="communityCalibGrid">
+    <!-- Rendered dynamically from live calibration data in app.js -->
   </div>
 </section>
  
@@ -410,6 +379,20 @@ src="assets/tabc-emblem-gold-transparent.svg"
 </section>
  
   </div>
+ 
+<!-- MODULE 6.5: LIVE COMMUNITY CALIBRATION & REVIEWS -->
+<section class="section-card" style="margin-top: 14px;">
+  <div class="section-title">
+    <span>👥 Live Community Calibration</span>
+    <span class="section-subtitle">Aggregated Verified Ratings</span>
+  </div>
+  <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">
+    Real cupping scores submitted by coffee drinkers across Delhi NCR upon bottle delivery. Every review calibrates our roastery extraction recipes:
+  </p>
+  <div id="communityCalibrationContainer" class="community-calibration-grid">
+    <!-- Populated dynamically by app.js from Google Sheets Sensory Feedback -->
+  </div>
+</section>
  
 <!-- MODULE 7: BOTTOM GATEWAY CTA -->
       <section class="section-card" style="margin-top: 14px; text-align: center;">

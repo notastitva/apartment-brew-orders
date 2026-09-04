@@ -83,6 +83,7 @@
     ]
   }
   </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 
 
@@ -696,13 +697,6 @@
   </div>
 
   <!-- Service Worker Registration -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW error:', err));
-      });
-    }
-  </script>
   <script src="app.js?v=2.5"></script>
 </body>
 </html>

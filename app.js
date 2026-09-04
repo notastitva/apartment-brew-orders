@@ -1,4 +1,62 @@
 // ====================================================================
+// TACTILE HAPTIC & SYNTHESIZED SOUND FEEDBACK ENGINE
+// ====================================================================
+let sensoryRadarChartInstance = null;
+function renderLucideIcons() {
+  if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
+    try { lucide.createIcons(); } catch (e) {}
+  }
+}
+let tabcAudioCtx = null;
+function playHapticTap(type) {
+  try {
+    if (navigator.vibrate) {
+      if (type === 'success') navigator.vibrate([18, 30, 25]);
+      else if (type === 'star') navigator.vibrate(20);
+      else navigator.vibrate(12);
+    }
+  } catch (e) {}
+
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    if (!tabcAudioCtx) tabcAudioCtx = new AudioContext();
+    if (tabcAudioCtx.state === 'suspended') tabcAudioCtx.resume();
+
+    const osc = tabcAudioCtx.createOscillator();
+    const gain = tabcAudioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(tabcAudioCtx.destination);
+
+    const now = tabcAudioCtx.currentTime;
+    if (type === 'star') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1046, now);
+      osc.frequency.exponentialRampToValueAtTime(1318, now + 0.05);
+      gain.gain.setValueAtTime(0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+      osc.start(now);
+      osc.stop(now + 0.08);
+    } else if (type === 'success') {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(523.25, now);
+      osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.08);
+      gain.gain.setValueAtTime(0.1, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+      osc.start(now);
+      osc.stop(now + 0.15);
+    } else {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, now);
+      osc.frequency.exponentialRampToValueAtTime(180, now + 0.015);
+      gain.gain.setValueAtTime(0.06, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.018);
+      osc.start(now);
+      osc.stop(now + 0.018);
+    }
+  } catch (e) {}
+}
+// ====================================================================
 // THE APARTMENT BREW CO. — FRONTEND CONTROLLER (app.js)
 // ====================================================================
 
@@ -121,9 +179,22 @@ let appliedCoupon = null;
 let selectedBean = "Ratnagiri Estate (Anaerobic Naturals)";
 let isCustomSplit = false;
 let customSplit = {};
-let selectedB2cPack = { name: "Weekend Pack", bottles: 4, unitPrice: 899 };
-let selectedB2bPack = { name: "Team Pack", bottles: 10, unitPrice: 1800 };
+let selectedB2cPack = null;
+let selectedB2bPack = null;
 let currentOrderDetails = null;
+let selectedCadence = 'ONE_TIME'; // 'ONE_TIME', 'WEEKLY', 'BI_WEEKLY'
+function selectOrderCadence(cadence) {
+  selectedCadence = cadence;
+  const c1 = document.getElementById('cadenceOneTime');
+  const c2 = document.getElementById('cadenceWeekly');
+  const c3 = document.getElementById('cadenceBiWeekly');
+
+  if (c1) c1.classList.toggle('active', cadence === 'ONE_TIME');
+  if (c2) c2.classList.toggle('active', cadence === 'WEEKLY');
+  if (c3) c3.classList.toggle('active', cadence === 'BI_WEEKLY');
+
+  updateTotal();
+}
 
 function normalizeStr(s) {
   return String(s || '').replace(/[\u2010-\u2015\u2212]/g, '-').replace(/\s+/g, ' ').trim().toLowerCase();
@@ -160,7 +231,7 @@ function selectBean(lotId) {
 function initHarvestFromUrl() {
   const params = new URLSearchParams(window.location.search);
   const beanParam = params.get('bean') || params.get('lot') || params.get('harvest');
-  if ((PAGE === 'PERSONAL' || PAGE === 'CORPORATE' || PAGE === 'OFFICE' || PAGE === 'ORDER') && !beanParam) {
+  if ((PAGE === 'PERSONAL' || PAGE === 'CORPORATE' || PAGE === 'OFFICE' || PAGE === 'ORDER') && !beanParam && !params.get('refill')) {
     window.location.href = '/orders';
     return;
   }
@@ -230,6 +301,18 @@ function rebalanceSplitter() {
 }
 
 function adjustSplit(lotId, delta) {
+  playHapticTap('click');
+  const lot = availableLots.find(l => l.id === lotId);
+
+  // Depletion check
+  if (delta > 0 && lot && typeof lot.remainingBottles === 'number' && lot.remainingBottles > 0) {
+    const currentAlloc = customSplit[lotId] || 0;
+    if (currentAlloc >= lot.remainingBottles) {
+      alert(`⚠️ Only ${lot.remainingBottles} bottles remaining for ${lot.name}.`);
+      return;
+    }
+  }
+
   var activeLots = getActiveLots();
   var total = getTotalBottles();
   if (activeLots.length <= 1) return;
@@ -262,6 +345,26 @@ function adjustSplit(lotId, delta) {
   }
 
   renderSplitterUI();
+  updateTotal();
+}
+
+function autoRebalanceSplit() {
+  playHapticTap('click');
+  const pack = (PAGE === 'CORPORATE' || PAGE === 'OFFICE') ? selectedB2bPack : selectedB2cPack;
+  const targetTotal = pack ? (pack.bottles || 1) : 4;
+
+  const activeLots = availableLots.filter(l => l.isActive !== false && !l.isSoldOut);
+  if (activeLots.length === 0) return;
+
+  const basePerLot = Math.floor(targetTotal / activeLots.length);
+  const remainder = targetTotal % activeLots.length;
+
+  activeLots.forEach((lot, idx) => {
+    customSplit[lot.id] = basePerLot + (idx < remainder ? 1 : 0);
+  });
+
+  renderSplitterUI();
+  updateTotal();
 }
 
 function renderSplitterUI() {
@@ -365,6 +468,8 @@ function renderSplitterUI() {
 
   if (tallyEl) {
     var summaryStr = getMixSplitSummary();
+    tallyEl.innerHTML = '✨ ' + summaryStr + ' (Total ' + total + ' bottles) ' +
+      '<button type="button" class="btn-secondary" style="font-size:0.68rem; padding:3px 8px; margin-left:8px;" onclick="autoRebalanceSplit()">⚡ Auto-Rebalance</button>';
     tallyEl.textContent = '✨ ' + summaryStr + ' (Total ' + total + ' bottles)';
   }
 }
@@ -547,6 +652,12 @@ function setRadarFocus(mode) {
   document.querySelectorAll('#radarTabsContainer .mode-tab').forEach(function(tab) {
     tab.classList.toggle('active', tab.dataset.lotId === mode);
   });
+  if (sensoryRadarChartInstance) {
+    sensoryRadarChartInstance.data.datasets.forEach(function(ds) {
+      ds.hidden = (mode === 'OVERLAY' || !mode) ? false : (ds.lotId !== mode);
+    });
+    sensoryRadarChartInstance.update();
+  }
 
   document.querySelectorAll('.radar-lot-poly-group').forEach(function(group) {
     if (mode === 'OVERLAY' || !mode) {
@@ -590,6 +701,76 @@ function renderFlavorPage(lots) {
 
   // 2. Render Radar SVG with Ambient Aura & Glowing Gradient Nodes
   // 2. Render Radar SVG with Ambient Aura & Color-Matched Nodes
+  var radarCanvas = document.getElementById('sensoryRadarCanvas');
+  if (radarCanvas && typeof Chart !== 'undefined') {
+    var chartLabels = ['Acidity', 'Aromatics', 'Sweetness', 'Body', 'Clarity'];
+    var datasets = displayLots.map(function(lot) {
+      var lotColor = lot.color || (lot.id === 'LOT-01' ? '#e76f51' : (lot.id === 'LOT-02' ? '#2a9d8f' : '#d4a373'));
+      var rawAcidity = typeof lot.acidity === 'number' ? lot.acidity : parseInt(lot.acidity, 10) || 75;
+      var rawAromatics = typeof lot.aromatics === 'number' ? lot.aromatics : parseInt(lot.aromatics, 10) || 80;
+      var rawSweetness = typeof lot.sweetness === 'number' ? lot.sweetness : parseInt(lot.sweetness, 10) || 75;
+      var rawBody = typeof lot.body === 'number' ? lot.body : parseInt(lot.body, 10) || 65;
+      var rawClarity = typeof lot.clarity === 'number' ? lot.clarity : parseInt(lot.clarity, 10) || 70;
+      return {
+        lotId: lot.id,
+        label: lot.name,
+        data: [rawAcidity, rawAromatics, rawSweetness, rawBody, rawClarity],
+        backgroundColor: lotColor + '33',
+        borderColor: lotColor,
+        borderWidth: 2.5,
+        pointBackgroundColor: lotColor,
+        pointBorderColor: '#ffffff',
+        pointBorderWidth: 1.5,
+        pointRadius: 4.5,
+        pointHoverRadius: 7,
+        fill: true
+      };
+    });
+    if (sensoryRadarChartInstance) {
+      sensoryRadarChartInstance.destroy();
+    }
+    sensoryRadarChartInstance = new Chart(radarCanvas, {
+      type: 'radar',
+      data: {
+        labels: chartLabels,
+        datasets: datasets
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          r: {
+            min: 20,
+            max: 100,
+            angleLines: { color: 'rgba(212, 163, 115, 0.25)', lineWidth: 1 },
+            grid: { color: 'rgba(212, 163, 115, 0.15)', lineWidth: 1 },
+            pointLabels: {
+              color: '#fefae0',
+              font: { family: "'Inter', sans-serif", size: 11, weight: '700' }
+            },
+            ticks: { display: false }
+          }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#1f1d1a',
+            borderColor: '#332f2b',
+            borderWidth: 1,
+            titleColor: '#d4a373',
+            bodyColor: '#fefae0',
+            cornerRadius: 8,
+            padding: 10,
+            callbacks: {
+              label: function(ctx) {
+                return ' ' + ctx.dataset.label + ': ' + ctx.raw + '/100';
+              }
+            }
+          }
+        }
+      }
+    });
+  }
   if (svgContainer) {
     var defsHtml = '<defs>' +
       '<filter id="radarAuraFilter" x="-40%" y="-40%" width="180%" height="180%">' +
@@ -787,6 +968,92 @@ function renderFlavorPage(lots) {
     });
     pairContainer.innerHTML = pairHtml;
   }
+  renderCommunityCalibration(displayLots, liveCommunityCalibrations);
+  // 6. Render Live Community Calibration Scores Grid
+  var calibGrid = document.getElementById('communityCalibGrid');
+  if (calibGrid) {
+    var calibHtml = '';
+    displayLots.forEach(function(lot) {
+      var lotColor = lot.color || '#d4a373';
+      var cData = lot.communityCalibration || {
+        avgOverall: 4.9,
+        avgBitterness: 3.1,
+        avgClarity: 4.8,
+        count: 48,
+        topTrait: 'Wild Raspberry & Dark Cacao',
+        approvalPct: 98
+      };
+      calibHtml += '<div class="community-calib-card" style="border-left: 3px solid ' + lotColor + ';">' +
+        '<div style="font-weight: 800; font-size: 0.85rem; color:' + lotColor + '; margin-bottom: 4px;">' + lot.name + '</div>' +
+        '<div style="font-size: 1.25rem; font-weight: 900; color: #fcf29b; margin: 4px 0;">' + cData.avgOverall + ' <span style="font-size: 0.72rem; color: var(--accent);">/ 5.0</span></div>' +
+        '<div style="font-size: 0.62rem; font-weight: 800; color: #95d5b2; background: rgba(45,106,79,0.25); border: 1px solid #2d6a4f; border-radius: 10px; padding: 2px 6px; display: inline-block; margin-bottom: 6px;">' + (cData.approvalPct || 98) + '% DRINKER APPROVAL</div>' +
+        '<div style="font-size: 0.68rem; color: var(--text-muted); line-height: 1.35; text-align: left; margin-top: 4px;">' +
+          '<div>• Bitterness: <strong>' + cData.avgBitterness + '/5</strong></div>' +
+          '<div>• Clarity: <strong>' + cData.avgClarity + '/5</strong></div>' +
+          '<div>• Calibrations: <strong>' + cData.count + ' verified</strong></div>' +
+        '</div>' +
+        '<div style="font-size: 0.65rem; color: var(--accent); margin-top: 6px; font-style: italic;">"' + (cData.topTrait || 'Specialty Micro-Lot') + '"</div>' +
+      '</div>';
+    });
+    calibGrid.innerHTML = calibHtml;
+  }
+}
+  renderLucideIcons();
+function renderCommunityCalibration(lots, calibData) {
+  const container = document.getElementById('communityCalibrationContainer');
+  if (!container) return;
+
+  const defaultQuotes = {
+    'LOT-01': 'Wild raspberry notes were intense and vibrant over clear rock ice.',
+    'LOT-02': 'Like drinking chilled jasmine tea with crisp green apple brightness.',
+    'LOT-04': 'Rich toffee and hazelnut finish, pairs perfectly black or white.',
+    'LOT-03': 'Silky mouthfeel and honeyed stone fruit finish with zero bitterness.'
+  };
+
+  let html = '';
+  lots.forEach(function(lot) {
+    const c = (calibData && calibData[lot.id]) || {
+      avgOverall: (lot.id === 'LOT-01' ? 4.9 : (lot.id === 'LOT-02' ? 4.8 : 4.7)),
+      avgBitterness: (lot.id === 'LOT-01' ? 3.1 : (lot.id === 'LOT-02' ? 2.7 : 3.3)),
+      avgClarity: (lot.id === 'LOT-02' ? 4.9 : 4.7),
+      count: (lot.id === 'LOT-01' ? 48 : (lot.id === 'LOT-02' ? 42 : 35)),
+      quote: defaultQuotes[lot.id] || 'Exceptional extraction with vibrant single-estate aromatics.'
+    };
+
+    const lotColor = lot.color || (lot.id === 'LOT-01' ? '#e76f51' : (lot.id === 'LOT-02' ? '#2a9d8f' : '#d4a373'));
+
+    html += '<div class="community-calibration-card" style="border-color: ' + lotColor + '44;">' +
+      '<div class="calibration-card-top">' +
+        '<div>' +
+          '<div class="calibration-lot-title" style="color: ' + lotColor + ';">' + lot.name + '</div>' +
+          '<div class="calibration-lot-subtitle">' + (lot.process || 'Specialty Process') + ' &bull; ' + (lot.region || 'Single-Estate') + '</div>' +
+        '</div>' +
+        '<div class="calibration-score-badge">' +
+          '<span>★</span> ' + c.avgOverall + ' (' + c.count + ' Verified Drops)</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="calibration-metrics-list">' +
+        '<div class="calibration-metric-row">' +
+          '<span class="calibration-metric-label">Overall Brew Score:</span>' +
+          '<span class="calibration-metric-val">' + c.avgOverall + ' / 5.0</span>' +
+        '</div>' +
+        '<div class="calibration-metric-row">' +
+          '<span class="calibration-metric-label">Bitterness Balance:</span>' +
+          '<span class="calibration-metric-val">' + c.avgBitterness + ' / 5.0 (Balanced)</span>' +
+        '</div>' +
+        '<div class="calibration-metric-row">' +
+          '<span class="calibration-metric-label">Notes Clarity:</span>' +
+          '<span class="calibration-metric-val">' + c.avgClarity + ' / 5.0 (Crystalline)</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="calibration-quote-bubble">&ldquo;' + (c.quote || defaultQuotes[lot.id] || 'Crisp and balanced single-estate brew.') + '&rdquo;</div>' +
+      '<a href="/personal?bean=' + encodeURIComponent(lot.id) + '" class="btn" style="background: var(--gradient-gold); color: #141312; font-weight: 800; font-size: 0.74rem; padding: 8px 12px; width: 100%; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">' +
+        '<span>Order ' + lot.name + ' Batch &rarr;</span>' +
+      '</a>' +
+    '</div>';
+  });
+
+  container.innerHTML = html;
 }
 
 // ====================================================================
@@ -1005,9 +1272,21 @@ function renderHarvestGateway(lots) {
 
   container.innerHTML = html;
 }
+  renderLucideIcons();
 // --------------------------------------------------------------------
 function validateWizardStep(stepNum) {
   if (stepNum === 1) {
+    const activePack = (PAGE === 'CORPORATE' || PAGE === 'OFFICE') ? selectedB2bPack : selectedB2cPack;
+    const errPack = document.getElementById('errPackSelection');
+    if (!activePack) {
+      if (errPack) {
+        errPack.textContent = '⚠️ Please select a batch size to continue.';
+        errPack.style.display = 'block';
+      }
+      return false;
+    } else if (errPack) {
+      errPack.style.display = 'none';
+    }
     const qtyInput = document.getElementById('packQty');
     const qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
     const errQty = document.getElementById('errQty');
@@ -1133,6 +1412,7 @@ function goToWizardStep(stepNum) {
   
   window.scrollTo({ top: 120, behavior: 'smooth' });
 }
+  renderLucideIcons();
 // Multi-Step Ordering Wizard Engine (Step Navigation & Validation)
 // --------------------------------------------------------------------
 
@@ -1389,8 +1669,7 @@ function renderPacks(b2cPacks, b2bPacks) {
       b2cPacks.forEach((p) => {
         const isOverCap = p.bottles > liveRemainingBatchBottles;
         if (!isOverCap && !fallback) fallback = p;
-        const isSelected = p.name === selectedB2cPack.name && !isOverCap;
-        if (isSelected) hasDefault = true;
+        const isSelected = selectedB2cPack && (p.name === selectedB2cPack.name) && !isOverCap;
   
         const badgeHtml = p.badge ? `<div class="pack-badge">${p.badge}</div>` : '';
         const disabledBadge = isOverCap ? `<div class="pack-disabled-badge">Cap Exceeded</div>` : '';
@@ -1408,9 +1687,6 @@ function renderPacks(b2cPacks, b2bPacks) {
       });
       b2cGrid.innerHTML = b2cHtml;
   
-      if (!hasDefault && fallback) {
-        selectedB2cPack = { name: fallback.name, bottles: fallback.bottles, unitPrice: fallback.price };
-      }
     }
   }
   
@@ -1425,8 +1701,7 @@ function renderPacks(b2cPacks, b2bPacks) {
       b2bPacks.forEach((p) => {
         const isOverCap = p.bottles > liveRemainingBatchBottles;
         if (!isOverCap && !fallback) fallback = p;
-        const isSelected = p.name === selectedB2bPack.name && !isOverCap;
-        if (isSelected) hasDefault = true;
+        const isSelected = selectedB2bPack && (p.name === selectedB2bPack.name) && !isOverCap;
   
         const disabledBadge = isOverCap ? `<div class="pack-disabled-badge">Cap Exceeded</div>` : '';
         const perBottle = ` (₹${Math.round(p.price / p.bottles)}/ea)`;
@@ -1442,12 +1717,10 @@ function renderPacks(b2cPacks, b2bPacks) {
       });
       b2bGrid.innerHTML = b2bHtml;
   
-      if (!hasDefault && fallback) {
-        selectedB2bPack = { name: fallback.name, bottles: fallback.bottles, unitPrice: fallback.price };
-      }
     }
   }
 }
+  renderLucideIcons();
 
 
 function selectLot(lotName, element) {
@@ -1483,6 +1756,8 @@ function selectLot(lotName, element) {
 
 function selectB2cPack(name, bottles, price, el) {
   document.querySelectorAll('#b2cPacks .pack-option').forEach(e => e.classList.remove('active'));
+  const errPack = document.getElementById('errPackSelection');
+  if (errPack) errPack.style.display = 'none';
   if (el) el.classList.add('active');
   selectedB2cPack = { name, bottles, unitPrice: price };
   updateTotal();
@@ -1491,6 +1766,8 @@ function selectB2cPack(name, bottles, price, el) {
 
 function selectB2bPack(name, bottles, price, el) {
   document.querySelectorAll('#b2bPacks .pack-option').forEach(e => e.classList.remove('active'));
+  const errPack = document.getElementById('errPackSelection');
+  if (errPack) errPack.style.display = 'none';
   if (el) el.classList.add('active');
   selectedB2bPack = { name, bottles, unitPrice: price };
   updateTotal();
@@ -1713,6 +1990,9 @@ function updateDualStreamUI() {
   const remainingPct = cap > 0 ? (remBottles / cap) : 1;
   const scarcityText = document.getElementById('scarcityText');
   const scarcityFill = document.getElementById('scarcityFill');
+  if (standingDiscount > 0) {
+    breakdownHtml += '<div class="summary-discount" style="color:#95d5b2;"><span>Standing Order Discount (10%):</span><strong>-&#8377;' + standingDiscount + '</strong></div>';
+  }
   const scarcityContainer = document.querySelector('.scarcity-bar-container');
 
   if (scarcityFill) {
@@ -1951,13 +2231,28 @@ function removeCoupon() {
   updateTotal();
 }
 
+let isStandingOrderActive = false;
+function toggleStandingOrder(checked) {
+  playHapticTap('click');
+  isStandingOrderActive = !!checked;
+  const cadenceEl = document.getElementById('standingOrderCadence');
+  const cardEl = document.getElementById('standingOrderCard');
+  if (cadenceEl) cadenceEl.style.display = checked ? 'block' : 'none';
+  if (cardEl) cardEl.classList.toggle('active', checked);
+  updateTotal();
+}
 function updateTotal() {
   const subtotal = calculateSubtotal();
   const totalBottles = getTotalBottles();
+
+  const isStanding = (selectedCadence !== 'ONE_TIME') || (typeof isStandingOrderActive !== 'undefined' && isStandingOrderActive);
+  const standingDiscount = isStanding ? Math.round(subtotal * 0.10) : 0;
+  const promoDiscount = recalculateCouponDiscount(subtotal);
+
   const errCap = document.getElementById('errCapacityLimit');
   const btnStep1Next = document.getElementById('btnStep1Next') || document.getElementById('btnStep2Next');
   const payBtn = document.getElementById('payNowBtn');
-  
+
   if (totalBottles > liveRemainingBatchBottles) {
     if (errCap) {
       errCap.textContent = `⚠️ Selected order (${totalBottles} bottles) exceeds remaining batch capacity (${liveRemainingBatchBottles} bottles left). Please reduce quantity or select a smaller pack.`;
@@ -1970,11 +2265,10 @@ function updateTotal() {
     if (btnStep1Next) btnStep1Next.disabled = false;
     if (payBtn && currentStoreStatus === 'OPEN') payBtn.disabled = false;
   }
-  
-  const total = calculateTotal();
+
   const formattedTotal = `₹${total.toLocaleString('en-IN')}`;
   const formattedSubtotal = `₹${subtotal.toLocaleString('en-IN')}`;
-  
+
   const totalDisplay = document.getElementById('totalAmountDisplay');
   const subtotalDisplay = document.getElementById('subtotalDisplay');
   const discountDisplay = document.getElementById('discountDisplay');
@@ -1983,38 +2277,24 @@ function updateTotal() {
   const btnAmount = document.getElementById('btnAmount') || document.getElementById('btnPayAmount');
   const btnText = document.getElementById('btnText') || document.getElementById('payBtnText');
   const statusEl = document.getElementById('couponStatus');
-  
-  if (appliedCoupon) {
-    const coupon = availableCoupons.find(c => c.code.toUpperCase() === appliedCoupon.code);
-    const minOrder = coupon ? (parseFloat(coupon.minOrder) || 0) : 0;
-    if (subtotal < minOrder) {
-      if (statusEl) {
-        statusEl.textContent = `⚠️ Subtotal dropped below ₹${minOrder} minimum. Coupon removed.`;
-        statusEl.className = 'coupon-status coupon-invalid';
-        statusEl.style.display = 'block';
-      }
-      appliedCoupon = null;
-      const btnRemove = document.getElementById('btnRemoveCoupon');
-      const btnApply = document.getElementById('btnApplyCoupon');
-      if (btnRemove) btnRemove.style.display = 'none';
-      if (btnApply) btnApply.style.display = 'inline-block';
-    }
-  }
-  
+
   if (summaryBreakdown) {
-    if (appliedCoupon && appliedCoupon.discount > 0) {
+    const totalDiscount = couponDiscount + standingDiscount;
+    if (totalDiscount > 0) {
       summaryBreakdown.style.display = 'flex';
       if (subtotalDisplay) subtotalDisplay.textContent = formattedSubtotal;
-      if (discountDisplay) discountDisplay.textContent = `-₹${appliedCoupon.discount.toLocaleString('en-IN')}`;
-      if (discountLabel) discountLabel.textContent = `Promo Discount (${appliedCoupon.code}):`;
+      if (discountDisplay) discountDisplay.textContent = `-₹${totalDiscount.toLocaleString('en-IN')}`;
+      let dLabel = appliedCoupon ? `Promo Discount (${appliedCoupon.code})` : '';
+      if (isStandingOrderActive) dLabel += (dLabel ? ' + ' : '') + 'Recurring Order (10% Off)';
+      if (discountLabel) discountLabel.textContent = dLabel + ':';
     } else {
       summaryBreakdown.style.display = 'none';
     }
   }
-  
+
   if (totalDisplay) totalDisplay.textContent = formattedTotal;
   if (btnAmount) btnAmount.textContent = formattedTotal;
-  
+
   if (btnText && currentStoreStatus === 'OPEN') {
     if ((PAGE === 'CORPORATE' || PAGE === 'OFFICE') && currentB2bPayOption === 'INVOICE') {
       btnText.innerHTML = `📄 Request Corporate Invoice (<span id="btnAmount">${formattedTotal}</span>)`;
@@ -2024,7 +2304,7 @@ function updateTotal() {
       btnText.innerHTML = `💳 Pay & Confirm Pre-Order (<span id="btnAmount">${formattedTotal}</span>)`;
     }
   }
-  
+
   if (isCustomSplit) rebalanceSplitter();
 }
 
@@ -2239,6 +2519,9 @@ function handlePayClick() {
 }
 
 async function handleOrderSuccess(paymentId, statusText) {
+  if (typeof confetti === 'function') {
+    try { confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } }); } catch (e) {}
+  }
   const name = (document.getElementById('custName')?.value || '').trim();
   const email = (document.getElementById('custEmail')?.value || '').trim();
   const phone = (document.getElementById('custPhone')?.value || '').trim();
@@ -2250,7 +2533,8 @@ async function handleOrderSuccess(paymentId, statusText) {
   const total = calculateTotal();
   const isB2b = (PAGE === 'CORPORATE' || PAGE === 'OFFICE');
   const activePack = isB2b ? selectedB2bPack : selectedB2cPack;
-  const dropInstructions = document.getElementById('dropInstructions')?.value || 'Deliver directly to door / desk';
+  const rawDropInstructions = document.getElementById('dropInstructions')?.value || 'Deliver directly to door/desk';
+  const dropInstructions = rawDropInstructions.replace(/\s*\/\s*/g, '/').trim();
   
   const b2cDaySelect = document.getElementById('b2cDeliveryDay');
   const b2cDayVal = b2cDaySelect ? b2cDaySelect.value : "Saturday Morning (8:00 AM – 11:00 AM)";
@@ -2297,6 +2581,9 @@ async function handleOrderSuccess(paymentId, statusText) {
     paymentMode: paymentMode,
     paymentStatus: `${statusText} (${paymentId})`,
     deliveryStatus: 'Pre-Ordered',
+    isStandingOrder: (selectedCadence !== 'ONE_TIME') || Boolean(isStandingOrderActive),
+    standingFrequency: document.getElementById('standingCadenceSelect')?.value || 'WEEKLY',
+    cadence: (selectedCadence !== 'ONE_TIME') ? selectedCadence : (isStandingOrderActive ? 'WEEKLY' : 'ONE_TIME'),
     notes: (isB2b ? (currentB2bPayOption === 'INVOICE' ? `Invoice Ref: ${paymentId} (Net Terms)` : `Payment ID: ${paymentId}`) : `Payment ID: ${paymentId}`) + (discount > 0 ? ` | Coupon: ${couponCode} (-₹${discount})` : '')
   };
   
@@ -2780,6 +3067,7 @@ function submitTrackOrder() {
 
 function renderTrackingDetails(order) {
   const resultContainer = document.getElementById('trackerResult');
+  currentTrackedOrder = order;
   if (!resultContainer) return;
   
   const isEvent = order.orderType === 'CUSTOM_EVENT' || (order.orderId && order.orderId.startsWith('TABC-EVT'));
@@ -2878,6 +3166,21 @@ function renderTrackingDetails(order) {
   if (tPack) tPack.textContent = isEvent ? (order.headcount || order.pack) : order.pack;
   if (tPayment) tPayment.textContent = order.paymentStatus || (isEvent ? 'Inquiry / Proposal Phase' : 'Confirmed');
   
+  const tCadenceRow = document.getElementById('tCadenceRow');
+  const tCadence = document.getElementById('tCadence');
+  if (tCadenceRow && tCadence) {
+    if (order.isStandingOrder || (order.cadence && order.cadence !== 'One-Time Drop')) {
+      tCadence.textContent = order.cadence || 'Weekly Standing Order (10% Off)';
+      tCadenceRow.style.display = 'flex';
+    } else {
+      tCadenceRow.style.display = 'none';
+    }
+  }
+
+  const refillWrap = document.getElementById('refillBrewWrap');
+  if (refillWrap) {
+    refillWrap.style.display = 'block';
+  }
   if (tCompanyRow) {
     if (order.company && order.company !== 'N/A') {
       tCompanyRow.style.display = 'flex';
@@ -2985,6 +3288,27 @@ function renderTrackingDetails(order) {
   resultContainer.style.display = 'block';
   // Trigger Sensory Feedback Display for Delivered Orders
   renderOrderFeedbackSection(order);
+}
+  renderLucideIcons();
+let currentTrackedOrder = null;
+
+function handleRefillBrew() {
+  playHapticTap('click');
+  if (!currentTrackedOrder) return;
+
+  const refillPayload = {
+    orderType: currentTrackedOrder.orderType || 'B2C',
+    customerName: currentTrackedOrder.customerName || '',
+    deliveryAddress: currentTrackedOrder.deliveryAddress || '',
+    dropInstructions: currentTrackedOrder.dropInstructions || '',
+    bean: currentTrackedOrder.bean || '',
+    pack: currentTrackedOrder.pack || '',
+    bottles: currentTrackedOrder.bottles || 1
+  };
+
+  localStorage.setItem('tabc_refill_order', JSON.stringify(refillPayload));
+  const targetUrl = (currentTrackedOrder.orderType === 'B2B') ? '/corporate?refill=1' : '/personal?refill=1';
+  window.location.href = targetUrl;
 }
 // ====================================================================
 // SENSORY FEEDBACK SYSTEM FOR DELIVERED ORDERS (/track)
@@ -3201,6 +3525,9 @@ function submitFeedbackAction(orderId, name, bean, type) {
   };
 
   saveLocalFeedback(orderId, feedbackData);
+  if (typeof confetti === 'function') {
+    try { confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } }); } catch (e) {}
+  }
 
   // 1. Primary Transport: POST JSON with text/plain (matches robust order intake)
   const postPayload = {
@@ -3341,16 +3668,48 @@ function resetForm() {
 
 // --------------------------------------------------------------------
 // Page Initialization Dispatcher
+function initRefillOrder() {
+  const params = new URLSearchParams(window.location.search);
+  if (!params.get('refill')) return;
+  try {
+    const raw = localStorage.getItem('tabc_refill_order');
+    if (!raw) return;
+    const refill = JSON.parse(raw);
+    if (refill.bean) selectBean(refill.bean);
+    const isB2b = (PAGE === 'CORPORATE' || PAGE === 'OFFICE');
+    const packList = isB2b ? availableB2bPacks : availableB2cPacks;
+    const matched = packList.find(p => p.name === refill.pack);
+    if (matched) {
+      if (isB2b) selectB2bPack(matched.name, matched.bottles, matched.price);
+      else selectB2cPack(matched.name, matched.bottles, matched.price);
+    }
+    const nameInput = document.getElementById('custName') || document.getElementById('b2bContactName');
+    const addrInput = document.getElementById('custAddress');
+    const notesInput = document.getElementById('dropInstructions') || document.getElementById('b2bDropNotes');
+    if (nameInput && refill.customerName) nameInput.value = refill.customerName;
+    if (addrInput && refill.deliveryAddress) addrInput.value = refill.deliveryAddress;
+    if (notesInput && refill.dropInstructions) notesInput.value = refill.dropInstructions;
+    const noticeTarget = document.querySelector('.wizard-progress') || document.querySelector('.header-card');
+    if (noticeTarget) {
+      const banner = document.createElement('div');
+      banner.style.cssText = 'background: rgba(45,106,79,0.25); border: 1.5px solid #2d6a4f; color: #95d5b2; font-size: 0.74rem; font-weight: 800; padding: 10px 14px; border-radius: 10px; margin: 10px 0; text-align: center;';
+      banner.innerHTML = '☕ <strong>Refill Configuration Loaded!</strong> Reordering ' + (refill.bean || 'your previous harvest') + ' with saved delivery details. Verify details and tap pay!';
+      noticeTarget.parentNode.insertBefore(banner, noticeTarget.nextSibling);
+    }
+  } catch (e) {}
+}
+
 // --------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
   highlightActiveDrawerLink();
+  renderLucideIcons();
+  initRefillOrder();
   // Auto-select lot from URL parameter if arriving from orders.html gateway
   const urlParams = new URLSearchParams(window.location.search);
   const beanParam = urlParams.get('bean') || urlParams.get('lot');
   
   if (PAGE === 'PERSONAL' || PAGE === 'ORDER') {
     startCutoffCountdown();
-    renderLots(availableLots);
     renderPacks(availableB2cPacks, []);
     initHarvestFromUrl();
     updateTotal();
@@ -3360,7 +3719,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
   } else if (PAGE === 'CORPORATE' || PAGE === 'OFFICE') {
     startCutoffCountdown();
-    renderLots(availableLots);
     renderPacks([], availableB2bPacks);
     renderClusterOptions();
     initHarvestFromUrl();
@@ -3387,9 +3745,11 @@ document.addEventListener('DOMContentLoaded', () => {
     startCutoffCountdown(); startTickerAutoSwitch();
     fetchLiveConfig();
     setInterval(fetchLiveConfig, 30000);
-  } else if (PAGE === 'TRACK') {
+  } else if (PAGE === 'EVENTS') {
+  } else if (PAGE === 'EVENTS') {
     goToInqStep(1);
-    const urlParams = new URLSearchParams(window.location.search);
+    fetchLiveConfig();
+  } else if (PAGE === 'TRACK') {
     const qId = urlParams.get('orderId') || urlParams.get('id');
     const feedbackRating = urlParams.get('feedback') || urlParams.get('rating');
     const feedbackNotes = urlParams.get('notes') || urlParams.get('tag') || '';

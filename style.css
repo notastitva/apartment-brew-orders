@@ -4423,3 +4423,501 @@ input:focus, select:focus, textarea:focus {
   }
 }
 
+/* ==================================================================== */
+/* LUXURY METALLIC SHIMMER & ANIMATION KEYFRAMES                       */
+/* ==================================================================== */
+@keyframes metallicShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes goldGleam {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(212, 163, 115, 0.35)); }
+  50% { filter: drop-shadow(0 0 14px rgba(252, 242, 155, 0.8)); }
+}
+
+.shimmer-badge {
+  background: linear-gradient(90deg, rgba(212, 163, 115, 0.15) 0%, rgba(252, 242, 155, 0.35) 50%, rgba(212, 163, 115, 0.15) 100%);
+  background-size: 200% 100%;
+  animation: metallicShimmer 3.5s infinite linear;
+}
+
+/* ==================================================================== */
+/* BOARDING PASS / COLD-CHAIN MANIFEST STYLING (/track)                 */
+/* ==================================================================== */
+.cold-chain-manifest-card {
+  background: linear-gradient(165deg, #1e1c19 0%, #141311 100%);
+  border: 1.5px solid rgba(212, 163, 115, 0.45);
+  border-radius: 14px;
+  padding: 0;
+  margin-top: 14px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.manifest-header {
+  background: #151412;
+  padding: 12px 16px;
+  border-bottom: 1.5px dashed rgba(212, 163, 115, 0.35);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.manifest-cutout-left,
+.manifest-cutout-right {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: #141312;
+  border-radius: 50%;
+  top: 100%;
+  transform: translateY(-50%);
+  z-index: 10;
+  border: 1.5px solid rgba(212, 163, 115, 0.45);
+}
+
+.manifest-cutout-left { left: -10px; }
+.manifest-cutout-right { right: -10px; }
+
+.manifest-body {
+  padding: 16px;
+}
+
+.manifest-barcode-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px dashed var(--card-border);
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+.manifest-temp-log {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(144, 224, 239, 0.1);
+  border: 1px solid rgba(144, 224, 239, 0.3);
+  color: #90e0ef;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.manifest-stamp {
+  border: 1.5px solid #2d6a4f;
+  color: #95d5b2;
+  background: rgba(45, 106, 79, 0.2);
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  transform: rotate(-3deg);
+  display: inline-block;
+  text-transform: uppercase;
+}
+
+/* 1-Click Refill Brew Button */
+.btn-refill-brew {
+  background: linear-gradient(135deg, #d4a373 0%, #fcf29b 50%, #b08968 100%);
+  background-size: 200% 100%;
+  color: #141312;
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+  box-shadow: 0 4px 18px rgba(212, 163, 115, 0.35);
+  transition: all 0.25s ease;
+  text-decoration: none;
+  animation: metallicShimmer 4s infinite linear;
+}
+
+.btn-refill-brew:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(212, 163, 115, 0.5);
+}
+
+/* ==================================================================== */
+/* COMMUNITY CALIBRATION & STANDING ORDER STYLES                        */
+/* ==================================================================== */
+.community-calib-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.community-calib-card {
+  background: var(--card-inner);
+  border: 1.5px solid var(--card-border);
+  border-radius: 12px;
+  padding: 12px 10px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.community-calib-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.standing-order-card {
+  background: linear-gradient(165deg, rgba(212, 163, 115, 0.08) 0%, rgba(21, 20, 19, 0.95) 100%);
+  border: 1.5px solid rgba(212, 163, 115, 0.35);
+  border-radius: 12px;
+  padding: 14px;
+  margin: 12px 0;
+  transition: all 0.25s ease;
+}
+
+.standing-order-card.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 16px rgba(212, 163, 115, 0.25);
+}
+
+.standing-order-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.standing-order-pill {
+  font-size: 0.68rem;
+  font-weight: 800;
+  background: rgba(45, 106, 79, 0.25);
+  color: #95d5b2;
+  border: 1px solid #2d6a4f;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+/* ==================================================================== */
+/* 1. LIVE COMMUNITY CALIBRATION SCORES (flavor.html)                   */
+/* ==================================================================== */
+.community-calibration-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.community-calibration-card {
+  background: linear-gradient(165deg, rgba(31, 29, 26, 0.95) 0%, rgba(20, 19, 18, 0.98) 100%);
+  border: 1.5px solid var(--card-border);
+  border-radius: 14px;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.community-calibration-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(212, 163, 115, 0.5);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.5);
+}
+
+.calibration-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.calibration-lot-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.calibration-lot-subtitle {
+  font-size: 0.72rem;
+  color: var(--accent);
+  margin-top: 2px;
+}
+
+.calibration-score-badge {
+  background: rgba(212, 163, 115, 0.15);
+  border: 1px solid var(--accent);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  color: #fcf29b;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.calibration-metrics-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
+
+.calibration-metric-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.73rem;
+}
+
+.calibration-metric-label {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.calibration-metric-val {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.calibration-quote-bubble {
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 2.5px solid var(--accent);
+  padding: 6px 10px;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.72rem;
+  font-style: italic;
+  color: var(--text-muted);
+  line-height: 1.35;
+  margin-bottom: 12px;
+}
+
+/* ==================================================================== */
+/* 2. 1-CLICK "REFILL MY BREW" COMPONENT (track.html)                   */
+/* ==================================================================== */
+.refill-action-card {
+  background: linear-gradient(145deg, rgba(31, 29, 26, 0.95) 0%, rgba(20, 19, 18, 0.98) 100%);
+  border: 1.5px solid rgba(212, 163, 115, 0.4);
+  border-radius: 14px;
+  padding: 16px;
+  margin-top: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.refill-action-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  margin-bottom: 12px;
+}
+
+.refill-icon-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(212, 163, 115, 0.15);
+  border: 1px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.refill-title {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.refill-subtitle {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+  margin-top: 2px;
+}
+
+.btn-refill-brew {
+  background: var(--gradient-gold);
+  color: #141312;
+  font-size: 0.85rem;
+  font-weight: 900;
+  letter-spacing: 0.4px;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 20px;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(212, 163, 115, 0.35);
+}
+
+.btn-refill-brew:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(212, 163, 115, 0.45);
+}
+
+/* ==================================================================== */
+/* 3. RECURRING STANDING ORDERS SELECTOR (personal.html & corporate)   */
+/* ==================================================================== */
+.cadence-selector-container {
+  background: var(--card-inner);
+  border: 1.5px solid var(--card-border);
+  border-radius: 14px;
+  padding: 14px 12px;
+  margin: 14px 0;
+  position: relative;
+}
+
+.cadence-selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 10px;
+  padding: 0 2px;
+}
+
+.standing-order-discount-badge {
+  background: rgba(45, 106, 79, 0.25);
+  border: 1px solid #2d6a4f;
+  color: #95d5b2;
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 10px;
+  letter-spacing: 0.4px;
+}
+
+.cadence-options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cadence-option {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1.5px solid var(--card-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.cadence-option:hover {
+  border-color: rgba(212, 163, 115, 0.4);
+  background: rgba(212, 163, 115, 0.04);
+}
+
+.cadence-option.active {
+  border-color: var(--accent);
+  background: rgba(212, 163, 115, 0.1);
+  box-shadow: 0 2px 12px rgba(212, 163, 115, 0.15);
+}
+
+.cadence-radio {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--card-border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.cadence-option.active .cadence-radio {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 6px rgba(212, 163, 115, 0.6);
+}
+
+.cadence-info {
+  flex: 1;
+}
+
+.cadence-name {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.cadence-desc {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  line-height: 1.25;
+  margin-top: 2px;
+}
+
+.cadence-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.cadence-tag.tag-discount {
+  background: rgba(45, 106, 79, 0.3);
+  border: 1px solid #2d6a4f;
+  color: #95d5b2;
+  font-weight: 800;
+}
+
+.standing-order-active-badge {
+  background: rgba(45, 106, 79, 0.2);
+  border: 1.5px solid #2d6a4f;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Lucide Icon Styling */
+.lucide {
+  width: 1.15em;
+  height: 1.15em;
+  stroke-width: 2;
+  vertical-align: -0.18em;
+  display: inline-block;
+}

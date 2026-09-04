@@ -34,8 +34,9 @@ All coffee across retail, corporate, and catering tiers is standardized into rec
 15. [Automated Email Receipts & Notification System](#15-automated-email-receipts--notification-system)  
 16. [Offline Resilience, Caching & Dynamic Fallbacks](#16-offline-resilience-caching--dynamic-fallbacks)  
 17. [Design System & Brand Asset Specifications](#17-design-system--brand-asset-specifications)  
-18. [Visual & Interaction Polls](#18-visual--interaction-polish)  
-19. [SEO, LocalBusiness Schema & Mobile Form Architecture](#19-seo-localbusiness-schema--mobile-form-architecture)
+18. [Visual & Interaction Polls](?tab=t.0#heading=h.tgn55gqor7s7)  
+19. [Responsive Desktop & Tablet Design System](?tab=t.0#heading=h.u3x4bi6cyx5c)  
+20. [Advanced Logistics, Community Calibration & Subscription Architecture](?tab=t.0#heading=h.qzuffe1nfdeg)
 
 ---
 
@@ -483,11 +484,6 @@ If Google Sheets API endpoint is unreachable or throttled, `app.js` automaticall
 
 * **Fluid Slide Physics:** Step panels in `personal.html` and `corporate.html` are wrapped in a 300% horizontal track inside a clipping viewport.
 
-```css
-transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-will-change: transform;
-```
-
 ### **18.4 Desktop Layout & Parallel Alignment Optimizations (index.html)**
 
 **Decoupled Full-Length Cards:** Removed `.parallel-card-deck` 50/50 split wrappers so each core content block spans full width on desktop viewports.  
@@ -562,3 +558,40 @@ To bypass aggressive browser and CDN (Cloudflare) caching upon deploying updates
 * \<script src="app.js?v=2.5"\>\</script\>
 
 When pushing stylesheet or controller updates, incrementing the version string guarantees instantaneous asset invalidation for all visitors.
+
+## **20\. Advanced Logistics, Community Calibration & Subscription Architecture**
+
+### **20.1 Live Community Calibration Scores (flavor.html)**
+
+* **Real Drinker Aggregation:** Automatically pulls ratings from the *Sensory Feedback* sheet tab and aggregates drinker scores per lot across 3 dimensions: Overall Brew (1–5), Bitterness Balance (1–5), and Notes Clarity (1–5).  
+* **Dynamic Calibration Display:** Displays verified drinker scores, overall approval percentages (e.g., 98% Drinker Approval), total calibrations count, and top community flavor quotes directly beneath the sensory radar chart.
+
+### **20.2 1-Click "Refill My Brew" Reordering (track.html)**
+
+* **Zero-Friction Reordering:** When customers look up an order on the tracker, an artisanal 1-click **"Refill My Brew"** button allows them to instantly duplicate their exact drop configuration.  
+* **Intelligent Autofill Routing:** Preserves the customer's harvest selection, pack size, custom bottle split, and delivery address, routing them to `/personal?refill=1` or `/corporate?refill=1` with details pre-loaded.
+
+### **20.3 Recurring Standing Orders (Weekly / Bi-Weekly Subscriptions)**
+
+* **Automated Batch Reservations:** Customers can toggle "Make this a Standing Order" during checkout to lock in automated weekend drops (Weekly or Bi-Weekly).  
+* **Subscriber Discount:** Applies an automatic 10% standing order discount and tags the order `[STANDING_ORDER: WEEKLY]` in the database and email dispatch notes.
+
+### **20.4 Smart Lot Depletion & 1-Click Auto-Rebalancing Splitter**
+
+* **Inventory Guardrails:** Real-time remaining bottle checks prevent customers from allocating more bottles of a single-estate lot than the roastery has in stock.  
+* **1-Click Auto-Rebalance:** Clicking **⚡ Auto-Rebalance** evenly distributes the pack's bottle quota across all active, available harvests without manual recalculation.
+
+### **20.5 Luxury Metallic Shimmer Keyframes (style.css)**
+
+* **Artisanal Micro-Animations:** Introduces `@keyframes metallicShimmer` and `@keyframes goldGleam` for buttons, badges, and status elements, projecting a luxury flash-chilled specialty brand aesthetic.
+
+### **20.6 Artisanal Cold-Chain Boarding Pass Manifest (track.html)**
+
+* **Air Waybill Aesthetics:** Redesigned order tracker summary card with ticket-style perforated cutouts, official cold-chain temperature verification (`≤ 4.0°C Thermal Shock`), digital SVG barcode, and certified roastery stamp.
+
+### **20.7 Tactile Haptic & Synthesized Audio Feedback**
+
+* **Multi-Sensory Interactions:** Built-in Web Audio API micro-synthesizer and hardware vibration engine (`playHapticTap()`):  
+  * **Stepper & Button Clicks:** 12ms soft sine micro-click (800Hz → 180Hz) \+ 12ms vibration.  
+  * **Rating Stars:** Harmonic high chime (1046Hz C6) \+ 20ms vibration.  
+  * **Order & Feedback Confirmations:** Two-tone major chord confirmation \+ multi-pulse haptic feedback.
