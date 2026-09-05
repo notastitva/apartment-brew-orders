@@ -2999,6 +2999,14 @@ async function handleOrderSuccess(paymentId, statusText) {
   if (rTotalVal) rTotalVal.textContent = formattedTotal;
   
   if (discount > 0) {
+    if (rSubtotalRow) rSubtotalRow.style.display = 'flex';
+    if (rSubtotal) rSubtotal.textContent = `₹${subtotal.toLocaleString('en-IN')}`;
+    if (rDiscountRow) rDiscountRow.style.display = 'flex';
+    if (rDiscount) rDiscount.textContent = `-₹${discount.toLocaleString('en-IN')} (${couponCode})`;
+  } else {
+    if (rSubtotalRow) rSubtotalRow.style.display = 'none';
+    if (rDiscountRow) rDiscountRow.style.display = 'none';
+  }
   const rDrop1Id = document.getElementById('rDrop1Id');
   if (rDrop1Id && (PAGE === 'SUBSCRIBE' || PAGE === 'PASS')) {
     rDrop1Id.textContent = `${orderId}-D1`;
@@ -3014,20 +3022,25 @@ async function handleOrderSuccess(paymentId, statusText) {
   if (linkTrackOrder) {
     linkTrackOrder.href = `/track?orderId=${encodeURIComponent(orderId)}`;
   }
-    if (rSubtotalRow) rSubtotalRow.style.display = 'flex';
-    if (rSubtotal) rSubtotal.textContent = `₹${subtotal.toLocaleString('en-IN')}`;
-    if (rDiscountRow) rDiscountRow.style.display = 'flex';
-    if (rDiscount) rDiscount.textContent = `-₹${discount.toLocaleString('en-IN')} (${couponCode})`;
-  } else {
-    if (rSubtotalRow) rSubtotalRow.style.display = 'none';
-    if (rDiscountRow) rDiscountRow.style.display = 'none';
-  }
   
   
   const orderFormView = document.getElementById('orderFormView');
   const confirmationView = document.getElementById('confirmationView');
+  for (let i = 1; i <= 3; i++) {
+    const p = document.getElementById(`stepPanel${i}`);
+    if (p) p.style.display = 'none';
+  }
+  const sliderTrack = document.getElementById('wizardSliderTrack');
+  if (sliderTrack) sliderTrack.style.display = 'none';
+  const sliderViewport = document.querySelector('.wizard-slider-viewport');
+  if (sliderViewport) sliderViewport.style.display = 'none';
   if (orderFormView) orderFormView.style.display = 'none';
-  if (confirmationView) confirmationView.style.display = 'block';
+  if (confirmationView) {
+    confirmationView.style.display = 'block';
+    if (typeof confirmationView.scrollIntoView === 'function') {
+      confirmationView.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
