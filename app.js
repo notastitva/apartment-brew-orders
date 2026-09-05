@@ -7,6 +7,13 @@ function renderLucideIcons() {
     try { lucide.createIcons(); } catch (e) {}
   }
 }
+let liveBatchNumber = '1';
+function updateNavBatchLabel() {
+  const links = document.querySelectorAll('.drawer-link[data-page-link="ORDERS"], #drawerOrderLink');
+  links.forEach(l => {
+    l.textContent = `Order Batch #${liveBatchNumber}`;
+  });
+}
 let tabcAudioCtx = null;
 function playHapticTap(type) {
   try {
@@ -210,7 +217,7 @@ function normalizeStr(s) {
 
 function selectBean(lotId) {
   const lot = availableLots.find(l => l.id === lotId || l.name === lotId);
-  if (lotId === 'MIX') {
+  if (lotId === 'MIX' || lotId === 'LOT-MIX' || (lotId && String(lotId).toLowerCase().includes('mix'))) {
     isCustomSplit = true;
     selectedBean = "Mix & Match Custom Split";
   } else if (lot) {
@@ -394,6 +401,9 @@ function getTotalBottles() {
   var qtyInput = document.getElementById('packQty');
   var qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
   if (isNaN(qty) || qty <= 0) qty = 1;
+  if (PAGE === 'SUBSCRIBE' || PAGE === 'PASS') {
+    return (selectedPassTier && selectedPassTier.bottlesPerDrop ? selectedPassTier.bottlesPerDrop : 4) * qty;
+  }
   var isB2b = (PAGE === 'CORPORATE' || PAGE === 'OFFICE' || currentMode === 'B2B');
   var active = isB2b ? selectedB2bPack : selectedB2cPack;
   var bottleCount = (active && active.bottles) ? active.bottles : 1;
@@ -2055,6 +2065,14 @@ function applyConfigToUI(data) {
     aboutB2bCapText.textContent = `${remaining} / ${total} Bottles Available`;
     if (aboutB2bBar) aboutB2bBar.style.width = `${pct}%`;
   }
+      if (data && data.batchNumber) {
+        currentBatchNumber = String(data.batchNumber);
+        updateNavBatchLabel();
+      if (data.batchNumber) {
+        liveBatchNumber = String(data.batchNumber);
+        updateNavBatchLabel();
+      }
+      }
 }
 
 function fetchLiveConfig() {
@@ -2654,7 +2672,10 @@ function handlePayClick() {
   const name = (document.getElementById('custName')?.value || '').trim();
   const email = (document.getElementById('custEmail')?.value || '').trim();
   const phone = (document.getElementById('custPhone')?.value || '').trim();
-  const activePack = (PAGE === 'CORPORATE' || PAGE === 'OFFICE') ? selectedB2bPack : selectedB2cPack;
+  const isPass = (PAGE === 'SUBSCRIBE' || PAGE === 'PASS');
+  const isB2b = (PAGE === 'CORPORATE' || PAGE === 'OFFICE');
+  const activePack = isPass ? selectedPassTier : (isB2b ? selectedB2bPack : selectedB2cPack);
+  const orderDesc = isPass ? `4-Drop Coffee Pass: ${packName}` : `${isB2b ? 'Office Drop' : 'Pre-Order'}: ${packName}`;
   
   if (CONFIG.razorpayKeyId && !CONFIG.razorpayKeyId.includes("YOUR_RAZORPAY")) {
     const options = {
@@ -2662,7 +2683,7 @@ function handlePayClick() {
       amount: total * 100,
       currency: "INR",
       name: "The Apartment Brew Co.",
-      description: `${(PAGE === 'CORPORATE' || PAGE === 'OFFICE') ? 'Office Drop' : 'Pre-Order'}: ${activePack.name}`,
+      description: `${isPass ? '4-Drop Coffee Pass' : (isB2b ? 'Office Drop' : 'Pre-Order')}: ${activePack ? activePack.name : 'Coffee'}`,
       prefill: { name: name, email: email, contact: phone },
       theme: { color: "#d4a373" },
       handler: function (response) { handleOrderSuccess(response.razorpay_payment_id, "Paid via Gateway"); }
@@ -2692,17 +2713,16 @@ async function handleOrderSuccess(paymentId, statusText) {
   const discount = appliedCoupon ? appliedCoupon.discount : 0;
   const couponCode = appliedCoupon ? appliedCoupon.code : 'NONE';
   const total = calculateTotal();
+  const isPass = (PAGE === 'SUBSCRIBE' || PAGE === 'PASS');
   const isB2b = (PAGE === 'CORPORATE' || PAGE === 'OFFICE');
-  const activePack = isB2b ? selectedB2bPack : selectedB2cPack;
-  const rawDropInstructions = document.getElementById('dropInstructions')?.value || 'Deliver directly to door/desk';
-  const dropInstructions = rawDropInstructions.replace(/\s*\/\s*/g, '/').trim();
+  const activePack = isPass ? selectedPassTier : (isB2b ? selectedB2bPack : selectedB2cPack);
   
+  const passDropWindow = document.getElementById('passDropWindow')?.value;
   const b2cDaySelect = document.getElementById('b2cDeliveryDay');
   const b2cDayVal = b2cDaySelect ? b2cDaySelect.value : "Saturday Morning (8:00 AM – 11:00 AM)";
-  const deliveryWindow = isB2b ? (document.getElementById('b2bDeliveryWindow')?.value || '') : b2cDayVal;
-  const dropDate = isB2b ? getUpcomingFridayFormatted() : getUpcomingB2cDropDate(b2cDayVal);
-  
-  const orderId = isB2b ? "TABC-B2B-" + Math.floor(100000 + Math.random() * 900000) : "TABC-" + Math.floor(100000 + Math.random() * 900000);
+  const deliveryWindow = isPass ? (passDropWindow || 'Saturday Morning (8:00 AM – 11:00 AM)') : (isB2b ? (document.getElementById('b2bDeliveryWindow')?.value || '') : b2cDayVal);
+  const dropDate = isB2b ? getUpcomingFridayFormatted() : getUpcomingB2cDropDate(deliveryWindow);
+  const orderId = isPass ? "TABC-PASS-" + Math.floor(100000 + Math.random() * 900000) : (isB2b ? "TABC-B2B-" + Math.floor(100000 + Math.random() * 900000) : "TABC-" + Math.floor(100000 + Math.random() * 900000));
   const location = isB2b ? (document.getElementById('b2bTechPark')?.value || '') : (document.getElementById('custCity')?.value || '');
   const company = isB2b ? ((document.getElementById('custCompany')?.value || '').trim() || "N/A") : "N/A";
   const gstin = isB2b ? ((document.getElementById('custGstin')?.value || '').trim() || "N/A") : "N/A";
@@ -2717,8 +2737,8 @@ async function handleOrderSuccess(paymentId, statusText) {
   const orderPayload = {
     authToken: CONFIG.authToken,
     botTrap: "",
-    orderType: isB2b ? 'B2B' : 'B2C',
-    targetSheet: isB2b ? 'B2B Orders' : 'Sheet1',
+    orderType: isPass ? 'COFFEE_PASS' : (isB2b ? 'B2B' : 'B2C'),
+    targetSheet: isPass ? 'Coffee Passes' : (isB2b ? 'B2B Orders' : 'Sheet1'),
     orderId: orderId,
     company: company,
     name: name,
@@ -2732,9 +2752,9 @@ async function handleOrderSuccess(paymentId, statusText) {
     deliveryWindow: deliveryWindow,
     dropDate: dropDate,
     bean: coffeeLotDisplay,
-    pack: activePack.name,
+    pack: activePack ? activePack.name : (isPass ? '4-Drop Coffee Pass' : 'Batch Pack'),
     quantity: qty,
-    bottles: activePack.bottles * qty,
+    bottles: (activePack && activePack.bottles ? activePack.bottles : (isPass ? 16 : 1)) * qty,
     subtotalAmount: subtotal,
     couponCode: couponCode,
     discountAmount: discount,
@@ -3980,7 +4000,9 @@ function initRefillOrder() {
 document.addEventListener('DOMContentLoaded', () => {
   highlightActiveDrawerLink();
   renderLucideIcons();
+  updateNavBatchLabel();
   initRefillOrder();
+  updateNavBatchLabel();
   // Auto-select lot from URL parameter if arriving from orders.html gateway
   const urlParams = new URLSearchParams(window.location.search);
   const beanParam = urlParams.get('bean') || urlParams.get('lot');

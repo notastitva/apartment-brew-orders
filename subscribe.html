@@ -124,13 +124,11 @@
 
     <nav class="drawer-nav">
 
-      <a href="/" class="drawer-link" data-page-link="INDEX">Home</a>
+<a href="/" class="drawer-link" data-page-link="INDEX">Home</a>
 
-      <a href="/orders" class="drawer-link" data-page-link="ORDERS">Order Single Batch</a>
+<a href="/orders" class="drawer-link" data-page-link="ORDERS" id="drawerOrderLink">Order Batch #1</a>
 
-      <a href="/subscribe" class="drawer-link active" data-page-link="SUBSCRIBE">Subscribe (4-Drop Pass)</a>
-
-      <a href="/pass" class="drawer-link" data-page-link="PASS">Manage Active Pass</a>
+<a href="/pass" class="drawer-link" data-page-link="PASS">Manage Active Pass</a>
 
       <a href="/flavor" class="drawer-link" data-page-link="FLAVOR">Flavor Matcher</a>
 
@@ -206,35 +204,35 @@
 
     <main id="orderFormView">
 
-      <!-- Multi-Step Ordering Wizard Progress Stepper -->
+<!-- WIZARD STEP SLIDER VIEWPORT (Hardware-Accelerated Slide Transitions) -->
 
-      <div class="wizard-progress">
+<div class="wizard-progress-bar">
 
-        <div class="wizard-node node-active" id="wNode1" onclick="goToWizardStep(1)">
+<div class="wizard-step-node node-active" id="wNode1" onclick="goToWizardStep(1)">
 
-          <div class="node-circle">1</div>
+<div class="node-circle" id="wCircle1">1</div>
 
-          <div class="node-label">Pass Tier</div>
-
-        </div>
-
-        <div class="wizard-line" id="wLine1"></div>
-
-        <div class="wizard-node" id="wNode2" onclick="goToWizardStep(2)">
-
-          <div class="node-circle">2</div>
-
-          <div class="node-label">Delivery</div>
+<div class="node-label" id="wLabel1">Pass Tier</div>
 
         </div>
 
-        <div class="wizard-line" id="wLine2"></div>
+<div class="wizard-node-line" id="wLine1"></div>
 
-        <div class="wizard-node" id="wNode3" onclick="goToWizardStep(3)">
+<div class="wizard-step-node" id="wNode2" onclick="goToWizardStep(2)">
 
-          <div class="node-circle">3</div>
+<div class="node-circle" id="wCircle2">2</div>
 
-          <div class="node-label">Review &amp; Pay</div>
+<div class="node-label" id="wLabel2">Delivery</div>
+
+        </div>
+
+<div class="wizard-node-line" id="wLine2"></div>
+
+<div class="wizard-step-node" id="wNode3" onclick="goToWizardStep(3)">
+
+<div class="node-circle" id="wCircle3">3</div>
+
+<div class="node-label" id="wLabel3">Review Pass</div>
 
         </div>
 
@@ -526,13 +524,13 @@
 
           </section>
 
-          <!-- STEP 3: Review & Upfront Payment -->
+<!-- STEP 3: Review Pass -->
 
           <section class="section-card wizard-step-panel" id="stepPanel3">
 
             <div class="section-title">
 
-              <span>Step 3: Review Pass &amp; Upfront Payment</span>
+<span>Step 3: Review Pass</span>
 
               <span class="section-subtitle">1 Upfront Payment Locks 4 Scheduled Flash-Brew Drops</span>
 
