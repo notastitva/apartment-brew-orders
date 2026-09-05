@@ -3794,7 +3794,7 @@ function renderTrackingDetails(order) {
 
 // Pass management happens exclusively on pass.html
 const btnGoToPassPortal = document.getElementById('btnGoToPassPortal');
-const isPassOrder = order.orderType === 'COFFEE_PASS' || order.orderType === 'COFFEE_PASS_DROP' || order.masterPassId || (order.orderId && order.orderId.includes('PASS')) || order.isStandingOrder;
+const isPassOrder = Boolean(order.orderType === 'COFFEE_PASS' || order.orderType === 'COFFEE_PASS_DROP' || order.masterPassId || (order.orderId && String(order.orderId).includes('PASS')));
 if (passRedirectCard) {
 if (isPassOrder) {
 passRedirectCard.style.display = 'block';
@@ -3875,7 +3875,49 @@ passRedirectCard.style.display = 'none';
       }
     }
   } else {
-    if (status.includes('out for delivery') || status.includes('transit') || status.includes('dispatch') || status.includes('shipped') || status.includes('on the way')) {
+    if (status.includes('cancel')) {
+      if (sPre) {
+        sPre.className = 'stepper-step step-active';
+      }
+      const sIcon1 = document.getElementById('stepIcon1');
+      if (sIcon1) {
+        sIcon1.textContent = '✕';
+        sIcon1.style.background = 'rgba(230,57,70,0.25)';
+        sIcon1.style.borderColor = 'var(--error)';
+        sIcon1.style.color = 'var(--error-light)';
+      }
+      if (sTitle1) {
+        sTitle1.textContent = 'CANCELLED';
+        sTitle1.style.color = 'var(--error-light)';
+      }
+      if (tBadge) {
+        tBadge.textContent = 'CANCELLED';
+        tBadge.className = 'tracker-badge';
+        tBadge.style.background = 'rgba(230,57,70,0.25)';
+        tBadge.style.borderColor = 'var(--error)';
+        tBadge.style.color = 'var(--error-light)';
+      }
+    } else if (status.includes('pause')) {
+      if (sPre) {
+        sPre.className = 'stepper-step step-active';
+      }
+      const sIcon1 = document.getElementById('stepIcon1');
+      if (sIcon1) {
+        sIcon1.textContent = '⏸️';
+        sIcon1.style.borderColor = '#f39c12';
+        sIcon1.style.color = '#f39c12';
+      }
+      if (sTitle1) {
+        sTitle1.textContent = 'PAUSED';
+        sTitle1.style.color = '#f39c12';
+      }
+      if (tBadge) {
+        tBadge.textContent = 'PAUSED';
+        tBadge.className = 'tracker-badge status-brewing';
+        tBadge.style.color = '#f39c12';
+        tBadge.style.borderColor = '#f39c12';
+      }
+    } else if (status.includes('out for delivery') || status.includes('transit') || status.includes('dispatch') || status.includes('shipped') || status.includes('on the way')) {
       if (sPre) sPre.classList.add('step-completed');
       if (l1) l1.classList.add('line-completed');
       if (sBrew) sBrew.classList.add('step-completed');
