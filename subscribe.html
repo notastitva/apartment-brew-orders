@@ -124,7 +124,7 @@
 
     <nav class="drawer-nav">
 <a href="/" class="drawer-link" data-page-link="INDEX">Home</a>
-<a href="/orders" class="drawer-link" data-page-link="ORDERS" id="navDrawerOrderBatch">Order Batch #1</a>
+<a href="/orders" class="drawer-link" data-page-link="ORDERS" id="drawerOrderLink">Order Batch #1</a>
 <a href="/pass" class="drawer-link" data-page-link="PASS">Manage Active Pass</a>
 <a href="/flavor" class="drawer-link" data-page-link="FLAVOR">Flavor Matcher</a>
 <a href="/guide" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
@@ -198,36 +198,23 @@
 
 <!-- WIZARD STEP SLIDER VIEWPORT (Hardware-Accelerated Slide Transitions) -->
 
+<!-- Multi-Step Ordering Wizard Progress Stepper -->
 <div class="wizard-progress-bar">
-
-<div class="wizard-step-node node-active" id="wNode1" onclick="goToWizardStep(1)">
-
-<div class="node-circle" id="wCircle1">1</div>
-
-<div class="node-label" id="wLabel1">Pass Tier</div>
-
-        </div>
-
-<div class="wizard-node-line" id="wLine1"></div>
-
-<div class="wizard-step-node" id="wNode2" onclick="goToWizardStep(2)">
-
-<div class="node-circle" id="wCircle2">2</div>
-
-<div class="node-label" id="wLabel2">Delivery</div>
-
-        </div>
-
-<div class="wizard-node-line" id="wLine2"></div>
-
-<div class="wizard-step-node" id="wNode3" onclick="goToWizardStep(3)">
-
-<div class="node-circle" id="wCircle3">3</div>
-
-<div class="node-label" id="wLabel3">Review Pass</div>
-
-        </div>
-
+  <div class="wizard-step-node node-active" id="wNode1" onclick="goToWizardStep(1)">
+    <div class="node-circle" id="wCircle1">1</div>
+    <div class="node-label" id="wLabel1">Pass Tier</div>
+  </div>
+  <div class="wizard-node-line" id="wLine1"></div>
+  <div class="wizard-step-node" id="wNode2" onclick="goToWizardStep(2)">
+    <div class="node-circle" id="wCircle2">2</div>
+    <div class="node-label" id="wLabel2">Delivery</div>
+  </div>
+  <div class="wizard-node-line" id="wLine2"></div>
+  <div class="wizard-step-node" id="wNode3" onclick="goToWizardStep(3)">
+    <div class="node-circle" id="wCircle3">3</div>
+    <div class="node-label" id="wLabel3">Review Pass</div>
+  </div>
+</div>
       </div>
 
       <div class="wizard-slider-viewport">

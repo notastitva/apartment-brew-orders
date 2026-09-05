@@ -1,5 +1,16 @@
 // TACTILE HAPTIC & SYNTHESIZED SOUND FEEDBACK ENGINE
 let currentBatchNumber = '1';
+let liveCommunityCalibrations = {};
+
+function updateNavBatchLabel() {
+  const links = document.querySelectorAll('.drawer-link[data-page-link="ORDERS"], #drawerOrderLink, .nav-order-batch');
+  links.forEach(l => {
+    l.textContent = `Order Batch #${currentBatchNumber}`;
+  });
+}
+function updateNavBatchNumber() { updateNavBatchLabel(); }
+function updateNavBatchLabels() { updateNavBatchLabel(); }
+function updateDrawerBatchNumber() { updateNavBatchLabel(); }
 
 function updateNavBatchLabels() {
   const links = document.querySelectorAll('.drawer-link[data-page-link="ORDERS"], #drawerOrderLink');
@@ -125,6 +136,59 @@ const CONFIG = {
   googleSheetEndpoint: "https://script.google.com/macros/s/AKfycbz9kw-PDrwGXaNeHzvgfuOZsQ5A52tKXk-WN2np30ohE12xekUSK7x-bAp_kN_epmig/exec", // Replace with Apps Script Web App URL ending in /exec
   authToken: "TABC_SECURE_TOKEN_2026" // Shared auth token matching Code.gs
 };
+// ====================================================================
+// AUTOMATED ERROR TELEMETRY & REPORTING ENGINE
+// ====================================================================
+function reportClientError(errorData) {
+  try {
+    if (!CONFIG || !CONFIG.googleSheetEndpoint) return;
+    const payload = {
+      action: 'log_error',
+      authToken: CONFIG.authToken || 'TABC_SECURE_TOKEN_2026',
+      timestamp: new Date().toISOString(),
+      page: window.location.pathname || String(PAGE || ''),
+      severity: errorData.severity || 'ERROR',
+      component: errorData.component || 'Client UI',
+      message: errorData.message || 'Unknown error',
+      stack: errorData.stack || '',
+      userAgent: navigator.userAgent || '',
+      orderId: errorData.orderId || ''
+    };
+
+    const blob = new Blob([JSON.stringify(payload)], { type: 'text/plain' });
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(CONFIG.googleSheetEndpoint, blob);
+    } else {
+      fetch(CONFIG.googleSheetEndpoint, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify(payload)
+      }).catch(() => {});
+    }
+  } catch (e) {
+    console.warn('Failed to dispatch error telemetry:', e);
+  }
+}
+
+// Global runtime listener for uncaught errors
+window.addEventListener('error', (event) => {
+  reportClientError({
+    component: 'Runtime Window Error',
+    message: event.message || 'Uncaught Error',
+    stack: `${event.filename || ''}:${event.lineno || 0}:${event.colno || 0}`,
+    severity: 'ERROR'
+  });
+});
+
+// Global listener for unhandled promise rejections
+window.addEventListener('unhandledrejection', (event) => {
+  reportClientError({
+    component: 'Unhandled Promise Rejection',
+    message: event.reason?.message || String(event.reason || 'Promise rejected'),
+    stack: event.reason?.stack || '',
+    severity: 'ERROR'
+  });
+});
 
 let cachedProfile = null;
 
@@ -2158,28 +2222,8 @@ function applyConfigToUI(data) {
     aboutB2bCapText.textContent = `${remaining} / ${total} Bottles Available`;
     if (aboutB2bBar) aboutB2bBar.style.width = `${pct}%`;
   }
-      if (data && data.batchNumber) {
-        currentBatchNumber = String(data.batchNumber);
-        updateNavBatchLabel();
-      if (data.batchNumber) {
-        liveBatchNumber = String(data.batchNumber);
-        updateNavBatchLabel();
-      }
-      if (data.batchNumber) {
-        currentBatchNumber = String(data.batchNumber);
-        updateNavBatchNumber();
-      }
-      }
 }
 
-let liveBatchNumber = '1';
-
-function updateNavBatchLabel() {
-  const links = document.querySelectorAll('.drawer-link[data-page-link="ORDERS"], #drawerOrderLink, .nav-order-batch-link');
-  links.forEach(link => {
-    link.textContent = `Order Batch #${liveBatchNumber}`;
-  });
-}
 
 function fetchLiveConfig() {
   try {
@@ -2807,16 +2851,14 @@ function handlePayClick() {
   const isPass = (PAGE === 'SUBSCRIBE' || PAGE === 'PASS');
   const isB2b = (PAGE === 'CORPORATE' || PAGE === 'OFFICE');
   const activePack = isPass ? selectedPassTier : (isB2b ? selectedB2bPack : selectedB2cPack);
-  const packTitle = activePack ? activePack.name : (isPass ? '4-Drop Coffee Pass' : 'Specialty Coffee');
-  
+
   if (CONFIG.razorpayKeyId && !CONFIG.razorpayKeyId.includes("YOUR_RAZORPAY")) {
     const options = {
       key: CONFIG.razorpayKeyId,
       amount: total * 100,
       currency: "INR",
       name: "The Apartment Brew Co.",
-      description: `${isPass ? '4-Drop Coffee Pass' : (isB2b ? 'Office Drop' : 'Pre-Order')}: ${packTitle}`,
-      prefill: { name: name, email: email, contact: phone },
+      description: `${isPass ? '4-Drop Coffee Pass' : (isB2b ? 'Office Drop' : 'Pre-Order')}: ${activePack ? activePack.name : 'Coffee Pass'}`,
       theme: { color: "#d4a373" },
       handler: function (response) { handleOrderSuccess(response.razorpay_payment_id, "Paid via Gateway"); }
     };
@@ -2842,20 +2884,19 @@ async function handleOrderSuccess(paymentId, statusText) {
   const address = (document.getElementById('custAddress')?.value || '').trim();
   const qty = parseInt(document.getElementById('packQty')?.value, 10) || 1;
   const subtotal = calculateSubtotal();
-  const discount = appliedCoupon ? appliedCoupon.discount : 0;
-  const couponCode = appliedCoupon ? appliedCoupon.code : 'NONE';
-  const total = calculateTotal();
   const isPass = (PAGE === 'SUBSCRIBE' || PAGE === 'PASS');
   const isB2b = (PAGE === 'CORPORATE' || PAGE === 'OFFICE');
-  const techParkVal = isB2b ? (document.getElementById('custTechPark')?.value || 'DLF Cyber City') : 'Gurugram/NCR';
+  const activePack = isPass ? selectedPassTier : (isB2b ? selectedB2bPack : selectedB2cPack);
   const rawDropInstructions = document.getElementById('dropInstructions')?.value || 'Deliver directly to door/desk';
   const dropInstructions = rawDropInstructions.replace(/\s*\/\s*/g, '/').trim();
-  
+
   const b2cDaySelect = document.getElementById('b2cDeliveryDay');
   const b2cDayVal = b2cDaySelect ? b2cDaySelect.value : "Saturday Morning (8:00 AM – 11:00 AM)";
-  const passDropWindow = document.getElementById('passDropWindow')?.value;
-  const deliveryWindow = isPass ? (passDropWindow || 'Saturday Morning (8:00 AM – 11:00 AM)') : (isB2b ? (document.getElementById('b2bDeliveryWindow')?.value || '') : b2cDayVal);
-  const dropDate = isPass ? getUpcomingB2cDropDate(deliveryWindow) : (isB2b ? getUpcomingFridayFormatted() : getUpcomingB2cDropDate(b2cDayVal));
+  const passWindowSelect = document.getElementById('passDropWindow');
+  const passWindowVal = passWindowSelect ? passWindowSelect.value : "Saturday Morning (8:00 AM – 11:00 AM)";
+  const deliveryWindow = isPass ? passWindowVal : (isB2b ? (document.getElementById('b2bDeliveryWindow')?.value || '') : b2cDayVal);
+  const dropDate = isPass ? getUpcomingB2cDropDate(passWindowVal) : (isB2b ? getUpcomingFridayFormatted() : getUpcomingB2cDropDate(b2cDayVal));
+
   const orderId = isPass ? "TABC-PASS-" + Math.floor(100000 + Math.random() * 900000) : (isB2b ? "TABC-B2B-" + Math.floor(100000 + Math.random() * 900000) : "TABC-" + Math.floor(100000 + Math.random() * 900000));
   const company = isB2b ? ((document.getElementById('custCompany')?.value || '').trim() || "N/A") : "N/A";
   const gstin = isB2b ? ((document.getElementById('custGstin')?.value || '').trim() || "N/A") : "N/A";
@@ -4144,16 +4185,9 @@ function initRefillOrder() {
 // --------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
   highlightActiveDrawerLink();
-  updateNavBatchLabels();
   updateNavBatchLabel();
-  updateNavBatchNumber();
   renderLucideIcons();
-  updateNavBatchLabel();
-  updateDrawerBatchNumber();
-  updateNavBatchLabel();
-  updateNavBatchLabel();
   initRefillOrder();
-  updateNavBatchLabel();
   // Auto-select lot from URL parameter if arriving from orders.html gateway
   const urlParams = new URLSearchParams(window.location.search);
   const beanParam = urlParams.get('bean') || urlParams.get('lot');
