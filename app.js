@@ -7,11 +7,11 @@ function renderLucideIcons() {
     try { lucide.createIcons(); } catch (e) {}
   }
 }
-let liveBatchNumber = '1';
+let currentBatchNumber = "1";
 function updateNavBatchLabel() {
-  const links = document.querySelectorAll('.drawer-link[data-page-link="ORDERS"], #drawerOrderLink');
-  links.forEach(l => {
-    l.textContent = `Order Batch #${liveBatchNumber}`;
+  const links = document.querySelectorAll('.drawer-link[data-page-link="ORDERS"], #drawerOrderLink, .nav-order-link');
+  links.forEach(link => {
+    link.textContent = `Order Batch #${currentBatchNumber}`;
   });
 }
 let tabcAudioCtx = null;
@@ -2091,6 +2091,10 @@ function fetchLiveConfig() {
       if (data && data.status === 'success' && !data.action) {
         localStorage.setItem('tabc_live_config', JSON.stringify(data));
         applyConfigToUI(data);
+        if (data.batchNumber || data.currentBatch) {
+          currentBatchNumber = String(data.batchNumber || data.currentBatch);
+          updateNavBatchLabel();
+        }
       }
     })
     .catch(() => {});
@@ -2675,6 +2679,7 @@ function handlePayClick() {
   const isPass = (PAGE === 'SUBSCRIBE' || PAGE === 'PASS');
   const isB2b = (PAGE === 'CORPORATE' || PAGE === 'OFFICE');
   const activePack = isPass ? selectedPassTier : (isB2b ? selectedB2bPack : selectedB2cPack);
+  const packName = activePack ? activePack.name : (isPass ? '4-Drop Coffee Pass' : 'Batch Pack');
   const orderDesc = isPass ? `4-Drop Coffee Pass: ${packName}` : `${isB2b ? 'Office Drop' : 'Pre-Order'}: ${packName}`;
   
   if (CONFIG.razorpayKeyId && !CONFIG.razorpayKeyId.includes("YOUR_RAZORPAY")) {
@@ -2716,7 +2721,9 @@ async function handleOrderSuccess(paymentId, statusText) {
   const isPass = (PAGE === 'SUBSCRIBE' || PAGE === 'PASS');
   const isB2b = (PAGE === 'CORPORATE' || PAGE === 'OFFICE');
   const activePack = isPass ? selectedPassTier : (isB2b ? selectedB2bPack : selectedB2cPack);
-  
+  const rawDropInstructions = document.getElementById('dropInstructions')?.value || 'Deliver directly to door/desk';
+  const dropInstructions = rawDropInstructions.replace(/\s*\/\s*/g, '/').trim();
+
   const passDropWindow = document.getElementById('passDropWindow')?.value;
   const b2cDaySelect = document.getElementById('b2cDeliveryDay');
   const b2cDayVal = b2cDaySelect ? b2cDaySelect.value : "Saturday Morning (8:00 AM – 11:00 AM)";
@@ -4000,6 +4007,7 @@ function initRefillOrder() {
 document.addEventListener('DOMContentLoaded', () => {
   highlightActiveDrawerLink();
   renderLucideIcons();
+  updateNavBatchLabel();
   updateNavBatchLabel();
   initRefillOrder();
   updateNavBatchLabel();
