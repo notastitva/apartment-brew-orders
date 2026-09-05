@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+  <title>Subscribe to 4-Drop Coffee Pass | The Apartment Brew Co.</title>
+
+  <meta name="description" content="Subscribe to a 4-drop specialty coffee pass for homes and corporate offices across Gurugram &amp; Delhi NCR. Pre-paid 4 drops with automated batch reservation, individual drop tracking IDs, and 10–15% savings." />
+
+  <link rel="canonical" href="https://apartmentbrewco.in/subscribe" />
+
+  <link rel="stylesheet" href="style.css?v=2.5" />
+
+  
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+
+  <!-- Favicons & Mobile Touch Icons -->
+
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
+
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon-180x180.png" />
+
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/android-chrome-192x192.png" />
+
+  <!-- Open Graph & Social Preview Tags -->
+
+  <meta property="og:type" content="website" />
+
+  <meta property="og:title" content="Subscribe to 4-Drop Coffee Pass | The Apartment Brew Co." />
+
+  <meta property="og:description" content="Pre-paid 4-drop specialty coffee passes with 10–15% upfront savings and flexible scheduling." />
+
+  <meta property="og:image" content="assets/tabc-social-banner-1500x500.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <meta name="twitter:image" content="assets/tabc-social-banner-1500x500.png" />
+
+  <!-- Scripts -->
+
+  <link rel="preconnect" href="https://checkout.razorpay.com" />
+
+  <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
+
+  <script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <script defer src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+</head>
+
+<body data-page="SUBSCRIBE">
+
+  <!-- Sticky Top Header & Hamburger Navigation -->
+
+  <header class="site-header-sticky">
+
+    <div class="header-inner">
+
+      <a href="/" class="nav-logo" aria-label="The Apartment Brew Co. Home">
+
+        <div class="nav-logo-brand">
+
+          <img src="assets/tabc-emblem-gold-transparent.svg" alt="TABC Emblem" class="nav-logo-icon" />
+
+          <div class="nav-logo-titles">
+
+            <span class="logo-text">The Apartment Brew Co.</span>
+
+            <span class="logo-sub">Specialty Coffee &bull; Gurugram</span>
+
+          </div>
+
+        </div>
+
+      </a>
+
+      <button type="button" class="nav-hamburger-btn" id="navHamburgerBtn" aria-label="Toggle navigation menu" onclick="toggleNavDrawer()">
+
+        <span class="hamburger-bar"></span>
+
+        <span class="hamburger-bar"></span>
+
+        <span class="hamburger-bar"></span>
+
+      </button>
+
+    </div>
+
+  </header>
+
+  <!-- Navigation Drawer Backdrop & Overlay Menu -->
+
+  <div class="nav-backdrop" id="navBackdrop" onclick="closeNavDrawer()"></div>
+
+  <aside class="nav-drawer" id="navDrawer">
+
+    <div class="drawer-header">
+
+      <div style="display: flex; align-items: center; gap: 8px;">
+
+        <img src="assets/tabc-emblem-gold-transparent.svg" alt="TABC" style="width: 24px; height: 24px; object-fit: contain;" />
+
+        <span class="drawer-title">Navigation Menu</span>
+
+      </div>
+
+      <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&times;</button>
+
+    </div>
+
+    <nav class="drawer-nav">
+
+      <a href="/" class="drawer-link" data-page-link="INDEX">Home</a>
+
+      <a href="/orders" class="drawer-link" data-page-link="ORDERS">Order Single Batch</a>
+
+      <a href="/subscribe" class="drawer-link active" data-page-link="SUBSCRIBE">Subscribe (4-Drop Pass)</a>
+
+      <a href="/pass" class="drawer-link" data-page-link="PASS">Manage Active Pass</a>
+
+      <a href="/flavor" class="drawer-link" data-page-link="FLAVOR">Flavor Matcher</a>
+
+      <a href="/guide" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
+
+      <a href="/about" class="drawer-link" data-page-link="ABOUT">Story so far</a>
+
+      <a href="/events" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
+
+      <a href="/track" class="drawer-link" data-page-link="TRACK">Inquiry/Order tracking</a>
+
+    </nav>
+
+    <div class="drawer-footer">
+
+      <div class="drawer-footer-text">☕ Hand-Brewed Fresh to Order in Gurugram</div>
+
+    </div>
+
+  </aside>
+
+  <div class="container">
+
+    
+
+    <!-- Live Drop & Batch Capacity Header Card -->
+
+    <header class="header-card">
+
+      <div class="drop-banner" id="dropBanner">
+
+        <span>☕</span> 4-Drop Multi-Week Specialty Coffee Passes
+
+      </div>
+
+      <div class="countdown-timer" id="countdownTimer" style="font-size: 0.78rem;">1 Upfront Payment &bull; 4 Scheduled Fresh Drops &bull; Save 10–15%</div>
+
+      <!-- Scarcity Bar -->
+
+      <div class="scarcity-bar-container">
+
+        <div class="scarcity-label">
+
+          <span>🔥 Guaranteed Subscriber Batch Allocation</span>
+
+          <span id="scarcityText">Loading batch availability...</span>
+
+        </div>
+
+        <div class="scarcity-progress-track">
+
+          <div class="scarcity-progress-fill" id="scarcityFill"></div>
+
+        </div>
+
+      </div>
+
+      <div class="geo-badge" style="margin-top: 10px;">
+
+        📍 Cold-Chain Drops Across Gurugram &amp; Delhi NCR (200ml Glass Bottles)
+
+      </div>
+
+      <div class="craft-badge">
+
+        ☕ Hand-Brewed Separately in Small Batches &bull; 48-Hour Freshness Benchmark
+
+      </div>
+
+    </header>
+
+    <!-- Pass Creation Wizard -->
+
+    <main id="orderFormView">
+
+      <!-- Multi-Step Ordering Wizard Progress Stepper -->
+
+      <div class="wizard-progress">
+
+        <div class="wizard-node node-active" id="wNode1" onclick="goToWizardStep(1)">
+
+          <div class="node-circle">1</div>
+
+          <div class="node-label">Pass Tier</div>
+
+        </div>
+
+        <div class="wizard-line" id="wLine1"></div>
+
+        <div class="wizard-node" id="wNode2" onclick="goToWizardStep(2)">
+
+          <div class="node-circle">2</div>
+
+          <div class="node-label">Delivery</div>
+
+        </div>
+
+        <div class="wizard-line" id="wLine2"></div>
+
+        <div class="wizard-node" id="wNode3" onclick="goToWizardStep(3)">
+
+          <div class="node-circle">3</div>
+
+          <div class="node-label">Review &amp; Pay</div>
+
+        </div>
+
+      </div>
+
+      <div class="wizard-slider-viewport">
+
+        <div class="wizard-slider-track" id="wizardSliderTrack">
+
+          <!-- STEP 1: Pass Tier Selection & Harvest -->
+
+          <section class="section-card wizard-step-panel" id="stepPanel1">
+
+            <div class="section-title">
+
+              <span>Step 1: Choose 4-Drop Pass Tier</span>
+
+              <span class="section-subtitle">1 Upfront Payment &bull; 4 Consecutive Drops &bull; Skip or Swap Anytime</span>
+
+            </div>
+
+            <div class="selected-harvest-summary" id="selectedHarvestSummary">
+
+              <span>Starting Harvest: <strong id="displaySelectedBean">Ratnagiri Estate (72h Anaerobic Natural)</strong></span>
+
+              <a href="/orders" class="change-harvest-link">Change &rarr;</a>
+
+            </div>
+
+            <!-- Dynamic Pass Packs Grid -->
+
+            <div class="pack-grid" id="passPacks"></div>
+
+            <div class="field-error" id="errPackSelection" style="display: none; margin-top: 8px;">⚠️ Please select a pass tier to continue.</div>
+
+            <div class="form-group" style="margin-top: 12px;">
+
+              <label for="packQty">Quantity of Passes</label>
+
+              <input type="number" id="packQty" min="1" value="1" inputmode="numeric" oninput="updateTotal()" />
+
+              <div class="field-error" id="errQty">Please enter a valid quantity (minimum 1).</div>
+
+            </div>
+
+            <!-- Custom Splitter Container -->
+
+            <div class="custom-splitter-card" id="customSplitter" style="display: none;">
+
+              <div class="splitter-header">
+
+                <span class="splitter-title">🎯 Mix &amp; Match Per-Drop Bottle Split</span>
+
+                <span class="splitter-tally" id="splitterTally">Allocated: <strong><span id="allocCount">4</span> / <span id="targetCount">4</span></strong> bottles/drop</span>
+
+              </div>
+
+              <div id="tallyStatus" class="splitter-tally-note" style="font-size: 0.76rem; color: var(--accent); margin-bottom: 8px; text-align: center;"></div>
+
+              <div class="bottle-crate-container" id="splitterBottleCrate">
+
+                <div class="bottle-crate-header">
+
+                  <span>📦 Your Per-Drop Pack Composition</span>
+
+                  <span style="color: var(--text-muted); font-size: 0.65rem;">Tap steppers below to adjust</span>
+
+                </div>
+
+                <div class="bottle-crate-grid" id="crateBottleGrid"></div>
+
+              </div>
+
+              <div class="splitter-controls" id="splitterControlsContainer"></div>
+
+              <div class="splitter-ratio-bar" id="splitterRatioBar"></div>
+
+            </div>
+
+            <div class="capacity-warning-msg" id="errCapacityLimit" style="display: none;"></div>
+
+            <!-- Promo Code Input -->
+
+            <div class="form-group" style="margin-top: 14px;">
+
+              <label for="couponInput">Promo Code (Optional)</label>
+
+              <div class="coupon-input-group">
+
+                <input type="text" id="couponInput" placeholder="e.g. NCRFIRST" autocomplete="off" inputmode="text" autocapitalize="characters" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();applyCoupon();}" />
+
+                <button type="button" id="btnApplyCoupon" class="btn-coupon" onclick="applyCoupon()">Apply</button>
+
+                <button type="button" id="btnRemoveCoupon" class="btn-coupon-remove" onclick="removeCoupon()" style="display: none;">Remove</button>
+
+              </div>
+
+              <div id="couponStatus" class="coupon-status" style="display: none;"></div>
+
+            </div>
+
+            <!-- Order Price Summary Card -->
+
+            <div class="summary-box" style="margin-top: 14px;">
+
+              <div class="summary-breakdown" id="summaryBreakdown" style="display: none;">
+
+                <div class="summary-line">
+
+                  <span>Subtotal:</span>
+
+                  <span id="subtotalDisplay">₹3,199</span>
+
+                </div>
+
+                <div class="summary-line summary-discount" id="discountLine">
+
+                  <span id="discountLabel">Promo Discount:</span>
+
+                  <span id="discountDisplay">-₹0</span>
+
+                </div>
+
+              </div>
+
+              <div class="summary-total-line">
+
+                <span style="font-size:0.85rem; color:var(--text-muted);">Total Upfront (4 Delivered Drops):</span>
+
+                <span class="summary-total" id="totalAmountDisplay">₹3,199</span>
+
+              </div>
+
+            </div>
+
+            <div class="wizard-nav-btns">
+
+              <a href="/orders" class="btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">&larr; Back to Harvest</a>
+
+              <button type="button" id="btnStep1Next" class="btn btn-pay" onclick="nextWizardStep(2)">
+
+                <span>Continue to Delivery Schedule &rarr;</span>
+
+              </button>
+
+            </div>
+
+          </section>
+
+          <!-- STEP 2: Delivery Schedule & Contact Details -->
+
+          <section class="section-card wizard-step-panel" id="stepPanel2">
+
+            <div class="section-title">
+
+              <span>Step 2: Delivery Schedule &amp; Address</span>
+
+              <span class="section-subtitle">Set your preferred drop schedule &bull; Skip or shift dates anytime via email</span>
+
+            </div>
+
+            <div class="saved-profile-bar" id="savedProfileBar">
+
+              <span id="savedProfileText">👋 Welcome back! Autofill delivery details?</span>
+
+              <button class="saved-profile-btn" onclick="applySavedProfile()">Autofill</button>
+
+            </div>
+
+            <!-- Delivery Day & Schedule Preference -->
+
+            <div class="form-group">
+
+              <label for="passDropWindow">Preferred Drop Window *</label>
+
+              <select id="passDropWindow">
+
+                <option value="Saturday Morning (8:00 AM – 11:00 AM)">Saturday Morning (8:00 AM – 11:00 AM) — Residential Home</option>
+
+                <option value="Sunday Morning (8:00 AM – 11:00 AM)">Sunday Morning (8:00 AM – 11:00 AM) — Residential Home</option>
+
+                <option value="Friday Morning Kickoff (9:30 AM – 11:30 AM)">Friday Morning Kickoff (9:30 AM – 11:30 AM) — Corporate Office</option>
+
+                <option value="Friday Afternoon Recharge (2:00 PM – 4:00 PM)">Friday Afternoon Recharge (2:00 PM – 4:00 PM) — Corporate Office</option>
+
+              </select>
+
+            </div>
+
+            <div class="form-group">
+
+              <label for="passCadence">Drop Frequency *</label>
+
+              <select id="passCadence">
+
+                <option value="WEEKLY" selected>Weekly (4 Consecutive Weeks)</option>
+
+                <option value="BI_WEEKLY">Bi-Weekly (Every 2 Weeks &bull; 8-Week Span)</option>
+
+              </select>
+
+              <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 4px;">
+
+                Need to travel or pause? Tapping "Skip Drop" in your pre-cutoff email pushes your delivery by 1 week with zero credit loss.
+
+              </div>
+
+            </div>
+
+            <div class="form-group">
+
+              <label for="custPincode">6-Digit PIN Code *</label>
+
+              <input type="text" id="custPincode" maxlength="6" inputmode="numeric" pattern="[0-9]*" autocomplete="postal-code" placeholder="e.g. 122002" oninput="validatePincodeField()" />
+
+              <div id="pinStatus" class="pin-status"></div>
+
+              <div class="field-error" id="errPincode">Please enter a valid 6-digit Delhi NCR PIN code.</div>
+
+            </div>
+
+            <div class="form-group">
+
+              <label id="labelName" for="custName">Your Name *</label>
+
+              <input type="text" id="custName" autocomplete="name" autocapitalize="words" spellcheck="false" placeholder="e.g. Astitva Gupta" oninput="validateField('custName')" />
+
+              <div class="field-error" id="errName">Please enter your name (at least 2 characters).</div>
+
+            </div>
+
+            <div class="form-group">
+
+              <label id="labelEmail" for="custEmail">Email Address (For Schedule Updates &amp; 1-Click Skip Links) *</label>
+
+              <input type="email" id="custEmail" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="e.g. astitva@example.com" oninput="validateEmailField()" />
+
+              <div class="field-error" id="errEmail">Please enter a valid email address.</div>
+
+            </div>
+
+            <div class="form-group">
+
+              <label for="custPhone">WhatsApp / Mobile Number *</label>
+
+              <input type="tel" id="custPhone" inputmode="tel" autocomplete="tel" placeholder="e.g. 9876543210" maxlength="10" oninput="validatePhoneField()" />
+
+              <div class="field-error" id="errPhone">Please enter a valid 10-digit Indian mobile number.</div>
+
+            </div>
+
+            <div class="form-group">
+
+              <label id="labelAddress" for="custAddress">Delivery Address (Flat / Tower / Office Floor Details) *</label>
+
+              <textarea id="custAddress" rows="2" autocomplete="street-address" autocapitalize="words" placeholder="e.g. Flat 402, Tower 3, DLF Phase 5" oninput="validateField('custAddress')"></textarea>
+
+              <div class="field-error" id="errAddress">Please enter your complete address.</div>
+
+            </div>
+
+            <div class="form-group">
+
+              <label for="dropInstructions">Delivery / Gate Drop Preference</label>
+
+              <select id="dropInstructions" style="padding: 10px; background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 8px; color: var(--text); font-size: 0.82rem; width: 100%;">
+
+                <option value="Deliver directly to door/desk">Deliver directly to door / desk</option>
+
+                <option value="Leave with Tower Security/Concierge Desk">Leave with Tower Security / Concierge Desk</option>
+
+                <option value="Call upon arrival for pickup">Call upon arrival for pickup</option>
+
+              </select>
+
+            </div>
+
+            <div class="wizard-nav-btns">
+
+              <button type="button" class="btn-secondary" onclick="goToWizardStep(1)">&larr; Back to Pass Tier</button>
+
+              <button type="button" class="btn btn-pay" onclick="nextWizardStep(3)">
+
+                <span>Review Pass &rarr;</span>
+
+              </button>
+
+            </div>
+
+          </section>
+
+          <!-- STEP 3: Review & Upfront Payment -->
+
+          <section class="section-card wizard-step-panel" id="stepPanel3">
+
+            <div class="section-title">
+
+              <span>Step 3: Review Pass &amp; Upfront Payment</span>
+
+              <span class="section-subtitle">1 Upfront Payment Locks 4 Scheduled Flash-Brew Drops</span>
+
+            </div>
+
+            <!-- Pass Review Card -->
+
+            <div class="order-review-card">
+
+              <div class="review-row">
+
+                <span>Pass Tier:</span>
+
+                <strong id="revPack">-</strong>
+
+              </div>
+
+              <div class="review-row">
+
+                <span>Initial Coffee Harvest:</span>
+
+                <strong id="revBean">-</strong>
+
+              </div>
+
+              <div class="review-row">
+
+                <span>Fulfillment Schedule:</span>
+
+                <strong id="revDate" style="color: var(--accent);">4 Scheduled Drops (Weekly)</strong>
+
+              </div>
+
+              <div class="review-row">
+
+                <span>Delivering To:</span>
+
+                <strong id="revAddress">-</strong>
+
+              </div>
+
+              <div class="review-row">
+
+                <span>Subscriber:</span>
+
+                <strong id="revCustomer">-</strong>
+
+              </div>
+
+              <div class="review-row" id="revDiscountRow" style="display: none;">
+
+                <span>Promo Discount:</span>
+
+                <strong id="revDiscount" style="color: var(--success-light);">-</strong>
+
+              </div>
+
+              <div class="review-row review-total-row">
+
+                <span style="color: var(--text);">Total Upfront:</span>
+
+                <strong id="revTotal" style="color: var(--accent); font-size: 1.15rem;">₹3,199</strong>
+
+              </div>
+
+            </div>
+
+            <div class="freshness-alert" style="margin-top: 12px; margin-bottom: 0;">
+
+              ❄️ <strong>The Roastery Pass Guarantee:</strong> Zero preservatives. Every drop is extracted hot and flash-chilled to 4°C immediately before dispatch. Each drop has its own unique Order ID so you can track and rate your coffees individually!
+
+            </div>
+
+            <div class="wizard-nav-btns">
+
+              <button type="button" class="btn-secondary" onclick="goToWizardStep(2)">&larr; Edit Details</button>
+
+              <button id="payNowBtn" class="btn btn-pay" onclick="handlePayClick()">
+
+                <span id="btnText">💳 Pay Upfront for 4 Drops (<span id="btnAmount">₹3,199</span>)</span>
+
+              </button>
+
+            </div>
+
+          </section>
+
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- Confirmation View (Shown after purchase) -->
+
+    <section id="confirmationView" style="display: none;">
+
+      <div class="section-card" style="text-align: center;">
+
+        <div class="success-badge">&#10003; 4-Drop Coffee Pass Activated</div>
+
+        <h2 style="font-size: 1.3rem; margin-bottom: 4px;">Welcome to The Apartment Brew Co. Pass!</h2>
+
+        <p style="font-size: 0.82rem; color: var(--text-muted);">Your pass is registered. We have queued your first drop for brewing.</p>
+
+        <div class="receipt-details" style="margin-top: 16px;">
+
+          <div class="receipt-row">
+
+            <span class="receipt-label">Master Pass ID</span>
+
+            <span class="receipt-val" id="rOrderId" style="font-family: monospace; font-weight: 800; color: var(--accent);">-</span>
+
+          </div>
+
+          <div class="receipt-row">
+
+            <span class="receipt-label">Drop 1 Order ID</span>
+
+            <span class="receipt-val" id="rDrop1Id" style="font-family: monospace; font-weight: 700; color: var(--accent);">-</span>
+
+          </div>
+
+          <div class="receipt-row">
+
+            <span class="receipt-label">Pass Tier</span>
+
+            <span class="receipt-val" id="rPack">-</span>
+
+          </div>
+
+          <div class="receipt-row">
+
+            <span class="receipt-label">Next Scheduled Drop</span>
+
+            <span class="receipt-val" id="rDropDate" style="color: var(--accent);">-</span>
+
+          </div>
+
+          <div class="receipt-row">
+
+            <span class="receipt-label">Subscriber</span>
+
+            <span class="receipt-val" id="rName">-</span>
+
+          </div>
+
+          <div class="receipt-row">
+
+            <span class="receipt-label">Starting Harvest</span>
+
+            <span class="receipt-val" id="rBean">-</span>
+
+          </div>
+
+          <div class="receipt-row">
+
+            <span class="receipt-label">Total Paid Upfront</span>
+
+            <span class="receipt-val" id="rTotalVal" style="font-weight: 800; color: var(--accent);">-</span>
+
+          </div>
+
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 16px;">
+
+          <a href="/pass" id="btnGoManagePass" class="btn btn-pay" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
+
+            <span>🔄 Manage Full Pass Schedule on /pass &rarr;</span>
+
+          </a>
+
+          <a href="/track" id="btnGoTrackDrop" class="btn btn-secondary" style="text-decoration: none; display: flex; align-items: center; justify-content: center;">
+
+            <span>🔍 Track Drop 1 Delivery Status on /track &rarr;</span>
+
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+  <script src="app.js?v=2.5"></script>
+
+</body>
+
+</html>
+

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Manage Coffee Pass | The Apartment Brew Co.</title>
+  <meta name="description" content="Self-service management portal for The Apartment Brew Co. 4-Drop Coffee Passes. View your digital punch card, upcoming drop dates, individual drop order IDs, skip drops, or swap harvests." />
+  <link rel="canonical" href="https://apartmentbrewco.in/pass" />
+  <link rel="stylesheet" href="style.css?v=2.5" />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+
+  <!-- Favicons & Mobile Touch Icons -->
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon-180x180.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/android-chrome-192x192.png" />
+
+  <!-- Open Graph & Social Preview Tags -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Manage Coffee Pass | The Apartment Brew Co." />
+  <meta property="og:description" content="Manage your 4-drop specialty coffee pass, view drop dates, and swap harvests." />
+  <meta property="og:image" content="assets/tabc-social-banner-1500x500.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="assets/tabc-social-banner-1500x500.png" />
+
+  <!-- Scripts -->
+  <script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body data-page="PASS">
+
+  <!-- Sticky Top Header & Hamburger Navigation -->
+  <header class="site-header-sticky">
+    <div class="header-inner">
+      <a href="/" class="nav-logo" aria-label="The Apartment Brew Co. Home">
+        <div class="nav-logo-brand">
+          <img src="assets/tabc-emblem-gold-transparent.svg" alt="TABC Emblem" class="nav-logo-icon" />
+          <div class="nav-logo-titles">
+            <span class="logo-text">The Apartment Brew Co.</span>
+            <span class="logo-sub">Specialty Coffee &bull; Gurugram</span>
+          </div>
+        </div>
+      </a>
+      <button type="button" class="nav-hamburger-btn" id="navHamburgerBtn" aria-label="Toggle navigation menu" onclick="toggleNavDrawer()">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Navigation Drawer Backdrop & Overlay Menu -->
+  <div class="nav-backdrop" id="navBackdrop" onclick="closeNavDrawer()"></div>
+  <aside class="nav-drawer" id="navDrawer">
+    <div class="drawer-header">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <img src="assets/tabc-emblem-gold-transparent.svg" alt="TABC" style="width: 24px; height: 24px; object-fit: contain;" />
+        <span class="drawer-title">Navigation Menu</span>
+      </div>
+      <button type="button" class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close menu">&times;</button>
+    </div>
+    <nav class="drawer-nav">
+      <a href="/" class="drawer-link" data-page-link="INDEX">Home</a>
+      <a href="/orders" class="drawer-link" data-page-link="ORDERS">Order Single Batch</a>
+      <a href="/subscribe" class="drawer-link" data-page-link="SUBSCRIBE">Subscribe (4-Drop Pass)</a>
+      <a href="/pass" class="drawer-link active" data-page-link="PASS">Manage Active Pass</a>
+      <a href="/flavor" class="drawer-link" data-page-link="FLAVOR">Flavor Matcher</a>
+      <a href="/guide" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
+      <a href="/about" class="drawer-link" data-page-link="ABOUT">Story so far</a>
+      <a href="/events" class="drawer-link" data-page-link="EVENTS">Event Runs</a>
+      <a href="/track" class="drawer-link" data-page-link="TRACK">Inquiry/Order tracking</a>
+    </nav>
+    <div class="drawer-footer">
+      <div class="drawer-footer-text">☕ Hand-Brewed Fresh to Order in Gurugram</div>
+    </div>
+  </aside>
+
+  <div class="container">
+    
+    <!-- Header Card -->
+    <header class="header-card">
+      <div class="drop-banner">
+        <span>🔄</span> 4-Drop Coffee Pass Management Portal
+      </div>
+      <div class="geo-badge" style="margin-top: 10px;">
+        📍 Live Pass Schedule &bull; Digital Punch Card &bull; Individual Drop Tracking
+      </div>
+      <div class="craft-badge">
+        ☕ 1 Upfront Payment &bull; 4 Fresh Batches &bull; Skip or Swap Anytime
+      </div>
+    </header>
+
+    <!-- Buy Pass Callout Banner for Non-Subscribers -->
+    <div class="section-card" style="background: linear-gradient(135deg, rgba(212,163,115,0.12) 0%, rgba(20,19,18,0.95) 100%); border: 1px solid rgba(212,163,115,0.3); border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+      <div>
+        <div style="font-size: 0.85rem; font-weight: 800; color: var(--accent);">Looking to subscribe to a 4-Drop Coffee Pass?</div>
+        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Lock in 4 scheduled fresh drops with 10–15% upfront savings.</div>
+      </div>
+      <a href="/subscribe" class="btn" style="background: var(--gradient-gold); color: #141312; font-weight: 800; font-size: 0.75rem; padding: 8px 14px; border-radius: 8px; text-decoration: none;">
+        <span>Subscribe &rarr;</span>
+      </a>
+    </div>
+
+    <!-- Pass Lookup Section -->
+    <main class="section-card">
+      <div class="section-title">
+        <span>Look Up Your Coffee Pass</span>
+        <span class="section-subtitle">Enter Pass ID to view schedule and individual drop IDs</span>
+      </div>
+
+      <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+        <input type="text" id="passLookupInput" placeholder="Enter Pass ID (e.g. TABC-PASS-104289)" autocomplete="off" autocapitalize="characters" spellcheck="false" style="flex: 1; padding: 10px 14px; background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 8px; color: var(--text); font-size: 0.85rem; font-family: monospace; font-weight: 700;" onkeydown="if(event.key==='Enter'){event.preventDefault();lookupActivePass();}" />
+        <button type="button" class="btn btn-pay" id="btnLookupPass" style="padding: 0 18px;" onclick="lookupActivePass()">
+          <span>Lookup &rarr;</span>
+        </button>
+      </div>
+      <div id="passLookupMsg" style="display: none; padding: 10px 14px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; margin-bottom: 12px; text-align: center;"></div>
+
+      <!-- Dynamic Pass Management Card & Punch Card -->
+      <div id="passDetailsCard" style="display: none;">
+        <!-- Dynamically rendered by app.js with Digital Punch Card & Drop IDs -->
+      </div>
+    </main>
+
+  </div>
+
+  <script src="app.js?v=2.5"></script>
+</body>
+</html>
+

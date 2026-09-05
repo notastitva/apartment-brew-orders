@@ -128,7 +128,9 @@
     </div>
     <nav class="drawer-nav">
       <a href="/" class="drawer-link active" data-page-link="INDEX">Home</a>
-      <a href="/orders" class="drawer-link" data-page-link="ORDERS">Order Batch</a>
+      <a href="/orders" class="drawer-link" data-page-link="ORDERS">Order Single Batch</a>
+      <a href="/subscribe" class="drawer-link" data-page-link="SUBSCRIBE">Subscribe (4-Drop Pass)</a>
+      <a href="/pass" class="drawer-link" data-page-link="PASS">Manage Active Pass</a>
       <a href="/flavor" class="drawer-link" data-page-link="FLAVOR">Flavor Matcher</a>
       <a href="/guide" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
       <a href="/about" class="drawer-link" data-page-link="ABOUT">Story so far</a>
@@ -573,13 +575,26 @@
           <div class="sh-cta">Choose Coffee &amp; Order &rarr;</div>
         </a>
   
-        <!-- Option 2: Events -->
+        <!-- Option 2: 4-Drop Coffee Pass -->
+        <a href="/subscribe" class="streamlined-hub-card" style="border-color: rgba(212,163,115,0.45); background: linear-gradient(145deg, rgba(212,163,115,0.12) 0%, rgba(20,19,18,0.95) 100%);">
+          <div class="sh-card-header" style="justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="sh-icon">🔄</span>
+              <span class="sh-title">4-Drop Coffee Pass</span>
+            </div>
+            <span style="font-size: 0.62rem; font-weight: 800; background: rgba(45,106,79,0.3); border: 1px solid #2d6a4f; color: #95d5b2; padding: 2px 7px; border-radius: 6px;">SAVE 10–15%</span>
+          </div>
+          <p class="sh-desc">Pre-pay 4 scheduled drops with guaranteed batch allocation, individual drop IDs, and flexible skip/swap.</p>
+          <div class="sh-cta" style="color: var(--accent); font-weight: 800;">Get a 4-Drop Pass &rarr;</div>
+        </a>
+  
+        <!-- Option 3: Events -->
         <a href="/events" class="streamlined-hub-card">
           <div class="sh-card-header">
             <span class="sh-icon">🎉</span>
             <span class="sh-title">Book us for Event Catering</span>
           </div>
-          <p class="sh-desc">Custom Event Catering &amp; Offsites.</p>
+          <p class="sh-desc">Custom Event Catering &amp; Offsites across Delhi NCR.</p>
           <div class="sh-cta">Event reachout &rarr;</div>
         </a>
       </div>
@@ -587,7 +602,10 @@
       <!-- Quick Utility Links Bar -->
       <div class="streamlined-sub-links">
         <a href="/track" class="sub-link-pill">
-          <span>🔍 Track Existing Order Status &rarr;</span>
+          <span>🔍 Track Single Order Status &rarr;</span>
+        </a>
+        <a href="/pass" class="sub-link-pill">
+          <span>🔄 Manage Active Coffee Pass &rarr;</span>
         </a>
       </div>
     </section>

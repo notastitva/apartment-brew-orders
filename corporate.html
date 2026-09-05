@@ -78,7 +78,8 @@ src="assets/tabc-emblem-gold-transparent.svg"
     </div>
     <nav class="drawer-nav">
 <a href="/" class="drawer-link" data-page-link="INDEX">Home</a>
-<a href="/orders" class="drawer-link" data-page-link="ORDERS">Order Batch</a>
+<a href="/orders" class="drawer-link" data-page-link="ORDERS">Order Single Batch</a>
+<a href="/pass" class="drawer-link" data-page-link="PASS">4-Drop Coffee Pass</a>
 <a href="/flavor" class="drawer-link" data-page-link="FLAVOR">Flavor Matcher</a>
 <a href="/guide" class="drawer-link" data-page-link="GUIDE">Freshness Guide</a>
 <a href="/about" class="drawer-link" data-page-link="ABOUT">Story so far</a>
@@ -223,39 +224,6 @@ Need 100+ bottles for a hackathon or all-hands? <a href="/events">Custom Event C
       </div>
       <div id="couponStatus" class="coupon-status" style="display: none;"></div>
     </div>
-<!-- Recurring Corporate Standing Order Cadence Selector -->
-<div class="cadence-selector-container" id="cadenceSelectorContainer">
-  <div class="cadence-selector-header">
-    <span>🔄 Office Delivery Cadence</span>
-    <span class="standing-order-discount-badge">Save 10% on Office Standing Orders</span>
-  </div>
-  <div class="cadence-options-grid">
-<div class="cadence-option active" id="cadenceOneTime" onclick="selectOrderCadence('ONE_TIME')">
-      <div class="cadence-radio"></div>
-      <div class="cadence-info">
-        <div class="cadence-name">One-Time Friday Drop</div>
-        <div class="cadence-desc">Upcoming Friday tech-park office drop only. No recurring commitment.</div>
-      </div>
-      <div class="cadence-tag">Standard</div>
-    </div>
-<div class="cadence-option" id="cadenceWeekly" onclick="selectOrderCadence('WEEKLY')">
-      <div class="cadence-radio"></div>
-      <div class="cadence-info">
-        <div class="cadence-name">Weekly Friday Standing Order</div>
-        <div class="cadence-desc">Fresh cold drop every Friday. Guaranteed batch reserve before Thursday cutoff.</div>
-      </div>
-      <div class="cadence-tag tag-discount">Save 10%</div>
-    </div>
-<div class="cadence-option" id="cadenceBiWeekly" onclick="selectOrderCadence('BI_WEEKLY')">
-      <div class="cadence-radio"></div>
-      <div class="cadence-info">
-        <div class="cadence-name">Bi-Weekly Friday Standing Order</div>
-        <div class="cadence-desc">Fresh office drop every alternate Friday. Net terms invoicing supported.</div>
-      </div>
-      <div class="cadence-tag tag-discount">Save 10%</div>
-    </div>
-  </div>
-</div>
 
     <div class="summary-box">
       <div class="summary-breakdown" id="summaryBreakdown" style="display: none;">

@@ -124,6 +124,8 @@ let cachedProfile = null;
 
 // Determine current page from body dataset or pathname
 const PAGE = document.body.dataset.page || (
+  window.location.pathname.includes('subscribe') ? 'SUBSCRIBE' :
+  window.location.pathname.includes('pass') ? 'PASS' :
   window.location.pathname.includes('orders') ? 'ORDERS' :
   (window.location.pathname.includes('personal') || window.location.pathname.includes('order')) ? 'PERSONAL' :
   (window.location.pathname.includes('corporate') || window.location.pathname.includes('office')) ? 'CORPORATE' :
@@ -160,6 +162,13 @@ let availableB2bPacks = [
   { id: "B2B-03", name: "Floor Pack", bottles: 40, price: 6000 },
   { id: "B2B-04", name: "Townhall Bulk", bottles: 60, price: 8700 }
 ];
+let availablePassTiers = [
+  { id: 'PASS-01', name: 'Weekend 4-Pack Pass (4 Drops)', bottles: 16, drops: 4, bottlesPerDrop: 4, unitPrice: 3199, price: 3199, badge: 'Most Popular • Save 11%', desc: '16x 200ml bottles (4 bottles/drop across 4 scheduled weekend drops)' },
+  { id: 'PASS-02', name: 'Duo Discovery Pass (4 Drops)', bottles: 8, drops: 4, bottlesPerDrop: 2, unitPrice: 1699, price: 1699, badge: 'Discovery Sampler', desc: '8x 200ml bottles (2 bottles/drop across 4 scheduled weekend drops)' },
+  { id: 'PASS-03', name: 'Corporate Team Pass (4 Drops)', bottles: 40, drops: 4, bottlesPerDrop: 10, unitPrice: 6480, price: 6480, badge: 'Office Team • Save 10%', desc: '40x 200ml bottles (10 bottles/drop across 4 Friday office drops)' },
+  { id: 'PASS-04', name: 'Mega Weekender Pass (4 Drops)', bottles: 24, drops: 4, bottlesPerDrop: 6, unitPrice: 4199, price: 4199, badge: 'Ultimate Value • Save 13%', desc: '24x 200ml bottles (6 bottles/drop across 4 scheduled weekend drops)' }
+];
+let selectedPassTier = null;
 
 let availableClusters = [
   { techPark: "DLF Cyber City / Cyber Hub (Gurugram)", window: "Morning Kickoff (9:30 AM – 11:30 AM)", maxOrders: 25, currentOrders: 0, remainingOrders: 25, isFull: false },
@@ -225,6 +234,144 @@ function selectBean(lotId) {
   if (isCustomSplit) rebalanceSplitter();
   updateTotal();
   renderSplitterUI();
+}
+
+function renderPassPacks() {
+  const container = document.getElementById('passPacks');
+  if (!container) return;
+  let html = '';
+  availablePassTiers.forEach(p => {
+    const isSelected = selectedPassTier && (selectedPassTier.id === p.id);
+    html += `
+      <div class="pack-option ${isSelected ? 'active' : ''}" onclick="selectPassTier('${p.id}')">
+        ${p.badge ? `<div class="pack-badge">${p.badge}</div>` : ''}
+        <div class="pack-name">${p.name}</div>
+        <div class="pack-price">₹${p.price.toLocaleString('en-IN')}</div>
+        <div class="pack-desc">${p.desc}</div>
+      </div>`;
+  });
+  container.innerHTML = html;
+  renderLucideIcons();
+}
+
+function selectPassTier(id) {
+  playHapticTap('click');
+  selectedPassTier = availablePassTiers.find(p => p.id === id) || null;
+  const errPack = document.getElementById('errPackSelection');
+  if (errPack) errPack.style.display = 'none';
+  renderPassPacks();
+  updateTotal();
+  if (isCustomSplit) rebalanceSplitter();
+}
+
+function setPassMode(mode) {
+  playHapticTap('click');
+  const tabBuy = document.getElementById('tabBuyPass');
+  const tabManage = document.getElementById('tabManagePass');
+  const buyView = document.getElementById('orderFormView');
+  const manageView = document.getElementById('managePassView');
+  if (tabBuy) tabBuy.classList.toggle('active', mode === 'BUY');
+  if (tabManage) tabManage.classList.toggle('active', mode === 'MANAGE');
+  if (buyView) buyView.style.display = (mode === 'BUY') ? 'block' : 'none';
+  if (manageView) manageView.style.display = (mode === 'MANAGE') ? 'block' : 'none';
+}
+
+function lookupActivePass(passId) {
+  const input = document.getElementById('passLookupInput');
+  const pId = (passId || (input ? input.value.trim().toUpperCase() : '')).trim();
+  const msgEl = document.getElementById('passLookupMsg');
+  const cardEl = document.getElementById('passDetailsCard');
+  if (!pId) {
+    if (msgEl) {
+      msgEl.textContent = 'Please enter a valid Pass ID (e.g. TABC-PASS-104).';
+      msgEl.style.display = 'block';
+      msgEl.style.background = 'rgba(230,57,70,0.2)';
+      msgEl.style.color = '#ff8fa3';
+    }
+    return;
+  }
+  if (msgEl) {
+    msgEl.textContent = '⏳ Querying pass status in roastery database...';
+    msgEl.style.display = 'block';
+    msgEl.style.background = 'rgba(212,163,115,0.15)';
+    msgEl.style.color = 'var(--accent)';
+  }
+  const url = `${CONFIG.googleSheetEndpoint}?action=track&orderId=${encodeURIComponent(pId)}`;
+  fetch(url)
+    .then(r => r.json())
+    .then(data => {
+      if (data && data.status === 'success' && data.order) {
+        if (msgEl) msgEl.style.display = 'none';
+        renderPassDetailsCard(data.order);
+      } else {
+        if (msgEl) {
+          msgEl.textContent = `✕ No active coffee pass found with ID "${pId}". Please verify your Pass ID.`;
+          msgEl.style.background = 'rgba(230,57,70,0.2)';
+          msgEl.style.color = '#ff8fa3';
+        }
+        if (cardEl) cardEl.style.display = 'none';
+      }
+    })
+    .catch(() => {
+      if (msgEl) {
+        msgEl.textContent = '⚠️ Network error querying pass status.';
+        msgEl.style.background = 'rgba(230,57,70,0.2)';
+        msgEl.style.color = '#ff8fa3';
+      }
+    });
+}
+
+function renderPassDetailsCard(order) {
+  const cardEl = document.getElementById('passDetailsCard');
+  if (!cardEl) return;
+  cardEl.style.display = 'block';
+  const dropsTotal = 4;
+  const isB2b = order.orderId.includes('B2B') || (order.pack && order.pack.toLowerCase().includes('corporate'));
+  const dropDayName = isB2b ? 'Friday' : (order.deliveryWindow && order.deliveryWindow.includes('Sunday') ? 'Sunday' : 'Saturday');
+  const fulfilledCount = (order.notes && order.notes.includes('4 Fulfilled')) ? 4 : ((order.notes && order.notes.includes('3 Fulfilled')) ? 3 : ((order.notes && order.notes.includes('2 Fulfilled')) ? 2 : ((order.notes && order.notes.includes('1 Fulfilled')) ? 1 : 0)));
+  const remaining = Math.max(0, dropsTotal - fulfilledCount);
+  const isPaused = (order.notes && order.notes.includes('PAUSED')) || (order.deliveryStatus && order.deliveryStatus.includes('Paused'));
+  const isCancelled = (order.notes && order.notes.includes('CANCELLED')) || (order.deliveryStatus && order.deliveryStatus.includes('Cancelled'));
+  let statusBadge = '<span style="background: rgba(45,106,79,0.25); border: 1px solid #2d6a4f; color: #95d5b2; font-size: 0.68rem; font-weight: 800; padding: 4px 10px; border-radius: 8px;">ACTIVE PASS</span>';
+  if (isCancelled) {
+    statusBadge = '<span style="background: rgba(230,57,70,0.25); border: 1px solid #e63946; color: #ff8fa3; font-size: 0.68rem; font-weight: 800; padding: 4px 10px; border-radius: 8px;">CANCELLED</span>';
+  } else if (isPaused) {
+    statusBadge = '<span style="background: rgba(231,111,81,0.25); border: 1px solid #e76f51; color: #f39c12; font-size: 0.68rem; font-weight: 800; padding: 4px 10px; border-radius: 8px;">PAUSED</span>';
+  } else if (remaining === 0) {
+    statusBadge = '<span style="background: rgba(212,163,115,0.25); border: 1px solid #d4a373; color: #fcf29b; font-size: 0.68rem; font-weight: 800; padding: 4px 10px; border-radius: 8px;">COMPLETED</span>';
+  }
+  let dropsHtml = '';
+  for (let d = 1; d <= 4; d++) {
+    const dropId = order.orderId + '-D' + d;
+    let dStatus = 'SCHEDULED';
+    let dColor = '#9c9589';
+    let dIcon = '○';
+    let trackLink = '';
+    if (d <= fulfilledCount) {
+      dStatus = 'DELIVERED';
+      dColor = '#95d5b2';
+      dIcon = '✓';
+      trackLink = '<a href="/track?orderId=' + encodeURIComponent(dropId) + '" class="btn-secondary" style="font-size: 0.68rem; padding: 4px 10px; text-decoration: none; border-radius: 6px;">Rate / Track &rarr;</a>';
+    } else if (d === fulfilledCount + 1) {
+      if (isPaused) {
+        dStatus = 'PAUSED (SKIPPED)';
+        dColor = '#f39c12';
+        dIcon = '⏸️';
+      } else {
+        dStatus = 'QUEUED FOR BREW';
+        dColor = 'var(--accent)';
+        dIcon = '☕';
+      }
+      trackLink = '<a href="/track?orderId=' + encodeURIComponent(dropId) + '" class="btn-secondary" style="font-size: 0.68rem; padding: 4px 10px; text-decoration: none; border-radius: 6px;">Track Status &rarr;</a>';
+    }
+    dropsHtml += '<div style="background: #151413; border: 1px solid var(--card-border); border-radius: 10px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">' + '<div style="display: flex; align-items: center; gap: 10px;">' + '<div style="width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 1px solid ' + dColor + '; color: ' + dColor + '; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.85rem;">' + dIcon + '</div>' + '<div>' + '<div style="font-size: 0.82rem; font-weight: 800; color: var(--text);">Drop ' + d + ' of 4 &bull; <span style="font-family: monospace; color: var(--accent);">' + dropId + '</span></div>' + '<div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">' + order.bean + ' &bull; <strong style="color: ' + dColor + ';">' + dStatus + '</strong></div>' + '</div>' + '</div>' + trackLink + '</div>';
+  }
+  let renewSection = '';
+  if (remaining === 0) {
+    renewSection = '<div style="margin-top: 14px; text-align: center; background: rgba(45,106,79,0.2); border: 1.5px solid #2d6a4f; border-radius: 10px; padding: 14px;">' + '<div style="font-size: 0.9rem; font-weight: 800; color: #95d5b2;">All 4 Drops Fulfilled!</div>' + '<p style="font-size: 0.74rem; color: var(--text-muted); margin: 4px 0 12px;">Loved your coffee journey? Renew for another 4 weeks and retain your 10–15% subscriber savings.</p>' + '<a href="/subscribe?renew=' + encodeURIComponent(order.orderId) + '" class="btn btn-pay" style="text-decoration: none; display: inline-flex; width: auto; padding: 10px 20px;">' + '<span>☕ Renew 4-Drop Pass &rarr;</span>' + '</a>' + '</div>';
+  }
+  cardEl.innerHTML = '<div style="background: var(--card-inner); border: 1.5px solid rgba(212,163,115,0.4); border-radius: 14px; padding: 18px; margin-top: 12px;">' + '<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--card-border); padding-bottom: 12px; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">' + '<div>' + '<div style="font-size: 1.05rem; font-weight: 900; color: var(--accent); font-family: monospace;">' + order.orderId + '</div>' + '<div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">' + (order.pack || 'Weekend 4-Pack Pass (4 Drops)') + ' &bull; ' + order.customerName + '</div>' + '</div>' + '<div style="display: flex; align-items: center; gap: 8px;">' + statusBadge + '<span style="font-size: 0.72rem; font-weight: 800; color: var(--text); background: rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 8px;">' + remaining + ' OF ' + dropsTotal + ' DROPS LEFT</span></div>' + '</div>' + '<div style="margin-bottom: 14px; font-size: 0.8rem; color: var(--text); background: rgba(0,0,0,0.25); border-radius: 10px; padding: 12px;">' + '<div><strong>Fulfillment Drop Window:</strong> <span style="color: var(--accent); font-weight: 700;">Every ' + dropDayName + '</span> (' + order.deliveryWindow + ')</div>' + '<div style="margin-top: 4px;"><strong>Next Target Drop:</strong> <strong style="color: var(--accent);">' + (order.dropDate || 'Upcoming Weekend') + '</strong></div>' + '<div style="margin-top: 4px;"><strong>Delivering To:</strong> ' + order.deliveryAddress + '</div>' + '</div>' + '<div style="font-size: 0.8rem; font-weight: 800; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">📦 4-Drop Digital Stamp Card & Order IDs</div>' + dropsHtml + renewSection + '<div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; border-top: 1px dashed var(--card-border); padding-top: 12px;">' + '<button type="button" class="btn-secondary" style="flex: 1; padding: 8px 12px; font-size: 0.75rem;" onclick="handleSubscriptionAction(\'TOGGLE_PAUSE\')">' + (isPaused ? '▶️ Resume Pass' : '⏸️ Skip Next Drop') + '</button>' + '<button type="button" class="btn-secondary" style="flex: 1; padding: 8px 12px; font-size: 0.75rem;" onclick="handleSubscriptionAction(\'SWITCH_HARVEST\')">🔄 Swap Coffee Lot</button>' + '</div>' + '</div>';
+  renderLucideIcons();
 }
 
 function initHarvestFromUrl() {
@@ -1134,6 +1281,11 @@ function selectHarvestOption(lotId) {
     }
     if (btnCorporate) {
       btnCorporate.classList.remove('disabled');
+    const btnSubscribe = document.getElementById('btnGoSubscribe');
+    if (btnSubscribe) {
+      btnSubscribe.classList.remove('disabled');
+      btnSubscribe.href = '/subscribe?bean=' + encodeURIComponent(selectedGatewayLot);
+    }
       btnCorporate.href = '/corporate?bean=' + encodeURIComponent(selectedGatewayLot);
     }
     if (prompt) {
@@ -1148,6 +1300,11 @@ function selectHarvestOption(lotId) {
     if (btnCorporate) {
       btnCorporate.classList.add('disabled');
       btnCorporate.href = 'javascript:void(0)';
+    const btnSubscribe = document.getElementById('btnGoSubscribe');
+    if (btnSubscribe) {
+      btnSubscribe.classList.add('disabled');
+      btnSubscribe.href = 'javascript:void(0)';
+    }
     }
     if (prompt) {
       prompt.textContent = '👆 Please select a single-estate harvest above to choose your order scale';
@@ -1275,7 +1432,9 @@ function renderHarvestGateway(lots) {
 // --------------------------------------------------------------------
 function validateWizardStep(stepNum) {
   if (stepNum === 1) {
-    const activePack = (PAGE === 'CORPORATE' || PAGE === 'OFFICE') ? selectedB2bPack : selectedB2cPack;
+    let activePack = null;
+    if (PAGE === 'SUBSCRIBE' || PAGE === 'PASS') activePack = selectedPassTier;
+    else activePack = (PAGE === 'CORPORATE' || PAGE === 'OFFICE') ? selectedB2bPack : selectedB2cPack;
     const errPack = document.getElementById('errPackSelection');
     if (!activePack) {
       if (errPack) {
@@ -2097,6 +2256,9 @@ function calculateSubtotal() {
   const qtyInput = document.getElementById('packQty');
   let qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
   if (isNaN(qty) || qty < 1) qty = 1;
+  if (PAGE === 'SUBSCRIBE' || PAGE === 'PASS') {
+    return (selectedPassTier && selectedPassTier.unitPrice ? selectedPassTier.unitPrice : 0) * qty;
+  }
   const active = (PAGE === 'CORPORATE' || PAGE === 'OFFICE' || currentMode === 'B2B') ? selectedB2bPack : selectedB2cPack;
   return (active && active.unitPrice ? active.unitPrice : 0) * qty;
 }
@@ -2649,6 +2811,18 @@ async function handleOrderSuccess(paymentId, statusText) {
   }
   
   if (linkTrackOrder) {
+  const rDrop1Id = document.getElementById('rDrop1Id');
+  if (rDrop1Id && (PAGE === 'SUBSCRIBE' || PAGE === 'PASS')) {
+    rDrop1Id.textContent = `${orderId}-D1`;
+  }
+  const btnGoManagePass = document.getElementById('btnGoManagePass');
+  if (btnGoManagePass) {
+    btnGoManagePass.href = `/pass?id=${encodeURIComponent(orderId)}`;
+  }
+  const btnGoTrackDrop = document.getElementById('btnGoTrackDrop');
+  if (btnGoTrackDrop) {
+    btnGoTrackDrop.href = `/track?orderId=${encodeURIComponent(orderId + '-D1')}`;
+  }
     linkTrackOrder.href = `/track?orderId=${encodeURIComponent(orderId)}`;
   }
   
@@ -3829,6 +4003,21 @@ document.addEventListener('DOMContentLoaded', () => {
     goToWizardStep(1);
     fetchLiveConfig();
     setInterval(fetchLiveConfig, 30000);
+  } else if (PAGE === 'SUBSCRIBE') {
+    startCutoffCountdown();
+    renderPassPacks();
+    initHarvestFromUrl();
+    updateTotal();
+    goToWizardStep(1);
+    fetchLiveConfig();
+  } else if (PAGE === 'PASS') {
+    fetchLiveConfig();
+    const pId = urlParams.get('passId') || urlParams.get('id');
+    if (pId) {
+      const inp = document.getElementById('passLookupInput');
+      if (inp) inp.value = pId;
+      lookupActivePass(pId);
+    }
   } else if (PAGE === 'ORDERS') {
     renderHarvestGateway();
     startCutoffCountdown();
