@@ -396,19 +396,20 @@ function renderPassDetailsCard(order) {
   const cardEl = document.getElementById('passDetailsCard');
   if (!cardEl) return;
   cardEl.style.display = 'block';
-
   currentTrackedOrder = order;
   const dropsTotal = 4;
   const fulfilledCount = order.fulfilledCount || (order.notes && order.notes.includes('4 Fulfilled') ? 4 : (order.notes && order.notes.includes('3 Fulfilled') ? 3 : (order.notes && order.notes.includes('2 Fulfilled') ? 2 : (order.notes && order.notes.includes('1 Fulfilled') ? 1 : 0))));
   const remaining = typeof order.remainingCount === 'number' ? order.remainingCount : Math.max(0, dropsTotal - fulfilledCount);
-
-  let statusBadge = '<span style="background: rgba(45,106,79,0.25); border: 1px solid #2d6a4f; color: #95d5b2; font-size: 0.68rem; font-weight: 800; padding: 4px 10px; border-radius: 8px;">ACTIVE PASS</span>';
+  const isPaused = String(order.deliveryStatus || '').toLowerCase() === 'paused' || (order.notes && order.notes.includes('PAUSED'));
+  const isCancelled = String(order.deliveryStatus || '').toLowerCase() === 'cancelled' || (order.notes && order.notes.includes('CANCELLED'));
+  let statusBadge = '<span class="tracker-badge status-preordered">ACTIVE PASS</span>';
   if (remaining === 0) {
-    statusBadge = '<span style="background: rgba(230,57,70,0.25); border: 1px solid #e63946; color: #ff8fa3; font-size: 0.68rem; font-weight: 800; padding: 4px 10px; border-radius: 8px;">EXPIRED</span>';
-  } else if (order.deliveryStatus === 'Paused') {
-    statusBadge = '<span style="background: rgba(231,111,81,0.25); border: 1px solid #e76f51; color: #f39c12; font-size: 0.68rem; font-weight: 800; padding: 4px 10px; border-radius: 8px;">PAUSED</span>';
+    statusBadge = '<span class="tracker-badge status-delivered">EXPIRED / FULFILLED</span>';
+  } else if (isCancelled) {
+    statusBadge = '<span class="tracker-badge" style="background: rgba(230,57,70,0.2); border: 1.5px solid var(--error); color: var(--error-light);">CANCELLED</span>';
+  } else if (isPaused) {
+    statusBadge = '<span class="tracker-badge status-brewing" style="color: #f39c12; border-color: #f39c12;">PAUSED</span>';
   }
-
   // Generate 4 Drop Cards
   let dropsHtml = '';
   const dropsData = (order.drops && order.drops.length > 0) ? order.drops : [
@@ -417,45 +418,55 @@ function renderPassDetailsCard(order) {
     { dropId: order.orderId + '-D3', dropNum: '3 of 4', dropDate: 'Drop 3 (+2 cycles)', bean: order.bean, status: fulfilledCount >= 3 ? 'Delivered' : 'Scheduled' },
     { dropId: order.orderId + '-D4', dropNum: '4 of 4', dropDate: 'Drop 4 (+3 cycles)', bean: order.bean, status: fulfilledCount >= 4 ? 'Delivered' : 'Scheduled' }
   ];
-
   dropsData.forEach(function(d, idx) {
-    const isDelivered = d.status.toLowerCase() === 'delivered';
-    const isNext = !isDelivered && (idx === 0 || dropsData[idx - 1].status.toLowerCase() === 'delivered');
-    const isSkipped = d.status.toLowerCase().includes('skip');
-
+    const stLower = d.status.toLowerCase();
+    const isDelivered = stLower === 'delivered';
+    const isDropPaused = isPaused || stLower.includes('pause');
+    const isSkipped = stLower.includes('skip') || stLower.includes('roll');
+    const isDropCancelled = isCancelled || stLower.includes('cancel');
+    const isNext = !isDelivered && !isDropPaused && !isDropCancelled && (idx === 0 || dropsData[idx - 1].status.toLowerCase() === 'delivered');
     let dColor = '#9c9589';
     let dIcon = '○';
     let dStatusLabel = d.status.toUpperCase();
-
     if (isDelivered) {
       dColor = '#95d5b2';
       dIcon = '✓';
+    } else if (isDropPaused) {
+      dColor = '#f39c12';
+      dIcon = '⏸️';
+      dStatusLabel = 'PAUSED';
     } else if (isNext) {
       dColor = 'var(--accent)';
       dIcon = '☕';
-      dStatusLabel = d.status === 'Pre-Ordered' ? 'PRE-ORDERED (NEXT DROP)' : 'QUEUED FOR BREW';
+      dStatusLabel = 'QUEUED FOR BREW';
     } else if (isSkipped) {
       dColor = '#f39c12';
-      dIcon = '⏸️';
+      dIcon = '⏭️';
+      dStatusLabel = 'ROLLED FORWARD';
+    } else if (isDropCancelled) {
+      dColor = '#ff8fa3';
+      dIcon = '✕';
+      dStatusLabel = 'CANCELLED';
     }
-
-    const trackBtn = `<a href="/track?orderId=${encodeURIComponent(d.dropId)}" class="btn-secondary" style="font-size: 0.68rem; padding: 5px 12px; text-decoration: none; border-radius: 6px; white-space: nowrap;">${isDelivered ? 'Rate & Track &rarr;' : 'Track Drop &rarr;'}</a>`;
-
+    let dateDisplay = d.dropDate;
+    if (isDropPaused || (typeof d.dropDate === 'string' && d.dropDate.toLowerCase().includes('not yet available'))) {
+      dateDisplay = '<span style="color: #f39c12; font-weight: 700;">Not yet available (Paused)</span>';
+    }
+    const trackBtn = isDropCancelled ? '' : `<a href="/track?orderId=${encodeURIComponent(d.dropId)}" class="btn-secondary" style="font-size: 0.72rem; padding: 6px 14px; text-decoration: none; border-radius: 6px; white-space: nowrap;">${isDelivered ? 'Rate & Track &rarr;' : 'Track Drop &rarr;'}</a>`;
     dropsHtml += `
-      <div style="background: #151413; border: 1px solid var(--card-border); border-radius: 10px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+      <div style="background: #151412; border: 1px solid var(--card-border); border-radius: 10px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
         <div style="display: flex; align-items: center; gap: 10px;">
-          <div style="width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 1px solid ${dColor}; color: ${dColor}; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.85rem;">
+          <div style="width: 28px; height: 28px; min-width: 28px; border-radius: 50%; background: rgba(255,255,255,0.05); border: 1px solid ${dColor}; color: ${dColor}; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.82rem;">
             ${dIcon}
           </div>
           <div>
             <div style="font-size: 0.82rem; font-weight: 800; color: var(--text);">Drop ${idx + 1} of 4 &bull; <span style="font-family: monospace; color: var(--accent);">${d.dropId}</span></div>
-            <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">${d.dropDate} &bull; ${d.bean} &bull; <strong style="color: ${dColor};">${dStatusLabel}</strong></div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">${dateDisplay} &bull; ${d.bean} &bull; <strong style="color: ${dColor};">${dStatusLabel}</strong></div>
           </div>
         </div>
         ${trackBtn}
       </div>`;
   });
-
   // Lot options for Swap Harvest
   let lotOptionsHtml = '';
   if (availableLots && availableLots.length > 0) {
@@ -464,62 +475,105 @@ function renderPassDetailsCard(order) {
       lotOptionsHtml += `<option value="${l.name} (${l.process})" ${isSel ? 'selected' : ''}>${l.name} (${l.process})</option>`;
     });
   }
-
-  cardEl.innerHTML = `
-    <div style="background: var(--card-inner); border: 1.5px solid rgba(212,163,115,0.4); border-radius: 14px; padding: 18px; margin-top: 12px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--card-border); padding-bottom: 12px; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
-        <div>
-          <div style="font-size: 1.05rem; font-weight: 900; color: var(--accent); font-family: monospace;">${order.orderId}</div>
-          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">${order.pack || 'Weekend 4-Pack Pass (4 Drops)'} &bull; ${order.customerName}</div>
+  // Management controls (Exclusively in pass.html)
+  let actionControlsHtml = '';
+  if (!isCancelled && remaining > 0) {
+    actionControlsHtml = `
+      <div style="margin-top: 18px; border-top: 1.5px dashed rgba(212,163,115,0.35); padding-top: 16px;">
+        <div style="font-size: 0.82rem; font-weight: 800; color: var(--accent); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 10px;">
+          🔄 Manage Subscription Drops
         </div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          ${statusBadge}
-          <span style="font-size: 0.72rem; font-weight: 800; color: var(--text); background: rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 8px;">
-            ${remaining} OF ${dropsTotal} DROPS REMAINING
-          </span>
-        </div>
-      </div>
-      ${remaining === 0 ? `
-      <div style="background: rgba(230,57,70,0.05); border: 1px solid rgba(230,57,70,0.2); border-radius: 10px; padding: 14px; margin-bottom: 14px; text-align: center;">
-        <div style="font-size: 0.9rem; font-weight: 800; color: #ff8fa3;">Your 4-Drop Coffee Pass Has Expired</div>
-        <p style="font-size: 0.74rem; color: var(--text-muted); margin: 4px 0 12px;">All 4 scheduled drops have been successfully delivered. Renew your pass to keep your 10–15% subscriber savings!</p>
-        <a href="/subscribe" class="btn btn-pay" style="width: auto; padding: 8px 20px; font-size: 0.78rem; text-decoration: none; display: inline-block;">Renew Coffee Pass &rarr;</a>
-      </div>` : ''}
-
-      <div style="margin-bottom: 14px; font-size: 0.8rem; color: var(--text); background: rgba(0,0,0,0.25); border-radius: 10px; padding: 12px;">
-        <div><strong>Scheduled Drop Window:</strong> <span style="color: var(--accent); font-weight: 700;">${order.deliveryWindow || 'Saturday Morning (8:00 AM – 11:00 AM)'}</span></div>
-        <div style="margin-top: 4px;"><strong>Delivering To:</strong> ${order.deliveryAddress} (${order.dropInstructions || 'Deliver directly to door/desk'})</div>
-      </div>
-
-      <div style="font-size: 0.8rem; font-weight: 800; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">
-        📦 4-Drop Digital Stamp Card &amp; Order IDs
-      </div>
-      ${dropsHtml}
-
-      <!-- Self-Service Action Controls -->
-      <div style="margin-top: 16px; border-top: 1px dashed var(--card-border); padding-top: 14px;">
-        <div style="font-size: 0.78rem; font-weight: 800; color: var(--text); margin-bottom: 8px;">🔄 Manage Upcoming Drop:</div>
-
-        <!-- Swap Lot Control -->
+        <!-- 1. Swap Lot Control -->
         <div style="display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;">
-          <select id="selectNewHarvest" style="flex: 1; min-width: 200px; padding: 8px 12px; background: #141312; border: 1px solid var(--card-border); border-radius: 8px; color: var(--text); font-size: 0.75rem;">
+          <select id="selectNewHarvest" style="flex: 1; min-width: 200px; padding: 10px 12px; background: #141312; border: 1px solid var(--card-border); border-radius: 8px; color: var(--text); font-size: 0.82rem; font-weight: 600;">
             ${lotOptionsHtml}
           </select>
-          <button type="button" class="btn btn-pay" style="width: auto; padding: 8px 16px; font-size: 0.75rem;" onclick="handleSubscriptionAction('SWITCH_HARVEST')">
+          <button type="button" class="btn btn-pay" style="width: auto; padding: 10px 18px; font-size: 0.82rem; font-weight: 700; white-space: nowrap;" onclick="handleSubscriptionAction('SWITCH_HARVEST')">
             <span>Update Coffee Lot</span>
           </button>
         </div>
-
-        <!-- Skip Drop Control -->
-        <div style="display: flex; gap: 8px;">
-          <button type="button" class="btn-secondary" style="flex: 1; padding: 8px 14px; font-size: 0.75rem;" onclick="handleSubscriptionAction('SKIP')">
-            <span>⏸️ Skip Next Drop (+1 Week Rollover)</span>
+        <!-- 2. Skip / Rollover Drop Control (Cascading) -->
+        <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+          <button type="button" class="btn btn-secondary" style="flex: 1; padding: 10px 16px; font-size: 0.82rem; font-weight: 700;" onclick="handleSubscriptionAction('SKIP')">
+            <span>⏭️ Rollover Next Drop (+1 Week / Shifts Following Drops)</span>
+          </button>
+        </div>
+        <!-- 3. Pause / Resume Subscription -->
+        <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+          ${isPaused ? `
+            <button type="button" class="btn btn-pay" style="flex: 1; padding: 10px 16px; font-size: 0.82rem; font-weight: 700;" onclick="handleSubscriptionAction('RESUME')">
+              <span>▶️ Resume Subscription (Reschedule Remaining Drops from Today)</span>
+            </button>
+          ` : `
+            <button type="button" class="btn btn-secondary" style="flex: 1; padding: 10px 16px; font-size: 0.82rem; font-weight: 700; border-color: rgba(243,156,18,0.5); color: #f39c12;" onclick="handleSubscriptionAction('PAUSE')">
+              <span>⏸️ Pause Subscription (Hold Upcoming Deliveries)</span>
+            </button>
+          `}
+        </div>
+        <!-- 4. Cancel Subscription -->
+        <div style="text-align: center; margin-top: 12px;">
+          <button type="button" style="background: none; border: none; color: var(--error-light); font-size: 0.74rem; cursor: pointer; text-decoration: underline;" onclick="if(confirm('Are you sure you want to cancel your coffee pass subscription? All remaining unfulfilled drops will be cancelled.')){handleSubscriptionAction('CANCEL');}">
+            Cancel Subscription
           </button>
         </div>
         <div id="subActionInlineMsg" class="track-status-msg" style="display: none; margin-top: 10px; text-align: center;"></div>
       </div>
+    `;
+  }
+  cardEl.innerHTML = `
+    <div class="cold-chain-manifest-card" style="margin-top: 14px;">
+      <!-- Left & Right Circular Ticket Cutouts -->
+      <div class="manifest-cutout-left"></div>
+      <div class="manifest-cutout-right"></div>
+      <div class="manifest-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 0.68rem; font-weight: 800; color: var(--accent); letter-spacing: 0.8px; text-transform: uppercase;">✈️ COLD-CHAIN SUBSCRIPTION MANIFEST</span>
+        </div>
+        <span class="manifest-stamp">★ 4-DROP CRAFT PASS ★</span>
+      </div>
+      <div class="manifest-body">
+        <div class="tracker-summary-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            ${statusBadge}
+            <span style="font-size: 0.7rem; font-weight: 800; color: var(--text); background: rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 8px;">
+              ${remaining} OF ${dropsTotal} DROPS REMAINING
+            </span>
+          </div>
+          <span class="tracker-order-id" style="font-family: monospace; font-size: 1.05rem; font-weight: 900; color: var(--accent);">${order.orderId}</span>
+        </div>
+        <div class="tracker-details-list">
+          <div class="tracker-detail-row">
+            <span>Pass Tier:</span>
+            <strong>${order.pack || 'Weekend 4-Pack Pass (4 Drops)'}</strong>
+          </div>
+          <div class="tracker-detail-row">
+            <span>Subscriber:</span>
+            <strong>${order.customerName || 'Valued Subscriber'}</strong>
+          </div>
+          <div class="tracker-detail-row">
+            <span>Delivery Window:</span>
+            <strong style="color: var(--accent);">${order.deliveryWindow || 'Saturday Morning (8:00 AM – 11:00 AM)'}</strong>
+          </div>
+          <div class="tracker-detail-row">
+            <span>Destination:</span>
+            <strong>${order.deliveryAddress} (${order.dropInstructions || 'Deliver directly to door/desk'})</strong>
+          </div>
+          <div class="tracker-detail-row">
+            <span>Current Harvest:</span>
+            <strong style="color: var(--accent);">${order.bean || 'Single-Estate Selection'}</strong>
+          </div>
+        </div>
+        <div style="font-size: 0.78rem; font-weight: 800; color: var(--accent); margin: 16px 0 8px; text-transform: uppercase; letter-spacing: 0.5px;">
+          📦 Discrete Drop Schedule &amp; Tracking IDs
+        </div>
+        ${dropsHtml}
+        ${actionControlsHtml}
+        <div class="manifest-barcode-row" style="margin-top: 14px;">
+          <div class="manifest-temp-log">❄️ SUB-4°C FLASH CHILLED &bull; ZERO PRESERVATIVES</div>
+          <div style="font-size: 0.65rem; font-family: monospace; color: var(--text-dim); letter-spacing: 1px;">AUTONOMOUS PASS LEDGER</div>
+        </div>
+      </div>
     </div>`;
-
   renderLucideIcons();
 }
 
@@ -3562,70 +3616,20 @@ function renderTrackingDetails(order) {
     }
   }
 
-  const subManageCard = document.getElementById('subscriptionManageCard');
-  const subStatusBadge = document.getElementById('subStatusBadge');
-  const btnToggleSubPause = document.getElementById('btnToggleSubPause');
-  const subPauseTitle = document.getElementById('subPauseTitle');
-  const subPauseDesc = document.getElementById('subPauseDesc');
-  const currentSubLotText = document.getElementById('currentSubLotText');
-  const selectNewHarvest = document.getElementById('selectNewHarvest');
-
-  const isStandingOrder = order.isStandingOrder || (order.notes && order.notes.includes('STANDING_ORDER')) || (order.cadence && order.cadence !== 'One-Time Drop');
-  const isPaused = (order.notes && order.notes.includes('PAUSED')) || (order.cadence && order.cadence.includes('Paused'));
-  const isCancelled = (order.notes && order.notes.includes('CANCELLED')) || (order.cadence && order.cadence.includes('Cancelled'));
-
-  if (subManageCard) {
-    if (isStandingOrder) {
-      subManageCard.style.display = 'block';
-      if (currentSubLotText) currentSubLotText.textContent = 'Current: ' + order.bean;
-
-      if (selectNewHarvest && availableLots && availableLots.length > 0) {
-        let optsHtml = '';
-        availableLots.filter(l => l.isActive !== false).forEach(lot => {
-          const isSel = (lot.name === order.bean || order.bean.includes(lot.name));
-          optsHtml += '<option value="' + lot.name + ' (' + lot.process + ')" ' + (isSel ? 'selected' : '') + '>' + lot.name + ' (' + lot.process + ')</option>';
-        });
-        selectNewHarvest.innerHTML = optsHtml;
-      }
-
-      if (isCancelled) {
-        if (subStatusBadge) {
-          subStatusBadge.textContent = 'CANCELLED';
-          subStatusBadge.style.background = 'rgba(230,57,70,0.25)';
-          subStatusBadge.style.borderColor = '#e63946';
-          subStatusBadge.style.color = '#ff8fa3';
-        }
-        if (btnToggleSubPause) {
-          btnToggleSubPause.textContent = 'Reactivate';
-          btnToggleSubPause.onclick = () => handleSubscriptionAction('RESUME');
-        }
-        if (subPauseTitle) subPauseTitle.textContent = 'Reactivate Subscription';
-        if (subPauseDesc) subPauseDesc.textContent = 'Resume recurring drops and unlock your 10% subscriber reservation.';
-      } else if (isPaused) {
-        if (subStatusBadge) {
-          subStatusBadge.textContent = 'PAUSED';
-          subStatusBadge.style.background = 'rgba(231,111,81,0.25)';
-          subStatusBadge.style.borderColor = '#e76f51';
-          subStatusBadge.style.color = '#f39c12';
-        }
-        if (btnToggleSubPause) btnToggleSubPause.textContent = '▶️ Resume Drop';
-        if (subPauseTitle) subPauseTitle.textContent = 'Resume Standing Order';
-        if (subPauseDesc) subPauseDesc.textContent = 'Your next drop is paused. Tap to reactivate for the upcoming cutoff.';
-      } else {
-        if (subStatusBadge) {
-          subStatusBadge.textContent = 'ACTIVE';
-          subStatusBadge.style.background = 'rgba(45,106,79,0.25)';
-          subStatusBadge.style.borderColor = '#2d6a4f';
-          subStatusBadge.style.color = '#95d5b2';
-        }
-        if (btnToggleSubPause) btnToggleSubPause.textContent = '⏸️ Pause Next Drop';
-        if (subPauseTitle) subPauseTitle.textContent = 'Pause Upcoming Drop';
-        if (subPauseDesc) subPauseDesc.textContent = 'Skip your next scheduled delivery. Automatically resumes following week.';
-      }
-    } else {
-      subManageCard.style.display = 'none';
-    }
-  }
+// Pass management happens exclusively on pass.html
+const btnGoToPassPortal = document.getElementById('btnGoToPassPortal');
+const isPassOrder = order.orderType === 'COFFEE_PASS' || order.orderType === 'COFFEE_PASS_DROP' || order.masterPassId || (order.orderId && order.orderId.includes('PASS')) || order.isStandingOrder;
+if (passRedirectCard) {
+if (isPassOrder) {
+passRedirectCard.style.display = 'block';
+if (btnGoToPassPortal) {
+btnGoToPassPortal.href = `/pass?id=${encodeURIComponent(order.masterPassId || order.orderId)}`;
+}
+} else {
+passRedirectCard.style.display = 'none';
+}
+}
+if (subStatusBadge) {
 
   const refillWrap = document.getElementById('refillBrewWrap');
   if (refillWrap) {
@@ -3762,6 +3766,90 @@ function handleRefillBrew() {
 }
 
 function handleSubscriptionAction(actionType) {
+  playHapticTap('click');
+  if (!currentTrackedOrder) return;
+  const orderId = currentTrackedOrder.orderId;
+  const statusMsg = document.getElementById('passLookupMsg') || document.getElementById('subActionMsg');
+  const inlineMsg = document.getElementById('subActionInlineMsg');
+  let subAction = actionType;
+  let newHarvest = '';
+  if (actionType === 'SWITCH_HARVEST') {
+    const sel = document.getElementById('selectNewHarvest');
+    newHarvest = sel ? sel.value : '';
+    if (!newHarvest) {
+      alert('Please select a coffee lot from the dropdown.');
+      return;
+    }
+  }
+  let waitText = '⏳ Updating pass schedule in roastery database...';
+  let successText = '✓ Pass updated successfully!';
+  if (actionType === 'SKIP' || actionType === 'ROLLOVER') {
+    subAction = 'SKIP';
+    waitText = '⏳ Rolling drop schedule forward by 1 week...';
+    successText = '✓ Upcoming drop and subsequent drops rolled forward by 1 week.';
+  } else if (actionType === 'PAUSE') {
+    subAction = 'PAUSE';
+    waitText = '⏳ Pausing subscription deliveries...';
+    successText = '✓ Subscription paused! Upcoming dates set to "Not yet available".';
+  } else if (actionType === 'RESUME') {
+    subAction = 'RESUME';
+    waitText = '⏳ Rescheduling remaining drops from current date...';
+    successText = '✓ Subscription resumed! Remaining drops rescheduled starting from next available delivery date.';
+  } else if (actionType === 'CANCEL') {
+    subAction = 'CANCEL';
+    waitText = '⏳ Cancelling subscription...';
+    successText = '✓ Subscription cancelled. Remaining unscheduled drops have been cancelled.';
+  } else if (actionType === 'SWITCH_HARVEST') {
+    waitText = `⏳ Updating upcoming drop coffee harvest to ${newHarvest}...`;
+    successText = `✓ Next drop single-estate harvest updated to ${newHarvest}!`;
+  }
+  if (statusMsg) {
+    statusMsg.style.display = 'block';
+    statusMsg.style.background = 'rgba(212,163,115,0.15)';
+    statusMsg.style.color = 'var(--accent)';
+    statusMsg.textContent = waitText;
+  }
+  if (inlineMsg) {
+    inlineMsg.style.display = 'block';
+    inlineMsg.style.background = 'rgba(212,163,115,0.15)';
+    inlineMsg.style.color = 'var(--accent)';
+    inlineMsg.textContent = waitText;
+  }
+  const payload = {
+    action: 'manage_subscription',
+    orderId: orderId,
+    subAction: subAction,
+    newHarvest: newHarvest
+  };
+  function onActionDone() {
+    if (statusMsg) {
+      statusMsg.style.background = 'rgba(45,106,79,0.25)';
+      statusMsg.style.color = '#95d5b2';
+      statusMsg.textContent = successText;
+    }
+    if (inlineMsg) {
+      inlineMsg.style.background = 'rgba(45,106,79,0.25)';
+      inlineMsg.style.color = '#95d5b2';
+      inlineMsg.textContent = successText;
+    }
+    if (typeof confetti === 'function') {
+      try { confetti({ particleCount: 40, spread: 50, origin: { y: 0.6 } }); } catch (e) {}
+    }
+    alert(successText);
+    setTimeout(() => { 
+      lookupActivePass(orderId); 
+    }, 1200);
+  }
+  fetch(CONFIG.googleSheetEndpoint, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  }).then(onActionDone).catch(() => {
+    const getUrl = `${CONFIG.googleSheetEndpoint}?action=manage_subscription&orderId=${encodeURIComponent(orderId)}&subAction=${encodeURIComponent(subAction)}&newHarvest=${encodeURIComponent(newHarvest)}`;
+    fetch(getUrl, { mode: 'no-cors' }).finally(onActionDone);
+  });
+}
   playHapticTap('click');
   if (!currentTrackedOrder) return;
   const orderId = currentTrackedOrder.orderId;

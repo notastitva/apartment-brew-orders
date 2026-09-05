@@ -5165,3 +5165,185 @@ input:focus, select:focus, textarea:focus {
 .stepper-line.line-completed {
   background: linear-gradient(90deg, var(--success-light) 0%, var(--accent) 100%) !important;
 }
+
+/* ==================================================================== */
+/* STRICT HORIZONTAL TIMELINE STEPPER FOR TRACK.HTML                     */
+/* Matches the Single-Row Architecture of Personal/Corporate Wizards    */
+/* ==================================================================== */
+.timeline-stepper {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background: var(--card-inner) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 12px !important;
+  padding: 12px 10px 10px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin-bottom: 16px !important;
+}
+
+.stepper-step {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 3px !important;
+  flex: 1 1 0 !important;
+  text-align: center !important;
+  z-index: 2 !important;
+  position: relative !important;
+}
+
+.step-icon-wrap {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.step-icon {
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  border-radius: 50% !important;
+  background: #2a2724 !important;
+  color: var(--text-muted) !important;
+  border: 2px solid var(--card-border) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.72rem !important;
+  font-weight: 800 !important;
+  transition: all 0.25s ease !important;
+}
+
+.stepper-step.step-active .step-icon {
+  background: var(--gradient-gold) !important;
+  border-color: #fcf29b !important;
+  color: #141312 !important;
+  box-shadow: 0 0 14px rgba(212, 163, 115, 0.6) !important;
+  transform: scale(1.1) !important;
+}
+
+.stepper-step.step-completed .step-icon {
+  background: var(--success) !important;
+  border-color: var(--success-light) !important;
+  color: #fff !important;
+}
+
+.step-info {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  width: 100% !important;
+}
+
+.step-title {
+  font-size: 0.64rem !important;
+  font-weight: 800 !important;
+  color: var(--text-muted) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.3px !important;
+  margin-top: 4px !important;
+  white-space: nowrap !important;
+}
+
+.stepper-step.step-active .step-title {
+  color: var(--accent) !important;
+}
+
+.stepper-step.step-completed .step-title {
+  color: var(--success-light) !important;
+}
+
+.step-desc {
+  display: none !important;
+}
+
+.stepper-line {
+  flex: 1 1 0 !important;
+  height: 2px !important;
+  background: var(--card-border) !important;
+  margin: 0 -4px 14px !important;
+  position: relative !important;
+  z-index: 1 !important;
+  transition: background 0.3s ease !important;
+}
+
+.stepper-line.line-completed {
+  background: linear-gradient(90deg, var(--success-light) 0%, var(--accent) 100%) !important;
+}
+
+/* COLD-CHAIN MANIFEST STYLING FOR ORDER & PASS CONFIRMATION VIEWS */
+#confirmationView .section-card,
+#inqConfirmationView .section-card {
+  background: linear-gradient(165deg, #1e1c19 0%, #141311 100%) !important;
+  border: 1.5px solid rgba(212, 163, 115, 0.45) !important;
+  border-radius: 14px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  padding: 0 0 20px 0 !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+#confirmationView .section-card::before,
+#inqConfirmationView .section-card::before {
+  content: '✈️ COLD-CHAIN DISPATCH MANIFEST  •  ★ ZERO PRESERVATIVES ★';
+  display: block;
+  background: #151412;
+  color: var(--accent);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 12px 16px;
+  border-bottom: 1.5px dashed rgba(212, 163, 115, 0.35);
+  margin-bottom: 16px;
+}
+
+#confirmationView .section-card > *,
+#inqConfirmationView .section-card > * {
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+#confirmationView .receipt-details,
+#inqConfirmationView .receipt-details {
+  background: #151412 !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 10px !important;
+  padding: 12px 16px !important;
+  margin: 16px 18px !important;
+}
+
+#confirmationView .receipt-row,
+#inqConfirmationView .receipt-row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 8px 0 !important;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08) !important;
+  font-size: 0.84rem !important;
+}
+
+#confirmationView .receipt-row:last-child,
+#inqConfirmationView .receipt-row:last-child {
+  border-bottom: none !important;
+}
+
+#confirmationView .receipt-label,
+#inqConfirmationView .receipt-label {
+  color: var(--text-muted) !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.4px !important;
+}
+
+#confirmationView .receipt-val,
+#inqConfirmationView .receipt-val {
+  color: var(--text) !important;
+  font-weight: 700 !important;
+  text-align: right !important;
+}
