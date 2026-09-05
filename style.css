@@ -5347,3 +5347,65 @@ input:focus, select:focus, textarea:focus {
   font-weight: 700 !important;
   text-align: right !important;
 }
+/* ==================================================================== */
+/* INTERACTIVE HARVEST LOT SWITCHER & PASS MODULES (PASS.HTML)          */
+/* ==================================================================== */
+.harvest-switch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.harvest-switch-card {
+  background: #141312;
+  border: 1.5px solid var(--card-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.harvest-switch-card:hover {
+  border-color: rgba(212, 163, 115, 0.5);
+  background: rgba(212, 163, 115, 0.05);
+  transform: translateY(-1.5px);
+}
+
+.harvest-switch-card.active {
+  border-color: var(--accent) !important;
+  background: rgba(212, 163, 115, 0.12) !important;
+  box-shadow: 0 0 14px rgba(212, 163, 115, 0.3) !important;
+}
+
+.pass-management-module {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.module-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.module-preview-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #151412;
+  border: 1px dashed var(--card-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
