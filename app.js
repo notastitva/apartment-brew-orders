@@ -1739,7 +1739,7 @@ function goToWizardStep(stepNum) {
 
 function populateOrderReview() {
   const isB2b = (PAGE === 'CORPORATE' || PAGE === 'OFFICE');
-  const activePack = isB2b ? selectedB2bPack : selectedB2cPack;
+  const isPass = (PAGE === "SUBSCRIBE" || PAGE === "PASS"); const activePack = isPass ? selectedPassTier : (isB2b ? selectedB2bPack : selectedB2cPack);
   const qty = parseInt(document.getElementById('packQty')?.value, 10) || 1;
   const subtotal = calculateSubtotal();
   const total = calculateTotal();
@@ -1756,8 +1756,10 @@ function populateOrderReview() {
   
   const b2cDaySelect = document.getElementById('b2cDeliveryDay');
   const b2cDayVal = b2cDaySelect ? b2cDaySelect.value : "Saturday Morning (8:00 AM – 11:00 AM)";
-  const deliveryWindow = isB2b ? (document.getElementById('b2bDeliveryWindow')?.value || '') : b2cDayVal;
-  const dropDate = isB2b ? getUpcomingFridayFormatted() : getUpcomingB2cDropDate(b2cDayVal);
+  const passWindowSelect = document.getElementById('passDropWindow');
+  const passWindowVal = passWindowSelect ? passWindowSelect.value : "Saturday Morning (8:00 AM – 11:00 AM)";
+  const deliveryWindow = isPass ? passWindowVal : (isB2b ? (document.getElementById('b2bDeliveryWindow')?.value || '') : b2cDayVal);
+  const dropDate = isPass ? getUpcomingB2cDropDate(passWindowVal) : (isB2b ? getUpcomingFridayFormatted() : getUpcomingB2cDropDate(b2cDayVal));
   const company = (document.getElementById('custCompany')?.value || '').trim();
   
   const revBean = document.getElementById('revBean');
@@ -1772,7 +1774,11 @@ function populateOrderReview() {
   const revTotal = document.getElementById('revTotal');
   
   if (revBean) revBean.textContent = coffeeLotDisplay;
-  if (revPack) revPack.textContent = `${activePack.name} x ${qty} (${activePack.bottles * qty} bottles)`;
+  if (revPack) {
+    const packName = activePack ? activePack.name : (isPass ? '4-Drop Coffee Pass' : 'Batch Pack');
+    const packBottles = activePack && activePack.bottles ? activePack.bottles : (isPass ? 16 : 1);
+    revPack.textContent = `${packName} x ${qty} (${packBottles * qty} bottles)`;
+  }
   if (revDate) revDate.textContent = `${dropDate} (${deliveryWindow})`;
   if (revWindow) revWindow.textContent = deliveryWindow;
   if (revAddress) revAddress.textContent = `${address}, ${location} (PIN: ${pin})`;
@@ -2887,6 +2893,10 @@ async function handleOrderSuccess(paymentId, statusText) {
   const isPass = (PAGE === 'SUBSCRIBE' || PAGE === 'PASS');
   const isB2b = (PAGE === 'CORPORATE' || PAGE === 'OFFICE');
   const activePack = isPass ? selectedPassTier : (isB2b ? selectedB2bPack : selectedB2cPack);
+  const total = calculateTotal();
+  const discount = appliedCoupon ? (appliedCoupon.discount || 0) : 0;
+  const couponCode = appliedCoupon ? (appliedCoupon.code || '') : '';
+  const techParkVal = isB2b ? (document.getElementById('b2bTechPark')?.value || '').trim() : 'N/A';
   const rawDropInstructions = document.getElementById('dropInstructions')?.value || 'Deliver directly to door/desk';
   const dropInstructions = rawDropInstructions.replace(/\s*\/\s*/g, '/').trim();
 
@@ -2924,24 +2934,7 @@ async function handleOrderSuccess(paymentId, statusText) {
     deliveryWindow: deliveryWindow,
     dropDate: dropDate,
     bean: selectedBean,
-    pack: activePack ? activePack.name : (isPass ? '4-Drop Coffee Pass' : 'Batch Pack'),
-    quantity: qty,
-    bottles: (activePack ? (activePack.bottles || 16) : 16) * qty,
-    orderType: isPass ? 'COFFEE_PASS' : (isB2b ? 'B2B' : 'B2C'),
-    targetSheet: isPass ? 'Coffee Passes' : (isB2b ? 'B2B Orders' : 'Sheet1'),
-    name: name,
-    email: email,
-    phone: phone,
-    buildingFloor: address,
-    techPark: techParkVal,
-    pinCode: pin,
-    dropInstructions: dropInstructions,
-    deliveryWindow: deliveryWindow,
-    dropDate: dropDate,
-    bean: selectedBean,
     pack: activePack ? activePack.name : (isPass ? 'Weekend 4-Pack Pass (4 Drops)' : 'Batch Pack'),
-    quantity: qty,
-    bottles: (activePack && activePack.bottles ? activePack.bottles : (isPass ? 16 : 1)) * qty,
     quantity: qty,
     bottles: (activePack && activePack.bottles ? activePack.bottles : (isPass ? 16 : 1)) * qty,
     subtotalAmount: subtotal,
@@ -3006,7 +2999,11 @@ async function handleOrderSuccess(paymentId, statusText) {
   if (rName) rName.textContent = name;
   if (rEmail) rEmail.textContent = email;
   if (rBean) rBean.textContent = coffeeLotDisplay;
-  if (rPack) rPack.textContent = `${activePack.name} x ${qty} (${activePack.bottles * qty} bottles)`;
+  if (rPack) {
+    const packName = activePack ? activePack.name : (isPass ? '4-Drop Coffee Pass' : 'Batch Pack');
+    const packBottles = activePack && activePack.bottles ? activePack.bottles : (isPass ? 16 : 1);
+    rPack.textContent = `${packName} x ${qty} (${packBottles * qty} bottles)`;
+  }
   if (rTotal) rTotal.textContent = `₹${total.toLocaleString('en-IN')}`;
   
   if (discount > 0) {
