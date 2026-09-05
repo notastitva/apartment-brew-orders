@@ -600,17 +600,13 @@ will-change: transform;
 18.5 Responsive Desktop Parallel Card Architecture & Full-Width Ticker
 * Decoupled 50/50 decks on large viewports so cards span full container width.
 * Aligns multi-column sensory grids and comparison matrices in clean desktop parallel decks.
-18.6 Main Portals Grid & Quick Utility Navigation (index.html)
-* 3-Card Responsive Portals Hub: .streamlined-hub-grid styled with repeat(auto-fit, minmax(220px, 1fr)) to cleanly present the three core customer journeys:
-   * 1. Harvests & Ordering Hub (/orders): Single micro-batch exploration & configuration.
-   * 2. 4-Drop Coffee Pass (/subscribe): Pre-paid 4-drop passes with green SAVE 10–15% badge.
-   * 3. Book us for Event Catering (/events): Pop-up coffee bars, offsites, and hackathons.
-* Quick Self-Service Sub-Links: Dedicated pills for instant tracking (/track) and pass management (/pass).
-* Responsive Parallel Card Decks (.parallel-card-deck):
-   * On screens < 860px, cards stack vertically with standard mobile spacing.
-   * On screens ≥ 860px (laptops and desktops), cards auto-switch to a 2-column grid (grid-template-columns: repeat(2, 1fr); gap: 20px; align-items: stretch;):
-      1. Homepage (index.html): Sensory Profile & Science card sits parallel to 48-Hour Freshness Curve; Flavor Guidance card sits parallel to The Comparison (How We Differ) card.
-      2. Flavor Page (flavor.html): 5-Axis Sensory Radar sits parallel to Side-by-Side Spectrum Bars; Process Science sits parallel to Food Pairings.
+18.6 Three Ways to Experience Card & Main Portals Grid (index.html)
+* Full-Sized 3-Way Experience Card: A prominent section card on index.html explaining the three fulfillment formats:
+   1. 🏠 Personal Drops: Single weekend pre-orders (1–6 bottles) delivered Saturday & Sunday morning across Delhi NCR.
+   2. 🏢 Corporate Drops: Scheduled Friday office drops (10–60 bottles) with GSTIN 18% ITC and Net-7 terms.
+   3. 🔄 4-Drop Coffee Passes: 1 upfront payment, 4 scheduled deliveries, 10–15% savings, individual drop IDs, and flexible skip/swap.
+* Streamlined 2-Card Hub: Clean 2-card layout under Order & Inquire featuring Harvests & Ordering Hub (/orders) and Event Catering (/events).
+* Dynamic Batch Navigation Label: Navigation drawer dynamically updates to Order Batch #X based on the roastery&apos;s active batch counter.
 ---
 19. SEO, LocalBusiness Schema & Mobile Form Architecture
 19.1 Technical SEO & Canonical Routing
