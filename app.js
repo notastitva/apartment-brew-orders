@@ -485,18 +485,6 @@ function renderPassDetailsCard(order) {
         <p style="font-size: 0.74rem; color: var(--text-muted); margin: 4px 0 12px;">All 4 scheduled drops have been successfully delivered. Renew your pass to keep your 10–15% subscriber savings!</p>
         <a href="/subscribe" class="btn btn-pay" style="width: auto; padding: 8px 20px; font-size: 0.78rem; text-decoration: none; display: inline-block;">Renew Coffee Pass &rarr;</a>
       </div>` : ''}
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed var(--card-border); padding-bottom: 12px; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
-        <div>
-          <div style="font-size: 1.05rem; font-weight: 900; color: var(--accent); font-family: monospace;">${order.orderId}</div>
-          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">${order.pack || 'Weekend 4-Pack Pass (4 Drops)'} &bull; ${order.customerName}</div>
-        </div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          ${statusBadge}
-          <span style="font-size: 0.72rem; font-weight: 800; color: var(--text); background: rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 8px;">
-            ${remaining} OF ${dropsTotal} DROPS REMAINING
-          </span>
-        </div>
-      </div>
 
       <div style="margin-bottom: 14px; font-size: 0.8rem; color: var(--text); background: rgba(0,0,0,0.25); border-radius: 10px; padding: 12px;">
         <div><strong>Scheduled Drop Window:</strong> <span style="color: var(--accent); font-weight: 700;">${order.deliveryWindow || 'Saturday Morning (8:00 AM – 11:00 AM)'}</span></div>
@@ -528,6 +516,7 @@ function renderPassDetailsCard(order) {
             <span>⏸️ Skip Next Drop (+1 Week Rollover)</span>
           </button>
         </div>
+        <div id="subActionInlineMsg" class="track-status-msg" style="display: none; margin-top: 10px; text-align: center;"></div>
       </div>
     </div>`;
 
@@ -3004,19 +2993,12 @@ async function handleOrderSuccess(paymentId, statusText) {
     const packBottles = activePack && activePack.bottles ? activePack.bottles : (isPass ? 16 : 1);
     rPack.textContent = `${packName} x ${qty} (${packBottles * qty} bottles)`;
   }
-  if (rTotal) rTotal.textContent = `₹${total.toLocaleString('en-IN')}`;
+  const formattedTotal = `₹${total.toLocaleString('en-IN')}`;
+  if (rTotal) rTotal.textContent = formattedTotal;
+  const rTotalVal = document.getElementById('rTotalVal');
+  if (rTotalVal) rTotalVal.textContent = formattedTotal;
   
   if (discount > 0) {
-    if (rSubtotalRow) rSubtotalRow.style.display = 'flex';
-    if (rSubtotal) rSubtotal.textContent = `₹${subtotal.toLocaleString('en-IN')}`;
-    if (rDiscountRow) rDiscountRow.style.display = 'flex';
-    if (rDiscount) rDiscount.textContent = `-₹${discount.toLocaleString('en-IN')} (${couponCode})`;
-  } else {
-    if (rSubtotalRow) rSubtotalRow.style.display = 'none';
-    if (rDiscountRow) rDiscountRow.style.display = 'none';
-  }
-  
-  if (linkTrackOrder) {
   const rDrop1Id = document.getElementById('rDrop1Id');
   if (rDrop1Id && (PAGE === 'SUBSCRIBE' || PAGE === 'PASS')) {
     rDrop1Id.textContent = `${orderId}-D1`;
@@ -3029,8 +3011,18 @@ async function handleOrderSuccess(paymentId, statusText) {
   if (btnGoTrackDrop) {
     btnGoTrackDrop.href = `/track?orderId=${encodeURIComponent(orderId + '-D1')}`;
   }
+  if (linkTrackOrder) {
     linkTrackOrder.href = `/track?orderId=${encodeURIComponent(orderId)}`;
   }
+    if (rSubtotalRow) rSubtotalRow.style.display = 'flex';
+    if (rSubtotal) rSubtotal.textContent = `₹${subtotal.toLocaleString('en-IN')}`;
+    if (rDiscountRow) rDiscountRow.style.display = 'flex';
+    if (rDiscount) rDiscount.textContent = `-₹${discount.toLocaleString('en-IN')} (${couponCode})`;
+  } else {
+    if (rSubtotalRow) rSubtotalRow.style.display = 'none';
+    if (rDiscountRow) rDiscountRow.style.display = 'none';
+  }
+  
   
   const orderFormView = document.getElementById('orderFormView');
   const confirmationView = document.getElementById('confirmationView');
@@ -3761,10 +3753,9 @@ function handleSubscriptionAction(actionType) {
   if (!currentTrackedOrder) return;
   const orderId = currentTrackedOrder.orderId;
   const statusMsg = document.getElementById('passLookupMsg') || document.getElementById('subActionMsg');
-
+  const inlineMsg = document.getElementById('subActionInlineMsg');
   let subAction = actionType;
   let newHarvest = '';
-
   if (actionType === 'SWITCH_HARVEST') {
     const sel = document.getElementById('selectNewHarvest');
     newHarvest = sel ? sel.value : '';
@@ -3773,48 +3764,56 @@ function handleSubscriptionAction(actionType) {
       return;
     }
   }
-
   if (actionType === 'SKIP' || actionType === 'TOGGLE_PAUSE') {
     subAction = 'SKIP';
   }
-
+  const waitText = (subAction === 'SKIP') ? '⏳ Skipping upcoming drop and rolling schedule forward...' : `⏳ Updating coffee lot to ${newHarvest}...`;
   if (statusMsg) {
     statusMsg.style.display = 'block';
     statusMsg.style.background = 'rgba(212,163,115,0.15)';
     statusMsg.style.color = 'var(--accent)';
-    statusMsg.textContent = '⏳ Updating pass schedule in roastery database...';
+    statusMsg.textContent = waitText;
   }
-
+  if (inlineMsg) {
+    inlineMsg.style.display = 'block';
+    inlineMsg.style.background = 'rgba(212,163,115,0.15)';
+    inlineMsg.style.color = 'var(--accent)';
+    inlineMsg.textContent = waitText;
+  }
   const payload = {
     action: 'manage_subscription',
     orderId: orderId,
     subAction: subAction,
     newHarvest: newHarvest
   };
-
+  const successText = (subAction === 'SKIP') ? '✓ Upcoming drop skipped! Schedule rolled forward by 1 week.' : `✓ Coffee harvest successfully updated to ${newHarvest}!`;
+  function onActionDone() {
+    if (statusMsg) {
+      statusMsg.style.background = 'rgba(45,106,79,0.25)';
+      statusMsg.style.color = '#95d5b2';
+      statusMsg.textContent = successText;
+    }
+    if (inlineMsg) {
+      inlineMsg.style.background = 'rgba(45,106,79,0.25)';
+      inlineMsg.style.color = '#95d5b2';
+      inlineMsg.textContent = successText;
+    }
+    if (typeof confetti === 'function') {
+      try { confetti({ particleCount: 40, spread: 50, origin: { y: 0.6 } }); } catch (e) {}
+    }
+    alert(successText);
+    setTimeout(() => { lookupActivePass(orderId); }, 1200);
+  }
   fetch(CONFIG.googleSheetEndpoint, {
     method: 'POST',
     mode: 'no-cors',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify(payload)
-  }).then(() => {
-    if (statusMsg) {
-      statusMsg.style.background = 'rgba(45,106,79,0.25)';
-      statusMsg.style.color = '#95d5b2';
-      statusMsg.textContent = (subAction === 'SKIP') ? '✓ Upcoming drop skipped! Schedule rolled forward by 1 week.' : `✓ Single-estate harvest updated to ${newHarvest}!`;
-}
-    setTimeout(() => { lookupActivePass(orderId); }, 1400);
-  }).catch(() => {
+  }).then(onActionDone).catch(() => {
     const getUrl = `${CONFIG.googleSheetEndpoint}?action=manage_subscription&orderId=${encodeURIComponent(orderId)}&subAction=${encodeURIComponent(subAction)}&newHarvest=${encodeURIComponent(newHarvest)}`;
-    fetch(getUrl, { mode: 'no-cors' }).finally(() => {
-      setTimeout(() => { lookupActivePass(orderId); }, 1400);
-    });
+    fetch(getUrl, { mode: 'no-cors' }).finally(onActionDone);
   });
 }
-// ====================================================================
-// SENSORY FEEDBACK SYSTEM FOR DELIVERED ORDERS (/track)
-// Dimensions: Overall Brew (1-5), Bitterness (1-5), Notes Clarity (1-5)
-// ====================================================================
 // ====================================================================
 // SENSORY FEEDBACK SYSTEM FOR DELIVERED ORDERS (/track)
 // Dimensions: Overall Brew (1-5), Bitterness (1-5), Notes Clarity (1-5)

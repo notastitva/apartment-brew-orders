@@ -104,16 +104,17 @@
     <main class="section-card">
       <div class="section-title">
         <span>Look Up Your Coffee Pass</span>
-        <span class="section-subtitle">Enter Pass ID to view schedule and individual drop IDs</span>
+        <span class="section-subtitle">Live Status Lookup</span>
       </div>
+      <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4;">
+        Manage your 4-drop specialty coffee pass, view your digital stamp card with individual drop tracking IDs, swap upcoming single-estate lots, or rollover drop dates.
+      </p>
 
-      <div style="display: flex; gap: 8px; margin-bottom: 14px;">
-        <input type="text" id="passLookupInput" placeholder="Enter Pass ID (e.g. TABC-PASS-104289)" autocomplete="off" autocapitalize="characters" spellcheck="false" style="flex: 1; padding: 10px 14px; background: var(--card-inner); border: 1px solid var(--card-border); border-radius: 8px; color: var(--text); font-size: 0.85rem; font-family: monospace; font-weight: 700;" onkeydown="if(event.key==='Enter'){event.preventDefault();lookupActivePass();}" />
-        <button type="button" class="btn btn-pay" id="btnLookupPass" style="padding: 0 18px;" onclick="lookupActivePass()">
-          <span>Lookup &rarr;</span>
-        </button>
+      <div class="tracker-input-group">
+        <input type="text" id="passLookupInput" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Enter Pass ID (e.g. TABC-PASS-104289)" onkeydown="if(event.key==='Enter'){event.preventDefault();lookupActivePass();}" />
+        <button type="button" id="btnLookupPass" class="btn-track" onclick="lookupActivePass()">Lookup</button>
       </div>
-      <div id="passLookupMsg" style="display: none; padding: 10px 14px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; margin-bottom: 12px; text-align: center;"></div>
+      <div id="passLookupMsg" class="track-status-msg" style="display: none;"></div>
 
       <!-- Dynamic Pass Management Card & Punch Card -->
       <div id="passDetailsCard" style="display: none;">
