@@ -428,14 +428,14 @@ function renderPassDetailsCard(order) {
   const fulfilledCount = order.fulfilledCount || (order.notes && order.notes.includes('4 Fulfilled') ? 4 : (order.notes && order.notes.includes('3 Fulfilled') ? 3 : (order.notes && order.notes.includes('2 Fulfilled') ? 2 : (order.notes && order.notes.includes('1 Fulfilled') ? 1 : 0))));
   const remaining = typeof order.remainingCount === 'number' ? order.remainingCount : Math.max(0, dropsTotal - fulfilledCount);
 
-  const isPaused = String(order.deliveryStatus || '').toLowerCase() === 'paused' || (order.notes && order.notes.includes('PAUSED'));
-  const isCancelled = String(order.deliveryStatus || '').toLowerCase() === 'cancelled' || (order.notes && order.notes.includes('CANCELLED'));
+  const isCancelled = String(order.deliveryStatus || '').toLowerCase() === "cancelled" || (order.notes && order.notes.includes("CANCELLED")) || (order.drops && order.drops.length > 0 && order.drops.every(d => d.status.toLowerCase() === "cancelled"));
+  const isPaused = !isCancelled && (String(order.deliveryStatus || '').toLowerCase() === "paused" || (order.notes && order.notes.includes("PAUSED")) || (order.drops && order.drops.some(d => d.status.toLowerCase().includes("pause") || String(d.dropDate || '').toLowerCase().includes("not yet available"))));
 
   let statusBadge = '<span class="tracker-badge status-preordered">ACTIVE PASS</span>';
-  if (remaining === 0) {
-    statusBadge = '<span class="tracker-badge status-delivered">EXPIRED / FULFILLED</span>';
-  } else if (isCancelled) {
+  if (isCancelled) {
     statusBadge = '<span class="tracker-badge" style="background: rgba(230,57,70,0.2); border: 1.5px solid var(--error); color: var(--error-light);">CANCELLED</span>';
+  } else if (remaining === 0) {
+    statusBadge = '<span class="tracker-badge status-delivered">EXPIRED / FULFILLED</span>';
   } else if (isPaused) {
     statusBadge = '<span class="tracker-badge status-brewing" style="color: #f39c12; border-color: #f39c12;">PAUSED</span>';
   }
@@ -543,46 +543,57 @@ function renderPassDetailsCard(order) {
   }
 
   let actionControlsHtml = '';
-  if (!isCancelled && remaining > 0) {
+  if (isCancelled) {
     actionControlsHtml = `
-      <div style="margin-top: 18px; border-top: 1.5px dashed rgba(212,163,115,0.35); padding-top: 16px;">
+      <div class="pass-cancelled-lockout-card">
+        <div style="font-size: 0.92rem; font-weight: 800; color: #ff8fa3; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <span>🔒</span> Pass Subscription Cancelled
+        </div>
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin: 6px 0 0; line-height: 1.4;">
+          This 4-drop pass subscription has been permanently cancelled. All scheduled deliveries are terminated and no further modifications, rollovers, or lot switches can be made.
+        </p>
+      </div>
+    `;
+  } else if (remaining > 0) {
+    actionControlsHtml = `
+      <div class="pass-actions-container">
         <div style="font-size: 0.82rem; font-weight: 800; color: var(--accent); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
           <span>🔄</span> Manage Pass Deliveries
         </div>
         <!-- Inline Status Confirmation Banner (On Pass Only - No Dialog Box) -->
         <div id="subActionInlineMsg" class="track-status-msg" style="display: none; margin-bottom: 12px; text-align: center;"></div>
         <!-- 1. Interactive Harvest Lot Switcher -->
-        <div style="background: #141312; border: 1px solid var(--card-border); border-radius: 10px; padding: 12px; margin-bottom: 10px;">
+        <div style="background: #141312; border: 1px solid var(--card-border); border-radius: 10px; padding: 12px; margin-bottom: 12px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
             <span style="font-size: 0.76rem; font-weight: 700; color: var(--text-muted);">Switch Next Drop Single-Estate Harvest:</span>
             <span class="standing-order-pill" style="font-size: 0.65rem; background: rgba(212,163,115,0.15); color: var(--accent); border: 1px solid rgba(212,163,115,0.4); padding: 2px 8px; border-radius: 6px;">FREE SWAP</span>
           </div>
-          <div class="harvest-switch-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; margin-bottom: 10px;">
+          <div class="harvest-switch-grid">
             ${harvestCardsHtml}
           </div>
-          <button type="button" class="btn btn-pay" id="btnConfirmHarvestSwitch" style="width: 100%; padding: 10px;" onclick="confirmHarvestSwitch()">
+          <button type="button" class="btn btn-pay" id="btnConfirmHarvestSwitch" style="width: 100%; padding: 12px; font-size: 0.84rem; font-weight: 800;" onclick="confirmHarvestSwitch()">
             <span id="btnConfirmHarvestSwitchText">☕ Update Next Drop Lot &rarr;</span>
           </button>
         </div>
-        <!-- 2. Clean Action Controls Row: Rollover & Pause/Resume -->
-        <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-          <button type="button" class="btn btn-secondary" style="flex: 1; padding: 10px; font-size: 0.8rem; font-weight: 700; border-color: rgba(212,163,115,0.4); color: var(--text);" onclick="handleSubscriptionAction('SKIP')">
+        <!-- 2. Harmonized Action Buttons Row (Rollover & Pause/Resume) -->
+        <div class="pass-action-btn-row">
+          <button type="button" class="btn btn-secondary" onclick="handleSubscriptionAction('SKIP')">
             <span>⏭️ Rollover Next Drop (+1 Wk)</span>
           </button>
           ${isPaused ? `
-            <button type="button" class="btn btn-pay" style="flex: 1; padding: 10px; font-size: 0.8rem; font-weight: 800;" onclick="handleSubscriptionAction('RESUME')">
+            <button type="button" class="btn btn-pay" onclick="handleSubscriptionAction('RESUME')">
               <span>▶️ Resume Deliveries</span>
             </button>
           ` : `
-            <button type="button" class="btn btn-secondary" style="flex: 1; padding: 10px; font-size: 0.8rem; font-weight: 700; border-color: rgba(243, 156, 18, 0.5); color: #f39c12;" onclick="handleSubscriptionAction('PAUSE')">
+            <button type="button" class="btn btn-secondary" style="border-color: rgba(243, 156, 18, 0.5); color: #f39c12;" onclick="handleSubscriptionAction('PAUSE')">
               <span>⏸️ Pause Deliveries</span>
             </button>
           `}
         </div>
-        <!-- 3. Discreet Cancel Link -->
-        <div style="text-align: center; margin-top: 10px;">
-          <button type="button" style="background: none; border: none; color: var(--text-dim); font-size: 0.72rem; cursor: pointer; text-decoration: underline;" onclick="handleSubscriptionAction('CANCEL')">
-            Cancel Subscription
+        <!-- 3. Red-Highlighted Cancel Subscription Button -->
+        <div style="text-align: center; margin-top: 14px; padding-top: 12px; border-top: 1px dashed rgba(255,255,255,0.08);">
+          <button type="button" class="btn-cancel-subscription" onclick="handleSubscriptionAction('CANCEL')">
+            ✕ Cancel Subscription
           </button>
         </div>
       </div>

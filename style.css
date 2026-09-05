@@ -5409,3 +5409,61 @@ input:focus, select:focus, textarea:focus {
   color: var(--text-muted);
   margin-top: 6px;
 }
+/* REDESIGNED PASS ACTIONS & RED CANCEL HIGHLIGHT (PASS.HTML) */
+.pass-actions-container {
+  margin-top: 18px;
+  border-top: 1.5px dashed rgba(212, 163, 115, 0.35);
+  padding-top: 16px;
+}
+
+.pass-action-btn-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.pass-action-btn-row .btn {
+  flex: 1;
+  padding: 12px 14px !important;
+  font-size: 0.82rem !important;
+  font-weight: 800 !important;
+  border-radius: 10px !important;
+  margin-top: 0 !important;
+  box-sizing: border-box;
+}
+
+.btn-cancel-subscription {
+  background: rgba(230, 57, 70, 0.12) !important;
+  border: 1.5px solid var(--error) !important;
+  color: var(--error-light) !important;
+  font-size: 0.76rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 8px 18px !important;
+  border-radius: 8px !important;
+  cursor: pointer;
+  transition: all 0.2s ease !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+}
+
+.btn-cancel-subscription:hover {
+  background: rgba(230, 57, 70, 0.25) !important;
+  color: #fff !important;
+  border-color: #ff8fa3 !important;
+  box-shadow: 0 0 16px rgba(230, 57, 70, 0.4) !important;
+  transform: translateY(-1.5px);
+}
+
+.pass-cancelled-lockout-card {
+  background: rgba(230, 57, 70, 0.08) !important;
+  border: 1.5px solid var(--error) !important;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-top: 18px;
+  text-align: center;
+  box-shadow: 0 4px 18px rgba(230, 57, 70, 0.15);
+}
