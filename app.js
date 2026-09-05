@@ -1,17 +1,18 @@
 // TACTILE HAPTIC & SYNTHESIZED SOUND FEEDBACK ENGINE
+let currentBatchNumber = '1';
+
+function updateNavBatchLabels() {
+  const links = document.querySelectorAll('.drawer-link[data-page-link="ORDERS"], #drawerOrderLink');
+  links.forEach(link => {
+    link.textContent = `Order Batch #${currentBatchNumber}`;
+  });
+}
 // ====================================================================
 let sensoryRadarChartInstance = null;
 function renderLucideIcons() {
   if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
     try { lucide.createIcons(); } catch (e) {}
   }
-}
-let currentBatchNumber = "1";
-function updateNavBatchLabel() {
-  const links = document.querySelectorAll('.drawer-link[data-page-link="ORDERS"], #drawerOrderLink, .nav-order-link');
-  links.forEach(link => {
-    link.textContent = `Order Batch #${currentBatchNumber}`;
-  });
 }
 let tabcAudioCtx = null;
 function playHapticTap(type) {
@@ -2194,6 +2195,10 @@ function fetchLiveConfig() {
     .then(res => res.json())
     .then(data => {
       if (data && data.status === 'success' && !data.action) {
+      if (data && data.batchNumber) {
+        currentBatchNumber = String(data.batchNumber).trim();
+        updateNavBatchLabels();
+      }
         localStorage.setItem('tabc_live_config', JSON.stringify(data));
     if (data.batchNumber) {
       currentBatchNumber = String(data.batchNumber).trim();
@@ -2802,18 +2807,19 @@ function handlePayClick() {
   const isPass = (PAGE === 'SUBSCRIBE' || PAGE === 'PASS');
   const isB2b = (PAGE === 'CORPORATE' || PAGE === 'OFFICE');
   const activePack = isPass ? selectedPassTier : (isB2b ? selectedB2bPack : selectedB2cPack);
+  const packTitle = activePack ? activePack.name : (isPass ? '4-Drop Coffee Pass' : 'Specialty Coffee');
+  
   if (CONFIG.razorpayKeyId && !CONFIG.razorpayKeyId.includes("YOUR_RAZORPAY")) {
     const options = {
       key: CONFIG.razorpayKeyId,
       amount: total * 100,
       currency: "INR",
       name: "The Apartment Brew Co.",
-      description: `${isPass ? '4-Drop Coffee Pass' : (isB2b ? 'Office Drop' : 'Pre-Order')}: ${activePack ? activePack.name : 'Coffee Pass'}`,
+      description: `${isPass ? '4-Drop Coffee Pass' : (isB2b ? 'Office Drop' : 'Pre-Order')}: ${packTitle}`,
       prefill: { name: name, email: email, contact: phone },
       theme: { color: "#d4a373" },
       handler: function (response) { handleOrderSuccess(response.razorpay_payment_id, "Paid via Gateway"); }
     };
-  
     const rzp = new Razorpay(options);
     rzp.on('payment.failed', function (response) {
       alert('Payment was not completed: ' + (response.error.description || 'Please try again.'));
@@ -2829,10 +2835,19 @@ async function handleOrderSuccess(paymentId, statusText) {
   if (typeof confetti === 'function') {
     try { confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } }); } catch (e) {}
   }
+  const name = (document.getElementById('custName')?.value || '').trim();
+  const email = (document.getElementById('custEmail')?.value || '').trim();
+  const phone = (document.getElementById('custPhone')?.value || '').trim();
+  const pin = (document.getElementById('custPincode')?.value || '').trim();
+  const address = (document.getElementById('custAddress')?.value || '').trim();
+  const qty = parseInt(document.getElementById('packQty')?.value, 10) || 1;
+  const subtotal = calculateSubtotal();
+  const discount = appliedCoupon ? appliedCoupon.discount : 0;
+  const couponCode = appliedCoupon ? appliedCoupon.code : 'NONE';
   const total = calculateTotal();
   const isPass = (PAGE === 'SUBSCRIBE' || PAGE === 'PASS');
   const isB2b = (PAGE === 'CORPORATE' || PAGE === 'OFFICE');
-  const activePack = isPass ? selectedPassTier : (isB2b ? selectedB2bPack : selectedB2cPack);
+  const techParkVal = isB2b ? (document.getElementById('custTechPark')?.value || 'DLF Cyber City') : 'Gurugram/NCR';
   const rawDropInstructions = document.getElementById('dropInstructions')?.value || 'Deliver directly to door/desk';
   const dropInstructions = rawDropInstructions.replace(/\s*\/\s*/g, '/').trim();
   
@@ -2856,6 +2871,21 @@ async function handleOrderSuccess(paymentId, statusText) {
     authToken: CONFIG.authToken,
     botTrap: "",
     orderId: orderId,
+    orderType: isPass ? 'COFFEE_PASS' : (isB2b ? 'B2B' : 'B2C'),
+    targetSheet: isPass ? 'Coffee Passes' : (isB2b ? 'B2B Orders' : 'Sheet1'),
+    name: name,
+    email: email,
+    phone: phone,
+    buildingFloor: address,
+    techPark: techParkVal,
+    pinCode: pin,
+    dropInstructions: dropInstructions,
+    deliveryWindow: deliveryWindow,
+    dropDate: dropDate,
+    bean: selectedBean,
+    pack: activePack ? activePack.name : (isPass ? '4-Drop Coffee Pass' : 'Batch Pack'),
+    quantity: qty,
+    bottles: (activePack ? (activePack.bottles || 16) : 16) * qty,
     orderType: isPass ? 'COFFEE_PASS' : (isB2b ? 'B2B' : 'B2C'),
     targetSheet: isPass ? 'Coffee Passes' : (isB2b ? 'B2B Orders' : 'Sheet1'),
     name: name,
@@ -4114,6 +4144,7 @@ function initRefillOrder() {
 // --------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
   highlightActiveDrawerLink();
+  updateNavBatchLabels();
   updateNavBatchLabel();
   updateNavBatchNumber();
   renderLucideIcons();
