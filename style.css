@@ -5467,3 +5467,16 @@ input:focus, select:focus, textarea:focus {
   text-align: center;
   box-shadow: 0 4px 18px rgba(230, 57, 70, 0.15);
 }
+/* Proceed to Checkout Grid (orders.html) */
+#proceedCheckoutGrid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 14px !important;
+  margin-top: 14px !important;
+}
+
+@media (max-width: 767px) {
+  #proceedCheckoutGrid {
+    grid-template-columns: 1fr !important;
+  }
+}
