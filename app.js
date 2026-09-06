@@ -361,7 +361,7 @@ function lookupActivePass(passId) {
     return;
   }
   if (msgEl) {
-    msgEl.textContent = '⏳ Querying pass status in roastery database...';
+    msgEl.textContent = '⏳ Querying pass status in brewery database...';
     msgEl.style.display = 'block';
     msgEl.style.background = 'rgba(212,163,115,0.15)';
     msgEl.style.color = 'var(--accent)';
@@ -683,7 +683,7 @@ function handleSubscriptionAction(actionType, customPayload) {
     }
   }
 
-  let waitText = '⏳ Updating pass schedule in roastery database...';
+  let waitText = '⏳ Updating pass schedule in brewery database...';
   let successText = '✓ Pass updated successfully!';
 
   if (actionType === 'SKIP' || actionType === 'ROLLOVER') {
@@ -2877,9 +2877,7 @@ function updateTotal() {
   if (btnAmount) btnAmount.textContent = formattedTotal;
 
   if (btnText && currentStoreStatus === 'OPEN') {
-    if ((PAGE === 'CORPORATE' || PAGE === 'OFFICE') && currentB2bPayOption === 'INVOICE') {
-      btnText.innerHTML = `📄 Request Corporate Invoice (<span id="btnAmount">${formattedTotal}</span>)`;
-    } else if (PAGE === 'CORPORATE' || PAGE === 'OFFICE') {
+    if (PAGE === 'CORPORATE' || PAGE === 'OFFICE') {
       btnText.innerHTML = `💳 Pay & Confirm Office Batch (<span id="btnAmount">${formattedTotal}</span>)`;
     } else {
       btnText.innerHTML = `💳 Pay & Confirm Pre-Order (<span id="btnAmount">${formattedTotal}</span>)`;
@@ -3077,11 +3075,7 @@ function handlePayClick() {
     return;
   }
   
-  if ((PAGE === 'CORPORATE' || PAGE === 'OFFICE') && currentB2bPayOption === 'INVOICE') {
-    const invId = "INV-REQ-" + Math.floor(100000 + Math.random() * 900000);
-    handleOrderSuccess(invId, 'Corporate Invoice Requested (Net Terms)');
-    return;
-  }
+  // All corporate orders proceed to upfront gateway payment
   const total = calculateTotal();
   const name = (document.getElementById('custName')?.value || '').trim();
   const email = (document.getElementById('custEmail')?.value || '').trim();
@@ -3143,7 +3137,7 @@ async function handleOrderSuccess(paymentId, statusText) {
   const company = isB2b ? ((document.getElementById('custCompany')?.value || '').trim() || "N/A") : "N/A";
   const gstin = isB2b ? ((document.getElementById('custGstin')?.value || '').trim() || "N/A") : "N/A";
   const buildingFloor = (document.getElementById('custAddress')?.value || '').trim();
-  const paymentMode = isB2b ? (currentB2bPayOption === 'INVOICE' ? "Corporate Invoice (Net Terms)" : "Razorpay Gateway") : "Razorpay Gateway";
+  const paymentMode = "Razorpay Gateway";
   
   const lot1Name = availableLots[0] ? availableLots[0].name : "Lot 1";
   const lot2Name = availableLots[1] ? availableLots[1].name : "Lot 2";
@@ -4119,7 +4113,7 @@ function renderOrderFeedbackSection(order) {
           ) : '') +
         '</div>' +
         '<p style="font-size: 0.72rem; color: var(--text-muted); line-height: 1.35; margin: 6px 0 0;">' +
-          'Thank you for calibrating this harvest batch' + dateStr + '! Your ratings directly guide our roastery for next week\'s extraction.' +
+          'Thank you for calibrating this harvest batch' + dateStr + '! Your ratings directly guide our brewery team for next week\'s extraction.' +
         '</p>' +
       '</div>';
     return;
@@ -4133,7 +4127,7 @@ function renderOrderFeedbackSection(order) {
   container.innerHTML = 
     '<div class="feedback-card">' +
       '<div class="feedback-card-title">✨ Rate Your Fresh Brew</div>' +
-      '<div class="feedback-card-sub">Help calibrate our next roast by rating your sensory cup experience across 3 key criteria:</div>' +
+      '<div class="feedback-card-sub">Help calibrate our next batch brew by rating your sensory cup experience across 3 key criteria:</div>' +
 
       '<div class="feedback-dimension-group">' +
         '<!-- 1. Overall Brew -->' +
@@ -4453,7 +4447,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const ratingNum = parseInt(feedbackRating, 10) || 5;
         const starsText = '★'.repeat(Math.max(1, Math.min(5, ratingNum)));
         statusMsg.innerHTML = '<div style="font-size: 1.15rem; font-weight: 800; color: var(--accent); margin-bottom: 6px;">' + starsText + ' Rating Recorded!</div>' +
-          'Thank you! Your ' + ratingNum + '-star feedback for order <strong>' + qId + '</strong> (' + (feedbackNotes || 'Sensory Calibration') + ') has been logged directly for our roastery team.';
+          '<p style="font-size: 0.85rem; color: var(--text); margin-top: 6px; line-height: 1.4;">Thank you! Your ' + ratingNum + '-star feedback for order <strong>' + qId + '</strong> (' + (feedbackNotes || 'Sensory Calibration') + ') has been logged directly for our brewery team.</p>';
         statusMsg.className = 'track-status-msg msg-success';
         statusMsg.style.display = 'block';
       }

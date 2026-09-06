@@ -325,11 +325,11 @@ Need 100+ bottles for a hackathon or all-hands? <a href="/events">Custom Event C
     <div class="wizard-nav-btns">
       <button type="button" class="btn-secondary" onclick="goToWizardStep(1)">&larr; Back to Batch Size</button>
       <button type="button" class="btn btn-pay" onclick="nextWizardStep(3)">
-        <span>Review &amp; Pay / Invoice &rarr;</span>
+        <span>Review &amp; Pay &rarr;</span>
       </button>
     </div>
   </section>
-  <!-- STEP 3: Review &amp; Payment / Corporate Invoice -->
+  <!-- STEP 3: Review &amp; Payment -->
   <section class="section-card wizard-step-panel" id="stepPanel3">
     <div class="section-title">
       <span>Step 3: Corporate Order Review &amp; Payment</span>
@@ -376,9 +376,9 @@ Need 100+ bottles for a hackathon or all-hands? <a href="/events">Custom Event C
     <!-- B2B Payment Method Toggle -->
     <div class="form-group" style="margin-top: 14px;">
       <label>Select Payment Method</label>
-      <div style="display: flex; gap: 8px; margin-top: 6px;">
-        <button type="button" class="mode-tab active" id="payOptionGateway" style="flex:1; border:1px solid var(--card-border);" onclick="setB2bPayOption('GATEWAY')">&#128179; Razorpay (UPI/Cards)</button>
-        <button type="button" class="mode-tab" id="payOptionInvoice" style="flex:1; border:1px solid var(--card-border);" onclick="setB2bPayOption('INVOICE')">&#128196; Corporate Invoice (Net-7)</button>
+      <div style="background: rgba(0, 180, 216, 0.08); border: 1px solid rgba(0, 180, 216, 0.3); border-radius: 10px; padding: 12px; margin-bottom: 12px; font-size: 0.78rem; color: var(--text-muted); line-height: 1.45;">
+        💳 <strong>Pre-Paid Corporate Order:</strong> Instant payment via Razorpay, UPI, Corporate Netbanking &amp; Cards. An official GSTIN 18% Tax Invoice with Input Tax Credit (ITC) details is generated and emailed immediately upon confirmation.
+      </div>
       </div>
     </div>
     <div class="freshness-alert" style="margin-top: 12px; margin-bottom: 0;">
@@ -479,7 +479,6 @@ Need 100+ bottles for a hackathon or all-hands? <a href="/events">Custom Event C
         <div class="confirmation-actions" style="max-width: 400px; margin: 18px auto 0; padding: 0 16px; display: flex; flex-direction: column; gap: 10px;">
           <a href="/track" id="linkTrackOrder" class="btn btn-pay" style="width: 100%; max-width: 360px; margin: 0 auto; text-decoration: none; padding: 11px 18px; font-size: 0.84rem; font-weight: 800; border-radius: 10px; display: flex; align-items: center; justify-content: center;"><span>🔍 View Live Order Status &rarr;</span></a>
           <button type="button" class="btn btn-calendar" style="width: 100%; max-width: 360px; margin: 0 auto; padding: 11px 18px; font-size: 0.84rem; font-weight: 800; border-radius: 10px;" onclick="addToGoogleCalendar()"><span>📅 Add Office Drop to Google Calendar</span></button>
-          <button type="button" class="btn btn-whatsapp" style="width: 100%; max-width: 360px; margin: 0 auto; padding: 11px 18px; font-size: 0.84rem; font-weight: 800; border-radius: 10px;" onclick="sendWhatsAppReceipt()"><span>💬 Send Receipt / Updates to WhatsApp</span></button>
           <button type="button" class="btn btn-secondary" style="width: 100%; max-width: 360px; margin: 0 auto; padding: 10px 18px; font-size: 0.82rem; font-weight: 700; border-radius: 10px;" onclick="resetForm()"><span>+ Place Another Office Drop</span></button>
           <button type="button" class="btn-celebrate-confetti" onclick="if(typeof confetti==='function'){confetti({particleCount:80,spread:70,origin:{y:0.6}});}if(typeof playHapticTap==='function'){playHapticTap('success');}"><span>🎉 Tap for Celebration Confetti!</span></button>
         </div>
