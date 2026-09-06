@@ -5733,3 +5733,18 @@ input:focus, select:focus, textarea:focus {
   border-color: var(--accent) !important;
   transform: scale(1.03);
 }
+/* UNIFIED DISABLED BUTTON STATE ACROSS PERSONAL, CORPORATE & SUBSCRIBE WIZARDS */
+.btn-pay:disabled,
+.btn-pay.disabled,
+.btn:disabled,
+.btn.disabled,
+.btn-hero-primary:disabled,
+.btn-hero-primary.disabled,
+button:disabled {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+  filter: grayscale(0.5) !important;
+  pointer-events: none !important;
+}

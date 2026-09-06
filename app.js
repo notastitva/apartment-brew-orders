@@ -331,6 +331,11 @@ function selectPassTier(id) {
   if (errPack) errPack.style.display = 'none';
   renderPassPacks();
   updateTotal();
+  const btnStep1Next = document.getElementById('btnStep1Next');
+  if (btnStep1Next && selectedPassTier) {
+    btnStep1Next.disabled = false;
+    btnStep1Next.classList.remove('disabled');
+  }
   if (isCustomSplit) rebalanceSplitter();
 }
 
@@ -1655,6 +1660,7 @@ function selectHarvestOption(lotId) {
   });
   const btnPersonal = document.getElementById('btnGoPersonal');
   const btnCorporate = document.getElementById('btnGoCorporate');
+  const btnSubscribe = document.getElementById('btnGoSubscribe');
   const prompt = document.getElementById('harvestPrompt');
   if (selectedGatewayLot) {
     if (btnPersonal) {
@@ -1663,12 +1669,11 @@ function selectHarvestOption(lotId) {
     }
     if (btnCorporate) {
       btnCorporate.classList.remove('disabled');
-    const btnSubscribe = document.getElementById('btnGoSubscribe');
+      btnCorporate.href = '/corporate?bean=' + encodeURIComponent(selectedGatewayLot);
+    }
     if (btnSubscribe) {
       btnSubscribe.classList.remove('disabled');
       btnSubscribe.href = '/subscribe?bean=' + encodeURIComponent(selectedGatewayLot);
-    }
-      btnCorporate.href = '/corporate?bean=' + encodeURIComponent(selectedGatewayLot);
     }
     if (prompt) {
       prompt.textContent = '✓ Harvest selected! Choose your order scale below:';
@@ -1676,23 +1681,23 @@ function selectHarvestOption(lotId) {
     }
   } else {
     if (btnPersonal) {
-      btnPersonal.classList.add('disabled');
-      btnPersonal.href = 'javascript:void(0)';
+      btnPersonal.classList.remove('disabled');
+      btnPersonal.href = '/personal?bean=LOT-MIX';
     }
     if (btnCorporate) {
-      btnCorporate.classList.add('disabled');
-      btnCorporate.href = 'javascript:void(0)';
-    const btnSubscribe = document.getElementById('btnGoSubscribe');
-    if (btnSubscribe) {
-      btnSubscribe.classList.add('disabled');
-      btnSubscribe.href = 'javascript:void(0)';
+      btnCorporate.classList.remove('disabled');
+      btnCorporate.href = '/corporate?bean=LOT-MIX';
     }
+    if (btnSubscribe) {
+      btnSubscribe.classList.remove('disabled');
+      btnSubscribe.href = '/subscribe?bean=LOT-MIX';
     }
     if (prompt) {
-      prompt.textContent = '👆 Please select a single-estate harvest above to choose your order scale';
+      prompt.textContent = '👆 Select a single-estate harvest above or choose an order format below:';
       prompt.classList.remove('selection-made');
     }
   }
+}
 }
 function getSwatchClass(text) {
   const t = (text || '').toLowerCase();
@@ -1883,7 +1888,15 @@ function nextWizardStep(targetStep) {
   if (targetStep > currentWizardStep) {
     for (let s = currentWizardStep; s < targetStep; s++) {
       if (!validateWizardStep(s)) {
-        alert('Please complete the required information before continuing.');
+        if (s === 1) {
+          const errPack = document.getElementById('errPackSelection');
+          if (errPack) {
+            errPack.style.display = 'block';
+            if (typeof errPack.scrollIntoView === 'function') {
+              errPack.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }
+        }
         return;
       }
     }
@@ -1898,6 +1911,11 @@ function goToWizardStep(stepNum) {
   }
   
   currentWizardStep = stepNum;
+  
+  // When entering Step 2, ensure saved customer profile autofill bar checks and displays
+  if (stepNum === 2) {
+    checkSavedProfile();
+  }
   
   // When entering Step 1, ensure splitter UI matches selected pack size
   if (stepNum === 1 && isCustomSplit) {
@@ -2307,6 +2325,11 @@ function selectB2cPack(name, bottles, price, el) {
   if (el) el.classList.add('active');
   selectedB2cPack = { name, bottles, unitPrice: price };
   updateTotal();
+  const btnStep1Next = document.getElementById('btnStep1Next');
+  if (btnStep1Next) {
+    btnStep1Next.disabled = false;
+    btnStep1Next.classList.remove('disabled');
+  }
   if (isCustomSplit) rebalanceSplitter();
 }
 
@@ -2317,6 +2340,11 @@ function selectB2bPack(name, bottles, price, el) {
   if (el) el.classList.add('active');
   selectedB2bPack = { name, bottles, unitPrice: price };
   updateTotal();
+  const btnStep1Next = document.getElementById('btnStep1Next');
+  if (btnStep1Next) {
+    btnStep1Next.disabled = false;
+    btnStep1Next.classList.remove('disabled');
+  }
   if (isCustomSplit) rebalanceSplitter();
 }
 
@@ -2838,13 +2866,28 @@ function updateTotal() {
       errCap.textContent = `⚠️ Selected order (${totalBottles} bottles) exceeds remaining batch capacity (${liveRemainingBatchBottles} bottles left). Please reduce quantity or select a smaller pack.`;
       errCap.style.display = 'block';
     }
-    if (btnStep1Next) btnStep1Next.disabled = true;
+    if (btnStep1Next) {
+      btnStep1Next.disabled = true;
+      btnStep1Next.classList.add('disabled');
+    }
     if (payBtn) payBtn.disabled = true;
   } else {
     if (errCap) errCap.style.display = 'none';
-    if (btnStep1Next) btnStep1Next.disabled = false;
+    let activePack = null;
+    if (PAGE === 'SUBSCRIBE' || PAGE === 'PASS') activePack = selectedPassTier;
+    else if (PAGE === 'CORPORATE' || PAGE === 'OFFICE') activePack = selectedB2bPack;
+    else activePack = selectedB2cPack;
+
+    if (btnStep1Next) {
+      if (!activePack) {
+        btnStep1Next.disabled = true;
+        btnStep1Next.classList.add('disabled');
+      } else {
+        btnStep1Next.disabled = false;
+        btnStep1Next.classList.remove('disabled');
+      }
+    }
     if (payBtn && currentStoreStatus === 'OPEN') payBtn.disabled = false;
-  }
 
   const total = calculateTotal();
   const formattedTotal = `₹${total.toLocaleString('en-IN')}`;
@@ -4371,6 +4414,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initHarvestFromUrl();
     updateTotal();
     goToWizardStep(1);
+    checkSavedProfile();
     fetchLiveConfig();
     setInterval(fetchLiveConfig, 30000);
     
@@ -4381,6 +4425,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initHarvestFromUrl();
     updateTotal();
     goToWizardStep(1);
+    checkSavedProfile();
     fetchLiveConfig();
     setInterval(fetchLiveConfig, 30000);
   } else if (PAGE === 'SUBSCRIBE') {
@@ -4389,6 +4434,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initHarvestFromUrl();
     updateTotal();
     goToWizardStep(1);
+    checkSavedProfile();
     fetchLiveConfig();
   } else if (PAGE === 'PASS') {
     fetchLiveConfig();
