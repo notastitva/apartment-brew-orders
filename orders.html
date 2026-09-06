@@ -144,7 +144,25 @@
 <div id="harvestPrompt" class="select-harvest-prompt">
   <span>👆 Please select a single-estate harvest above to choose your order scale</span>
 </div>
-  <div id="proceedCheckoutGrid" class="destination-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 14px;">
+  <style>
+    @media (min-width: 769px) {
+      #proceedCheckoutGrid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 14px !important;
+        width: 100% !important;
+      }
+    }
+    @media (max-width: 768px) {
+      #proceedCheckoutGrid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+        width: 100% !important;
+      }
+    }
+  </style>
+  <div id="proceedCheckoutGrid" class="destination-cards-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; width: 100%;">
     <!-- Option 1: Personal Order -->
 <div style="background: linear-gradient(145deg, rgba(212,163,115,0.08) 0%, rgba(20,19,18,0.95) 100%); border: 1.5px solid rgba(212,163,115,0.4); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between;">
       <div>
@@ -209,3 +227,4 @@
 </html>
 
 
+ 
