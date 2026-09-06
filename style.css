@@ -5505,3 +5505,16 @@ input:focus, select:focus, textarea:focus {
   border-color: var(--success) !important;
   color: #95d5b2 !important;
 }
+
+/* HORIZONTAL CHECKOUT CARDS ON LAPTOPS (ORDERS.HTML) */
+@media (min-width: 768px) {
+  body[data-page="ORDERS"] .container {
+    max-width: 1040px !important;
+  }
+  #proceedCheckoutGrid,
+  body[data-page="ORDERS"] .destination-cards-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 14px !important;
+  }
+}
