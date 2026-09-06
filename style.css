@@ -5602,3 +5602,65 @@ input:focus, select:focus, textarea:focus {
     gap: 12px !important;
   }
 }
+/* ==================================================================== */
+/* SAVED CUSTOMER PROFILE BANNER & AUTOFILL BUTTON                      */
+/* Premium Golden Hue & Ambient Glow                                    */
+/* ==================================================================== */
+.saved-profile-bar {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: linear-gradient(145deg, rgba(212, 163, 115, 0.14) 0%, rgba(26, 24, 22, 0.95) 100%);
+  border: 1.5px solid rgba(212, 163, 115, 0.45);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  animation: fadeInProfileBar 0.35s ease forwards;
+}
+
+@keyframes fadeInProfileBar {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#savedProfileText {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.35;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.saved-profile-btn {
+  background: var(--gradient-gold) !important;
+  color: #141312 !important;
+  font-size: 0.76rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  border: none !important;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(212, 163, 115, 0.35);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease !important;
+}
+
+.saved-profile-btn:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 16px rgba(212, 163, 115, 0.55) !important;
+  filter: brightness(1.05);
+}
+
+.saved-profile-btn:active {
+  transform: scale(0.96);
+  box-shadow: 0 1px 6px rgba(212, 163, 115, 0.25) !important;
+}
