@@ -1698,7 +1698,7 @@ function selectHarvestOption(lotId) {
     }
   }
 }
-}
+
 function getSwatchClass(text) {
   const t = (text || '').toLowerCase();
   if (t.includes('berry') || t.includes('rasp') || t.includes('fruit') || t.includes('currant')) return 'swatch-berry';
@@ -2888,8 +2888,9 @@ function updateTotal() {
       }
     }
     if (payBtn && currentStoreStatus === 'OPEN') payBtn.disabled = false;
+    }
 
-  const total = calculateTotal();
+    const total = calculateTotal();
   const formattedTotal = `₹${total.toLocaleString('en-IN')}`;
   const formattedSubtotal = `₹${subtotal.toLocaleString('en-IN')}`;
 
