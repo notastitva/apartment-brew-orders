@@ -133,61 +133,66 @@
 </div>
     </section>
 <!-- SECTION: BRANCHING ORDER PATHWAYS -->
-<section class="section-card">
-  <div class="section-title">
+<section class="section-card" id="proceedCheckoutCard" style="margin-top: 14px; background: linear-gradient(180deg, #1a1816 0%, #141312 100%); border: 1.5px solid rgba(212, 163, 115, 0.35); border-radius: 14px; padding: 20px 16px;">
+  <div class="section-title" style="margin-bottom: 4px;">
     <span>Proceed to Checkout</span>
     <span class="section-subtitle">Choose Fulfillment Scale</span>
   </div>
-  <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; line-height: 1.4;">
-    Select your fulfillment scale below to configure bottle count, delivery window, and secure checkout:
+  <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.45;">
+    Freshly extracted hot at 92–94&deg;C, flash-chilled to 4&deg;C, and delivered cold in 200ml glass bottles with zero preservatives across Gurugram &amp; Delhi NCR. Select your single-estate harvest above, then choose your fulfillment format below:
   </p>
 <div id="harvestPrompt" class="select-harvest-prompt">
   <span>👆 Please select a single-estate harvest above to choose your order scale</span>
 </div>
   <div class="destination-cards-grid">
     <!-- Option 1: Personal Order -->
-<a href="javascript:void(0)" id="btnGoPersonal" class="destination-order-card disabled">
-  <div>
-    <div class="dest-card-header">
-      <span class="dest-card-title">☕ Personal Order</span>
-<span class="dest-card-badge">1–6 Bottles</span>
-    </div>
-    <p class="dest-card-desc" style="margin-top: 8px;">
-      Pre-order glass bottles delivered cold to your home Saturday &amp; Sunday morning across Delhi NCR.
+<a href="javascript:void(0)" id="btnGoPersonal" class="destination-order-card disabled" style="background: linear-gradient(145deg, rgba(212,163,115,0.08) 0%, rgba(20,19,18,0.95) 100%); border: 1.5px solid rgba(212,163,115,0.4); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; text-decoration: none;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span style="font-size: 1.3rem;">🏡</span>
+        <span style="font-size: 0.62rem; font-weight: 800; background: rgba(212,163,115,0.2); border: 1px solid var(--accent); color: var(--accent); padding: 3px 8px; border-radius: 6px; letter-spacing: 0.3px;">WEEKEND RESIDENTIAL</span>
+      </div>
+      <div style="font-size: 0.95rem; font-weight: 800; color: var(--text); margin-bottom: 6px;">Personal Weekend Pre-Order</div>
+      <div style="font-size: 0.72rem; color: var(--accent); font-weight: 700; margin-bottom: 8px;">1–6 Bottles (200ml) &bull; Sat &amp; Sun Morning (8–11 AM)</div>
+      <p style="font-size: 0.73rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 14px;">
+        Handcrafted single-origin pour-overs delivered fresh to your doorstep. Choose a single estate or customize your own bottle split with Mix &amp; Match.
     </p>
   </div>
-<div class="dest-card-cta">
-    Configure Personal Order &rarr;
+    <div class="btn btn-hero-primary" style="width: 100%; font-size: 0.8rem; font-weight: 800; padding: 11px 14px; border-radius: 10px; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; box-sizing: border-box;">
+      <span>Configure Personal Order &rarr;</span>
   </div>
 </a>
     <!-- Option 2: Corporate Order -->
-<a href="javascript:void(0)" id="btnGoCorporate" class="destination-order-card disabled">
-  <div>
-    <div class="dest-card-header">
-      <span class="dest-card-title">🏢 Corporate Order</span>
-<span class="dest-card-badge">10–60+ Bottles</span>
-    </div>
-    <p class="dest-card-desc" style="margin-top: 8px;">
-      Friday Tech Park delivery with Net-7 corporate invoicing, GSTIN input credit, and team tasting notes.
-    </p>
-  </div>
-<div class="dest-card-cta">
-    Configure Corporate Order &rarr;
-  </div>
-</a>
-    <!-- Option 3: 4-Drop Coffee Pass -->
-<a href="javascript:void(0)" id="btnGoSubscribe" class="destination-order-card disabled" style="border-color: rgba(212,163,115,0.45); background: linear-gradient(145deg, rgba(212,163,115,0.12) 0%, rgba(20,19,18,0.95) 100%);">
+<a href="javascript:void(0)" id="btnGoCorporate" class="destination-order-card disabled" style="background: linear-gradient(145deg, rgba(0,180,216,0.08) 0%, rgba(20,19,18,0.95) 100%); border: 1.5px solid rgba(0,180,216,0.4); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; text-decoration: none;">
       <div>
-        <div class="dest-card-header">
-          <span class="dest-card-title">🔄 4-Drop Coffee Pass</span>
-          <span class="dest-card-badge" style="background: rgba(45,106,79,0.3); color: #95d5b2; border-color: #2d6a4f;">Save 10–15%</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span style="font-size: 1.3rem;">🏢</span>
+          <span style="font-size: 0.62rem; font-weight: 800; background: rgba(0,180,216,0.18); border: 1px solid #00b4d8; color: #90e0ef; padding: 3px 8px; border-radius: 6px; letter-spacing: 0.3px;">CORPORATE TECH PARKS</span>
         </div>
-        <p class="dest-card-desc" style="margin-top: 8px;">
-          Lock in 4 scheduled fresh drops with 1 upfront payment. Guaranteed roastery batch reservation, individual drop tracking IDs, and flexible skip/swap.
+        <div style="font-size: 0.95rem; font-weight: 800; color: var(--text); margin-bottom: 6px;">Corporate Friday Office Drops</div>
+        <div style="font-size: 0.72rem; color: #90e0ef; font-weight: 700; margin-bottom: 8px;">10–60 Bottles &bull; Friday Kickoff &amp; Afternoon Recharge</div>
+        <p style="font-size: 0.73rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 14px;">
+          Premium cold coffee for engineering teams, offsites, and offices across Cyber City, Golf Course Rd, and Candor. Includes GSTIN 18% ITC and Net-7 terms.
         </p>
       </div>
-      <div class="dest-card-cta" style="color: var(--accent); font-weight: 800;">
-        Subscribe (4-Drop Pass) &rarr;
+      <div class="btn btn-hero-primary" style="width: 100%; font-size: 0.8rem; font-weight: 800; padding: 11px 14px; border-radius: 10px; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; box-sizing: border-box;">
+        <span>Configure Corporate Order &rarr;</span>
+      </div>
+</a>
+    <!-- Option 3: 4-Drop Coffee Pass -->
+<a href="javascript:void(0)" id="btnGoSubscribe" class="destination-order-card disabled" style="background: linear-gradient(145deg, rgba(45,106,79,0.12) 0%, rgba(20,19,18,0.95) 100%); border: 1.5px solid rgba(45,106,79,0.5); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; text-decoration: none;">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span style="font-size: 1.3rem;">🔄</span>
+          <span style="font-size: 0.62rem; font-weight: 800; background: rgba(45,106,79,0.3); border: 1px solid #2d6a4f; color: #95d5b2; padding: 3px 8px; border-radius: 6px; letter-spacing: 0.3px;">SAVE 10–15% &bull; MULTI-WEEK PASS</span>
+        </div>
+        <div style="font-size: 0.95rem; font-weight: 800; color: var(--text); margin-bottom: 6px;">4-Drop Specialty Coffee Pass</div>
+        <div style="font-size: 0.72rem; color: #95d5b2; font-weight: 700; margin-bottom: 8px;">4 Scheduled Drops &bull; Weekly or Bi-Weekly Schedule</div>
+        <p style="font-size: 0.73rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 14px;">
+          1 upfront payment for 4 drops. Guaranteed batch reservation, discrete tracking IDs for every delivery, and 1-click flexibility to skip dates or swap lots.
+        </p>
+      </div>
+      <div class="btn btn-hero-primary" style="width: 100%; font-size: 0.8rem; font-weight: 800; padding: 11px 14px; border-radius: 10px; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; box-sizing: border-box;">
+        <span>Subscribe (4-Drop Pass) &rarr;</span>
       </div>
 </a>
   </div>
