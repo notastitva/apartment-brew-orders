@@ -5480,3 +5480,28 @@ input:focus, select:focus, textarea:focus {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* DISABLED BUTTON STATE (ORDER GATEWAY & FORMS) */
+.btn.disabled,
+.btn-hero-primary.disabled,
+.btn-pay.disabled,
+.btn-secondary.disabled,
+.btn:disabled,
+.btn-hero-primary:disabled,
+.btn-pay:disabled {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: none !important;
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  transform: none !important;
+  filter: grayscale(0.6) !important;
+}
+
+.select-harvest-prompt.selection-made {
+  background: rgba(45, 106, 79, 0.15) !important;
+  border-color: var(--success) !important;
+  color: #95d5b2 !important;
+}
