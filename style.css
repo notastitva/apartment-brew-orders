@@ -5518,3 +5518,87 @@ input:focus, select:focus, textarea:focus {
     gap: 14px !important;
   }
 }
+/* ==================================================================== */
+/* NOTCHED TICKET STUB BUTTON (MANIFEST CUTOUT DESIGN)                   */
+/* Inverted circular notches echoing Cold-Chain Dispatch Manifest        */
+/* ==================================================================== */
+.btn-ticket-stub {
+  position: relative !important;
+  background: var(--gradient-gold) !important;
+  color: #141312 !important;
+  font-weight: 800 !important;
+  font-size: 0.82rem !important;
+  letter-spacing: 0.4px !important;
+  text-transform: uppercase !important;
+  padding: 12px 24px !important;
+  border: none !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 18px rgba(212, 163, 115, 0.35) !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  overflow: visible !important;
+  transition: all 0.25s ease !important;
+  box-sizing: border-box !important;
+}
+
+/* Inverted Circular Notches on Left & Right Edges */
+.btn-ticket-stub::before,
+.btn-ticket-stub::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 10px !important;
+  height: 10px !important;
+  background: #141312 !important;
+  border-radius: 50% !important;
+  z-index: 3 !important;
+  pointer-events: none !important;
+}
+
+.btn-ticket-stub::before {
+  left: -5px !important;
+  border-right: 1px solid rgba(212, 163, 115, 0.4) !important;
+}
+
+.btn-ticket-stub::after {
+  right: -5px !important;
+  border-left: 1px solid rgba(212, 163, 115, 0.4) !important;
+}
+
+.btn-ticket-stub:hover:not(.disabled) {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 24px rgba(212, 163, 115, 0.55) !important;
+  filter: brightness(1.04) !important;
+}
+
+.btn-ticket-stub:active:not(.disabled) {
+  transform: scale(0.98) !important;
+}
+
+.btn-ticket-stub.disabled {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  filter: grayscale(0.5) !important;
+  box-shadow: none !important;
+}
+
+/* Strict 3-Column Horizontal Layout on Laptops & Desktops */
+.destination-cards-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 14px !important;
+  margin-top: 14px !important;
+}
+
+@media (max-width: 768px) {
+  .destination-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+}
