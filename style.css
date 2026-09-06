@@ -5664,3 +5664,72 @@ input:focus, select:focus, textarea:focus {
   transform: scale(0.96);
   box-shadow: 0 1px 6px rgba(212, 163, 115, 0.25) !important;
 }
+/* CONFIRMATION INSET BUTTONS & RIGHT-ALIGNED BOLD TOTAL */
+.confirmation-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  margin: 18px auto 0 !important;
+  max-width: 400px !important;
+  padding: 0 16px !important;
+  box-sizing: border-box !important;
+}
+
+.confirmation-actions .btn {
+  width: 100% !important;
+  max-width: 360px !important;
+  margin: 0 auto !important;
+  padding: 11px 18px !important;
+  font-size: 0.84rem !important;
+  font-weight: 800 !important;
+  border-radius: 10px !important;
+}
+
+.receipt-row.total-row {
+  border-top: 1.5px dashed var(--card-border) !important;
+  border-bottom: none !important;
+  padding-top: 12px !important;
+  margin-top: 6px !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.receipt-row.total-row .receipt-label {
+  font-size: 0.88rem !important;
+  font-weight: 800 !important;
+  color: var(--text) !important;
+  text-align: left !important;
+}
+
+.receipt-row.total-row .receipt-val,
+#rTotalVal {
+  font-size: 1.25rem !important;
+  font-weight: 900 !important;
+  color: var(--accent) !important;
+  text-align: right !important;
+  margin-left: auto !important;
+}
+
+.btn-celebrate-confetti {
+  background: none;
+  border: 1px dashed rgba(212,163,115,0.4);
+  color: var(--accent);
+  font-size: 0.74rem;
+  font-weight: 800;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-celebrate-confetti:hover {
+  background: rgba(212, 163, 115, 0.1) !important;
+  border-color: var(--accent) !important;
+  transform: scale(1.03);
+}

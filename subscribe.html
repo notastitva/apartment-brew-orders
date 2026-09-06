@@ -376,7 +376,7 @@
 
               <span id="savedProfileText">👋 Welcome back! Autofill delivery details?</span>
 
-              <button class="saved-profile-btn" onclick="applySavedProfile()">Autofill</button>
+              <button type="button" class="saved-profile-btn" onclick="applySavedProfile()"><span>⚡ Autofill</span></button>
 
             </div>
 
@@ -605,6 +605,84 @@
     <!-- Confirmation View (Shown after purchase) -->
 
     <section id="confirmationView" style="display: none;">
+      <div class="section-card" style="text-align: center;">
+        <div class="success-badge">&#10003; 4-Drop Coffee Pass Activated</div>
+        <h2 style="font-size: 1.35rem; font-weight: 800; margin-bottom: 4px;">Welcome to The Apartment Brew Co. Pass!</h2>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">Your pass is registered. We have queued your first drop for fresh hot extraction &amp; flash chilling.</p>
+
+        <!-- Fun 3-Perk Micro-Badges -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0;">
+          <div style="background: #151412; border: 1px solid var(--card-border); border-radius: 8px; padding: 8px 4px; text-align: center;">
+            <div style="font-size: 1rem;">👑</div>
+            <div style="font-size: 0.65rem; font-weight: 800; color: #95d5b2; margin-top: 2px;">LOCKED BATCH</div>
+            <div style="font-size: 0.58rem; color: var(--text-muted);">Never Sold Out</div>
+          </div>
+          <div style="background: #151412; border: 1px solid var(--card-border); border-radius: 8px; padding: 8px 4px; text-align: center;">
+            <div style="font-size: 1rem;">🔄</div>
+            <div style="font-size: 0.65rem; font-weight: 800; color: #95d5b2; margin-top: 2px;">FREE SWAPS</div>
+            <div style="font-size: 0.58rem; color: var(--text-muted);">Change Lots Anytime</div>
+          </div>
+          <div style="background: #151412; border: 1px solid var(--card-border); border-radius: 8px; padding: 8px 4px; text-align: center;">
+            <div style="font-size: 1rem;">💰</div>
+            <div style="font-size: 0.65rem; font-weight: 800; color: #95d5b2; margin-top: 2px;">10–15% OFF</div>
+            <div style="font-size: 0.58rem; color: var(--text-muted);">Upfront Savings</div>
+          </div>
+        </div>
+        <div class="receipt-details">
+          <div class="receipt-row">
+            <span class="receipt-label">Master Pass ID</span>
+            <span class="receipt-val" id="rOrderId" style="font-family: monospace; font-weight: 800; color: var(--accent);">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Drop 1 Order ID</span>
+            <span class="receipt-val" id="rDrop1Id" style="font-family: monospace; font-weight: 700; color: var(--accent);">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Pass Tier</span>
+            <span class="receipt-val" id="rPack">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Next Scheduled Drop</span>
+            <span class="receipt-val" id="rDropDate" style="color: var(--accent); font-weight: 700;">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Subscriber</span>
+            <span class="receipt-val" id="rName">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Starting Harvest</span>
+            <span class="receipt-val" id="rBean" style="color: var(--accent); font-weight: 700;">-</span>
+          </div>
+          <div class="receipt-row total-row" id="rTotalRow" style="border-top: 1.5px dashed var(--card-border); margin-top: 6px; padding-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <span class="receipt-label" style="font-weight: 800; color: var(--text); font-size: 0.88rem;">Total Paid Upfront</span>
+            <span class="receipt-val" id="rTotalVal" style="color: var(--accent); font-size: 1.25rem; font-weight: 900; text-align: right; margin-left: auto;">-</span>
+          </div>
+        </div>
+
+        <!-- Fun VIP Passholder Tip -->
+        <div class="fun-tasting-tip" style="background: rgba(45,106,79,0.12); border: 1px solid rgba(45,106,79,0.4); border-radius: 10px; padding: 12px 14px; margin: 14px 0; text-align: left;">
+          <div style="font-size: 0.76rem; font-weight: 800; color: #95d5b2; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+            <span>👑</span> VIP Passholder Privileges Activated
+          </div>
+          <p style="font-size: 0.74rem; color: var(--text-muted); margin: 0; line-height: 1.45;">
+            Your batch allocation is secured across all 4 drops. You can rollover drops if traveling or switch to new single-estate harvests anytime on /pass!
+          </p>
+        </div>
+
+        <!-- Inset Actions Container (Smaller Buttons with Breathing Room) -->
+        <div class="confirmation-actions" style="max-width: 400px; margin: 18px auto 0; padding: 0 16px; display: flex; flex-direction: column; gap: 10px;">
+          <a href="/pass" id="btnGoManagePass" class="btn btn-pay" style="width: 100%; max-width: 360px; margin: 0 auto; text-decoration: none; padding: 11px 18px; font-size: 0.84rem; font-weight: 800; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            <span>🔄 Manage Full Pass Schedule on /pass &rarr;</span>
+          </a>
+          <a href="/track" id="btnGoTrackDrop" class="btn btn-secondary" style="width: 100%; max-width: 360px; margin: 0 auto; text-decoration: none; padding: 11px 18px; font-size: 0.84rem; font-weight: 700; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            <span>🔍 Track Drop 1 Delivery Status on /track &rarr;</span>
+          </a>
+          <button type="button" class="btn-celebrate-confetti" onclick="if(typeof confetti==='function'){confetti({particleCount:80,spread:70,origin:{y:0.6}});}if(typeof playHapticTap==='function'){playHapticTap('success');}">
+            <span>🎉 Tap for Celebration Confetti!</span>
+          </button>
+        </div>
+      </div>
+    </section>
 
       <div class="section-card" style="text-align: center;">
 

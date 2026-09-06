@@ -3263,9 +3263,12 @@ async function handleOrderSuccess(paymentId, statusText) {
     rPack.textContent = `${packName} x ${qty} (${packBottles * qty} bottles)`;
   }
   const formattedTotal = `₹${total.toLocaleString('en-IN')}`;
-  if (rTotal) rTotal.textContent = formattedTotal;
   const rTotalVal = document.getElementById('rTotalVal');
-  if (rTotalVal) rTotalVal.textContent = formattedTotal;
+  if (rTotalVal) {
+    rTotalVal.textContent = formattedTotal;
+  } else if (rTotal) {
+    rTotal.textContent = formattedTotal;
+  }
   
   if (discount > 0) {
     if (rSubtotalRow) rSubtotalRow.style.display = 'flex';

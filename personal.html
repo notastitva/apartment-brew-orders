@@ -272,7 +272,7 @@
 
         <div class="saved-profile-bar" id="savedProfileBar">
           <span id="savedProfileText">👋 Welcome back! Autofill previous order info?</span>
-          <button class="saved-profile-btn" onclick="applySavedProfile()">Autofill</button>
+<button type="button" class="saved-profile-btn" onclick="applySavedProfile()"><span>⚡ Autofill</span></button>
         </div>
 
         <!-- Delivery Day Selection (Saturday vs Sunday) -->
@@ -396,7 +396,104 @@
     </main>
   
     <!-- Confirmation View -->
-    <section id="confirmationView" style="display: none;">
+<section id="confirmationView" style="display: none;">
+      <div class="section-card" style="text-align: center;">
+        <div class="success-badge">&#10003; Order Confirmed</div>
+        <h2 style="font-size: 1.35rem; font-weight: 800; margin-bottom: 4px;">Thank You for Your Order!</h2>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">Your micro-batch is scheduled for fresh hot extraction &amp; flash-chilled delivery.</p>
+        <!-- Fun 3-Perk Micro-Badges -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0;">
+          <div style="background: #151412; border: 1px solid var(--card-border); border-radius: 8px; padding: 8px 4px; text-align: center;">
+            <div style="font-size: 1rem;">❄️</div>
+            <div style="font-size: 0.65rem; font-weight: 800; color: var(--accent); margin-top: 2px;">4°C CHILLED</div>
+            <div style="font-size: 0.58rem; color: var(--text-muted);">Sub-Zero Shock</div>
+          </div>
+          <div style="background: #151412; border: 1px solid var(--card-border); border-radius: 8px; padding: 8px 4px; text-align: center;">
+            <div style="font-size: 1rem;">⏱️</div>
+            <div style="font-size: 0.65rem; font-weight: 800; color: var(--accent); margin-top: 2px;">48H PEAK</div>
+            <div style="font-size: 0.58rem; color: var(--text-muted);">Freshness Window</div>
+          </div>
+          <div style="background: #151412; border: 1px solid var(--card-border); border-radius: 8px; padding: 8px 4px; text-align: center;">
+            <div style="font-size: 1rem;">🌱</div>
+            <div style="font-size: 0.65rem; font-weight: 800; color: var(--accent); margin-top: 2px;">100% ARABICA</div>
+            <div style="font-size: 0.58rem; color: var(--text-muted);">Curated Estate</div>
+          </div>
+        </div>
+        <div class="receipt-details">
+          <div class="receipt-row">
+            <span class="receipt-label">Order ID</span>
+            <span class="receipt-val" id="rOrderId" style="font-family: monospace; font-weight: 800; color: var(--accent);">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Order Type</span>
+            <span class="receipt-val" id="rOrderType">Individual Pre-Order</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Payment Ref</span>
+            <span class="receipt-val" id="rPayId" style="font-family: monospace; font-size: 0.78rem;">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Delivery Window</span>
+            <span class="receipt-val" id="rDropDate" style="color: var(--accent); font-weight: 700;">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Customer</span>
+            <span class="receipt-val" id="rName">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Email</span>
+            <span class="receipt-val" id="rEmail">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Coffee Lot</span>
+            <span class="receipt-val" id="rBean" style="color: var(--accent); font-weight: 700;">-</span>
+          </div>
+          <div class="receipt-row">
+            <span class="receipt-label">Selection</span>
+            <span class="receipt-val" id="rPack">-</span>
+          </div>
+          <div class="receipt-row" id="rSubtotalRow" style="display: none;">
+            <span class="receipt-label">Subtotal</span>
+            <span class="receipt-val" id="rSubtotal">-</span>
+          </div>
+          <div class="receipt-row" id="rDiscountRow" style="display: none;">
+            <span class="receipt-label">Promo Discount</span>
+            <span class="receipt-val" id="rDiscount" style="color: var(--success-light);">-</span>
+          </div>
+          <div class="receipt-row total-row" id="rTotalRow" style="border-top: 1.5px dashed var(--card-border); margin-top: 6px; padding-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <span class="receipt-label" style="font-weight: 800; color: var(--text); font-size: 0.88rem;">Total Amount</span>
+            <span class="receipt-val" id="rTotalVal" style="color: var(--accent); font-size: 1.25rem; font-weight: 900; text-align: right; margin-left: auto;">-</span>
+          </div>
+        </div>
+        <!-- Fun Brewer's Secret Tip -->
+        <div class="fun-tasting-tip" style="background: rgba(212,163,115,0.08); border: 1px solid rgba(212,163,115,0.3); border-radius: 10px; padding: 12px 14px; margin: 14px 0; text-align: left;">
+          <div style="font-size: 0.76rem; font-weight: 800; color: var(--accent); display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+            <span>💡</span> Brewer's Secret Tasting Protocol
+          </div>
+          <p style="font-size: 0.74rem; color: var(--text-muted); margin: 0; line-height: 1.45;">
+            Swirl the chilled glass bottle gently before serving. Pour over a single large ice sphere to release hidden jasmine aromatics and bright wild-berry fruit acids!
+          </p>
+        </div>
+        <!-- Inset Actions Container (Smaller Buttons with Breathing Room) -->
+        <div class="confirmation-actions" style="max-width: 400px; margin: 18px auto 0; padding: 0 16px; display: flex; flex-direction: column; gap: 10px;">
+          <a href="/track" id="linkTrackOrder" class="btn btn-pay" style="width: 100%; max-width: 360px; margin: 0 auto; text-decoration: none; padding: 11px 18px; font-size: 0.84rem; font-weight: 800; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            <span>🔍 View Live Order Status &rarr;</span>
+          </a>
+          <button type="button" class="btn btn-calendar" style="width: 100%; max-width: 360px; margin: 0 auto; padding: 11px 18px; font-size: 0.84rem; font-weight: 800; border-radius: 10px;" onclick="addToGoogleCalendar()">
+            <span>📅 Add Delivery Window to Google Calendar</span>
+          </button>
+          <button type="button" class="btn btn-whatsapp" style="width: 100%; max-width: 360px; margin: 0 auto; padding: 11px 18px; font-size: 0.84rem; font-weight: 800; border-radius: 10px;" onclick="sendWhatsAppReceipt()">
+            <span>💬 Send Receipt / Updates to WhatsApp</span>
+          </button>
+          <button type="button" class="btn btn-secondary" style="width: 100%; max-width: 360px; margin: 0 auto; padding: 10px 18px; font-size: 0.82rem; font-weight: 700; border-radius: 10px;" onclick="resetForm()">
+            <span>+ Place Another Pre-Order</span>
+          </button>
+          <button type="button" class="btn-celebrate-confetti" onclick="if(typeof confetti==='function'){confetti({particleCount:80,spread:70,origin:{y:0.6}});}if(typeof playHapticTap==='function'){playHapticTap('success');}">
+            <span>🎉 Tap for Celebration Confetti!</span>
+          </button>
+        </div>
+      </div>
+    </section>
       <div class="section-card" style="text-align: center;">
         <div class="success-badge">&#10003; Order Confirmed</div>
         <h2 style="font-size: 1.3rem; margin-bottom: 4px;">Thank You for Your Order!</h2>
