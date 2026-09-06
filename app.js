@@ -2951,32 +2951,6 @@ function applySavedProfile() {
     }
   } catch (e) {}
 }
-  try {
-    const profile = cachedProfile || JSON.parse(localStorage.getItem('tabc_customer_profile') || '{}');
-    if (profile && profile.name) {
-      const nameInput = document.getElementById('custName');
-      const emailInput = document.getElementById('custEmail');
-      const phoneInput = document.getElementById('custPhone');
-      const pinInput = document.getElementById('custPincode');
-      const addrInput = document.getElementById('custAddress');
-      const compInput = document.getElementById('custCompany');
-      const gstinInput = document.getElementById('custGstin');
-  
-      if (profile.name && nameInput) nameInput.value = profile.name;
-      if (profile.email && emailInput) emailInput.value = profile.email;
-      if (profile.phone && phoneInput) phoneInput.value = profile.phone;
-      if (profile.pin && pinInput) {
-        pinInput.value = profile.pin;
-        validatePincodeField();
-      }
-      if (profile.address && addrInput) addrInput.value = profile.address;
-      if (profile.company && compInput) compInput.value = profile.company;
-      if (profile.gstin && gstinInput) gstinInput.value = profile.gstin;
-  
-      validateWizardStep(3);
-    }
-  } catch (e) {}
-}
 
 function saveCustomerProfile(data) {
   try {
